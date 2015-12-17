@@ -1,0 +1,93 @@
+doctype html
+html
+	head
+		meta charset="utf-8"
+
+		// Meta
+		title = current_page.data.title || "Sistemas Operativos y Redes"
+
+    meta name="description" content="IIC2333 - Sistemas Operativos y Redes"
+		meta name="author" content="Dietrich Daroch"
+
+
+		// Mobile
+		meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"
+		meta name="apple-mobile-web-app-capable" content="yes"
+		meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"
+
+		// RevealJS
+		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/reveal.min.css"
+		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/theme/black.min.css" id="theme"
+		// Presentable
+		link rel="stylesheet" href="https://github.com/frederickf/presentable/raw/master/src/presentable.css"
+
+		// Code syntax highlighting
+		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/css/zenburn.min.css"
+
+    // Fonts (pre-cache)
+		link rel="stylesheet" type="text/css"  href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/font/source-sans-pro/source-sans-pro.css"
+		link rel="stylesheet" type="text/woff" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/font/source-sans-pro/source-sans-pro-semibold.woff"
+
+		// D3
+		//script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.11/d3.min.js'
+
+		// CanvasJS
+		// script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js'
+
+		// Printing and PDF exports
+		javascript:
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/print/pdf.min.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/print/paper.min.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+
+	body
+		.reveal
+			.slides
+				section
+					h3 Sistemas Operativos y Redes
+					h4 = current_page.data.title
+					p style="padding-top:4em;"
+						small Departamento de Ciencia de la Computación
+					p
+						small Pontificia Universidad Católica de Chile
+
+				section
+					h2 Table of Contents
+					nav#presentable-toc.revealjs
+
+				== yield
+
+			aside#presentable-icon.revealjs
+				a title="ToC" href="#/0/1"
+					img alt="ToC"
+
+
+		script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/js/head.min.js"
+		script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/js/reveal.min.js"
+
+		javascript:
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					// Dynamic Loading
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/js/classList.min.js', condition: function() { return !document.body.classList; } },
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/markdown/marked.min.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/markdown/markdown.min.js', condition: function() { return !!document.querySelector( '[data-markdown]' );} },
+					// Async Loading
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/highlight/highlight.min.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/zoom-js/zoom.min.js', async: true },
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/notes/notes.min.js', async: true }
+				]
+			});
+
