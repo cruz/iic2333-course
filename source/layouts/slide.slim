@@ -1,38 +1,41 @@
 doctype html
 html
 	head
+		/! Do NOT read this file, the source is available
 		meta charset="utf-8"
 
-		// Meta
+		/  Meta
 		title = current_page.data.title || "Sistemas Operativos y Redes"
 
     meta name="description" content="IIC2333 - Sistemas Operativos y Redes"
 		meta name="author" content="Dietrich Daroch"
 
 
-		// Mobile
+		/  Mobile
 		meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"
 		meta name="apple-mobile-web-app-capable" content="yes"
 		meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"
 
-		// RevealJS
+		/  RevealJS
 		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/reveal.min.css"
 		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/css/theme/black.min.css" id="theme"
-		// Presentable
+		/  Presentable
 		link rel="stylesheet" href="https://github.com/frederickf/presentable/raw/master/src/presentable.css"
+		/  Title footer
+		/ link rel="stylesheet" href="/css/plugin/title-footer.css"
 
-		// Code syntax highlighting
+		/  Code syntax highlighting
 		link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/css/zenburn.min.css"
 
-    // Fonts (pre-cache)
+    /  Fonts (pre-cache)
 		link rel="stylesheet" type="text/css"  href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/font/source-sans-pro/source-sans-pro.css"
 		link rel="stylesheet" type="text/woff" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/font/source-sans-pro/source-sans-pro-semibold.woff"
 
-		// D3
+		/  D3
 		//script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.11/d3.min.js'
 
-		// CanvasJS
-		// script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js'
+		/  CanvasJS
+		/  script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js'
 
 		// Printing and PDF exports
 		javascript:
@@ -46,12 +49,10 @@ html
 		.reveal
 			.slides
 				section
-					h3 Sistemas Operativos y Redes
-					h4 = current_page.data.title
-					p style="padding-top:4em;"
-						small Departamento de Ciencia de la Computación
-					p
-						small Pontificia Universidad Católica de Chile
+					h2 Sistemas Operativos y Redes
+					h1 = current_page.data.title
+					p style='padding-top:4em;' Departamento de Ciencia de la Computación
+					p Pontificia Universidad Católica de Chile
 
 				section
 					h2 Table of Contents
@@ -71,6 +72,9 @@ html
 			// Full list of configuration options available at:
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
+				width: 1600,
+				height: 900,
+
 				controls: true,
 				progress: true,
 				history: true,
@@ -78,16 +82,36 @@ html
 
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
 
+				math: {
+					mathjax: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js',
+					// config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+					config: 'TeX-AMS-MML_HTMLorMML'  // See http://docs.mathjax.org/en/latest/config-files.html
+				},
+
 				// Optional reveal.js plugins
 				dependencies: [
-					// Dynamic Loading
+
+					// Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/lib/js/classList.min.js', condition: function() { return !document.body.classList; } },
+
+					// Markdown
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/markdown/marked.min.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/markdown/markdown.min.js', condition: function() { return !!document.querySelector( '[data-markdown]' );} },
-					// Async Loading
+
+					// Highlight <code>
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/highlight/highlight.min.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+					// Mathjax
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/math/math.min.js', async: true },
+
+					// Zoom
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/zoom-js/zoom.min.js', async: true },
+
+					// Speaker Notes
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.2.0/plugin/notes/notes.min.js', async: true }
+
+					// Title footer
+					//{ src: '/js/plugin/title-footer/title-footer.js', async: true, callback: function() { title_footer.initialize(); } }
 				]
 			});
 
