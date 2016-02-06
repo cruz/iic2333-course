@@ -1,0 +1,315 @@
+---
+title: Introducción a C
+layout: activity
+---
+section.top
+  p Esta introducción a C está pensada para gente que ya es familiar con algún lenguaje de programación imperativo como Java y Python.
+  p La mayoría de las secciones presenta código.
+
+
+article
+  section
+    h3 C
+    p C es un lenguaje de programación MUY simple. Es un lenguaje procedural y estructurado.
+    p Los programas en C se componen de funciones, estas pueden llamar a otras funciones.
+    p Tiene algunas diferencias con otros lenguajes imperativos comunes.
+    ul
+      li No existen las clases, pero no son necesarias, ya que se puede usar un struct para guardar la información de los objetos.
+      li Requiere administrar la memoria manualmente. Esto da más control, pero también requiere más trabajo.
+      li Hay un preprocesador que permite generar código usando reemplazos sintácticos.
+
+    section
+      h3 Tipos
+      /  =====
+
+      section.top
+        h5 Tipos básicos
+        /  ------------
+        p C tiene los tipos básicos usuales, de hecho, son usuales porque C los tenía.
+        ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+          li char
+          li int
+          li float
+          li double
+        p El tamaño de los tipos depende de la implementación. El tamaño de un <strong>char</strong> está dado por la arquitectura, un char debe ser la unidad atómica de información direccionable, esta unidad es 1 Byte, que en las arquitecturas usuales son 8 bits. 'sizeof(T)' devuelve el tamaño en Bytes de un tipo.
+        p Existen los modificadores unsigned, short y long para
+        / preguntar porqué unsigned no es tan buena idea?
+            for(uint i=10; i>=0; i--)
+
+        p El tamaño de los tipos depende de la implementación. En x86,
+        div
+          pre
+            table.table-bordered style="border: 1px solid black;"
+              tr
+                th type
+                th colspan="4"  (x86) Word [4 Bytes]
+              tr
+                td rowspan="2" char
+                td.full
+                td.empty
+                td.empty
+                td.empty
+              tr
+                td.empty
+                td.empty
+                td.empty
+                td.empty
+              tr
+                td rowspan="2" short int
+                td.full
+                td.full
+                td.empty
+                td.empty
+              tr
+                td.empty
+                td.empty
+                td.empty
+                td.empty
+              tr.sep
+                td rowspan="2" int
+                td.full
+                td.full
+                td.full
+                td.full
+              tr
+                td.empty
+                td.empty
+                td.empty
+                td.empty
+              tr.sep
+                td rowspan="2" long int
+                td.full
+                td.full
+                td.full
+                td.full
+              tr
+                td.empty
+                td.empty
+                td.empty
+                td.empty
+              tr.sep
+                td rowspan="2" long long int
+                td.full
+                td.full
+                td.full
+                td.full
+              tr
+                td.full
+                td.full
+                td.full
+                td.full
+              tr.sep
+                td rowspan="2"float
+                td.full
+                td.full
+                td.full
+                td.full
+              tr
+                td.empty
+                td.empty
+                td.empty
+                td.empty
+              tr.sep
+                td rowspan="2" double
+                td.full
+                td.full
+                td.full
+                td.full
+              tr
+                td.full
+                td.full
+                td.full
+                td.full
+
+        p El orden de los bytes (endiannes) también depende de la implementación.
+
+
+      section
+        h5 Structs y Unions
+        /  ----------------
+        p A partir de estos se pueden agrupar para construir tipos más complejos en <strong>structs</strong> o <strong>unions</strong>. Ambos se acceden y crean de la misma manera.
+        p La diferencia es que un <strong>struct</strong> tiene espacio independiente para cada miembro, mientras que una <strong>union</strong> sólo para el tipo más grande.
+        pre
+          code.hljs
+            | /* Defining new Data Types
+                ----------------------- */
+              struct Wagen {
+                int  wert;
+                char farbe[20];  /* who needs strings :x?? */
+
+                union {  /* Unions provide shared storage (last write stays), they are not widely used */
+                  char   c;
+                  double f;
+                } kaputt;
+
+                union {
+                  double speed;
+                  double geschwindigkeit;
+                }; /* Anonymous union. Structs can also be anonymous */
+
+              }; /* now 'struct Wagen' is a new type */
+
+
+              typedef struct Wagen Car; /* now 'Car' is the type 'struct Wagen' */
+
+
+              /* Declaring new cars
+                ------------------ */
+              struct Wagen redCar;
+              Car blueCars[7];
+              /* Wagen derp;  'Wagen' is not a type (just a tag) */
+
+
+              /* Using struct members
+                -------------------- */
+              redCar.wert = 74000;
+              redCar.geschwindigkeit = 347.31415;
+
+              blueCars[2].kaputt.c = 'A'
+              blueCars[2].kaputt.f = 2147483647.2357;  /* other union values are now corrupt */
+
+              printf("This car costs %d and reaches %.1f km/h \n",
+                    redCar.wert,   /* 74000 */
+                    redCar.speed); /* 347.3 (union) */
+
+      section
+        h5 Namespaces
+        /  ----------
+        p No hay namespaces por tipos, es decir, 'Car' no tiene sus propias funciones, sólo existe un namespace de tipos global <small>(y otro de tags)</small>, esto no es un problema siendo ordenados.
+        aside.small Python usa este mismo truco, de hecho 'self' no es un nombre especial.
+        pre
+          code.hljs
+            | Car* car_new() {  /* new Car() */
+                /* ... */
+              }
+              void car_wash(Car* c) { /* c.wash() */
+                /* ... */
+              }
+              void car_wash_for(Car* c, int time) { /* c.wash(time) */
+                /* Overloading yields to name conflicts, but you can use a different name */
+                /* Other languages eventually use 'name mangling' to avoid conflicts,
+                    but names look like _g4rb3137Age_# while debugging unless the
+                    name mapping is available. */
+              }
+
+      section
+        h5 Punteros
+        /  --------
+        aside.small
+          a href="http://cdecl.org/" C decl
+        pre
+          code.hljs
+            | char (*(*x[3])())[5]; /* perfectly valid C declaration */
+            div
+              = image_tag 'http://1.bp.blogspot.com/-o-Dp9_mVy9I/UUdoskHylZI/AAAAAAAAAIM/sdK8ASDKwro/s1600/spongebob-brain-fire.gif'
+
+        p Los punteros agregan abstracción, las operaciones son sobre algún dato, o usando alguna función, pero sin saber específicamente cuál, solo su forma (tipo de dato o firma de la función)
+        p Existen 2 operadores para manipular objetos y direcciones.
+        dl
+          dt Address of
+          dfn = "&x"
+          dd Obtiene la dirección de (donde comienza) x
+          dt Dereference
+          dfn = "*x"
+          dd Es lo apuntado por x
+        p Usar punteros crea tipos nuevos, ya que no es lo mismo tener un int o un struct que una referencia a él.
+        pre
+          code.hljs
+            | void car_wash(Car *c);
+        p La forma correcta de leer esa declaración es pensando que '*c' es de tipo 'Car', por lo que 'c' es un puntero que apunta a un 'Car'. Es más cómodo pensar que 'Car*' es un tipo, pero eso hace que las declaraciones múltiples sean extrañas.
+        pre
+          code.hljs
+            | int* a, b; /*  type(a): int*.   type(b): int  */
+
+        h6 Usando punteros
+        p Es usual usar punteros para "pasar" structs a una función, así la función puede modificar el mismo struct que existe fuera de la función en vez de una copia de él.
+        pre
+          code.hljs
+            | void car_crash(Car* a, Car* b) {
+                /* <a href="https://xkcd.com/138/" target="_blank">(Relevant xkcd)</a> */
+                /* ' a' is a Car pointer (Car*) */
+                /* '*a' is the Car (Car) */
+                /* '&a' is a pointer to a, so it points to a Car pointer (Car*), it is a 'Car**' */
+
+
+                /* *a is the Car (Car), so this should work */
+                (*a).speed = 0;
+                /* This modifies the data pointed by a, so it better be a Car */
+                /* (parenthesis are needed because '.' has higher precedence than '*', */
+                /*    *a.m is the object pointed by a.m, not what we wanted) */
+
+                /* operator '->' is syntax sugar for '(*lhs).rhs' */
+                b->speed   = 0;
+
+                a->value = car_estimate_value(a);
+                b->value = car_estimate_value(b);
+              }
+              void f() {
+                void (*carCrashLikeFunction) (Car*, Car*) = &car_crash;
+                Car red, blue;
+                carCrashLikeFunction(&red, &blu);
+              }
+        p Como cualquier trozo de memoria tiene que tener guardado algún número, entonces no hay cómo expresar el valor nulo. Es usual considerar que un puntero apuntando a la dirección 0 es en realidad un puntero inválido. Muchas veces definen 'NULL' como 0.
+        small
+          = "¿Qué guardará el primer byte de memoria?"
+
+
+
+
+      section
+        h5 Memoria dinámica
+        /  ----------------
+        p C Requiere administrar la memoria manualmente. Esto da más control, pero también requiere más trabajo.
+        p Se puede obtener acceso a más memoria usando 'malloc' (memory allocate?), función que pide un trozo de memoria del SO de (al menos) x bytes.
+        pre
+          code.hljs
+            | #include "stdlib.h"
+
+              int* canIHasManyInts(int N) {
+                int* manyInts = (int*) malloc( N * sizeof(int) );
+                for(int i=0; i!=N; i++)
+                  manyInts[i] = i;
+                return manyInts;
+              }
+
+        p Idealmente los programas deberían pedir recursos sólo mientras los necesitan, por lo que se deberían devolver al SO lo antes posible.
+        pre
+          code.hljs
+            | void* ptr = malloc(024642);
+              free(ptr);   /* Now ptr points to unowned memory */
+              ptr = NULL;  /* Now ptr is marked as invalid */
+
+
+    section
+      h3 Preprocesador
+      /  =============
+      p Para "facilitar la vida", existe el <strong>preprocesador</strong>, el que permite hacer operaciones sobre el código antes de compilarlo. Usualmente se usan nombres en mayúsculas para evitar confundirlas con funciones de C.
+
+      p Lo más interesante del preprocesador son las 'macros', que son funciones que reciben argumentos. Se puede pensar que las constantes son funciones sin argumentos (pi()=3.1415)
+      pre
+        code.hljs
+          | #define MALLOC(T, N) ((T)*) malloc(N * sizeof(T))
+            #define FREE(P) free(T); P=NULL
+            #define PI 3.14159265358979323846
+
+            int* canIHasManyInts(int n) {
+              int* manyInts = MALLOC(n, int);
+              /* =>
+                int* manyInts = ((int)*) malloc(n * sizeof(int)); */
+
+              /* ... */
+              return manyInts;  /* The caller should free 'manyInts' */
+            }
+
+      p Si bien pueden parecer muy útiles, también hay que tener cuidado al usarlas. La expansión puede no tener el significado esperado si es que se calculan cosas al entregar los argumentos a la macro.
+      pre
+        code.hljs
+          | #square(X) X*X
+            int x = square(2+6);  /* 8*8?? */
+
+      p Puede ser usado de forma mal intencionada >=)
+      pre
+        code.hljs
+          | #define if(X) if(!(X))
+
+
