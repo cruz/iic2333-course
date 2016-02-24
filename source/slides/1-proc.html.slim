@@ -1,0 +1,934 @@
+---
+title: Administración de Procesos
+layout: slide
+---
+
+
+section
+	h2 Procesos
+	/  --------
+
+
+
+section
+	h2 ¿Qué es un Proceso?
+	/  -------------------
+
+	section
+		p.fragment Un programa en ejecución
+
+		blockquote.fragment
+			| Proceso = Código + Recursos
+
+		ul
+			li.fragment El código del programa
+			li.fragment Los recursos de la ejecución
+			ul
+				li.fragment Memoria
+				li.fragment Archivos
+				li.fragment <small>Sockets, Dispositivos, Librerías (...)</small>
+
+
+
+section
+	h2 Composición y representación
+	/  -----------------------------
+
+	section
+		p ¿Qué hay en un Proceso?
+		ul
+			li.fragment Código (<em>.text</em>, información estática)
+			li.fragment Program Counter (PC) + Registros
+			li.fragment Stack (de funciones)
+			p.fragment Cada item del stack representa una función, por lo que tiene:
+			ul
+				li.fragment Parámetros
+				li.fragment Variables locales
+				li.fragment Lugar de retorno (donde estaba la ejecución anterior, PC)
+			li.fragment Datos (<em>.data</em>)
+			ul
+				li.fragment Variables globales
+			li.fragment Heap
+			p.fragment Memoria asignada dinámicamente (durante la ejecución)
+		/ TODO: includegraphics[width=3cm]{figs/01-3_01.pdf}
+
+
+
+section#states
+	h2 Estados
+	/  -------
+
+
+	section#states-inside
+		p Un proceso en ejecución puede cambiar de estado
+
+		ul
+			li.fragment <em>[New]       </em>: En creación
+			li.fragment <em>[Running]   </em>: En ejecución
+			li.fragment <em>[Waiting]   </em>: Esperando (I/O, signal)
+			li.fragment <em>[Ready]     </em>: Listo para ejecutar. Esperando asignación de CPU
+			li.fragment <em>[Terminated]</em>: Ejecución terminada
+
+
+	section#states-automata
+		/ TODO: includegraphics[width=8cm]{figs/01-3_02.pdf}
+		p.fragment ¡Un autómata!
+
+
+	section#states-status
+		p ¿Cómo averiguo el estado de un proceso?
+
+		.fragment
+			p Desde un terminal
+			pre
+				code.hljs.lang-bash
+					| $ htop || top || ps aux
+		.fragment
+			p En C
+			pre
+				code.hljs.lang-c
+					| #include "sys/types.h"
+					  #include "sys/wait.h"
+					  /* ... */
+					  int status;
+					  pid_t return_pid = waitpid(process_id, /*out*/ &status, WNOHANG);
+					  
+					  switch(return_pid) {
+					    case 0:
+					      /* Still running */
+					    case process_id:
+					      /* Child terminated. Exit status in 'status' */
+					    case -1:
+					    default:
+					      /* Error */
+					  }
+		.fragment
+			p O con un Administrador de Procesos
+
+
+section#repr
+	h3 Representación de Procesos
+	/  --------------------------
+
+	section#repr-PCB
+		p ¿Cómo represento un proceso?
+
+		p.fragment Process Control Block (PCB)
+		ul
+			li.fragment Estado
+			li.fragment Identificador (PID)
+			li.fragment Program Counter (PC)
+			li.fragment Registros de CPU: <em>estado de ejecución</em>
+			li.fragment Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
+			li.fragment Información de memoria: límites, tabla de páginas/segmentos, &hellip;
+			li.fragment Contabilidad (<em>accounting</em>)
+			li.fragment Información de I/O: archivos y dispositivos abiertos, &hellip;
+
+		/ \includegraphics[width=3cm]{figs/01-3_03.pdf}
+		/ \onslide<10->{Miremos en <code>include/linux/sched.h</code>}
+
+
+	/section#repr-contextSwitch
+		h3 Cambio de un proceso a otro
+		/  ---------------------------
+		p El cambio de procesos se conoce como <strong>Context Switch</strong>
+		/ includegraphics[width=8cm]{figs/01-3_04.pdf}
+
+
+
+section#creation
+	h2 Creando procesos
+	/  ----------------
+
+	section#creation-0
+		p Creación de procesos: ¿el huevo o la gallina?
+		p ¿Quién crea un proceso?... <span class="fragment"> otro proceso</span>
+		ul
+			li.fragment ¿Quién crea ese otro proceso? <span class="fragment"> otro proceso</span>
+			li.fragment ¿Quién crea ese otro proceso? <span class="fragment"> otro proceso...</span>
+
+		p.fragment Existe un proceso llamado 'init' que es construido durante la inicialización del kernel. Usualmente tienen asignado el ProcessID 1.
+		/! Salvo Windows por supuesto, que usa el 4.
+		ul
+			li.fragment Linux: systemd, initV, upstart
+			li.fragment MacOS X: launchd
+			li.fragment Windows: InitialSystemProcess, System
+
+	section#creation-tree
+		p Como todos los procesos tienen un padre, forman un árbol de procesos
+		pre
+			code.hljs
+				| $ pstree --show-pids
+		pre
+			code.hljs
+				| systemd(1)─┬─crond(572)───rsync(984)
+				             ├─dbus-daemon(563)
+				             ├─konsole(30672)───zsh(30675)───tmux(11098)
+				             ├─systemd(756)─┬─ncmpcpp(759)
+				             │              └─emacs(773)─┬─aspell(798)
+				             │                           └─{gmain}(774)
+				             ├─systemd-logind(573)
+				             └─tmux(11100)─┬─zsh(9853)
+				                           └─zsh(11221)───vim(13615)
+
+
+	section#creation-init
+		p Si un proceso crea a un proceso (hijo).
+		ul
+			li.fragment ¿Quién sigue ejecutando? (modos de ejecución)
+			ul
+				li.fragment Padre e hijo continúan ejecutando concurrentemente
+				li.fragment Padre espera que algunos o todos sus hijos terminen
+			li.fragment ¿Qué personalidad tiene el hijo? (modos de espacio de direcciones)
+			ul
+				li.fragment El hijo es un duplicado <a href="http://linux.die.net/man/2/fork">casi</a> exacto del padre (secciones <strong>.text</strong>, <strong>.data</strong> y el stack son copiados)
+				li.fragment El hijo es un nuevo programa
+
+
+	section#creation-syscalls
+		p Syscalls
+		dl
+			.fragment
+				dt Fork
+				dd
+					p.fragment Crea un nuevo proceso como <strong>copia</strong> del padre.
+					p.fragment Ambos continúan ejecutando desde la instrucción posterior a <code>fork</code>
+					p.fragment La llamada retorna* el <code>PID</code> del hijo al padre y <code>0</code> al hijo
+			.fragment
+				dt Exec
+				dd
+					p.fragment Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
+					p.fragment Básicamente otro programa se <em>roba</em> el proceso
+
+
+
+	section#creation-fork-l-q
+		p ¿Qué imprimen los programas?
+
+		pre
+			code.hljs.lang-c
+				| int a = 42;
+				  
+				  pid_t child_pid = fork(); /* create new process */
+				  if (child_pid == 0) { /* child gets 0 */
+				    a++;
+				    printf("CHILD: a is : %d\n", a); /* ??? */
+				  }
+				  else if(child_pid > 0) { /* parent gets the new pid ('random' number) */
+				    printf("PARENT: child_pid is %d\n", child_pid);
+				    printf("PARENT: a is %d\n", a); /* ??? */
+				  }
+
+
+	section#creation-fork-loop-q
+		p ¿Cuántos procesos se crean?
+
+		pre
+			code.hljs.lang-c
+				| /* ... */
+				  for(int i=0; i<4; i++) {
+				    fork();
+				    printf("[%4d] %d\n", getpid(), i);
+				  }
+
+
+	/section#creation-fork-q
+		p ¿Qué hacen estos programas? (*)
+		p <small>asumiendo que fork no falla</small>
+		pre
+			code.hljs.lang-c
+				| while(fork())
+				    exec("date");
+				  /* ... */
+		pre
+			code.hljs.lang-c
+				| while(!fork())
+				    exec("date");
+				  /* ... */
+
+
+	section#creation-wait
+		p Usualmente, después del <code>fork()</code>, uno de los dos (el hijo) ejecuta un <code>exec()</code>.
+		ul
+			li.fragment El padre conoce el <strong>pid</strong> del hijo
+			li.fragment El padre podría seguir ejecutando y crear más hijos
+			li.fragment &hellip; o bien esperar que el hijo termine (o muera)
+		/ \includegraphics[width=11cm]{figs/01-3_10.pdf}
+
+
+	section#creation-wait-def
+		p Syscalls
+
+		dl
+			dt Fork
+			dd
+				p Clona el proceso.
+			dt Exec
+			dd
+				p Reemplaza el proceso por otro
+			.fragment
+				dt Wait
+				dd
+					p.fragment Espera a un proceso hijo termine de ejecutar.
+
+
+
+section#termination
+	h2 Terminando procesos
+	/  -------------------
+
+	section#termination-0
+		p.fragment Todo proceso, al terminar su ejecución, ejecuta <code>exit()</code>
+		ul
+			li.fragment Entrega un <em>código de retorno</em> (¿para qué?)
+			li.fragment El SO recupera todos los recursos asignados
+
+	section#termination-retCode
+		p El código de retorno se utiliza para avisar cómo resultó la ejecución
+		ul
+			li.fragment Generalmente es <code>0</code> cuando no hubo problemas
+			li.fragment Y un número distinto de <code>0</code> para indicar un problema
+			ul
+				li.fragment La documentación del programa debería relacionar errores a códigos de retorno.
+			li.fragment Por su uso, también es conocido por <em>código de error</em>.
+
+	section#termination-syscalls
+		p Syscalls
+
+		dl
+			dt Fork
+			dd
+				p Clona el proceso.
+			dt Exec
+			dd
+				p Reemplaza el proceso por otro
+			dt Wait
+			dd
+				p Espera a un proceso hijo termine de ejecutar.
+			.fragment
+				dt Exit
+				dd
+					p.fragment Termina el proceso con un código de retorno dado.
+
+
+	section#termination-signals
+		dl
+			dt kill / TerminateProcess
+			dd
+				p Envía una <strong>señal</strong> a otro proceso (típicamente <em>SIGTERM</em>)
+				p Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
+		/ p <small>Mama, just killed a process</small>
+
+
+	section#termination-q
+		p Si el padre muere, ¿deben morir los hijos?
+
+		ul
+			li.fragment Usualmente el SO no permite que un hijo exista si el padre ha terminado.
+			li.fragment Sistema Operativo ejecuta una <strong>terminación en cascada</strong>
+
+	section#termination-getReturnCode
+		p Huérfanos y zombies: the walking process
+
+		p.fragment Proceso terminado no se borra inmediatamente de la tabla de procesos.
+		ul
+			li.fragment ¿Por qué? <span class="fragment">Para que el padre recupere su estado de salida con <code>wait()</code></span>
+			li.fragment Cuando el padre hace <code>wait()</code> la entrada del hijo se borra de la tabla
+
+		p.fragment ¿Cómo se hace en Linux?
+		pre.fragment
+			code.hljs.lang-c
+				| /* Un proceso (hijo) termina... */
+				  exit(1);
+		pre.fragment
+			code.hljs.lang-c
+				| /* El padre consulta el estado */
+				  int status;
+				  pid_t pid = wait(/*out*/ &status); /* Ahora 'status' tiene el código de retorno */
+				  /* Ahora el SO puede terminar de eliminar el proceso hijo */
+		p.fragment Si el padre tenía varios hijos, ¿a cuál esperamos recién?
+
+
+	section#termination-zombies
+		p ¿Y si el padre jamás hace <code>wait()</code>?
+		ul
+			li.fragment Si el padre termina sin ejecutar <code>wait()</code>, el hijo queda <strong>huérfano</strong> (zombie).
+			.fragment
+				li Linux/UNIX: huérfanos pasan a ser hijos de <code>init</code>
+				ul
+					li <code>init</code> llama periódicamente a <code>wait()</code> para deshacerse de los huérfanos (reaps zombies).
+
+
+	section#termination-necromancy
+		p Creando zombies
+
+		pre
+			code.hljs.lang-c
+				| #include "sys/wait.h"
+				  #include "stdlib.h"
+				  #include "unistd.h"
+				  
+				  pid_t pids[10];
+				  void main() {
+				    
+				    for (int i=9; i>=0; i--)
+				      if ((pids[i]=fork()) == 0) { /* pid == 0, only child enters */
+				         sleep(i+1);   /* Wait and terminate */
+				         exit(0);
+				      }
+				    
+				    for (int i=9; i>=0; i--)       /* Only root process reaches */
+				      waitpid(pids[i], NULL, 0);   /* First wait [9] is the longest */
+				  }
+
+
+
+
+section#_ipc
+	h2 Comunicación entre procesos (IPC)
+/    =================================
+section#ipc
+	h2 Comunicación entre procesos (IPC)
+	/  ---------------------------------
+
+	section#ipc-0
+		p <em>InterProcess Comunication (IPC)</em>
+
+		p.fragment Si hay multiprogramación, hay múltiples procesos "en ejecución"
+		/''\footnote{ya sabemos que esto no es estrictamente correcto}
+		ul
+			li.fragment Procesos <strong>independientes</strong> no provocan problemas &hellip;
+			li.fragment procesos <strong>cooperativos</strong> requieren <strong>comunicación inter-procesos</strong>
+
+		p.fragment Dos modelos fundamentales de IPC:
+		ul
+			li.fragment <strong>Memoria compartida</strong> (<em>shared memory</em>)
+			li.fragment <strong>Paso de mensajes</strong> (<em>message passing</em>)
+
+
+	section#ipc-shm_vs_mp
+		p Memoria compartida vs. Paso de mensajes
+
+		p Memoria Compartida
+		p.fragment data-fragment-index="1" Procesos acuerdan un espacio de memoria donde ambos pueden escribir
+		ul
+			li.fragment data-fragment-index="3" Más rápido que paso de mensajes (sólo un <em>syscall</em> para crearla)
+			li.fragment data-fragment-index="5" Requiere coordinar accesos
+
+
+		p
+		span.fragment.fade-in data-fragment-index="0" 
+			span.fragment.fade-out data-fragment-index="1"
+				small Fight!
+
+		p Paso de Mensajes
+		p.fragment data-fragment-index="2" Procesos se envían mensajes
+		ul
+			li.fragment data-fragment-index="4" Requiere <em>Syscall</em>s <code>send</code>/<code>recv</code>
+			li.fragment data-fragment-index="6" Fácil de programar para envíos pequeños (no provoca conflictos)
+
+
+	/section#ipc-shm_vs_mp-fig
+		/ includegraphics[width=8cm]{figs/01-3_12.pdf}
+
+
+section#ipc-_shm
+	h2 Memoria Compartida
+
+	section#ipc-shm
+		p ¿Escribir en memoria de otro proceso?
+
+		ul.fragment
+			li Procesos $A$ y $B$ deben <strong>acordar</strong> permitirse acceso
+			li Proceso $A$ designa una región de su espacio de memoria como <em>compartida</em>
+			li Proceso $B$ agrega esa región como parte de su espacio
+			li $A$ y $B$ se preocupan de coordinar los accesos
+
+		p.fragment API POSIX provee syscall para crear y exponer regiones de memoria compartida
+		ul.fragment
+			li <em>Memory-mapped files</em>
+			li <code>shm_open()</code>, <code>ftruncate()</code>, <code>mmap()</code>, <code>shm_unlink()</code>
+
+
+	section#ipc-shm-prod_cons
+		p Un problema clásico de coordinación
+
+		p
+			em Problema del productor y consumidor
+		ul.fragment
+			li Proceso <strong>productor</strong> produce información.
+			li Proceso <strong>consumidor</strong> consume información del productor.
+		pre
+			/ TODO: \includegraphics[width=8cm]{figs/01-ProdCons.png}
+		.fragment
+			p Variantes: con <strong>buffer limitado</strong> ó <strong>ilimitado</strong>
+			ul
+				li.fragment Con <strong>buffer limitado</strong> el productor puede tener que esperar
+
+
+
+	section#ipc-shm-prod_cons-code
+		p Buffer limitado (<em>bounded</em>) en memoria compartida
+		pre
+			code.hljs.lang-c
+				| #define BUFFER_SIZE 10
+				  
+				  typedef struct {
+				    /* ... */
+				  } item;
+				  
+				  item buffer[BUFFER_SIZE];
+				  int in = 0;     // proxima posicion libre
+				  int out = 0;    // primera posicion llena
+		p ¿Cuándo está lleno el buffer? ¿Cuándo está vacío?
+
+
+	section#ipc-shm-prod_cons-code-prod
+		p Proceso <strong>productor</strong>
+		pre
+			code.hljs.lang-c
+				| item next_product;
+				  while(true) {
+				    next_product = produce();
+				    while ( ((in+1)%BUFFER_SIZE) == out);  /* !!! */
+				    
+				    buffer[in] = next_product;
+				    in = (in+1)%BUFFER_SIZE;
+				  }
+
+
+	section#ipc-shm-prod_cons-code-cons
+		p Proceso <strong>consumidor</strong>
+
+		pre
+			code.hljs.lang-c
+				| item next_consumed;
+				  
+				  while(true) {
+				    while(in == out); /* !!! */
+				    
+				    next_consumed = buffer[out];
+				    out = (out+1)%BUFFER_SIZE;
+				    
+				    consume(next_consumed);
+				  }
+		p ¿Cuántos ítemes puede haber como máximo en el <em>buffer</em>?
+
+
+
+section#ipc-_mp
+	h2 Paso de mensajes
+
+	section#ipc-mp
+		p.fragment Abstracción de <em>mensaje</em>. Dos primitivas:
+
+		ul.fragment
+			li <code>send(message)</code>
+			li <code>receive(message)</code>
+
+		p.fragment ¿Cómo habilitar la comunicación? Varios aspectos a decidir
+		ul
+			li.fragment Comunicación directa o indirecta
+			ul
+				li.fragment <code>send(P, message)</code>, <code>recv(Q, message)</code>, <code>recv(&id, message)</code>
+				li.fragment <code>send(A, message)</code>, <code>recv(A, message)</code>
+			li.fragment Comunicación síncrona o asíncrona
+
+
+	section#ipc-mp-d-u
+		p Comunicación directa vs indirecta
+
+		p.fragment data-fragment-index="0" Con <strong>comunicación directa</strong>, cada proceso debe conocer el <em>nombre</em> del otro
+		ul.fragment
+			li <code>send(P, message)</code>
+			li <code>receive(Q, message)</code>
+		p.fragment Este esquema es <strong>simétrico</strong><span class="fragment">. Variante <em>asimétrica</em>: <code>receive(&id, message)</code></span>
+
+		p.fragment data-fragment-index="0" Con <strong>comunicación indirecta</strong> utiliza abstracción de <em>mailbox</em> o <em>port</em>
+		ul.fragment
+			li <code>send(A, message)</code>
+			li <code>receive(A, message)</code>
+		p.fragment Ambos deben poseer un referencia al <em>mailbox</em> <code>A</code>
+
+
+	section#ipc-mp-sync
+		p Comunicación síncrona vs asíncrona
+
+		p.fragment Tanto <code>send()</code> como <code>receive()</code> pueden ser <strong>bloqueantes</strong> (síncrono) o <strong>no bloqueantes</strong> (asíncrono)
+
+		ul
+			li.fragment <code>send</code> <strong>bloqueante</strong>: bloquea hasta que el mensaje es recibido
+			li.fragment <code>send</code> <strong>no-bloqueante</strong>: envía y continúa
+			li.fragment <code>recv</code> <strong>bloqueante</strong>: espera hasta recibir un mensaje
+			li.fragment <code>recv</code> <strong>no-bloqueante</strong>: recibe un mensaje inmediatamente o <code>null</code>
+
+
+
+	section#ipc-mp-buf
+		p Comunicación <em>buffered</em> o <em>unbuffered</em>
+
+		p.fragment Sistemas Operativos usan <em>colas</em> temporales para transmitir mensajes
+		ul
+			li.fragment <strong>Cola de capacidad cero</strong>: fuerza <code>send()</code> bloqueante
+			li.fragment <strong>Cola de capacidad limitada</strong>: máximo de $n$ mensajes encolados mientras no sean recibidos.
+			ul
+				li.fragment Si se llena, el siguiente <code>send()</code> se bloquea
+			li.fragment <strong>Cola de capacidad ilimitada</strong>: cola potencialmente infinita
+
+
+section#ipc-hl
+	h2 Más comunicación inter-procesos
+	small Algunas técnicas de más alto nivel
+
+
+	section#ipc-hl-sockets
+		p.fragment <strong>Sockets</strong>: punto de comunicación de servicios
+
+		ul
+			li.fragment Indexado
+			li.fragment Comunicación cliente/servidor
+			li.fragment Para comunicación TCP o UDP
+			/ \footnote{Si no sabe que es esto, búsquelo en Google o espere hasta los capítulos de redes}
+		/ TODO: \includegraphics[width=6cm]{figs/01-3_20.pdf}
+
+
+	section#ipc-hl-rpc
+		p <strong>RPC</strong>: Remote Procedure Call
+		/ \footnote{Más de esto en IIC2523, Sistemas Distribuidos}
+		ul
+			li.fragment Comunicación a nivel de funciones (métodos) en otro proceso
+			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
+			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
+			li.fragment Mismo esquema usado por <em>Web Services</em>
+		/ \includegraphics[width=6cm]{figs/01-RPC.png}
+
+
+	section#ipc-hl-rpc
+		p <strong>Pipes</strong>: <em>tubo</em> entre dos procesos
+
+		ul
+			li.fragment  Unidireccionales o bidireccionales
+			li.fragment  Un proceso escribe en un extremo (<em>write-end</em>), y otro proceso lee desde el otro extremo (<em>read-end</em>)
+			li.fragment  Pueden ser tratadas como archivos
+			li.fragment  Implementación implícita en consolas. Ej: <code>ls | more</code>
+		/ TODO: \includegraphics[width=10cm]{figs/01-pipes.png}
+
+
+section#summary
+	h2 Resumen: Procesos
+	/ \framesubtitle{Algunos puntos clave}
+
+	section#summary-proc
+		p Procesos
+		ul
+			li.fragment  Programa en ejecución + recursos
+			li.fragment  Pasan por estados
+			li.fragment  Representados por PCBs
+			li.fragment  Proceso que no está en ejecución se mantiene en una cola
+			/ li.fragment  <em>Scheduler</em> decide qué proceso debe ejecutar
+			li.fragment  Pueden crear otros procesos, estableciendo relación <em>padre-hijo</em>
+			li.fragment  Pueden comunicarse usando varios métodos
+
+
+
+/ Frame
+  //   \frametitle{Desafío \#1: Fork de Procesos}
+  //   %\framesubtitle{Algunos puntos clave}
+  //
+  //   \begin{enumerate}
+  //     li.fragment  Entrar a sitio del curso en \url{http://edx.ing.puc.cl}.
+  //     li.fragment  Construir un código único en C que cree un proceso que permita crear un árbol binario de procesos con $3$ niveles.
+  //       ul
+  //         li.fragment  Nivel 1: Proceso padre, $P_0$ crea dos hijos $P_1$, $P_2$
+  //         li.fragment  Nivel 2: $P_1$ y $P_2$ crean dos hijos cada uno
+  //         li.fragment  Nivel 3: Procesos hoja imprimen su PID, su PPID, y un mensaje de despedida.
+  //         li.fragment  Cada proceso padre debe esperar a los hijos
+  //         li.fragment  Cuando todos los descendientes han terminado, el padre debe mostrar la hora actual (<code>date</code>)
+  //         li.fragment  Bonus si funciona para $N$ niveles
+  //     li.fragment  Pueden hacerlo en conjuntos de $N$, $1 \leq N \leq 3$.
+
+
+
+
+section#threads
+	h2 Threads
+
+	section#threads-_init
+		h2 <em>Threads</em> y <em>Multicores</em>
+
+	section#threads-init
+		p <strong><em>Thread</em></strong>: Como un proceso, pero más liviano.
+
+		p.fragment Unidad básica de uso de CPU
+		.fragment
+			ul
+				li.fragment  <em>Thread ID</em> (<strong>tid</strong>)
+				li.fragment  Program Counter
+				li.fragment  Registros
+				li.fragment  <em>Stack</em>
+		p.fragment ¿y el resto?&hellip; <span class="fragment">compartido con un proceso</span>
+
+
+
+	section#threads-mt
+		p <em>Single-threading</em> vs <em>Multi-threading</em>
+
+		p.fragment Procesos pueden tener uno o más <em>threads</em>
+		/ TODO: \includegraphics[width=10cm]{figs/01-4_01.pdf}
+
+
+	section#threads-mt-1
+		p <em>Multi-threading</em>
+
+		ul
+			ul
+			li.fragment  Proceso son unidades <em>pesadas</em>
+			li.fragment  <em>Threads</em> pueden ejecutar parte del código de un proceso
+			ul
+				li.fragment  Concurrencia real en la medida que hayan múltiples <em>core</em>s
+			li.fragment  Un <em>web browser</em> puede:
+			ul
+				li.fragment  Recuperar y desplegar imágenes
+				li.fragment  Hacer <em>parsing</em> de HTML
+				li.fragment  Proponer opciones de autocompletado mientras se escribir
+				li.fragment  Ejecutar corrector ortográfico mientras se escribe
+
+		p.fragment Si voy a ejecutar parte del mismo código, talvez no necesito crear un proceso nuevo.
+		p.fragment Es como hacer <code>fork()</code> ¿y &hellip; hacer <code>exec()</code>?
+
+
+
+	section#threads-mt-2
+		p <em>Multi-threading</em>
+
+		p Otro caso: un <em>web server</em> necesita atender múltiples conexiones
+		ul
+			li.fragment  ¿Espero atender completamente una antes de recibir la siguiente?
+		/ TODO: \includegraphics[width=10cm]{figs/01-4_02.pdf}
+
+
+	section#threads-mt-3
+		p <em>Multi-cores</em> y <em>Multi-threading</em>
+
+		p.fragment Con <em>single-core</em> solo un <em>thread</em> de un proceso puede ejecutar al mismo tiempo
+		.fragment
+			p ¿Cómo se provee la ilusión de que múltiples <em>threads</em> ejecutan simultáneamente?
+			p &hellip; ¡pero ahora hay <strong>multi-cores</strong>!
+		ul.fragment
+			li Múltiples <em>threads</em> avanzan: <strong>concurrencia</strong>
+			li Múltiples <em>threads</em> ejecutan simultáneamente: <strong>paralelismo</strong>
+
+
+section#ll
+	h2 Paralelismo
+
+	section#ll-Amdahl
+		p <em>Multi-cores</em> y <em>Multi-threading</em>
+		p ¿Cuánto gano?
+
+		p.fragment Gene Amdahl propuso una fórmula (1967) para calcular la mejora <em>potencial</em> de un programa
+				que contiene partes paralelizables y partes secuenciales
+
+		p.fragment style="font-size:1.5em;" $$\mathit{speedup} \leq \frac{1}{s + \frac{\bar{s}}{N}}$$
+
+
+	section#ll-Amdahl-d-0
+		p Midiendo paralelismo
+
+		ul
+			li $s$: Fracción de tiempo usado en de código no-paralelizable (secuencial).
+			li $N$: Número de <em>cores</em>
+
+		p El <em>speedup</em> es un valor positivo que indica la mejora de un código paralelo respecto a su versión secuencial
+		p $$\mathit{speedup} = \frac{T_{\mathit{secuencial}}}{T_{\mathit{paralelo}}} = \frac{T_{1}}{T_{N}}$$
+
+		p.fragment Ejemplo: $\mathit{speedup}=2$ signfica que $T_{1}=2T_{N}$, dos veces más rápido
+
+
+	section#ll-Amdahl-d-1
+		p Sea $T_N$ el tiempo de ejecución con $N$ cores, y $s \in (0, 1]$ la fracción de código estrictamente secuencial
+
+		p.fragment El tiempo en $N$ cores se puede definir como:
+		ul
+			li.fragment
+				| $$T_N = T_1 s + \frac{T_1 \bar{s}}{N} = T_1 \left( s + \frac{\bar{s}}{N} \right)$$
+
+		p.fragment Por lo tanto el <em>speedup</em> es:
+		p.fragment
+			| $$\mathit{speedup} = \frac{T_1}{T_N} = \frac{T_1}{T_1 \left( s + \frac{\bar{s}}{N} \right)} = \frac{1}{s + \frac{\bar{s}}{N}}$$
+
+
+section#mt
+	h2 <em>Multi-threading</em>
+
+	section#mt
+		p <em>Multi-threading</em>
+		span.fragment.fade-out data-fragment-index="0"
+			small ¿Fácil?
+
+		p.fragment  data-fragment-index="0" Surgen desafíos para poder aprovechar el <em>multithreading</em>
+		ul.fragment data-fragment-index="1"
+			li <em>División de tareas</em>    ¿Qué tareas ejecuto en paralelo? Ideal: que sean independientes
+			li <em>Balance de carga</em>      Idealmente: tareas de tamaño similar
+			li <em>División de datos</em>     ¿Bajo qué criterio divido los datos entre <em>threads</em>?
+			li <em>Dependencias de datos</em> ¿Hay competencia por datos? ¿Necesito sincronizar accesos? ¿Puedo perder concurrencia?
+			li <em>Testing + Debugging</em>   ¿Cómo <em>debuggear</em> una aplicación <em>multithreaded</em>?
+
+
+	section#mt-dataModels
+		p Modelos de <em>multithreading</em>
+
+		p Dos tipos de <em>threads</em>
+		ul
+			li.fragment  <strong>User threads</strong>
+			ul
+				li.fragment  Manejados por una biblioteca de usuario
+				li.fragment  Sistema Operativo sólo ve procesos
+			li.fragment  <strong>Kernel threads</strong>
+			ul
+				li.fragment  Administrador por el Sistema Operativo (asignables a <em>core</em>s)
+				li.fragment  Soportados en (casi) todos los Sistemas Operativos contemporáneos
+
+		p.fragment ¿Cómo se relacionan <em>kernel</em> y <em>user threads</em>?
+
+
+	section#mt-dataModels-greenThreads
+		p <em>Many-to-one</em>
+
+		ul
+			li.fragment  + Manejo de <em>threads</em> en biblioteca de usuario
+			li.fragment  - Un <em>syscall</em> de un <em>thread</em> bloquea todo el proceso
+		/ \includegraphics[width=4cm]{figs/01-4_05.pdf}
+
+		br
+		p.fragment Solaris: biblioteca <em>green threads</em>
+
+
+	section#mt-dataModels-id
+		p <em>One-to-one</em>
+		ul
+			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
+			li.fragment  + Asignables a distintos <em>core</em>s
+			li.fragment  - Creación implica ejecutar <em>syscalls</em>
+			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
+		/ \includegraphics[width=6cm]{figs/01-4_06.pdf}
+		br
+		p.fragment Linux & Windows
+
+	section#mt-dataModels-m2m
+		p <em>Many-to-many</em>
+		ul
+			li.fragment  + Usuario pueden crear número ilimitado de <em>threads</em>
+			li.fragment  + Asignación de <em>user thread</em> a <em>kernel thread</em> se hace <em>on-demand</em>
+			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
+			li.fragment  - Creación implica ejecutar <em>syscalls</em>
+			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
+		/ \includegraphics[width=4cm]{figs/01-4_07.pdf}
+		br
+    p.fragment Linux & Windows.
+
+
+	section#mt-threadingLibs
+		p Bibliotecas de <em>threads</em>
+
+		p.fragment Tres principales:
+		ul.fragment
+			li POSIX Pthreads (kernel ó user)
+			li Windows Threads (kernel)
+			li Java threads (user)
+
+
+	section#mt-threadingLibs-pthreads
+		h5
+			code pthread
+
+		p POSIX standard IEEE 1003.1c (especificación)
+
+		p.fragment API para creación y sincronización de <em>thread</em>s.
+		p.fragment Implementaciones para Linux, Mac OS X, Solaris
+		ul
+			li.fragment  <code>pthread_t</code>, identificador
+			li.fragment  <code>pthread_create()</code>, creación de <em>thread</em>
+			li.fragment  <code>pthread_join()</code>, padre espera que hijo(s) termine(n)
+			li.fragment  <code>pthread_exit()</code>, termina el <em>thread</em> actual
+
+	section#mt-threadingLibs-winThreads
+		h5 Windows Threads
+
+		p Disponible nativamente en Windows API (kernel <em>thread</em>s)
+		ul
+			li.fragment  <code>HANDLE</code>, permite acceder al <em>thread</em> (puntero)
+			li.fragment  <code>CreateThread()</code>, creación de <em>thread</em>
+			li.fragment  <code>WaitForSingleObject()</code> padre espera que hijo termine
+			li.fragment  <code>WaitForMultipleObjects()</code> padre espera que hijo(s) termine(n)
+			li.fragment  <code>CloseHandle()</code>, borra el <em>thread</em> indicado
+
+
+	section#mt-threadingLibs-javaThreads
+		h5 Java Threads
+
+		p Implementado como biblioteca nativa en la JVM
+
+		p.fragment Se consideran <em>user thread</em>s ya que la JVM ejecuta sobre algún Sistema Operativo <em>host</em>
+		ul
+			li.fragment  Creación: extender clase <code>Thread</code> y hacer <em>override</em> del método <code>run()</code>
+			li.fragment  Creación: clase que implementa la interfaz <code>Runnable</code>
+			li.fragment  <em>Thread</em> es efectivamente creado al invocar <code>start()</code>
+			ul
+				li.fragment  Asigna memoria para el nuevo objeto <em>thread</em> en la JVM
+				li.fragment  Llama al método <code>run()</code> iniciando la ejecución del <em>thread</em>
+			li.fragment  Esperar que un <em>thread</em> hijo termine: <code>join()</code>
+
+
+	section#mt-threadingLibs-support
+		p Usar eficientemente <em>thread</em>s no es fácil.
+
+		p.fragment ¿Y si le dejamos el trabajo al compilador o bibliotecas?
+		ul
+			li.fragment  <em>Thread-pools</em>: piscinas de <em>threads</em> disponibles
+			ul.fragment
+				li  Windows API: <code>QueueUserWorkItem( &PoolFunction, &hellip;)</code>
+				li  Java: package <code>java.util.concurrent</code>
+			li.fragment  <code>OpenMP</code>: directivas para identificar regiones paralelas
+			ul.fragment
+				li  Popular en C, C++, FORTRAN
+				li  Número de <em>threads</em> elegidos dinámicamente (p.ej: $\#$cores)
+			li.fragment  <code>Grand Central Dispatch</code>
+			ul.fragment
+				li  Extensiones para C, C++
+				li  Usado en Mac OS X, y en iOS
+				li  Bloques de paralelismo: esencialmente funciones anónimas ($\lambda$)
+
+
+section#semantics
+	h2 Semántica de <code>fork</code>/<code>exec</code> y señales
+
+	p Aún quedan algunas situaciones "poco claras"
+	ul
+		li.fragment  Semántica de <code>fork()</code> y <code>exec()</code> en proceso <em>multithreaded</em>
+		ul
+			li.fragment  ¿Se duplican todos los <em>thread</em>s o solo el actual?
+			li.fragment  ¿<code>exec()</code> reemplaza todos los <em>thread</em>s?
+			/!ul
+				li.fragment  No se debería poder, el resto de los threads quedarían corruptos
+				li.fragment  Si se espera que funcione  debe ser creando un proceso nuevo y terminando el thread
+
+		li.fragment  Semántica de señales (<em>signal</em>s) en Unix, ¿quién la recibe?
+		ul
+			li.fragment  Un <em>thread</em>, aquél al cual se le aplica
+			li.fragment  A todos los <em>thread</em>s del proceso
+			li.fragment  A algunos <em>thread</em>s
+			li.fragment  Siempre al mismo <em>thread</em>
+
+
+
+section#summary-
+	h2 Resumen: <em>Threads</em>
+	ul
+		li.fragment  <em>Thread</em>: flujo de control básico dentro de un proceso
+		li.fragment  Múltiples <em>thread</em>s en el mismo proceso comparten espacio de memoria
+		li.fragment  <em>User thread</em>s: fáciles de crear, pero no visto por el Sistema Operativo
+		li.fragment  <em>Kernel thread</em>s: manejables por el Sistema Operativo, más costosos de crear
+		li.fragment  MacOSX, Windows, Linux, soportan <em>kernel thread</em>s y hacen <em>mapping</em> a <em>user thread</em>s
+		li.fragment  Bibliotecas de <em>thread</em>s más comunes: Pthreads, Windows threads, Java threads
+

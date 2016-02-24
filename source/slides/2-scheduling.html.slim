@@ -1,0 +1,522 @@
+---
+title: Scheduling
+layout: slide
+---
+
+
+section
+	h2 Scheduling
+	/  --------
+
+section
+	h2 Scheduling
+	/  ----------
+
+	section
+		p Planificación
+
+		p.fragment En todos los problemas en que los recursos no son suficientes es necesario revisar cómo se distribuyen, <span class="fragment"> y aunque sean infinitos igual hay que administrarlos para evitar conflictos.</span>
+		/! Hilbert's paradox
+		/! https://en.wikipedia.org/wiki/Hilbert%27s_paradox_of_the_Grand_Hotel
+
+		ul
+			li.fragment Préstamo de libros en la biblioteca
+			li.fragment Asignación de alumnos, cursos y salas
+			li.fragment Tareas y empleados
+		p.fragment Y dentro de lo que nos concierne,
+		ul
+			li.fragment Asignación de procesos a la CPU
+			li.fragment Uso de I/O por los procesos
+			ul
+				li.fragment Disco
+				li.fragment Memoria
+				li.fragment Red
+				li.fragment '/dev/*' audio, gpu,&hellip;
+				/! QoS
+
+
+section#cpuSched
+	h2 CPU-Scheduling
+	/  ----------
+section#cpuSched-init_
+	h2 CPU-Scheduling
+	/  ----------
+
+	section#cpuSched-init
+		p <strong>¡Multiprogramación y Time-sharing (<em>multitasking</em>)!</strong>
+
+		p.fragment Objetivo de tener multiprogramación:
+		ul.fragment
+			li <strong>Maximizar utilización de (una) CPU</strong>
+
+		p.fragment Objetivo de tener <em>multitasking</em>
+		ul.fragment
+			li <strong>Asignar tiempo de (una) CPU frecuentemente a todos los procesos</strong>
+
+
+		/p.fragment ¿Qué queremos?        <span class="fragment"><strong>¡Multiprogramación y Time-sharing (<em>multitasking</em>)!</strong></span>
+		/p.fragment ¿Cuándo lo queremos?  <span class="fragment"><strong>ASAP</strong></span>
+		.fragment
+			= image_tag 'images/cpuSched-mp-mt-now.png'
+		/p.fragment ¿Cómo lo conseguimos? <span class="fragment">Con <strong>¡planificación (<em>scheduling</em>)!</strong></span>
+
+	section#cpuSched-how
+		p Muchos procesos en estado <em>ready</em>
+
+		p.fragment &hellip; ¿qué hacer con ellos?
+		p.fragment <strong>¡Colas!</strong>
+
+
+	section#cpuSched-queues
+		p Colas de <em>scheduling</em>
+
+		p Múltiples colas
+		== image_tag '/images/figures/01-3_05.pdf.png'
+
+
+	section#cpuSched-queues-1
+		p El <em>Scheduling</em> puede ser visto como un sistema de <em>manejo de colas</em>
+
+		= image_tag 'images/figures/01-3_06.pdf.png'
+
+		p.fragment ¿Bajo qué criterio?
+		p.fragment $\longrightarrow$ <strong>algoritmos de <em>scheduling</em></strong>
+
+
+	section#cpuSched-levels
+		p Distintos <em>schedulers</em> en un SO
+
+		ul
+			li <em>Long-term Scheduler</em>   <span class="fragment">Admite procesos en la <em>cola ready</em>. Determina el <strong>grado de multiprogramación</strong>.</span>
+			li <em>Short-term Scheduler</em>  <span class="fragment">Selecciona procesos en la(s) cola <em>ready</em> a ejecutar.</span>
+			li <em>Medium-term Scheduler</em> <span class="fragment">Modificación temporal del grado de multiprogramación, haciendo <strong>swapping</strong></span>
+
+			/ \includegraphics[width=8cm]{figs/01-3_07.pdf}
+
+
+
+
+
+	section#cpuSched-thrsh
+		p ¿Y si estamos siempre haciendo <em>Scheduling</em> en vez de ejecutar programas?
+		/   \framesubtitle{i.e. ``exceso de burocracia''}
+		p.fragment <em>Scheduling</em> es importante para proveer <strong>multiprogramación</strong>
+		p.fragment &hellip; pero <em>scheduling</em> y <em>context switch</em> <strong>son sólo <em>overhead</em></strong>
+
+		ul
+			li.fragment ¿Qué pasa si el <em>scheduler</em> demora más tiempo de lo que toma el proceso?
+			li.fragment ¿Qué pasa si el <em>context switch</em> demora más tiempo de lo que toma el proceso?
+			li.fragment ¿Qué pasa si se le asigna poco tiempo a cada proceso?
+			li.fragment ¿Qué pasa si hay muchos procesos <em>ready</em>?
+
+		blockquote.fragment
+			| Contención de procesos se refleja en <strong>thrashing</strong>
+/
+  //   \onslide<8->{¿Los SS.OO. móviles permiten <em>multitasking</em>?}
+  //   ul
+  //     li.fragment  <9->{Hasta iOS 4, no había <em>multitasking</em> para procesos de usuasrio.}
+  //     li.fragment  <10->{Android usa <em>servicios</em>: <em>multitasking</em> para procesos de sistema, que ejecutan tareas en el <em>background</em>}
+
+	section#cpuSched-procLife
+		p Ejecución típica de un proceso:
+
+		p.fragment Dos etapas:
+		ul
+			li.fragment  Uso de CPU (CPU-burst)
+			li.fragment  Espera por I/O (I/O-burst)
+
+		p.fragment Procesos suelen estar dominados por uno u otro
+		ul.fragment
+			li.fragment  CPU-bound
+			li.fragment  I/O-bound
+		/ \includegraphics[width=4cm]{figs/01-6_01.pdf}
+
+	section#cpuSched-bursts
+		p ¿Cuánto dura típicamente un CPU-burst?
+
+		p.fragment No hay una respuesta única, pero&hellip;
+		/    \includegraphics[width=8cm]{figs/01-6_02.pdf}
+		p.fragment Duración de CPU-burst podría afectar el algoritmo de <em>scheduling</em>
+
+
+
+
+section#cpuSchedDesign
+	h2 Tipos de <em>Scheduling</em>
+
+	section#cpuSchedDesign-decisions
+		p Hay que tomar decisión de <em>scheduling</em> cuando:
+		ol.fragment
+			li Proceso pasa de <strong>Running</strong> a <strong>Waiting</strong>
+			li Proceso pasa de <strong>Running</strong> a <strong>Ready</strong>
+			li Proceso pasa de <strong>Waiting</strong> a <strong>Ready</strong>
+			li Proceso termina
+
+	section#cpuSchedDesign-decisions
+		p Dos tipos de <em>scheduling</em>
+
+		ul
+			li.fragment <em>Scheduling</em> con expropiación (<strong>preemptive</strong>)
+			ul
+				li.fragment Requiere interrupciones por <em>timer</em>
+				li.fragment Requiere cuidados de sincronización
+
+			li.fragment <em>Scheduling</em> sin expropiación (<strong>non-preemptive</strong>)
+			ul
+				li.fragment Requiere cooperación de los procesos (deben devolver la CPU pronto)
+				li.fragment Así que un programa puede (intencionalmente o no) tomar control permanente de la CPU
+				li.fragment Permiten un diseño más simple de Programas y Scheduler
+				ul
+					li.fragment Usado en Windows 3.1, MacOS (antes de X)
+					li.fragment También se conoce como <em>scheduling cooperativo</em>
+
+	section#cpuSchedDesign-criteria
+		p Criterios de <em>scheduling</em>
+
+		p.fragment ¿Qué algoritmo puede ser mejor?&hellip; <span class="fragment">depende</span>
+		ul.fragment
+			li [Uso de CPU]      Mantener la CPU lo más usada posible
+			li [Throughput]      Cantidad procesos atendidos por unidad de tiempo
+			li [Turnaround time] Tiempo total de un proceso, incluyendo esperas (wall-clock time)
+			li [Waiting time]    Tiempo de espera de un proceso en estado <strong>Ready</strong>
+			li [Response time]   Importante para sistemas interactivos
+
+		p.fragment ¿Qué tiempo es mejor minimizar?&hellip;
+		p.fragment ¿Tiempo promedio? ¿Tiempo máximo? ¿Varianza?
+
+section#cpuSchedAlgs
+	h2 Algoritmos de <em>Scheduling</em>
+
+section#cpuSchedAlgs-fcfs
+	h2 <em>First-Come First-Served</em> (FCFS)
+
+	p El más simple: una cola FIFO
+
+	p Ejemplo: Procesos en cola: $P=\{P_1,P_2,P_3\}$, con tiempos de ejecución (<em>burst-time</em>)
+		$T=\{T_1=24,T_2=3,T_3=3\}$ en milisegundos
+
+	ul
+		li.fragment  Tiempo promedio de espera, para el orden $P_1, P_2, P_3$ <span class="fragment">$\to 17$ms</span>
+		li.fragment  Tiempo promedio de espera, para el orden $P_2, P_3, P_1$ <span class="fragment">$\to 3$ms</span>
+
+	p.fragment Non-preemptive
+	ul
+		li.fragment  +Simple
+		li.fragment  -Poco predecible. Procesos CPU-bound pueden bloquear a los I/O-bound, 
+			bajo una secuencia ``desafortunada'' de llegada
+
+
+section#cpuSchedAlgs-sjf
+	h2 <em>Shortest-Job First</em> (SJF)
+
+	section#cpuSchedAlgs-sjf-init
+		p El más corto primero
+
+		p.fragment Ejemplo: Procesos en cola: $P=\{P_1,\cdots, P_4\}$, 
+												$T=\{T_1=6,T_2=8,T_3=7,T_4=3\}$
+		ul.fragment
+			li  Tiempo promedio de espera: <span class="fragment">$\to 7$ms</span>
+			li  Con FCFS:                  <span class="fragment">$\to 10.25$ms</span>
+
+		p
+		ul.fragment
+			li  +¡Óptimo! en tiempo de espera promedio (demostrable)
+			li  -¿Cómo saber cuánto se tomará cada proceso?
+			ul
+				li.fragment  En <em>long-term scheduling</em> usuarios pueden especificar tiempo máximo
+				li.fragment  En <em>short-term scheduling</em> hay que aproximarlo
+
+
+	section#cpuSchedAlgs-sjf-appr
+		/ TODO: Iván Torres
+		p Supuesto: el próximo <em>burst</em> durará lo mismo que el anterior
+
+		p.fragment Método de aproximación: <strong>promedio exponencial</strong> (<em>exponential average</em>) sobre los <em>burst</em> anteriores
+
+		.fragment
+			p Sea $t_n$ el tiempo que tomó el $n$-ésimo <em>burst</em>, y $\tau_{n+1}$ el valor predicho.
+			p Se define, con $\alpha \in [0, 1]$:
+			p $$ \tau_{n+1} = \alpha t_n + (1-\alpha)\tau_n $$
+
+
+		p.fragment $\alpha$ determina "el peso de la historia":
+		ul
+			li.fragment = '$ \alpha=0 \Rightarrow \tau_{n+1} = \tau_n $'
+			li.fragment = '$ \alpha=1 \Rightarrow \tau_{n+1} = t_n    $'
+
+		.fragment
+			p Expansión:
+			p $$\tau_{n+1} = \alpha t_n + (1-\alpha)\alpha t_{n-1} + \cdots + (1-\alpha)^j \alpha t_{n-j} + \cdots (1-\alpha)^{n+1}\tau_0$$
+
+
+
+	/section#cpuSchedAlgs-sjf-appr-1
+		p aoeu
+
+/ Frame
+  //   \frametitle{<em>Shortest-Job First</em> (SJF)}
+  //   \framesubtitle{El pronóstico del tiempo}
+  // 
+  //   $\alpha = 1/2, \tau_0=10$
+  //   
+  //   \begin{center}
+  //     \includegraphics[width=8cm]{figs/01-6_03.pdf}
+  //   \end{center}
+  // 
+  // 
+  // 
+  // \end{frame}
+  // 
+  // %---------------------------------------------------------------------
+
+
+	section#cpuSchedAlgs-sjf-add
+		/ TODO: Iván Torres
+		p ¿Qué hacer cuando llega un proceso nuevo?
+
+		.fragment
+			p Decidir en base al <strong>tiempo restante</strong>
+			p Ejemplo
+			blockquote.fragment
+				| $P=\{P_1,P_2,P_3,P_4\}$,
+				  tiempos de llegada $\{0,1,2,3\}$
+				  $T=\{8,4,9,5\}$  
+
+		ul
+			li Ejecución <em>preemptive</em>:     <span class="fragment">$\to 6.50$ms </span>
+			li Ejecución <em>non-preemptive</em>: <span class="fragment">$\to 7.75$ms</span>
+
+
+
+section#cpuSchedAlgs-pri
+	h2 <em>Scheduling</em> con prioridades
+
+	section#cpuSchedAlgs-pri-init
+		p.fragment Cada proceso tiene asociada una <strong>prioridad</strong>
+
+		ul.fragment
+			li  Se atienden por orden de <strong>prioridad</strong>
+			li  Prioridades iguales: FCFS
+			li  SJF es un <em>caso particular</em> de este algoritmo (¿por qué?)
+			li  Muchos criterios para definir prioridades
+
+		p.fragment Puede ser <em>non-preemptive</em> o <em>preemptive</em> (si llega uno con mayor prioridad, ejecuta de inmediato)
+
+		ul
+			li.fragment  -Inanición de los que tengan baja prioridad
+
+
+
+section#cpuSchedAlgs-rr
+	h2 <em>Round-Robin</em> (RR)
+
+	section#cpuSchedAlgs-rr-init
+		p.fragment Ideal para <em>time-sharing</em>
+
+		//   \onslide<2->{
+		//   FCFS + Preemption + 
+		//   <em>time quantum</em> o <em>time slice</em> $q$: unidad de tiempo\footnote{Típicamente $10$ a $100$ms}
+		//   Cada proceso recibe un $q$ms para ejecutar.
+		//   }
+
+		//   \onslide<3->{
+		//     Ejemplo: $P=\{P_1,P_2,P_3\}$,
+		//            $T=\{24,3,3\}$  
+		//   ul
+		//     li  Tiempo de espera promedio: $\to 5.66$ms
+		//   }
+
+		ul.fragment
+			li  +Cada proceso recibe $1/n$ de CPU, para $n$ procesos
+			li  +Ningún proceso espera más de $(n-1)\times q$ para ejecutar
+			li  Altamente dependiente de la elección de $q$ (puede degenerar a FCFS)
+
+
+section#cpuSchedAlgs-mlq
+	h2 <em>Multi-level queue</em> (MLQ)
+
+	section#cpuSchedAlgs-mlq-init
+		p Múltiples colas, divididas por tipo de proceso.
+
+		= image_tag 'images/figures/01-6_06.pdf.png'
+
+		p.fragment Varias alternativas:
+		ul
+			li.fragment  Prioridades entre colas, FCFS dentro de cada cola
+			li.fragment  RR entre colas, con quántums diferenciados
+
+/ Frame
+  //   \frametitle{Colas Multinivel con Feedback (MLFQ)}
+  // 
+  //   Colas multinivel es muy rígido: procesos no cambian de cola
+  // 
+  //   \begin{center}
+  //     \includegraphics[width=5cm]{figs/01-6_07.pdf}
+  //   \end{center}
+  //   
+  //   ul
+  //     li.fragment  Colas con quántum diferenciado. 
+  //     li.fragment  Proceso que no terminan en su quántum pasan a cola inferior
+  //     li.fragment  Proceso que entregan la CPU permanecen la misma cola
+  //     li.fragment  Dentro de cada cola, <em>scheduling</em> es FCFS
+  //     li.fragment  Favorece procesos con CPU <em>burst</em> cortos
+  //     li.fragment  Eventualmente se puede promover de nivel a los que han esperado más
+  //   \end{itemize}
+  // 
+  // \end{frame}
+  // %---------------------------------------------------------------------
+
+
+
+
+section#cpuSchedAlgs-mp
+	h2 <em>Scheduling</em> en multi-procesador
+
+	section#cpuSchedAlgs-mp-init
+		p Para un procesador no hay una mejor solución &hellip;
+
+		p.fragment para múltiples procesadores es más difícil
+
+		ul
+			li.fragment Modo asimétrico: distintos tipos de procesos a distintos cores
+			li.fragment Modo simétrico (SMP). Ampliamente soportado: Windows, Linux, MacOSX
+			ul.fragment
+				li.fragment  ¿colas por procesador o cola única?
+				li.fragment  evitar que dos procesadores ejecuten el mismo proceso
+
+	section#cpuSchedAlgs-mp-afinity
+		p Es más fácil seguir ejecutando en el mismo núcleo que en otro.
+		p.fragment Pero es mejor ejecutar en otro si está libre.
+
+		p.fragment <strong>Processor Affinity</strong>
+		ul.fragment
+			li Considera efectos de <em>cache</em>
+			li Evita perder el chache L1 y ensuciar el resto
+
+		p.fragment <strong>Load Balancing</strong>
+		p.fragment Objetivo: mantener carga similar entre procesadores
+		ul
+			li.fragment Si hay procesadores desocupados, algunos procesos son migrados a ellos.
+			li.fragment Modo <em>push</em> ó <em>pull</em>
+			li.fragment Hay núcleos más cercanos que otros (físicamente y por cache)
+
+		p.fragment Son objetivos conflictivos ¿cuál escoger y cuándo?
+
+
+section#cpuSchedAlgs-currentOS
+	h2 <em>Scheduling</em> en algunos SO
+
+	section#cpuSchedAlgs-currentOS_
+
+	section#cpuSchedAlgs-win
+		h2 Windows
+		ul
+			li.fragment  3.1, 95, 98. Preemptive para 32-bit. Cooperative para 16-bit.
+			li.fragment  NT-based. MLFQ con 32 prioridades.
+			ul
+				li.fragment  16 prioridades normales
+				li.fragment  16 prioridades <em>Real-Time</em>
+				li.fragment  S.O. puede modificar prioridad para mejorar interactividad
+
+	section#cpuSchedAlgs-macOS
+		h2 Mac OS
+
+		ul
+			li.fragment  Hasta MacOS 9: cooperativo. RR entre procesos.
+			li.fragment  MacOSX: MLFQ con 4 prioridades
+			ul
+				li.fragment  Normal
+				li.fragment  System high-priority
+				li.fragment  Kernel mode only
+				li.fragment  Real-time
+
+	section#cpuSchedAlgs-linux
+		h2 Linux
+		ul
+			li.fragment  Linux 2.4. $O(n)$ <em>scheduler</em>. MLFQ. <em>Quantum</em>s no usados por completo se agregan a la siguiente ronda.
+			li.fragment  Linux 2.6.0 a 2.6.22. $O(1)$ <em>scheduler</em>. Mejor soporte para SMP, mal soporte para tareas interactivas.
+			ul
+				li.fragment  Tiempo de selección independiente del número de procesos
+			li.fragment  Linux 2.6.23&hellip;+4.5 <em>Completely Fair Scheduler</em> (CFS).
+
+		p.fragment  Se puede cambiar el scheduler de CPU y (spoiler) el de cada disco.
+		ul
+			li.fragment  Para escritorios muchos prefieren el <em>Brain Fuck Scheduler</em> (BFS).
+
+
+
+/ Frame
+  //   \frametitle{Resumen: <em>Scheduling</em>}
+  //   \frametitle{Algunos puntos importantes}
+  //   
+  //   ul
+  //     li.fragment  <em>Scheduler</em> permite seleccionar el próximo proceso del conjunto <em>ready</em>
+  //     li.fragment  Debe ser una decisión rápida
+  //     li.fragment  Diferentes métricas para comparar algoritmos de <em>scheduling</em>
+  //     li.fragment  Algoritmos clásicos:
+  //       ul
+  //         li.fragment  FCFS: simple, tiempo de espera impredecible
+  //         li.fragment  SJF: óptimo en tiempo de espera, difícil de predecir
+  //         li.fragment  RR: mejor para <em>time-sharing</em>, depende de $q$
+  //         li.fragment  Prioridades: con expropiación, apropiado para <em>real-time</em>
+  //         li.fragment  Multicolas, MLFQ: flexible y base para <em>schedulers</em> reales
+  //       \end{itemize}  
+  //     li.fragment  <em>Scheduling</em> para multiprocesadores
+  //       ul
+  //         li.fragment  Arquitecturas SMP requiere <em>tradeoff</em> entre afinidad y balance de carga
+  //       \end{itemize}
+  //   \end{itemize}
+  // 
+  // \end{frame}
+  // %---------------------------------------------------------------------
+  // \section{Sincronización de Procesos}
+  // 
+/ Frame
+  //   \frametitle{Sincronización de Procesos}
+  // 
+  //   Cosas buenas:
+  //   ul
+  //     li.fragment  Tener <em>concurrencia</em> y <em>paralelismo</em>
+  //     li.fragment  Crear <em>threads</em> livianos sobre el mismo espacio de memoria (no necesita <em>syscall</em> de <em>shared memory</em>) 
+  //   \end{itemize}
+  //   Pero &hellip;
+  //   ul
+  //     li.fragment  Hay que coordinarlos (¿por qué?)
+  //   \end{itemize}
+  //   
+  // \end{frame}
+  // 
+  // %---------------------------------------------------------------------
+/ Frame[fragile]
+  //   \frametitle{Regreso al Productor/Consumidor}
+  //   Solución con <em>threads</em> productor y consumidor. 
+  //   Variable <code>counter</code> inicializada en <code>0</code> en memoria compartida.
+  //   
+  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=true]{c}
+  //   /** Productor **/
+  //   while(true) {
+  //     next_product = produce();
+  //     while (counter == BUFFER_SIZE); /* do nothing */
+  //     buffer[in] = next_product;
+  //     in = (in+1)%BUFFER_SIZE;
+  //     counter++;
+  //   }
+  // \end{minted}
+  // 
+  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=true]{c}
+  //   /** Consumidor **/  
+  //   while(true) {
+  //     while(counter == 0); /* do nothing */
+  //     next_consumed = buffer[out];
+  //     out = (out+1)%BUFFER_SIZE
+  //     counter--;
+  //     consume(next_consumed);
+  //   }
+  // \end{minted}  
+  // 
+  // \end{frame}
+  // 
+  // %---------------------------------------------------------------------
+
+/ Frame[fragile]
+  //   \frametitle{Regreso al Productor/Consumidor}
