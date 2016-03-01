@@ -9,13 +9,8 @@ section
 	h2 Estructura de un Sistema Operativo
 	/  ----------------------------------
 
-// section
-//	 \frametitle{El Sistema Operativo en un Sistema Computacional}
-//	 \framesubtitle{<em>Software}</em>
-
-//	 \begin{center}
-//		 \includegraphics[width=9cm]{figs/00-ComponentesSistComp.png}
-//	 \end{center}
+	section
+		== image_tag '/images/figures/00-ComponentesSistComp.png', :width=>"50%"
 
 
 
@@ -291,8 +286,7 @@ section
 
 	section
 		br
-		br
-		= tag :img, :src => "/images/404td.jpg", :maxwidth => "60%"
+		= image_tag "/images/figures/00-1_10.pdf.png", :width=>"60%"
 
 		p Modo dual suportado por hardware: mode bit (0=kernel/1=user)
 
@@ -300,30 +294,24 @@ section
 		p.fragment Kernel mode, a.k.a. (Privileged | Supervised | Monitor | System) mode
 
 		blockquote.fragment
-			| Instrucciones privilegiadas<br/>
-			| Solo pueden ejecutar en modo kernel <br/>
+			| Instrucciones privilegiadas solo pueden ejecutar en modo kernel <br/>
 			| Si se intenta ejecutar en mode=1, el hardware no la ejecuta y genera una interrupción para el S.O. Evita acceso indebido de otros usuarios
 
 		p.fragment Ej: cambio mode bit, llamada I/O, manejo timer, manejo de interrupciones
 
 
 	section
-		h4 Multi-modos
-
-		p Más de dos modos de operación, ¿para qué?
+		p Multi-modos: Más de dos modos de operación, ¿para qué?
 
 		ul
 			li.fragment Útil para virtualización
 			li.fragment VMM (<em>Virtual Machine Manager</em>) opera en modo intermedio
-			div.fragment
-				ul
-					li Menos privilegios que S.O.
-					li Más privilegios que cada <em>Virtual Machine</em>
+			ul.fragment
+				li Menos privilegios que S.O.
+				li Más privilegios que cada <em>Virtual Machine</em>
 
-		br
-		div.fragment
-			// figs/00-1_20.pdf
-			= tag :img, :src => "/images/404td.jpg", :maxwidth => "60%"
+		.fragment
+			== image_tag "images/figures/00-1_20.pdf.png", :width=>"40%"
 
 
 	section
@@ -360,7 +348,7 @@ section
 		ul
 			li Administración de procesos
 			li Administración de memoria
-			li Administración de dispositivos de E/S
+			li Administración de dispositivos de I/O
 
 
 
@@ -412,9 +400,7 @@ section
 // %section
 // %	\frametitle{Tarea: Administración de Almacenamiento}
 // %
-// %	\begin{center}
-// %		\includegraphics[width=3cm]{figs/00-1_09.pdf}
-// %	\end{center}
+// %	== image_tag '/images/figures/00-1_09.pdf.png'
 // %
 // %	Distribución de memoria en un sistema de multiprogramación
 // %
@@ -473,7 +459,7 @@ section
 // %	Existe por la diferencia en los accesos a la jerarquía de memoria
 // %
 // %	\begin{center}
-// %		\includegraphics[width=6cm]{figs/00-1_04.pdf}
+// %		/== image_tag [width=6cm]{images/figures/00-1_04.pdf.png}
 // %	\end{center}
 
 // %section
@@ -504,7 +490,7 @@ section
 // %	Tiempos de acceso
 // %
 // %	\begin{center}
-// %		\includegraphics[width=10cm]{figs/00-1_11.pdf}
+// %		/== image_tag [width=10cm]{images/figures/00-1_11.pdf.png}
 // %	\end{center}
 
 
@@ -549,9 +535,7 @@ section
 	section
 		p At a glance...
 
-		br
-		/ figs/00-2_01.pdf
-		= tag :img, :src => "/images/404td.jpg", :maxwidth => "60%"
+		= image_tag '/images/figures/00-2_01.pdf.png', :width => "80%"
 
 
 
@@ -641,27 +625,28 @@ section
 		ul
 			li.fragment CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
 			li.fragment X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
+			li.fragment <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
 
-		= tag :img, :src => "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
+		= image_tag "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
 
 
 	section
-		= tag :img, :src => "/images/figures/00-CDE.png", :style => 'max-width:50%; max-height:50%'
+		= image_tag "/images/figures/00-CDE.png", :style => 'max-width:50%; max-height:50%'
 		p CDE (Common Desktop Environment)
 
 
 	section
-		= tag :img, :src => "/images/figures/00-XFCE.png", :style => 'max-width:50%; max-height:50%'
+		= image_tag "/images/figures/00-XFCE.png", :style => 'max-width:50%; max-height:50%'
 		p Xfce
 
 
 	section
-		= tag :img, :src => "/images/figures/00-GNOME.png", :style => 'max-width:50%; max-height:50%'
+		= image_tag "/images/figures/00-GNOME.png", :style => 'max-width:50%; max-height:50%'
 		p GNOME
 
 
 	section
-		= tag :img, :src => "/images/figures/00-KDE.png", :style => 'max-width:50%; max-height:50%'
+		= image_tag "/images/figures/00-KDE.png", :style => 'max-width:50%; max-height:50%'
 		p KDE (K Desktop Environment)
 
 
@@ -713,12 +698,11 @@ section
 
 
 	section
-		/  figs/00-2_06.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
 
 
 	section
-		= tag :img, :src => "/images/figures/00-syscalls.png", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-syscalls.png", :style => 'max-width:50%; max-height:50%'
 
 
 
@@ -791,8 +775,8 @@ section
 			li.fragment Intel 8088 no tenía protección de <em>dual mode</em>
 			li.fragment ¿Problemas? <span class="fragment">Seguridad</span>
 
-		/ 00-2_11.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		br
+		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right;", :height=>"25%", :width=>"25%"
 
 
 
@@ -803,8 +787,7 @@ section
 	section
 		p UNIX: Estructura monolítica diseñada de acuerdo al <em>hardware</em>
 
-		/ 00-2_12.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%'
 
 		p.fragment ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
 
@@ -823,8 +806,7 @@ section
 			li.fragment Desventaja: dificultad de definición de capas (¿a qué nivel va qué funcionalidad?)
 			li.fragment Desventaja: eficiencia (¿cuántas capas?)
 
-		/ 00-2_13.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-2_13.pdf.png", :width => '25%'
 
 
 
@@ -836,16 +818,15 @@ section
 		p <strong>Mach</strong>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
 
 		ul
-			li          Set de funcionalidades mínimas
-			li          Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
+			li.fragment Set de funcionalidades mínimas
+			li.fragment Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
 			li.fragment Ventaja: Sistemas pequeño y fácil de portar
-			li.fragment Desventaja: Más interacción a través de <em>syscalls</em>!
+			li.fragment Desventaja: Mucha más interacción a través de <em>syscalls</em>!
 			li.fragment <strong>Darwin</strong> (MacOS X kernel) basado parcialmente en modelo Mach
 			li.fragment <strong>Windows NT</strong> usaba microkernel pero era más lento que Win95.
-			li.fragment <strong>GNU/Hurd</strong> aún es más lento que Linux.
+			li.fragment <strong>GNU/Hurd</strong> es más lento que Linux.
 
-		/ 00-2_14.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-2_14.pdf.png", :width=>'50%'
 
 
 
@@ -863,8 +844,7 @@ section
 			li Solaris, Linux, MacOS X, Windows
 			li Ej: kernel con soporte de manejo de archivo + módulos por cada <em>filesystem</em>
 
-		/ 00-2_15.pdf
-		= tag :img, :src => "/images/404td.jpg", :style => 'max-width:60%; max-height:60%'
+		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%'
 
 
 
@@ -888,15 +868,12 @@ section
 // %	ul
 // %		li <strong>Cocoa</strong>: API para Objective-C
 // %		li Kernel: Mach microkernel + BSD Unix Kernel
-// %			ul
-// %				li Mach: manejo de memoria, RPC, IPC, paso de mensajes, <em>threads</em>
-// %				li BSD: CLI, networking, sistemas de archivos, API POSIX
-// %
+// %		ul
+// %			li Mach: manejo de memoria, RPC, IPC, paso de mensajes, <em>threads</em>
+// %			li BSD: CLI, networking, sistemas de archivos, API POSIX
 // %		li Módulos cargables: <strong>kernel extensions</strong>
 // %
-// %	\begin{center}
-// %		\includegraphics[width=7cm]{figs/00-2_16.pdf}
-// %	\end{center}
+// %	== image_tag 'images/figures/00-2_16.pdf.png'
 
 
 
@@ -908,9 +885,7 @@ section
 // %		li Media: soporte gráfico + audio + video
 // %		li Core: kernel basado en Mac OS X
 // %
-// %	\begin{center}
-// %		\includegraphics[width=4cm]{figs/00-2_17.pdf}
-// %	\end{center}
+// %	== image_tag 'images/figures/00-2_17.pdf.png'
 
 
 
@@ -922,7 +897,5 @@ section
 // %		li Implementación de máquina virtual <strong>Dalvik</strong>
 // %		li Frameworks para desarrollo: webkit, SQLite, libc
 // %
-// %	\begin{center}
-// %		\includegraphics[width=6cm]{figs/00-2_18.pdf}
-// %	\end{center}
+// %	== image_tag 'images/figures/00-2_18.pdf.png'
 

@@ -50,7 +50,7 @@ section
 				li.fragment Variables globales
 			li.fragment Heap
 			p.fragment Memoria asignada dinámicamente (durante la ejecución)
-		/ TODO: includegraphics[width=3cm]{figs/01-3_01.pdf}
+		== image_tag '/images/figures/01-3_01.pdf.png'
 
 
 
@@ -71,7 +71,7 @@ section#states
 
 
 	section#states-automata
-		/ TODO: includegraphics[width=8cm]{figs/01-3_02.pdf}
+		== image_tag '/images/figures/01-3_02.pdf.png'
 		p.fragment ¡Un autómata!
 
 
@@ -124,15 +124,15 @@ section#repr
 			li.fragment Contabilidad (<em>accounting</em>)
 			li.fragment Información de I/O: archivos y dispositivos abiertos, &hellip;
 
-		/ \includegraphics[width=3cm]{figs/01-3_03.pdf}
-		/ \onslide<10->{Miremos en <code>include/linux/sched.h</code>}
+		== image_tag '/images/figures/01-3_03.pdf.png'
+		p.fragment Miremos en <code>include/linux/sched.h</code>
 
 
 	/section#repr-contextSwitch
 		h3 Cambio de un proceso a otro
 		/  ---------------------------
 		p El cambio de procesos se conoce como <strong>Context Switch</strong>
-		/ includegraphics[width=8cm]{figs/01-3_04.pdf}
+		== image_tag '/images/figures/01-3_04.pdf.png'
 
 
 
@@ -253,7 +253,7 @@ section#creation
 			li.fragment El padre conoce el <strong>pid</strong> del hijo
 			li.fragment El padre podría seguir ejecutando y crear más hijos
 			li.fragment &hellip; o bien esperar que el hijo termine (o muera)
-		/ \includegraphics[width=11cm]{figs/01-3_10.pdf}
+		== image_tag '/images/figures/01-3_10.pdf.png'
 
 
 	section#creation-wait-def
@@ -428,8 +428,8 @@ section#ipc
 			li.fragment data-fragment-index="6" Fácil de programar para envíos pequeños (no provoca conflictos)
 
 
-	/section#ipc-shm_vs_mp-fig
-		/ includegraphics[width=8cm]{figs/01-3_12.pdf}
+	section#ipc-shm_vs_mp-fig
+		== image_tag '/images/figures/01-3_12.pdf.png'
 
 
 section#ipc-_shm
@@ -459,7 +459,7 @@ section#ipc-_shm
 			li Proceso <strong>productor</strong> produce información.
 			li Proceso <strong>consumidor</strong> consume información del productor.
 		pre
-			/ TODO: \includegraphics[width=8cm]{figs/01-ProdCons.png}
+			== image_tag '/images/figures/01-ProdCons.png'
 		.fragment
 			p Variantes: con <strong>buffer limitado</strong> ó <strong>ilimitado</strong>
 			ul
@@ -589,7 +589,7 @@ section#ipc-hl
 			li.fragment Comunicación cliente/servidor
 			li.fragment Para comunicación TCP o UDP
 			/ \footnote{Si no sabe que es esto, búsquelo en Google o espere hasta los capítulos de redes}
-		/ TODO: \includegraphics[width=6cm]{figs/01-3_20.pdf}
+		== image_tag '/images/figures/01-3_20.pdf.png'
 
 
 	section#ipc-hl-rpc
@@ -600,7 +600,7 @@ section#ipc-hl
 			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
 			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
 			li.fragment Mismo esquema usado por <em>Web Services</em>
-		/ \includegraphics[width=6cm]{figs/01-RPC.png}
+		== image_tag '/images/figures/01-RPC.png'
 
 
 	section#ipc-hl-rpc
@@ -611,7 +611,7 @@ section#ipc-hl
 			li.fragment  Un proceso escribe en un extremo (<em>write-end</em>), y otro proceso lee desde el otro extremo (<em>read-end</em>)
 			li.fragment  Pueden ser tratadas como archivos
 			li.fragment  Implementación implícita en consolas. Ej: <code>ls | more</code>
-		/ TODO: \includegraphics[width=10cm]{figs/01-pipes.png}
+		== image_tag '/images/figures/01-pipes.png'
 
 
 section#summary
@@ -674,7 +674,7 @@ section#threads
 		p <em>Single-threading</em> vs <em>Multi-threading</em>
 
 		p.fragment Procesos pueden tener uno o más <em>threads</em>
-		/ TODO: \includegraphics[width=10cm]{figs/01-4_01.pdf}
+		== image_tag '/images/figures/01-4_01.pdf.png'
 
 
 	section#threads-mt-1
@@ -704,7 +704,7 @@ section#threads
 		p Otro caso: un <em>web server</em> necesita atender múltiples conexiones
 		ul
 			li.fragment  ¿Espero atender completamente una antes de recibir la siguiente?
-		/ TODO: \includegraphics[width=10cm]{figs/01-4_02.pdf}
+		== image_tag '/images/figures/01-4_02.pdf.png'
 
 
 	section#threads-mt-3
@@ -798,7 +798,7 @@ section#mt
 		ul
 			li.fragment  + Manejo de <em>threads</em> en biblioteca de usuario
 			li.fragment  - Un <em>syscall</em> de un <em>thread</em> bloquea todo el proceso
-		/ \includegraphics[width=4cm]{figs/01-4_05.pdf}
+		== image_tag '/images/figures/01-4_05.pdf.png'
 
 		br
 		p.fragment Solaris: biblioteca <em>green threads</em>
@@ -811,7 +811,7 @@ section#mt
 			li.fragment  + Asignables a distintos <em>core</em>s
 			li.fragment  - Creación implica ejecutar <em>syscalls</em>
 			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		/ \includegraphics[width=6cm]{figs/01-4_06.pdf}
+		== image_tag '/images/figures/01-4_06.pdf.png'
 		br
 		p.fragment Linux & Windows
 
@@ -823,7 +823,7 @@ section#mt
 			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
 			li.fragment  - Creación implica ejecutar <em>syscalls</em>
 			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		/ \includegraphics[width=4cm]{figs/01-4_07.pdf}
+		== image_tag '/images/figures/01-4_07.pdf.png'
 		br
     p.fragment Linux & Windows.
 

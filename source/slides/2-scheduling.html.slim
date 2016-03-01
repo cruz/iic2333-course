@@ -15,7 +15,7 @@ section
 	section
 		p Planificación
 
-		p.fragment En todos los problemas en que los recursos no son suficientes es necesario revisar cómo se distribuyen, <span class="fragment"> y aunque sean infinitos igual hay que administrarlos para evitar conflictos.</span>
+		p.fragment En todos los problemas en que los recursos no son suficientes es necesario revisar cómo se distribuyen, <span class="fragment"> y aunque sean <a href="https://en.wikipedia.org/wiki/Hilbert%27s_paradox_of_the_Grand_Hotel">infinitos</a> hay que administrarlos para evitar conflictos.</span>
 		/! Hilbert's paradox
 		/! https://en.wikipedia.org/wiki/Hilbert%27s_paradox_of_the_Grand_Hotel
 
@@ -91,7 +91,7 @@ section#cpuSched-init_
 			li <em>Short-term Scheduler</em>  <span class="fragment">Selecciona procesos en la(s) cola <em>ready</em> a ejecutar.</span>
 			li <em>Medium-term Scheduler</em> <span class="fragment">Modificación temporal del grado de multiprogramación, haciendo <strong>swapping</strong></span>
 
-			/ \includegraphics[width=8cm]{figs/01-3_07.pdf}
+			/ /== image_tag [width=8cm]{figures/01-3_07.pdf.png}
 
 
 
@@ -129,13 +129,13 @@ section#cpuSched-init_
 		ul.fragment
 			li.fragment  CPU-bound
 			li.fragment  I/O-bound
-		/ \includegraphics[width=4cm]{figs/01-6_01.pdf}
+		/ /== image_tag [width=4cm]{figures/01-6_01.pdf.png}
 
 	section#cpuSched-bursts
 		p ¿Cuánto dura típicamente un CPU-burst?
 
 		p.fragment No hay una respuesta única, pero&hellip;
-		/    \includegraphics[width=8cm]{figs/01-6_02.pdf}
+		/    /== image_tag [width=8cm]{figures/01-6_02.pdf.png}
 		p.fragment Duración de CPU-burst podría afectar el algoritmo de <em>scheduling</em>
 
 
@@ -260,7 +260,7 @@ section#cpuSchedAlgs-sjf
   //   $\alpha = 1/2, \tau_0=10$
   //   
   //   \begin{center}
-  //     \includegraphics[width=8cm]{figs/01-6_03.pdf}
+  //     /== image_tag [width=8cm]{figures/01-6_03.pdf.png}
   //   \end{center}
   // 
   // 
@@ -351,7 +351,7 @@ section#cpuSchedAlgs-mlq
   //   Colas multinivel es muy rígido: procesos no cambian de cola
   // 
   //   \begin{center}
-  //     \includegraphics[width=5cm]{figs/01-6_07.pdf}
+  //     /== image_tag [width=5cm]{figures/01-6_07.pdf.png}
   //   \end{center}
   //   
   //   ul
