@@ -40,6 +40,17 @@ html
 		/  CanvasJS
 		/  script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js'
 
+		style type="text/css"
+			|img code.hljs {
+			|  display: block;
+			|}
+			|code.hljs {
+			|  display: inline;
+			|}
+			|img {
+			|  background-color: white;
+			|}
+
 		// Printing and PDF exports
 		javascript:
 			var link = document.createElement( 'link' );
@@ -57,13 +68,13 @@ html
 					p style='padding-top:4em;' Departamento de Ciencia de la Computación
 					p Pontificia Universidad Católica de Chile
 
-				section
+				/section
 					h2 Table of Contents
 					nav#presentable-toc.revealjs
 
 				== yield
 
-			aside#presentable-icon.revealjs
+			/aside#presentable-icon.revealjs
 				a title="ToC" href="#/0/1"
 					img alt="ToC"
 
