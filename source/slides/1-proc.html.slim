@@ -128,11 +128,9 @@ section#repr
 		p.fragment Miremos en <code>include/linux/sched.h</code>
 
 
-	/section#repr-contextSwitch
-		h3 Cambio de un proceso a otro
-		/  ---------------------------
+	section#repr-contextSwitch
 		p El cambio de procesos se conoce como <strong>Context Switch</strong>
-		== image_tag '/images/figures/01-3_04.pdf.png'
+		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%"
 
 
 
@@ -142,10 +140,10 @@ section#creation
 
 	section#creation-0
 		p Creación de procesos: ¿el huevo o la gallina?
-		p ¿Quién crea un proceso?... <span class="fragment"> otro proceso</span>
 		ul
-			li.fragment ¿Quién crea ese otro proceso? <span class="fragment"> otro proceso</span>
-			li.fragment ¿Quién crea ese otro proceso? <span class="fragment"> otro proceso...</span>
+			li.fragment  ¿Quién crea un proceso?...     <span class="fragment"> otro proceso</span>
+			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso</span>
+			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso&hellip;</span>
 
 		p.fragment Existe un proceso llamado 'init' que es construido durante la inicialización del kernel. Usualmente tienen asignado el ProcessID 1.
 		/! Salvo Windows por supuesto, que usa el 4.
@@ -589,7 +587,7 @@ section#ipc-hl
 			li.fragment Comunicación cliente/servidor
 			li.fragment Para comunicación TCP o UDP
 			/ \footnote{Si no sabe que es esto, búsquelo en Google o espere hasta los capítulos de redes}
-		== image_tag '/images/figures/01-3_20.pdf.png'
+		== image_tag '/images/figures/01-3_20.pdf.png', :width=>"50%", :style=>"float:right;"
 
 
 	section#ipc-hl-rpc
@@ -600,7 +598,8 @@ section#ipc-hl
 			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
 			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
 			li.fragment Mismo esquema usado por <em>Web Services</em>
-		== image_tag '/images/figures/01-RPC.png'
+
+		== image_tag '/images/figures/01-RPC.png', :width=>"40%"
 
 
 	section#ipc-hl-rpc
@@ -704,7 +703,8 @@ section#threads
 		p Otro caso: un <em>web server</em> necesita atender múltiples conexiones
 		ul
 			li.fragment  ¿Espero atender completamente una antes de recibir la siguiente?
-		== image_tag '/images/figures/01-4_02.pdf.png'
+		.fragment
+			== image_tag '/images/figures/01-4_02.pdf.png'
 
 
 	section#threads-mt-3
@@ -798,7 +798,8 @@ section#mt
 		ul
 			li.fragment  + Manejo de <em>threads</em> en biblioteca de usuario
 			li.fragment  - Un <em>syscall</em> de un <em>thread</em> bloquea todo el proceso
-		== image_tag '/images/figures/01-4_05.pdf.png'
+		.fragment
+			== image_tag '/images/figures/01-4_05.pdf.png', :width=>"40%"
 
 		br
 		p.fragment Solaris: biblioteca <em>green threads</em>
@@ -811,7 +812,7 @@ section#mt
 			li.fragment  + Asignables a distintos <em>core</em>s
 			li.fragment  - Creación implica ejecutar <em>syscalls</em>
 			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		== image_tag '/images/figures/01-4_06.pdf.png'
+		== image_tag '/images/figures/01-4_06.pdf.png', :width=>"60%"
 		br
 		p.fragment Linux & Windows
 
@@ -823,7 +824,7 @@ section#mt
 			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
 			li.fragment  - Creación implica ejecutar <em>syscalls</em>
 			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		== image_tag '/images/figures/01-4_07.pdf.png'
+		== image_tag '/images/figures/01-4_07.pdf.png', :width=>"40%"
 		br
     p.fragment Linux & Windows.
 

@@ -7,1685 +7,1389 @@ layout: slide
 section
 	h2 Sincronización de Procesos
 	/  --------------------------
-
 section
 	h2 Sincronización de Procesos
 	/  --------------------------
 
-	section
+	section#init
 		p Cosas buenas:
 		ul
 			li.fragment  Tener <em>concurrencia</em> y <em>paralelismo</em>
 			li.fragment  Crear <em>threads</em> livianos sobre el mismo espacio de memoria (no necesita <em>syscall</em> de <em>shared memory</em>) 
 
-		p Pero &hellip;
+		p.fragment  Pero&hellip;
 		ul
 			li.fragment  Hay que coordinarlos (¿por qué?)
 
 
 
-/ Frame[fragile]
-  //   \frametitle{Regreso al Productor/Consumidor}
-  //   Solución con <em>threads</em> productor y consumidor. 
-  //   Variable <code>counter</code> inicializada en <code>0</code> en memoria compartida.
-  //   
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=true]{c}
-  //   /** Productor **/
-  //   while(true) {
-  //     next_product = produce();
-  //     while (counter == BUFFER_SIZE); /* do nothing */
-  //     buffer[in] = next_product;
-  //     in = (in+1)%BUFFER_SIZE;
-  //     counter++;
-  //   }
-  // \end{minted}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=true]{c}
-  //   /** Consumidor **/  
-  //   while(true) {
-  //     while(counter == 0); /* do nothing */
-  //     next_consumed = buffer[out];
-  //     out = (out+1)%BUFFER_SIZE
-  //     counter--;
-  //     consume(next_consumed);
-  //   }
-  // \end{minted}  
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Regreso al Productor/Consumidor}
-  // 
-  //   ¿Qué podría salir mal?
-  //   
-  //   \onslide<2->{Supongamos <code>counter=13</code>. Considere la secuencia:}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize]{c}
-  //   counter++;  /** linea 7 productor **/
-  //   counter--;  /** linea 6 consumidor **/
-  // \end{minted}
-  //   \onslide<3->{Resultado esperado: <code>counter == 13</code>}
-  //   
-  //   \onslide<4->{Pero también podría ocurrir <code>counter==12</code> o <code>counter==14</code> (what?)}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Regreso al Productor/Consumidor}
-  //   \framesubtitle{Autoincremento en assembler o en bytecode}
-  // 
-  //   ¿Cómo se ejecutan los <code>++</code> y <code>--</code> en hardware?
-  // 
-  //   Línea 7 productor: <code>counter++</code>
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize]{nasm}
-  //   load r1, counter  ; copia del valor desde memoria a registro 1 
-  //   inc r1            ; autoincremento de registros es comun en muchas arquitecturas 
-  //   store counter, r1 ; guarda el valor de r1 en memoria 
-  // \end{minted}
-  // 
-  //   Línea 6 consumidor: <code>counter--</code>
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize]{nasm}
-  //   load r2, counter
-  //   dec r2
-  //   store counter, r2
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Productor/Consumidor <em>multithreaded</em>}
-  //   \framesubtitle{Because shit happens}
-  //   
-  //   Podría ocurrir este orden de ejecución (o talvez no)
-  //   
-  //   \begin{footnotesize}
-  //   \begin{tabular}{llll}
-  //   \onslide<2->{$t=0$ & productor  & <code>load r1, counter</code>  & $r_1=13, r2=?, \mathit{counter}=13$ \\ \hline}
-  //   \onslide<3->{$t=1$ & productor  & <code>inc r1</code>            & $r_1=14, r2=?, \mathit{counter}=13$ \\ \hline}
-  //   \onslide<4->{$t=2$ & consumidor & <code>load r2, counter</code>  & $r_1=14, r2=13, \mathit{counter}=13$ \\ \hline}
-  //   \onslide<5->{$t=3$ & consumidor & <code>dec r2</code>            & $r_1=14, r2=12, \mathit{counter}=13$ \\ \hline}
-  //   \onslide<6->{$t=4$ & productor &  <code>store counter, r1</code> & $r_1=14, r2=12, \mathit{counter}=14$ \\ \hline}
-  //   \onslide<7->{$t=5$ & consumidor & <code>store counter, r2</code> & $r_1=14, r2=12, \mathit{counter}=12$ \\ }
-  //   \end{tabular}
-  //   \end{footnotesize}
-  // 
-  //   \onslide<8->{¿Podemos tener tan mala suerte para que ocurra así?}
-  // 
-  //   \onslide<9->{
-  //   \begin{block}{<strong>Race condition</strong> (condición de carrera o competencia)}
-  //     Situación en que la salida de una operación depende del orden temporal de sus operaciones internas,
-  //     el cual no está bajo control del programador.
-  //   \end{block}
-  //   }
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Sincronización de <em>threads</em>}
-  //   \framesubtitle{Un programador tenía un problema y decidió usar <em>threads</em>. tiene él problemas. Ahora dos }
-  // 
-  //   <em>Race conditions</em> hacen que el resultado de la ejecución no se pueda garantizar.
-  //   \onslide<2->{
-  //   \begin{alertblock}{<strong>Mala práctica</strong>}
-  //      El resultado de una ejecución puede depender de la entremezcla (<em>interleaving</em>) de la ejecución de sus <em>threads</em>  
-  //   \end{alertblock}
-  //   }
-  //   
-  //   \onslide<3->{
-  //   \begin{exampleblock}{<strong>Buena práctica</strong>}
-  //     <strong>Evitar las race conditions</strong>
-  //   \end{exampleblock}
-  //   }
-  //   
-  //   \onslide<3->{¿Como? Empleando métodos de <strong>sincronización</strong> y <strong>coordinación</strong>.}
-  //    
-  // \end{frame}
-  // %---------------------------------------------------------------------
-  // \subsection{El Problema de la Sección Crítica}
-  // 
-/ Frame
-  //   \frametitle{El Problema de la Sección Crítica}
-  // 
-  //   Considere un sistema de $n$ procesos, $\{P_0,P_1,&hellip;,P_{n-1}\}$.
-  //   Cada proceso tiene un segmento de código llamado <strong>sección crítica</strong>
-  //   ul
-  //     li.fragment  Dentro de su sección crítica el proceso puede modificar recursos compartidos
-  //   \end{itemize}
-  //   
-  //   \onslide<2->{
-  //   \begin{block}{Problema de la Sección Crítica}
-  //     Diseñar un protocolo que no permita que dos procesos se encuentren en su sección crítica al mismo tiempo
-  //   \end{block}
-  //   }
-  //   
-  //   \begin{center}
-  //     \includegraphics[width=5cm]{figs/01-seccioncritica.png}
-  //   \end{center}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Requisitos para una solución}
-  // 
-  //   Una solución al problema de la sección crítica (SC) debe cumplir 3 requisitos:
-  //   
-  //   \begin{description}
-  //     li.fragment [<strong>Exclusión Mutua</strong>] <em>A lo más uno</em>. Si $P_i$ se encuentra en su SC, entonces
-  //                                  nadie más lo está.
-  //     li.fragment [<strong>Progreso</strong>] <em>Al menos alguien puede entrar</em>. Si ningún proceso está en su SC, y hay
-  //                           procesos que desean entrar, entonces los que quieren entrar deben ser capaces
-  //                           de decidir quién entra, y decidirlo en un tiempo acotado.
-  //     li.fragment [<strong>Espera acotada</strong>] <em>Ausencia de inanición</em>. Si un proceso quiere entrar a su SC, entonces
-  //                                 después de una cantidad limitada de turnos, el proceso podrá entrar.
-  //                                 Esto significa que nadie espera indefinidamente.
-  //   \end{description}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-  // \subsection{Algunas soluciones al problema de la sección crítica}
-  // 
-/ Frame[fragile]
-  //   \frametitle{Solución de Peterson}
-  //   Solución para 2 procesos, propuesta por Gary L. Peterson, 1981.
-  //   
-  //   Variables compartidas: <code>int turn; boolean flag[2];</code>
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=true]{c}
-  //   /** Codigo para proceso P_i, i $\in$ {0,1}, j=1-i */
-  //   
-  //   do {
-  //     flag[i] = true;
-  //     turn = j;
-  //     while(flag[j] && turn == j);
-  //     
-  //     /** SECCION CRITICA **/
-  //     
-  //     flag[i] = false;
-  //     
-  //     /** resto del codigo **/
-  //   
-  //   } while(true);
-  // 
-  // \end{minted}
-  // 
-  // \onslide<2->{¿En qué valor se inicializan <code>turn</code> y <code>flag</code>?}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Solución de Peterson}
-  //   \framesubtitle{¿Cumple los requisitos?}
-  //   
-  //   <strong>Exclusión Mutua</strong>
-  //   
-  //   ul
-  //     li.fragment  $P_i$ puede entrar solamente si <code>flag[j]==false</code> ó <code>turn == i</code>
-  //     li.fragment  Si $P_i$ y $P_j$ se encuentran ambos en la SC, entonces <code>flag[0]==flag[1]==true</code>
-  //     li.fragment  <code>flag[0]==true</code> $\Rightarrow$ <code>turn=i</code>
-  //     li.fragment  <code>flag[1]==true</code> $\Rightarrow$ <code>turn=j</code>
-  //     li.fragment  Pero <code>i</code>$\neq$<code>j</code>, por lo tanto no pueden estar ambos en su SC
-  //   \end{itemize}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Solución de Peterson}
-  //   \framesubtitle{¿Cumple los requisitos?}
-  // 
-  //   <strong>Progreso</strong>
-  //   
-  //   ul
-  //     li.fragment  Si $P_i$ desea entrar a su SC, sólo puede estar detenido en la línea 6
-  //     li.fragment  Entonces se cumple <code>flag[j]==true</code> y <code>turn==j</code>
-  //     li.fragment  Si $P_j$ no desea entrar a su SC, entonces <code>flag[j]==false</code>
-  //     li.fragment  Si $P_j$ desea entrar, entonces <code>turn==i</code> ó <code>turn==j</code>
-  //     li.fragment  En cualquier caso, uno de los que quiere entrar, entra 
-  //   \end{itemize}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Solución de Peterson}
-  //   \framesubtitle{¿Cumple los requisitos?}
-  // 
-  //   <strong>Espera acotada</strong>
-  //   
-  //   ul
-  //     li.fragment  Si $P_i$ desea entrar y está esperando, entonces <code>flag[i]==true</code>, <code>flag[j]==true</code> y <code>turn==j</code>
-  //     li.fragment  En cuanto $P_j$ sale, establece <code>flag[j]=false</code>, y $P_i$ puede entrar (si empieza a ejecutar)
-  //     li.fragment  Si $P_j$ intenta entrar inmediatamente, deberá establecer <code>flag[j]=true</code> y <code>turn=i</code>.
-  //     li.fragment  Se cumple entonces <code>flag[i]==true</code>, <code>flag[j]==true</code>, y <code>turn=i</code>, con lo que $P_j$ no puede entrar.    
-  //     li.fragment  Por lo tanto después de, a lo más, 1 turno, $P_i$ puede entrar (espera acotada)
-  //   \end{itemize}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{}
-  // 
-  //   Soluciones por <em>software</em> dependen de que existan <strong>instrucciones atómicas</strong> por <em>hardware</em>:
-  //   instrucciones <strong>ininterruptibles</strong>
-  // 
-  //   Una solución más sencilla:
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Exclusion mutua **/
-  //     do {
-  //       lock = true;
-  //       while (lock == false);
-  //       
-  //       /* SECCION CRITICA */
-  //       
-  //       lock = false;
-  //   
-  //       /* resto del codigo */
-  //       
-  //   }  while(true);
-  // \end{minted}
-  //   
-  //   ¿Basta con esto?
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{<code>test_and_set()</code>}
-  // 
-  //   Algunas arquitecturas proveen instrucciones atómicas del tipo \verb+test_and_set+
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** test_and_set() **/
-  //     boolean test_and_set (boolean *target) {
-  //       boolean rv = *target;
-  //       *target = true;
-  //   
-  //       return rv;
-  //     }
-  // \end{minted}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{Exclusión mutua con <code>test_and_set()</code>}
-  // 
-  //   ¿Cómo usarlo?
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Exclusion mutua usando test_and_set() **/
-  //     do {
-  //       while (test_and_set(&lock));
-  //       
-  //       /* SECCION CRITICA */
-  //       
-  //       lock = false;
-  //   
-  //       /* resto del codigo */
-  //       
-  //   }  while(true);
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{<code>compare_and_swap()</code>}
-  // 
-  //   Otra instrucción atómica: \verb+compare_and_swap+
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** compare_and_swap  **/
-  //     boolean compare_and_swap (int *value, int expected, int new_value) {
-  //       int temp = *value;
-  // 
-  //       if(*value == expected)
-  //         *value = new_value;
-  //   
-  //       return temp;
-  //     }
-  // \end{minted}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{Exclusión mutua con <code>compare_and_swap()</code>}
-  // 
-  //   ¿Cómo usarlo?
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Exclusion mutua usando test_and_set() **/
-  //     do {
-  //       while (compare_and_swap(&lock, 0, 1) != 0);
-  //       
-  //       /* SECCION CRITICA */
-  //       
-  //       lock = 0;
-  //   
-  //       /* resto del codigo */
-  //       
-  //   } while(true);
-  // \end{minted}
-  // 
-  // Estos algoritmos ¿cumplen con las propiedades de solución para sección crítica?
-  // 
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Sincronización por <em>hardware</em> }
-  //   \framesubtitle{Una solución con <code>test_and_set()</code>}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Exclusion mutua usando test_and_set() para $n$ procesos **/
-  //     do {
-  //       waiting[i] = true;
-  //       key = true;
-  //       while (waiting[i] && key) 
-  //         key = test_and_set(&lock);
-  //       waiting[i] = false;
-  //       /* SECCION CRITICA */
-  //       j = (i+1)%n
-  //       while((j != i) && !waiting[j])
-  //         j = (j+1)%n;
-  //       if(j == i) 
-  //         lock = false;
-  //       else
-  //         waiting[j] = false;
-  //       /* resto del codigo */
-  //   } while(true);
-  // \end{minted}
-  // 
-  // Ejercicio: probar que cumple las propiedades de la sección crítica
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Locks de Exclusión Mutua (<em>Mutex</em>) }
-  //   \framesubtitle{}
-  // 
-  //   En general no se usan directamente soluciones por <em>hardware</em> sino que &hellip;
-  //   \onslide<2->{se construyen primitivas de <em>software</em> sobre ellas}.
-  //   
-  //   \onslide<3->{La más simple: 
-  //   \begin{block}{<strong>Mutex Lock</strong> (<strong>mut</strong>ual <strong>ex</strong>clusion)}
-  //     Dos operaciones:
-  //     ul
-  //       li.fragment {<code>acquire()</code>}
-  //       li.fragment {<code>release()</code>}
-  //     \end{itemize}  
-  //   \end{block}
-  //   }
-  // 
-  // 
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Locks de Exclusión Mutua (<em>Mutex</em>) }
-  //   \framesubtitle{}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Lock acquire **/
-  //   acquire() {
-  //     while(!available); /* busy wait */
-  //     available = false;
-  //   }
-  // 
-  //   /** Lock release **/
-  //   release() {
-  //     available = true;
-  //   }
-  // \end{minted}
-  // 
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Locks de Exclusión Mutua (<em>Mutex</em>) }
-  //   \framesubtitle{Sección crítica con <em>Mutex Locks</em>}
-  // 
-  //   Solución simple a sección crítica usando <em>Mutex Locks</em>
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     acquire();
-  //     
-  //     /** SECCION CRITICA **/
-  //     
-  //     release();
-  //     
-  //     /** resto del codigo **/
-  // 
-  //   } while(true);
-  // \end{minted}  
-  //   
-  // 
-  // \end{frame}
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{}
-  // 
-  //   <em>Mutex Locks</em> solo permiten un acceso a la sección crítica (<em>exclusión mutua</em>)
-  //   
-  //   \onslide<2->{En ocasiones se quiere un acceso acotado, pero mayor a 1}
-  // 
-  //   \onslide<3->{
-  //   \begin{block}{<strong>Semáforo</strong>}
-  //     Un semáforo <code>S</code> incluye un contador y dos operaciones:
-  //     ul
-  //       li.fragment  <code>P()</code> ó <code>wait</code>. Prueba a decrementar el valor.\footnote{Original: <em>proberen</em>, holandés para <em>probar</em>}
-  //       li.fragment  <code>V()</code> ó <code>signal</code>. Incrementa el valor.\footnote{Original: <em>verhogen</em>, holandés para <em>incrementar</em>}
-  //     \end{itemize}
-  //   \end{block}
-  //   }
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{<code>P()</code> y <code>V()</code>, a.k.a., <code>wait</code> y <code>signal()</code>}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** P(): bloquea si es $\leq$ 0 **/
-  //   wait(S) {
-  //     while(S <= 0); /* busy wait */
-  //     S--;
-  //   }
-  // 
-  //   /** V(): incrementa contador **/
-  //   signal() {
-  //     S++;
-  //   }
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{Sección crítica con semáforos}
-  // 
-  //   Una variante de la sección crítica: máximo de $r$ procesos en ella
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Inicializar el semaforo en $r$  **/
-  //   Semaphore S(r);
-  // \end{minted}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Para cada proceso: **/
-  //   do {
-  //     wait(S);
-  //     
-  //     /** SECCION CRITICA **/
-  //     
-  //     signal(S);
-  //     
-  //     /* resto del codigo */
-  //   }
-  // \end{minted}
-  // 
-  // ¿Cuándo sirve esto?
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{La maldición de la espera ocupada: ``lo llamamos''}
-  // 
-  //   Las definiciones propuesta de <em>mutex lock</em> y <em>semáforos</em> incluyen <strong>busy waiting</strong>
-  //   \onslide<2->{&hellip; eso es <strong>malo</strong>}
-  //   
-  //   \onslide<2->{
-  //   \begin{alertblock}{<strong>Busy waiting</strong> (espera ocupada)}
-  //   
-  //     Una solución que usa <em>busy waiting</em> <strong>NO ES</strong> una buena solución. 
-  //     Desperdicia ciclos de CPU
-  //   \end{alertblock}
-  //   }
-  //   
-  //   \onslide<3->{¿Alternativas?}
-  //   \onslide<4->{&hellip; ponerse en una cola de espera}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{Implementando semáforos sin <em>busy waiting</em>}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** Definicion del tipo semaforo **/
-  //   typedef struct {
-  //     int value;
-  //     struct process *list;
-  //   } semaphore;
-  // \end{minted}
-  // 
-  // Un semáforo contiene un <em>valor</em>, y una <em>lista de procesos</em>.
-  // 
-  // Supongamos una instrucción <code>block()</code> que libera la CPU voluntariamente,
-  // y una instrucción <code>wakeup(p)</code> que despierta al proceso <code>p</code>.
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{Implementando semáforos sin <em>busy waiting</em>}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   /** P(), wait() **/
-  //   wait(semaphore *S) {
-  //     S->value--;
-  //     if(S->value < 0) {
-  //       p = currentProcess();
-  //       addToList(S->list, p);
-  //       block();
-  //     }
-  //   }
-  // 
-  //   /** V(), signal() **/
-  //   signal(semaphore *S) {
-  //     S->value++;
-  //     if(S->value <= 0) {
-  //       p = extractFromList(S->list);
-  //       wakeup(p);
-  //     }
-  //   }
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Semáforos}
-  //   \framesubtitle{Cuidado con los bloqueos}
-  // 
-  //   Un uso poco cuidadoso de semáforos puede traer otro enemigo: el <strong>bloqueo mutuo</strong> ó <strong>deadlock</strong>
-  //   
-  //   \onslide<2->{Supongamos dos semáforos <code>S</code> y <code>Q</code>, y dos procesos $P_0$ y $P_1$}
-  // 
-  //   \begin{center}
-  //   \begin{footnotesize}
-  //   \begin{tabular}{ll}
-  //   \onslide<2->{$P_0$ & $P_1$ \\ \hline}
-  //   \onslide<3->{<code>wait(S);</code>   & <code>wait(Q);</code>  \\ }
-  //   \onslide<4->{<code>wait(Q);</code>   & <code>wait(S);</code>  \\ }
-  //   \onslide<5->{<code>&hellip;</code>     & <code>&hellip;</code>    \\ }
-  //   \onslide<5->{<code>signal(S);</code> & <code>signal(Q);</code> \\ }
-  //   \onslide<5->{<code>signal(Q);</code> & <code>signal(S);</code> \\ }
-  //   \end{tabular}
-  //   \end{footnotesize}
-  //   \end{center}
-  //   
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-  // \subsection{Problemas clásicos de sincronización}
-  // 
-/ Frame[fragile]
-  //   \frametitle{Problema del buffer acotado}
-  //   \framesubtitle{¿Otra vez el <em>buffer</em>?}
-  // 
-  //   ¿Cómo lo solucionamos con semáforos?
-  //   
-  //   Variables compartidas:
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   int BUFFER_SIZE;    /* tamano del buffer */
-  //   semaphore mutex(1); /* semaforo de exclusion mutua (podria ser un lock) */
-  //   semaphore empty(BUFFER_SIZE); /* para detener al consumidor */
-  //   semaphore full(0);  /* para detener al productor */
-  // \end{minted}
-  // 
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Problema del buffer acotado}
-  //   \framesubtitle{Buffer acotado con semáforos}
-  // 
-  // 
-  //   \begin{columns}[c]
-  //     \begin{column}[T]{6cm}
-  //       \begin{center}
-  //         <strong>Productor</strong>
-  //       \end{center}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     wait(empty);
-  //     wait(mutex);
-  // 
-  //     next_product = produce();
-  //     buffer[in] = next_product;
-  //     in = (in+1)%BUFFER_SIZE;
-  //     
-  //     signal(mutex);
-  //     signal(full);
-  // 
-  //   } while(true);
-  // \end{minted}
-  //     \end{column}
-  //     
-  //     \begin{column}[T]{6cm}
-  //       \begin{center}
-  //         <strong>Consumidor</strong>
-  //       \end{center}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     wait(full);
-  //     wait(mutex);
-  // 
-  //     next_product = buffer[out];
-  //     out = (out+1)%BUFFER_SIZE;
-  //     consume(next_consumed);
-  //     
-  //     signal(mutex);
-  //     signal(empty);
-  // 
-  //   } while(true);
-  // \end{minted}
-  //     \end{column}
-  //   \end{columns}
-  // 
-  // 
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Problema de los lectores y escritores (<em>readers</em>/<em>writers</em>)}
-  // 
-  //   La sección crítica suele exigir <strong>solo un</strong> <em>thread</em> en ella.
-  // 
-  //   \onslide<2->{¿Y si solo permitimos lecturas?}
-  //   \onslide<3->{ OK, entonces $n$ lectores simultáneos}
-  //   
-  //   \onslide<4->{¿Y si alguien quiere escribir?}
-  //   \onslide<5->{ Entonces, que solo <strong>uno</strong> pueda escribir}
-  //   
-  //   \onslide<6->{Condiciones distintas para cada rol}
-  //   
-  //   \onslide<7->{
-  //   \begin{block}{<strong>Problema de lectores y escritores</strong>}
-  //     Permitir acceso de $n$ lectores simultáneos, pero solamente 1 escritor
-  //   \end{block}
-  //   }  
-  //   
-  //   \onslide<8->{Hay variaciones: lectores ilimitados, escritores con prioridad}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Problema de los lectores y escritores (<em>readers</em>/<em>writers</em>)}
-  // 
-  //   Variables compartidas
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   semaphore rw_mutex(1); /* semaforo para lectores y escritores */
-  //   semaphore mutex(1);    /* semaforo de exclusion mutua */
-  //   int read_count = 0;    /* contador de lectores */
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Problema de los lectores y escritores (<em>readers</em>/<em>writers</em>)}
-  // 
-  //   \begin{columns}[c]
-  //     \begin{column}[T]{6cm}
-  //       \begin{center}
-  //         <strong>Escritor</strong>
-  //       \end{center}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     wait(rw_mutex);
-  // 
-  //     /** WRITE **/
-  //     
-  //     signal(rw_mutex);
-  // 
-  //   } while(true);
-  // \end{minted}
-  //     \end{column}
-  //     
-  //     \begin{column}[T]{6cm}
-  //       \begin{center}
-  //         <strong>Lector</strong>
-  //       \end{center}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     wait(mutex);
-  //     read_count++;
-  //     if(read_count == 1)
-  //       wait(rw_mutex);
-  //     signal(mutex);
-  //     
-  //     /** READ **/
-  //     
-  //     wait(mutex);
-  //     read_count--;
-  //     if(read_count == 0)
-  //       signal(rw_mutex);
-  //     signal(mutex);
-  //   } while(true);
-  // \end{minted}
-  //     \end{column}
-  //   \end{columns}
-  // 
-  // 
-  // \end{frame}
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Problema de los filósofos comensales}
-  //   \framesubtitle{Un clásico}
-  // 
-  //   5 filósofos se pasan la vida en dos actividades: <em>comer</em> y <em>pensar</em>
-  //   
-  //   \begin{center}
-  //       \includegraphics[width=3cm]{figs/01-5_13.pdf}
-  //   \end{center}
-  //   
-  //   \onslide<2->{Restricción 1: Para comer deben tomar ambos palillos}
-  //   
-  //   \onslide<3->{Restricción 2: Sólo pueden tomar un palillo a la vez}
-  //    
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Problema de los filósofos comensales}
-  // 
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   semaphore chopstick[5];
-  //   do {
-  //     wait(chopstick[i]);
-  //     wait(chopstick[(i+1)%5]);
-  //       ...
-  //     /* COMER */
-  //       ... 
-  //     signal(chopstick[i]);
-  //     signal(chopstick[(i+1)%5]);
-  //       ...
-  //     /* PENSAR */
-  //       ...
-  //   } while (true);
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Monitores}
-  // 
-  //   Construcción de sincronización de (más) alto nivel
-  //   
-  //   ul
-  //     li.fragment  Provee métodos que permiten controlar el acceso exclusivo
-  //     li.fragment  Utiliza <strong>variables de condición</strong>, que tiene dos operaciones
-  //       \begin{exampleblock}{<strong>Variables de condición</strong>}
-  //         ul
-  //           li.fragment  <code>condition.wait()</code> bloquea <strong>siempre</strong> el <em>thread</em>
-  //           li.fragment  <code>condition.signal()</code> despierta a un <em>thread</em> bloqueado, si lo hay
-  //         \end{itemize}
-  //         No son iguales a semáforos (pero pueden implementarse con ellos)
-  //       \end{exampleblock}
-  //   \end{itemize}
-  // 
-  //   ¿Semántica para <code>signal()</code>?
-  //   ul
-  //     li.fragment  <strong>Signal-and-continue</strong>: el que acaba de llamar a <code>signal()</code> continúa ejecutando (Java, C\#)
-  //     li.fragment  <strong>Signal-and-wait</strong>: el que acaba de llamar a <code>signal()</code> se bloquea inmediatamente
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Filósofos Comensales Monitoreados}
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   monitor FilosofosComensales {
-  //     enum {PENSANDO, HAMBRIENTO, COMIENDO} estado[5];
-  //     condition filosofo[5];
-  //     void tomar(int i) {
-  //       estado[i] = HAMBRIENTO;
-  //       probar(i);
-  //       if(estado[i] != COMIENDO)
-  //         filosofo[i].wait();
-  //     }
-  //     void soltar(int i) {
-  //       estado[i] = PENSANDO;
-  //       probar((i+4)%5);
-  //       probar((i+1)%5);
-  //     }
-  //     void probar(int i) {
-  //       if( (estado[(i+4)%5] != COMIENDO) && estado[i] == HAMBRIENTO && 
-  //           (estado[(i+1)%5] != COMIENDO) ) {
-  //         estado[i] = COMIENDO;
-  //         filosofo[i].signal();
-  //       }
-  //     }
-  //   }
-  // \end{minted}
-  // 
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Filósofos Comensales Monitoreados}
-  // 
-  //   La implementación de cada filósofo se reduce a:
-  //   
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   do {
-  //     FilosofosComensales.tomar(i);
-  //       ...
-  //     /* COMER */
-  //       ... 
-  //     FilosofosComensales.soltar(i);
-  //       ...
-  //     /* PENSAR */
-  //       ...
-  //   } while (true);
-  // \end{minted}
-  // 
-  //   \onslide<2->{Pregunta 1: ¿Cómo deben inicializarse los estados?}
-  //   
-  //   \onslide<3->{Pregunta 2: ¿Cumple todas las condiciones del problema de la sección crítica?}
-  // 
-  // \end{frame}
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Monitores usando semáforos}
-  // 
-  // 
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   monitor {
-  //     semaphore mutex(1);
-  //     semaphore next(0);
-  //     int nextCount = 0;    /* cuantos estan esperando en next */
-  //     condition {
-  //       semaphore conditionSem(0); /* para bloquearse en la condicion */
-  //       int count = 0;             /* cuantos esperan en la condicion */
-  //       wait();
-  //       signal();
-  //     }
-  //   }
-  //  \end{minted}
-  // 
-  // \end{frame}
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Monitores usando semáforos}
-  // 
-  //   <code>condition.wait()</code>: <em>thread</em> se bloquea incondicionalmente
-  // 
-  //   <code>condition.signal()</code>: despierta a algún <em>thread</em> bloqueado, si lo hay
-  //   
-  //     \begin{columns}[c]
-  //     \begin{column}[T]{5cm}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   condition.wait() {
-  //     count++;
-  //     if(nextCount > 0)
-  //       signal(next);
-  //     else
-  //       signal(mutex);
-  //     wait(conditionSem);
-  //     count--;
-  //   }  
-  // \end{minted}
-  //     \end{column}
-  //     \begin{column}[T]{5cm}
-  // \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //   condition.signal() {
-  //     if(count > 0) {
-  //       nextCount++;
-  //       signal(conditionSem);
-  //       wait(next);
-  //       nextCount--;
-  //     }
-  //   }
-  // \end{minted}
-  //     \end{column}
-  //     \end{columns}
-  // 
-  // Esta implementación utiliza la semántica <em>signal-and-wait</em>.
-  // 
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Resumen: Sincronización}
-  //   \framesubtitle{Algunos puntos clave}
-  // 
-  //   ul
-  //     li.fragment  Necesidad de sincronizar <em>thread</em> que ``compiten por datos''
-  //     li.fragment  Problema de la sección crítica:
-  //       ul
-  //         li.fragment  Exclusión mutua, progreso, espera acotada
-  //       \end{itemize}
-  //     li.fragment  Primitivas básicas de sincronización:
-  //       ul
-  //         li.fragment  <em>Hardware</em>, Locks, semáforos
-  //       \end{itemize}
-  //     li.fragment  Estructuras de mayor nivel
-  //       ul
-  //         li.fragment  Monitores
-  //       \end{itemize}
-  //   \end{itemize}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-  // \section{<em>Deadlocks</em>}
-  // 
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   Hemos visto situaciones de <em>bloqueo mutuo</em> (<em>deadlock</em>)
-  //   
-  //   ul
-  //     li.fragment  Cuando los filósofos toman los palillos de a uno
-  //     li.fragment  Cuando los procesos toman <em>locks</em> o <em>semáforos</em> en distinto orden
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   Ley 18290: Ley de Tránsito.
-  //   
-  //   Título XI. Derecho preferente de paso.
-  //   
-  //   Artículo 143:
-  //   \begin{quotation}
-  //   Todo vehículo que se aproxime a un cruce deberá hacerlo a velocidad razonable y prudente, deteniéndose si fuere necesario, y el de la izquierda cederá el paso al vehículo que se acerque al cruce por la derecha, el que tendrá derecho preferente de paso.
-  // 
-  //   \onslide<2->{
-  // El conductor del vehículo de la izquierda reiniciará la marcha e ingresará a la intersección sólo cuando se asegure que no hay riesgos de accidente, en atención a la distancia, visibilidad y velocidad de los otros vehículos que se aproximen por la derecha.}
-  //   \end{quotation}
-  // 
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  //   \framesubtitle{¿Qué puede ocurrir?}
-  // 
-  //   También se les llama <em>interbloqueo</em>
-  //   
-  //   \begin{center}
-  //     \includegraphics[width=10cm]{figs/01-cruces.png}
-  //   \end{center}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   &hellip; u otros nombres menos favorables
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=5cm]{figs/01-abrazomortal.jpg}
-  //   \end{center}
-  // 
-  //   (\#NOT!!)
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   Puede verse así:
-  //   
-  //   \begin{center}
-  //     \includegraphics[width=6cm]{figs/01-dealocks-code.jpg}
-  //   \end{center}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   O así:
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=8cm]{figs/01-cruce-gridlock.jpg}
-  //   \end{center}
-  // 
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{<em>Deadlocks</em>}
-  // 
-  //   ¿Cuándo se producen?
-  //   
-  //   \onslide<2->{Cuando hay <strong>competencia por recursos</strong>}
-  //   
-  //   \onslide<3->{
-  //   Modelo:
-  //   
-  //   ul
-  //     li.fragment  Cantidad finita de recursos y de procesos
-  //     li.fragment  Distintas clases de recursos (CPU, dispositvo E/S, &hellip;)
-  //     li.fragment  Cada proceso ejecuta en algún momento estos pasos:
-  //       ul
-  //         li.fragment  <strong>Solicitar</strong> recursos (<em>request</em>)
-  //         li.fragment  <strong>Utilizar</strong> recurso (<em>use</em>)
-  //         li.fragment  <strong>Liberar</strong> recurso (<em>release</em>)
-  //       \end{itemize}
-  //   \end{itemize}
-  //   }
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Caracterización de <em>Deadlocks</em>}
-  // 
-  //   Condiciones <em>necesarias</em>
-  //   
-  //   \begin{description}
-  //     li.fragment [<strong>Exclusión mutua</strong>] Existe al menos un recurso <strong>no compartible</strong>
-  //     li.fragment [<strong>Hold and Wait</strong>] Un proceso debe poseer el recurso y esperar otro recurso
-  //     li.fragment [<strong>Ausencia de expropiación</strong>] Los recursos sólo pueden ser liberados voluntariamente
-  //     li.fragment [<strong>Espera circular</strong>] Conjunto $\{P_0, P_1,&hellip;,P_n\}$ tal que ``$P_0$ espera a $P_1$'',
-  //                                  ``$P_1$ espera a $P_2$'', &hellip; ``$P_n$ espera a $P_0$''
-  //   \end{description}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Grafo de Asignación de Recursos}
-  // 
-  //   Herramienta para determinar la ocurrencia de <em>deadlocks</em>
-  //   \begin{block}{Grafo de Asignación de Recursos (<em>Resource-Allocation Graph</em>)}
-  //     Grafo dirigido $G=(V,E)$
-  //     ul
-  //       li.fragment  $V = P \cup R$. $P=\{P_1, P_2, &hellip;, P_n\}$ son los procesos activos;
-  //                             $R=\{R_1, R_2, &hellip;, R_m\}$ son clases de recursos en el sistema
-  //       li.fragment  Arista de solicitud. $P_i \to R_j$: $P_i$ está esperando un recurso de clase $R_j$
-  //       li.fragment  Arista de asignación. $R_j \to P_i$: Recurso clase $R_j$ ha sido asignado a $P_i$
-  //     \end{itemize}
-  //   \end{block}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Grafo de Asignación de Recursos}
-  // 
-  //   $P=\{P_1,P_2,P_3\}$
-  //   
-  //   $R=\{R_1,R_2,R_3,R_4\}, |R_1|=1, |R_2|=2, |R_3|=1, |R_4|=3$
-  //   
-  //   $E=\{P_1 \to R_1, P_2 \to R_3, R_1 \to P_2, R_2 \to P_2, R_2 \to P_1, R_3 \to P_3\}$
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=3cm]{figs/01-7_01.pdf}
-  //   \end{center}
-  // 
-  //   <em>¿Deadlock?</em> &hellip; \onslide<2->{No (¿por qué?)}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Grafo de Asignación de Recursos}
-  // 
-  //   \begin{alertblock}{Condición de <em>deadlock</em>}
-  //     En el grafo de asignación de recursos:
-  //     ul
-  //       li.fragment  Si no hay ciclos $\to$ no hay <em>deadlock</em>
-  //       li.fragment  Si hay ciclos $\to$ puede haber <em>deadlock</em>
-  //     \end{itemize}
-  //   \end{alertblock}
-  //   
-  //   \onslide<2->{
-  //   ¿Y si hay una sola instancia de cada clase de recurso?
-  //   }
-  //   \begin{center}
-  //   \onslide<3->{Ciclo $\Leftrightarrow$ <em>deadlock</em>}
-  //   \end{center}
-  //     
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Grafo de Asignación de Recursos}
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=3cm]{figs/01-7_01.pdf}
-  //     $P_3$ solicita $R_2$
-  //     \includegraphics[width=3cm]{figs/01-7_02.pdf}
-  //   \end{center}
-  // 
-  //   \onslide<2->{¡<em>Deadlock</em>!}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Grafo de Asignación de Recursos}
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=4cm]{figs/01-7_03.pdf}
-  //   \end{center}
-  // 
-  //   \onslide<2->{¡Ciclo! &hellip;}\onslide<3->{ pero sin <em>deadlock</em>}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{¿Como manejar <em>deadlock</em>s?}
-  // 
-  //   Tres alternativas:
-  //   ul
-  //     li.fragment  Prevenir o evitar llegar a un estado de <em>deadlock</em>
-  //     li.fragment  Permitir el <em>deadlock</em>, detectarlo, y tomar medidas
-  //     li.fragment  Ignorarlo
-  //   \end{itemize}
-  // 
-  //   \begin{center}
-  //     \includegraphics<2->[width=6cm]{figs/01-avestruces.jpg}
-  //   \end{center}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Prevención de <em>deadlock</em>s}
-  //   \framesubtitle{Decisión política}
-  // 
-  //   Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
-  //   
-  // 
-  //   ul
-  //     li.fragment  <strong>Impedir ``Exclusión mutua''</strong>. Que todos los recursos sean compartibles.
-  //     li.fragment  <strong>Impedir ``Hold-and-wait''</strong>. No ejecutar mientras no se tengan todos los recursos:
-  //           procesos deben solicitar todos los recursos antes de ejecutar ; o bien,
-  //           no permitir solicitudes a procesos que ya tengan recursos asignados
-  //           ul
-  //             li.fragment  -Posible subutilización de recursos
-  //             li.fragment  -Posible inanición
-  //           \end{itemize}
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Prevención de <em>deadlock</em>s}
-  //   \framesubtitle{Decisión política}
-  // 
-  //   Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
-  //   
-  // 
-  //   ul
-  //     li.fragment  <strong>Impedir ``No expropiación''</strong>. Permitir expropiación.
-  //           Si el proceso tiene recursos, solicita más y no se pueden asignar, entonces
-  //           debe liberar los que ya tiene.
-  //             ul
-  //               li.fragment  O bien, quitarle los que otro proceso necesita
-  //               li.fragment  Aplicable a recursos cuyo estado se puede recuperar
-  //             \end{itemize}
-  // 
-  //     li.fragment  <strong>Impedir ``Espera circular''</strong>. Que todos los recursos deban ser solicitados en el mismo orden.
-  //           ul
-  //             li.fragment  ¿Por qué esto es suficiente?
-  //             li.fragment  -La regla debe ser respetada por el programador
-  //             li.fragment  FreeBSD incluye objetos <em>witness</em> que verifican este orden
-  // %Chequear ejemplo Figure 7.5!!
-  //           \end{itemize}
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Solución algorítmica}
-  //   
-  //   En lugar de impedir alguna condición ``políticamente'', tomar
-  //   la acción justo antes que ocurra el <em>deadlock</em>.
-  //   
-  //   \onslide<2->{Require examinar dinámicamente el grafo de asignación de recursos}
-  //   
-  //   ul
-  //     li.fragment <3-> Cada procesos debe especificar la cantidad máxima de recursos que puede pedir
-  //   \end{itemize}
-  //   
-  //   \onslide<4->{
-  //   \begin{exampleblock}{<strong>Estado seguro</strong> (<em>safe state</em>)}
-  //     Un estado es seguro si el sistema puede satisfacer las necesidades de todos los procesos
-  //     en algún orden, y evitar el <em>deadlock</em>.
-  //     
-  //     Para un conjunto ordenado de procesos $\{P_1, P_2, &hellip;, P_n\}$, el estado es seguro
-  //     si cada proceso $P_i$ puede satisfacer su demanda máxima usando los recursos que tiene,
-  //     y los que tienen los procesos $P_j$, $j<i$.
-  //   \end{exampleblock}
-  //   }
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  // 
-  //   ul
-  //     li.fragment  Un estado que no es seguro es &hellip; <strong>inseguro</strong>
-  //     li.fragment <2-> Un estado de <em>deadlock</em> es <em>inseguro</em>
-  //     li.fragment <3-> No todo estado <em>inseguro</em> es estado de <em>deadlock</em>
-  //   \end{itemize}
-  //   
-  //   \begin{center}
-  //     \includegraphics[width=4cm]{figs/01-7_06.pdf}
-  //   \end{center}
-  // 
-  //   \onslide<4->{
-  //   La política es mantenerse siempre en estados seguros
-  //   }
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  // 
-  //   Ejemplo: $P=\{P_0,P_1,P_2\}$, $R=\{R_0\}$, $|R_0|=12$
-  //   
-  //   Solicitud máxima: $S_M=\{10,4,9\}$
-  //   
-  //   Solicitud actual: $S_a=\{5,2,2\}$
-  //   
-  //   \begin{center}
-  //     ¿Está el sistema en un estado seguro?
-  //   \end{center}
-  // 
-  //   \onslide<2->{Sí, ya que existe la secuencia $\langle P_1, P_0, P_2 \rangle$}
-  //   
-  //   \onslide<3->{
-  //   \begin{center}
-  //     ¿Y si a $P_2$ se le asigna un recurso más?
-  //   \end{center}
-  //   }
-  //   
-  //   \onslide<4->{
-  //     <strong>¡Estado inseguro!</strong> (¿por qué?)
-  //   }  
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Volviendo al grafo de asignación de recursos}
-  //   
-  //   Nuevo tipo de arista (existían de solicitud y de asignación):
-  //   
-  //   \onslide<2->{Arista de <strong>demanda</strong>: $P_i\to R_j$ significa que $P_i$ <em>puede</em> solicitar 
-  //                el recurso $R_j$ en el futuro.}
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=3cm]{figs/01-7_07.pdf}
-  //   \end{center}
-  // 
-  //   \onslide<3->{Algoritmo: satisfacer solicitud sólo si al satisfacer demanda
-  //                no se obtiene un ciclo}
-  //                
-  //   \onslide<4->{Costo de detectar ciclo con $n$ procesos: }\onslide<5->{$O(n^2)$}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-  // 
-  //   Analogía: el banquero entrega dinero de manera que pueda satisfacer a todos sus clientes
-  //   
-  //   ul
-  //     li.fragment <2-> Cada proceso debe declarar su máximo de demanda para cada (clase de) recurso,
-  //              que no debe ser mayor que el máximo existente
-  //     li.fragment <3-> El algoritmo sólo asigna recursos si se mantiene dentro de un estado seguro
-  //   \end{itemize}
-  //   
-  //   \onslide<4->{Estructuras: $m$ recursos, $n$ procesos}
-  //   ul
-  //     li.fragment <5-> <code>Available[m]</code>, cantidad disponible para cada recurso
-  //     li.fragment <5-> <code>Max[n][m]</code>, máxima demanda para cada proceso.
-  //       ul
-  //         li.fragment  <code>Max[i][j]=k</code>: $P_i$ puede solicitar hasta $k$ instancias de $R_j$
-  //       \end{itemize}
-  //     li.fragment <5-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
-  //       ul
-  //         li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
-  //       \end{itemize}
-  //     li.fragment <5-> <code>Need[n][m]</code>, solicitud potencial para cada proceso
-  //       ul
-  //         li.fragment  <code>Need[i][j]=k</code>: $P_i$ podría pedir hasta $k$ instancias de $R_j$
-  //         li.fragment  <code>Need[i][j] == Max[i][j] - Allocation[i][j]</code>
-  //       \end{itemize}
-  //   \end{itemize}
-  //   
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-  // 
-  //   ¿Cómo saber si estamos en un estado seguro?
-  //   
-  //   \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //     /** Safety Algorithm **/
-  //     int Work[m] = Available;
-  //     bool Finish[n] = FALSE;
-  //     
-  //     /** encontrar indice $i$ tal que Finish[i]==FALSE y Need[i] $\leq$ Work **/
-  //     while(existe i tal que (!Finish[i] && Need[i] <= Work)) {
-  //       Work = Work + Allocation[i];
-  //       Finish[i] = TRUE;
-  //     }
-  //     for(i=0;i<n;i++) {
-  //       if(Finish[i] == FALSE) {
-  //         return UNSAFE;
-  //       }
-  //     }
-  //     return SAFE;
-  //   \end{minted}
-  //   
-  //   Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
-  //   
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-  // 
-  //   ¿Cómo determinar si es posible hacer una asignación de recursos?
-  //   
-  //   Input: <code>Request[i]</code>, solicitud de $P_i$
-  //   \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //     assert(Request[i] <= Need[i]); /** no puede pedir mas de lo que declara **/
-  //     if(Request[i] <= Available) {
-  //       /** Simula una asignacion **/
-  //       Available = Available - Request[i];
-  //       Allocation[i] = Allocation[i] + Request[i];
-  //       Need[i] = Need[i] - Request[i];
-  //       if(safetyAlgorithm() == SAFE) { /** el de la slide anterior **/
-  //         return ALLOCATED;
-  //       }
-  //       else {
-  //         /** deshacer la asignacion **/
-  //         return WAIT;
-  //       }
-  //     }
-  //     else {
-  //       return WAIT;
-  //     }
-  //   \end{minted}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Evitar <em>deadlock</em>s}
-  //   \framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-  // 
-  //   Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
-  //   
-  //   $|R_A|=10, |R_B|=5, |R_C|=7$
-  //   
-  //   Estado actual:
-  //   \[
-  //   \begin{array}{c|c|c|c|}
-  //    \textbf{Alloc} & A & B & C \\ \hline
-  //    P_0 & 0 & 1 & 0 \\ \hline
-  //    P_1 & 2 & 0 & 0 \\ \hline
-  //    P_2 & 3 & 0 & 2 \\ \hline
-  //    P_3 & 2 & 1 & 1 \\ \hline
-  //    P_4 & 0 & 0 & 2 \\ \hline
-  //   \end{array}
-  //   \qquad 
-  //   \begin{array}{c|c|c|c|}
-  //    \textbf{Max} & A & B & C \\ \hline
-  //    P_0 & 7 & 5 & 3 \\ \hline
-  //    P_1 & 3 & 2 & 2 \\ \hline
-  //    P_2 & 9 & 0 & 2 \\ \hline
-  //    P_3 & 2 & 2 & 2 \\ \hline
-  //    P_4 & 4 & 3 & 3 \\ \hline
-  //   \end{array}
-  //   \qquad
-  //    \begin{array}{c|c|c|c|}
-  //    \textbf{Need} & A & B & C \\ \hline
-  //    P_0 & 7 & 4 & 3 \\ \hline
-  //    P_1 & 1 & 2 & 2 \\ \hline
-  //    P_2 & 6 & 0 & 0 \\ \hline
-  //    P_3 & 0 & 1 & 1 \\ \hline
-  //    P_4 & 4 & 3 & 1 \\ \hline
-  //   \end{array}
-  //   \]
-  //   $\textbf{Available}=\{3,3,2\}$
-  //   
-  //   El estado actual es <strong>safe</strong>, ¿por qué? \onslide<2->{({$\langle P_1,P_3,P_4,P_2,P_0 \rangle$})}
-  //   
-  //   ul
-  //     li.fragment <3-> Ejecutar <em>request</em> de $P_1$: <code>Request[1]=\{1,0,2\}</code>
-  //     li.fragment <3-> Ejecutar <em>request</em> de $P_4$: <code>Request[4]=\{3,3,0\}</code>
-  //     li.fragment <3-> Ejecutar <em>request</em> de $P_0$: <code>Request[0]=\{0,2,0\}</code>
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Detectar <em>deadlock</em>s}
-  // 
-  //   Si no se toma ninguna acción previa, pueden ocurrir <em>deadlocks</em>
-  //   
-  //   \onslide<2->{Se necesita:}
-  //   
-  //   ul
-  //     li.fragment <3->{Algoritmo para detectar <em>deadlocks</em>}
-  //     li.fragment <3->{Algoritmo para resolver <em>deadlocks</em>}
-  //   \end{itemize}
-  //   
-  //   Costo de detectar ciclos en grafo de asignación de $n$ procesos: $O(n^2)$
-  // 
-  //   \begin{center}
-  //     \includegraphics[width=6cm]{figs/01-7_09.pdf}
-  //   \end{center}
-  // 
-  // \end{frame}
-  // 
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Detectar <em>deadlock</em>s}
-  //   \framesubtitle{Pero con múltiples instancias por recurso}
-  //   
-  //   Algoritmo de detección de <em>deadlock</em> basado en el banquero
-  //   
-  //   \onslide<2->{Estructuras: $m$ recursos, $n$ procesos}
-  //   ul
-  //     li.fragment <2-> <code>Available[m]</code>, cantidad disponible para cada recurso
-  //     li.fragment <2-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
-  //       ul
-  //         li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
-  //       \end{itemize}
-  //     li.fragment <2-> <code>Request[n][m]</code>, solicitud actual para cada proceso
-  //       ul
-  //         li.fragment  <code>Request[i][j]=k</code>: $P_i$ solicita $k$ instancias de $R_j$
-  //       \end{itemize}
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame[fragile]
-  //   \frametitle{Detectar <em>deadlock</em>s}
-  //   \framesubtitle{Pero con múltiples instancias por recurso}
-  //  
-  //   Detección de <em>deadlock</em>
-  //   
-  //   \begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-  //     /** Deadlock detection algorithm **/
-  //     int Work[m] = Available; bool Finish[n];
-  //     for(i=0;i<n;i++)
-  //       if(Allocation[i] != 0) Finish[i] = FALSE;
-  //       else                   Finish[i] = TRUE;
-  //     /** encontrar indice $i$ tal que Finish[i]==FALSE y Request[i] $\leq$ Work **/
-  //     while(existe i tal que (!Finish[i] && Request[i] <= Work)) {
-  //       Work = Work + Allocation[i];
-  //       Finish[i] = TRUE;
-  //     }
-  //     /** todos pueden terminar? **/
-  //     for(i=0;i<n;i++)
-  //       if(Finish[i] == FALSE) return DEADLOCKED;
-  //     return NOT_DEADLOCKED;
-  //   \end{minted}
-  //   Todos los procesos para los cuales <code>Finish[i]==FALSE</code> están en <em>deadlock</em>
-  //   
-  //   Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Detectar <em>deadlock</em>s}
-  // 
-  //   Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
-  //   
-  //   $|R_A|=10, |R_B|=5, |R_C|=7$
-  //   
-  //   Estado actual:
-  //   \[
-  //   \begin{array}{c|c|c|c|}
-  //    \textbf{Alloc} & A & B & C \\ \hline
-  //    P_0 & 0 & 1 & 0 \\ \hline
-  //    P_1 & 2 & 0 & 0 \\ \hline
-  //    P_2 & 3 & 0 & 3 \\ \hline
-  //    P_3 & 2 & 1 & 1 \\ \hline
-  //    P_4 & 0 & 0 & 2 \\ \hline
-  //   \end{array}
-  //   \qquad 
-  //   \begin{array}{c|c|c|c|}
-  //    \textbf{Req} & A & B & C \\ \hline
-  //    P_0 & 0 & 0 & 0 \\ \hline
-  //    P_1 & 2 & 0 & 2 \\ \hline
-  //    P_2 & 0 & 0 & 0 \\ \hline
-  //    P_3 & 1 & 0 & 0 \\ \hline
-  //    P_4 & 0 & 0 & 2 \\ \hline
-  //   \end{array}
-  //   \]
-  //   $\textbf{Available}=\{0,0,0\}$
-  //   
-  //   El estado actual es <strong>NOT DEADLOCKED</strong>, ¿por qué? \onslide<2->{({$\langle P_0,P_2,P_3,P_1,P_4 \rangle$})}
-  //   
-  //   ul
-  //     li.fragment <3-> Ejecutar <em>request</em> de $P_2$: <code>Request[2]=\{0,0,1\}</code>
-  //   \end{itemize}
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Recuperación ante <em>deadlock</em>s}
-  // 
-  //   p OK, hemos detectado el <em>deadlock</em> (so what?)
-  //   
-  //   p.fragment Dos caminos&hellip;
-  //   ul
-  //     li.fragment <strong>Matar un proceso</strong> ¿Cuál?
-  //       ul
-  //         li.fragment Todos (solución drástica)
-  //         li.fragment Uno a la vez hasta resolver el <em>deadlock</em>
-  //           ul
-  //             li.fragment  Criterio 1: La cantidad mínima
-  //             li.fragment  Criterio 2: El de menor ``costo''
-  //     li.fragment <strong>Expropiar recursos</strong>
-  //       ul
-  //         li.fragment  ¿A quién?
-  //         li.fragment  <strong>Rollback</strong>
-  //       \end{itemize}
-  //   \end{itemize}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Recuperación ante <em>deadlock</em>s}
-  //   \framesubtitle{Algunos puntos importantes}
-  // 
-  //   ul
-  //     li.fragment  <em>Deadlock</em>: dos o más procesos esperando indefinidamente por un evento
-  //           que sólo puede ser producido por uno de ellos mismos.
-  //           ul
-  //             li.fragment  Requieren: recursos no compartibles, no expropiables, ``retención-y-espera'',
-  //                   y espera circular.
-  //             li.fragment  Si se impide una de estas condiciones, no se puede producir <em>deadlock</em>
-  //           \end{itemize}
-  //     li.fragment  Tres alternativas de manejo:
-  //       ul
-  //         li.fragment  Prevenir (que nunca pueda ocurrir), o evitar (esquivarlo antes que pase)
-  //         li.fragment  Permitirlo y recuperarse. Desafío: resolver con el menor ``daño'' posible
-  //         li.fragment  Ignorarlo
-  //       \end{itemize}
-  //     li.fragment  Algoritmo del banquero (Dijkstra, 1977), evita que el proceso llegue a un <em>estado inseguro</em>
-  //     li.fragment  Sistema en <em>estado seguro</em> no puede estar en <em>deadlock</em>
-  //   \end{itemize}
-  // 
-  // \end{frame}
-  // 
-  // %---------------------------------------------------------------------
-/ Frame
-  //   \frametitle{Administración de Procesos}
-  //   \framesubtitle{¿Qué debemos recordar?}
-  //  
-  //   ul
-  //     li.fragment  Procesos: programa+recursos, administrados por el S.O. mediante <em>syscall</em>s
-  //     li.fragment  <em>Threads</em>: unidad básica de ejecución visible al programador o al S.O.
-  //     li.fragment  Sincronización de <em>threads</em> permite que puedan ejecutar eficientemente, sin bloquearse,
-  //           y sin provocar inconsistencias en los datos compartidos
-  //     li.fragment  Algoritmos de <em>scheduling</em> permiten seleccionar eficientemente el próximo proceso/<em>thread</em> a ejecutar
-  //     li.fragment  Se debe evitar caer en situación de <em>bloqueo mutuo</em>
-  //   \end{itemize}
-  // 
-  // 
-  // \end{frame}
-  // 
-  // \end{document}
+
+section#prod-cons
+	h2 Regreso al Productor/Consumidor
+	/  -------------------------------
+
+	section#prod-cons-sol
+		p Solución con <em>threads</em> productor y consumidor.
+
+		pre
+			code.hljs.c
+				| size_t in=0, out=0;
+				 /* Shared data */
+				 size_t stock = 0;
+				 T storage[STORAGE_SIZE];
+
+		pre
+			code.hljs.c
+				| while ('v') {
+				   item = produce();
+				   while (stock == STORAGE_SIZE) {} /* Storage full */
+				   storage[in] = item;
+				   
+				   in = ++in%STORAGE_SIZE;  /* rotate index */
+				   stock++;
+				 }
+
+		pre
+			code.hljs.c
+				| while (2333) {
+				   while(!stock) {} /* Wait for new items */
+				   item = storage[out];
+				   
+				   out = ++out%STORAGE_SIZE;  /* rotate index */
+				   stock--;
+				   consume(item);
+				 }
+
+	section#prod-cons-sol-rc
+		p ¿Qué podría salir mal?
+
+		.fragment
+			p  Considere la secuencia:
+			pre
+				code.hljs.c
+					| /* stock=10 */
+					 stock++;  /* Thread 1  */
+					 stock--;  /* Thread 2 */
+
+		p.fragment Resultado esperado: <code>stock=10</code>
+
+		p.fragment Pero también podría ocurrir <code>9</code> o <code>11</code> (what?)
+
+
+	section#prod-cons-rc-asm
+		p ¿Cómo se ejecutan los cálculos en hardware?
+
+		pre
+			code.hljs.asm
+				| load r1, stock  ; r1 <= stock
+				 inc r1          ; (r1 += 1)
+				 store stock, r1 ; stock <= r1
+
+		pre
+			code.hljs.asm
+				| load r2, stock  ; r2 <= stock
+				  dec r2          ; (r2 -= 1)
+				  store stock, r2 ; stock <= r2
+
+	section#prod-cons-rc-asm-fail
+		p Podría ocurrir este orden de ejecución (<strike>Shit happens</strike> C'est la vie)
+
+		a href="http://i.imgur.com/MS13CAb.gif"
+			pre
+				code.hljs.asm
+					| load r1, stock  ; r1 = 10
+					                                    load r2, stock  ; r2 = 10
+					                                    dec r2          ; r2 = 9
+					                                    store stock, r2 ; stock = 9   Write lost!!
+					  inc r1          ; r1 = 11      Outdated!!
+					  store stock, r1 ; stock = 11   Dirty write :/
+
+		p.fragment ¿Podemos tener tan mala suerte para que ocurra a<a href="https://www.reddit.com/r/Bitcoin/comments/1wtbiu/how_i_stole_roughly_100_btc_from_an_exchange_and">sí</a>?
+
+
+	section#rc
+		dl
+			dt Race Condition
+			dd
+				p Situación en que la salida de una operación depende del orden temporal de sus operaciones internas, el cual no está bajo control del programador.
+
+		p.fragment El resultado depende de la entremezcla (<em>interleaving</em>) de sus <em>threads</em>
+		h5.fragment <strong>Hay que evitarlas</strong>
+
+
+section#crS
+	h2 El Problema de la Sección Crítica
+	/  ---------------------------------
+
+	section#crS-def
+		p  Cada proceso tiene un segmento de código llamado <strong>sección crítica</strong>
+
+		p.fragment  Allí el proceso puede acceder a los recursos compartidos
+
+	section#crS-def_
+		p  Objetivo:
+		blockquote.fragment
+			| Diseñar un protocolo que no permita que dos procesos se encuentren en su sección crítica al mismo tiempo
+
+		pre.fragment
+			code.hljs.c
+				| void mess_with_shared_things() {
+				    entry();
+				    /* do stuff with shared resources */
+				    leave();
+				    
+				    /* moar stuff */
+				 }
+
+
+	section#crS-solReqs
+		p Una solución al problema de la sección crítica (SC) debe cumplir 3 requisitos:
+
+		dl
+			dt.fragment Exclusión Mutua
+			dd.fragment
+				p <em>A lo más un</em> proceso está en su SC.
+
+			dt.fragment Progreso
+			dd.fragment
+				p <em>Al menos alguien puede entrar</em>.
+				p Si ningún proceso está en su SC, y hay procesos que desean entrar, entonces los que quieren entrar deben decidir quién entra, y decidirlo en un tiempo acotado.
+
+			dt.fragment Espera acotada
+			dd.fragment
+				p <em>Ausencia de inanición</em>. Si un proceso quiere entrar a su SC, podrá hacerlo luego de una cantidad finita de turnos.
+
+
+
+
+
+section#sols
+	h2 Algunas soluciones al problema de la sección crítica
+
+
+section#peterson
+	/TODO; FIX left/right css
+	.left
+		pre
+			code.hljs.c
+				| size_t me = //?;                  /* Peterson */
+				 size_t other = 1-me;
+				 do {
+				   flag[me] = true;  /* 'wants' */
+				   turn = other;
+				   
+				   while(flag[other] && turn == other); {}
+				   /* Critical Section */
+				   flag[me] = false;
+				   
+				   /* ... */
+				 } while('o');
+
+	section#peterson
+		h2 Solución de Peterson
+		/ ---------------------
+
+	section#peterson-init
+
+		.right
+			p Solución para 2 procesos (Gary L. Peterson, 1981)
+		.right
+			p.fragment Variables compartidas: <code>int turn; boolean flag[2];</code>
+			p.fragment ¿En qué valor se inicializan <code>turn</code> y <code>flag</code>?
+
+
+
+
+	section#peterson-a
+		.right
+			p ¿Cumple los requisitos?
+
+	section#peterson-a-me
+		.right
+			p <strong>Exclusión Mutua</strong>
+
+			ul
+				li.fragment  $P_i$ puede entrar solamente si <code>flag[j]==false</code> ó <code>turn == i</code>
+				li.fragment  Si $P_i$ y $P_j$ se encuentran ambos en la SC, entonces <code>flag[0]==flag[1]==true</code>
+				li.fragment  <code>flag[0]==true</code> $\Rightarrow$ <code>turn=i</code>
+				li.fragment  <code>flag[1]==true</code> $\Rightarrow$ <code>turn=j</code>
+				li.fragment  Pero <code>i</code>$\neq$<code>j</code>, por lo tanto no pueden estar ambos en su SC
+
+
+	section#peterson-a-p
+		.right
+			p <strong>Progreso</strong>
+
+			ul
+				li.fragment  Si $P_i$ desea entrar a su SC, sólo puede estar detenido en el loop (busy-wait)
+				li.fragment  Entonces se cumple <code>flag[j]==true</code> y <code>turn==j</code>
+				li.fragment  Si $P_j$ no desea entrar a su SC, entonces <code>flag[j]==false</code>
+				li.fragment  Si $P_j$ desea entrar, entonces <code>turn==i</code> ó <code>turn==j</code>
+				li.fragment  En cualquier caso, uno de los que quiere entrar, entra 
+
+
+	section#peterson-a-ea
+		.right
+			p <strong>Espera acotada</strong>
+
+			ul
+				li.fragment  Si $P_i$ desea entrar y está esperando, entonces <code>flag[i]==true</code>, <code>flag[j]==true</code> y <code>turn==j</code>
+				li.fragment  En cuanto $P_j$ sale, establece <code>flag[j]=false</code>, y $P_i$ puede entrar (si empieza a ejecutar)
+				li.fragment  Si $P_j$ intenta entrar inmediatamente, deberá establecer <code>flag[j]=true</code> y <code>turn=i</code>.
+				li.fragment  Se cumple entonces <code>flag[i]==true</code>, <code>flag[j]==true</code>, y <code>turn=i</code>, con lo que $P_j$ no puede entrar.    
+				li.fragment  Por lo tanto después de, a lo más, 1 turno, $P_i$ puede entrar (espera acotada)
+
+
+
+section#hwSync
+	h2 Sincronización por <em>hardware</em>
+	/  ------------------------------------
+
+	section#hwSync_
+		p Soluciones por <em>software</em> dependen de que existan <strong>instrucciones atómicas</strong> por <em>hardware</em>:
+
+		p.fragment Una solución más sencilla:
+		pre.fragment
+			code.hljs.c
+				| lock = true;
+				  while (!lock);
+				  /* Critical Section */
+				  lock = false;
+				  /* ... */
+
+		p.fragment ¿Basta con esto?
+
+
+	section#hwSync-ts
+		p <code>test_and_set()</code>
+
+		p.fragment Algunas arquitecturas proveen instrucciones atómicas del tipo <code>test_and_set</code>
+
+		.fragment
+			p  La instrucción es equivalente a:
+			pre
+				code.hljs.c
+					| _Bool SOFTWARE_test_and_set (_Bool *target) {
+					   _Bool old_value = *target;
+					   *target = true;
+					   
+					   return old_value;
+					 }
+
+		p.fragment ¿Y si no hay soporte en la CPU?
+		ul
+			li.fragment  Se puede usar deshabilitando las interrupciones momentáneamente.
+
+		p.fragment  ¿Cómo usarlo?
+
+	section#hwSync-ts_sample
+		pre.fragment
+			code.hljs.c
+				| _Bool lock;
+				 /* ... */
+				 while (test_and_set(&lock));
+				 /* Critical Section */
+				 lock = false;
+				 
+				 /* ... */
+
+	section#hwSync-cas
+		p Otra instrucción atómica: <code>compare_and_swap</code>
+
+		pre.fragment
+			code.hljs.c
+				| _Bool SOFTWARE_compare_and_swap (int *value, int expected, int new_value) {
+				    int previous = *value;
+				    
+				    if(*value == expected)
+				      *value = new_value;
+				    
+				    return previous;
+				  }
+
+		p.fragment  ¿Cómo usarlo?
+
+
+	section#hwSync-cas-sample
+
+		pre
+			code.hljs.c
+				| do {
+				    while (compare_and_swap(&lock, 0, 1));
+				    /* Critical Section */
+				    
+				    lock = 0;
+				    /* ... */
+				 } while('~');
+
+	section#sync-correctness
+		pre style="heigth=80%;max-heigth=80%;"
+			code.hljs.c style="heigth=80%;max-heigth=80%;"
+				| do {
+				    waiting[i] = key = true;          /* "I'm waiting and it's locked" */
+				    while (waiting[i] && key)
+				      key = test_and_set(&lock);
+				    waiting[i] = false;               /* "I'm no longer waiting" */
+				    /* Critical Section */
+				    
+				    j = (i+1)%N;                      /* Find waiting proc (clockwise circle) */
+				    while((j != i) && !waiting[j])
+				      j = ++j%N;
+				    if(j == i)                          /* -Nobody was waiting */
+				      lock = false;
+				    else                                /* -proc_j shold go (stop waiting) */
+				      waiting[j] = false;
+				    /* ...  */
+				 } while('-');   /* "Here I go again (on my own)" */
+
+		p.fragment Estos algoritmos ¿cumplen con las propiedades de solución para sección crítica?
+
+section#abstractions
+	h2 Abstracciones de Sincronización
+	/  -------------------------------
+
+	section#abstractions-init
+		p En general no se usan directamente soluciones por <em>hardware</em> sino que &hellip;
+
+		p.fragment Se construyen primitivas de <em>software</em> sobre ellas.
+		p.fragment Encapsulan la sincronización.
+		ul
+			li.fragment Algunas agregan mejoras para ciertas situaciones.
+			li.fragment Pero a veces el costo de la mejora supera lo ganado.
+
+
+section#abstractions-locks
+	h3 Locks
+
+	section#abstractions-locks-init
+		p.fragment La más simple
+		.fragment
+			p <strong>Mutex Lock</strong> (<strong>mut</strong>ual <strong>ex</strong>clusion)
+			ul
+				li.fragment <code>Lock::acquire()</code>
+				li.fragment <code>Lock::release()</code>
+
+		pre.fragment
+			code.hljs.c
+				| void acquire() {     /* (Using HW support or disabling INTs) */
+				    while(!available); /* busy wait */
+				    available = false;
+				  }
+				  
+				  void release() {
+				    available = true;
+				  }
+
+	section#abstractions-locks-sample
+		pre.fragment
+			code.hljs.c
+				| do {
+				    acquire();
+				    /* Critical Section */
+				    release();
+				    /* ... */
+				    
+				 } while('o');
+
+section#abstractions-locks
+	h3 Semáforos
+
+	section#sema
+		p En ocasiones se quiere un acceso acotado, pero mayor a 1
+
+		.fragment
+			dl
+				dt Semáforo
+				dd
+					p Un semáforo <code>S</code> incluye un contador y dos operaciones:
+					ul
+						li.fragment <em>proberen</em> <code>P()</code> ó <code>wait</code>. Intenta decrementar el valor.
+						li.fragment <em>verhogen</em> <code>V()</code> ó <code>signal</code>. Incrementa el valor.
+			p.fragment E. Dijkstra era Holandés, pero si no saben holandés es más fácil recordar <code>Pedir</code>/'<code>Votar</code>'
+
+		pre.fragment
+			code.hljs.c
+				| void P(S) {  /* wait (Using HW support or disabling INTs) */
+				    while(S <= 0); /* busy wait */
+				    S--;
+				  }
+				  void V(S) {  /* signal */
+				    S++;
+				  }
+
+	section#sema-1
+		p ¿Cuándo es adecuado?
+
+		p.fragment Cuando se quiere compartir múltiples recursos
+
+		p.fragment <em>¿Y si simplemente uso un lock por cada uno?</em>
+		ul
+			li.fragment Cada cliente debería intentar pedir todos.
+			li.fragment Puede que obtenga más de los que necesita.
+			li.fragment O que espere por recursos que no necesita.
+
+		p.fragment Con un semáforo se tiene una interfaz única para todos los recursos.
+
+		p.fragment Ejemplos:
+		ul
+			li.fragment Biblioteca: Un semáforo agrupa las copias de libros o salas.
+			li.fragment WebServers: Limitar la concurrencia para que los requests en los que se invierte tiempo no den timeout.
+			li.fragment Supermercados: Cola 'rápida' con varias cajas.
+
+	section#sema-sample
+		pre
+			code.hljs.c
+				| Semaphore* S = sema_new(K);
+				 do {
+				   P(S);
+				   /* Critical Section */
+				   V(S);
+				   /* ... */
+				 } while (1);
+
+
+
+section#no-busy-wait
+	h2 <strike>Busy Wait</strike>
+
+	section#no-busy-wait_
+		p Las Implementaciones propuestas de <em>Lock</em> y <em>Semaphore</em> usan <strong>busy waiting</strong>
+
+		p.fragment Eso es malo<span class="fragment">, <strong>muy malo</strong></span>
+		p.fragment Desperdicia ciclos de CPU
+
+		p.fragment ¿Alternativas?
+		ul
+			ul.fragment usar una cola de espera.
+
+	section#no-busy-wait-sema
+		p Semáforo sin <em>busy waiting</em>
+
+		pre.fragment
+			code.hljs.c
+				| typedef struct {
+				    int value;
+				    Queue<pid_t> queue;  /* (C++ notation. C needs a void* queue or a type defined by the preprocessor) */
+				  } Semaphore;
+
+		p.fragment Necesitamos soporte del SO para manipular procesos.
+		ul
+			li.fragment  <code>block()</code> que libera la CPU.
+			li.fragment  <code>wake(p)</code> que despierta al proceso <code>p</code>.
+
+		pre.fragment
+			code.hljs.c
+				| P(Semaphore *s) {  /* wait */
+				    s->value--;
+				    if(s->value < 0) {
+				      queue_push(s->queue, currentProcess() );
+				      block();
+				    }
+				  }
+				 
+				 V(Semaphore *s) {  /* signal */
+				   s->value++;
+				   wake( queue_pop(s->queue) );
+				 }
+
+
+
+
+section#block-problems
+	h2 Problemas clásicos de sincronización
+
+	section#block-problems_
+		p Ahora que la espera no desperdicia CPU revisemos algunos problemas.
+
+
+section#block-prodCons-sema
+	p Semáforos para el buffer acotado
+
+	section#block-prodCons_sema-data
+		p ¿Cómo lo solucionamos con semáforos?
+
+		p.fragment Variables compartidas:
+		pre.fragment
+			code.hljs.c
+				| Item buffer[BUFFER_SIZE];
+				  Semaphore missing(BUFFER_SIZE);
+				  Semaphore pending(0);
+				  
+				  Semaphore mutex(1);     /* (lock?) */
+
+  
+	section#block-prodCons_sema-procs
+		pre
+			code.hljs.c
+				| do {
+				    wait(missing);
+				    wait(mutex);
+				    
+				    buffer[in] = produce();  /* Store new Item */
+				    in = ++in%BUFFER_SIZE;   /* Advance save target */
+				    
+				    signal(mutex);
+				    signal(full);
+				  } while(1);
+
+		pre
+			code.hljs.c
+				| do {
+				    wait(full);
+				    wait(mutex);
+				    
+				    consume(  buffer[out]  );  /* Use Item */
+				    out = ++out%BUFFER_SIZE;   /* Target next item */
+				    
+				    signal(mutex);
+				    signal(empty);
+				  } while(2);
+
+		p.fragment  ¿Qué pasa si se pide el mutex antes?
+
+
+
+section#block-rw
+	p Semáforos para los lectores y escritores
+
+	section#block-rw_
+		p La sección crítica suele exigir <strong>solo un</strong> <em>thread</em> en ella.
+
+		/ Hay situaciones en las que puede entrar más de un proceso
+		/ Y más de una clase de procesos
+
+		p.fragment  ¿Y si solo permitimos lecturas?  <span class="fragment"> OK, entonces $n$ lectores simultáneos                  </span>
+		p.fragment  ¿Y si alguien quiere escribir?   <span class="fragment"> Entonces, que solo <strong>uno</strong> pueda escribir </span>
+		p.fragment  Condiciones distintas para cada rol
+
+		dl.fragment
+			dt Problema de lectores y escritores
+			dd
+				ul
+					li.fragment Permitir acceso de $n$ lectores simultáneos, pero solamente 1 escritor
+					li.fragment Variantes:
+					ul
+						li.fragment lectores ilimitados
+						li.fragment escritores con prioridad
+
+
+	section#block-rw-shared
+		p Variables compartidas
+		pre.fragment
+			code.hljs.c
+				| int reading=0;
+				  Semaphore rw_mutex(1);
+				  Semaphore mutex(1);
+  
+	section#block-rw-procs
+		pre.fragment
+			code.hljs.c
+				| do {
+				    wait(rw_mutex);
+				    /* write */
+				    signal(rw_mutex);
+				  } while('w');
+
+		pre.fragment
+			code.hljs.c
+				| do {
+				    wait(mutex);
+				    reading++;
+				    if(reading == 1)
+				      wait(rw_mutex);
+						signal(mutex);
+				    
+				    /* read */
+				    
+				    wait(mutex);
+				    reading--;
+				    if(read_count == 0)
+				      signal(rw_mutex);
+						signal(mutex);
+				  } while('r');
+
+
+section#block-phi
+	p Problema de los filósofos comensales
+
+	section#block-phi_
+		p 5 filósofos se pasan la vida en dos actividades: <em>comer</em> y <em>pensar</em>
+		ul
+			li.fragment  Para comer deben tomar ambos palillos
+			li.fragment  Sólo pueden tomar un palillo a la vez
+		= image_tag 'images/figures/01-5_13.pdf.png', :style=>"float:right;"
+
+
+	section#block-phi_-procs
+		pre.fragment
+			code.hljs.c
+				| int  left =  i;
+				  int right = (i+1)%N;
+				  Semaphore chopstick[N];
+				  
+				  do {
+				    wait(chopstick[ left]);
+				    wait(chopstick[right]);
+				    
+				    /* eat */
+				    
+				    signal(chopstick[ left]);
+				    signal(chopstick[right]);
+				    
+				    /* philosophise */
+				    
+				  } while ('p');
+
+		p.fragment  ¿Funciona? ¿Para 2? ¿3?
+
+
+
+	section#block-phi_-dl
+		p Un uso poco cuidadoso cuando hay más de 1 recurso puede traer otro enemigo.
+		p.fragment <strong>deadlock</strong> (<strong>bloqueo mutuo</strong>)
+		pre.fragment
+			code.hljs.c
+				| /* Shared */
+				  Semaphore a,b;  /* Lock fails too */
+				  
+				  /* Proc1 */       /* Proc 2 */
+				  P(a);             P(b);
+				  P(b);             P(a);
+				  /* ... */         /* ... */
+				  V(a);             V(b);
+				  V(b);             V(a);
+		p.fragment Ambos piden <code>a</code> y <code>b</code>, los usan y luego los devuelven.
+		p.fragment ¿Pero qué pasa si ambos ejecutan su primer <code>wait</code> al mismo tiempo?
+		p.fragment Es aún peor si internamente se usa <em>busy-wait</em> en vez de <code>block</code>.
+		p.fragment ¿Cómo se soluciona esto? ¿Se puede?
+		p.fragment ¿Bastará con mejores abstracciones?
+
+
+section#block-mon
+	h2 Monitores
+	/  ---------
+	/  1-252
+
+	section#block-mon-init
+		p Construcción de sincronización de (más) alto nivel
+
+		ul
+			li.fragment  Provee métodos que permiten controlar el acceso exclusivo
+			li.fragment  Utiliza <strong>variables de condición</strong>, que tiene dos operaciones
+			ul
+				li.fragment  <code>Condition::wait()</code>   bloquea <strong>siempre</strong> el <em>thread</em>
+				li.fragment  <code>Condition::signal()</code> despierta a un <em>thread</em> bloqueado, si lo hay
+			li.fragment  No son iguales a semáforos (pero pueden implementarse con ellos
+
+		p.fragment ¿Semántica para <code>signal()</code>?
+		ul
+			li.fragment  <strong>Signal-and-continue</strong>: el <em>caller</em> continúa ejecutando (Java, C#).
+			li.fragment  <strong>Signal-and-wait</strong>:     el <em>caller</em> se bloquea inmediatamente. <span class="fragment">¿Sirve?</span>
+
+
+
+	section#block-mon-phi
+		p Filósofos Comensales Monitoreados
+
+		pre.stretch
+			code.hljs.c
+				| monitor DiningPhilosophers {
+				    enum {PHILOSOPHISE, HUNGRY, EATING} state[N];   /* free / waiting / using */
+				    
+				    condition philosopher[N];
+				    int left  = (N+i-1)%N;  /* -5%2 ? */
+				    int right = (  i+1)%N;
+				    
+				    void take(int i) {
+				      state[i] = HUNGRY;
+				      check(i);
+				      if(state[i] != EATING)
+				        philosopher[i].wait();
+				    }
+				    
+				    void release(int i) {
+				      state[i] = PHILOSOPHISE;
+				      check( left);
+				      check(right);
+				    }
+				    
+				    void check(int i) {
+				      if( state[ left] != EATING &&
+				          state[right] != EATING &&
+				          state[    i] == HUNGRY )
+				        state[i] = EATING;
+				        philosopher[i].signal();
+				      }
+				    }
+				  }
+
+
+  
+	section#block-mon-phi-procs
+		p La implementación de cada filósofo se reduce a:
+
+		pre.fragment
+			code.hljs.c
+				| do {
+				    FilosofosComensales.take(i);
+				    /* eat */
+				    FilosofosComensales.release(i);
+				    /* philosophise */
+				  } while('p');
+
+		p.fragment  ¿Cómo deben inicializarse los estados?
+		p.fragment  ¿Cumple todas las condiciones del problema de la sección crítica?
+
+
+ 
+
+	section#block-mon-impl
+		p Monitores usando semáforos
+		pre.fragment
+			code.hljs.c
+				| struct monitor {
+				    Semaphore mutex(1);
+				    
+				    int nextCount = 0;
+				    Semaphore next(0);  /* Queue */
+				    
+				    struct condition {
+				      Semaphore conditionSem(0); /* para bloquearse en la condicion */
+				      int count = 0;             /* cuantos esperan en la condicion */
+				      wait();
+				      signal();
+				    };
+				  };
+
+
+	section#block-mon-impl
+		p <code>condition.wait()</code>:   <em>thread</em> se bloquea incondicionalmente
+
+		p <code>condition.signal()</code>: despierta a algún <em>thread</em> bloqueado, si lo hay
+		pre.fragment
+			code.hljs.c
+				| condition.wait() {
+				    count++;
+				    if(nextCount > 0)
+				      signal(next);
+				    else
+				      signal(mutex);
+				    wait(conditionSem);
+				    count--;
+				  }
+
+		pre.fragment
+			code.hljs.c
+				| condition.signal() {
+				    if(count > 0) {
+				      nextCount++;
+				      signal(conditionSem);
+				      wait(next);
+				      nextCount--;
+				    }
+				  }
+
+		p.fragment Esta implementación utiliza la semántica <em>signal-and-wait</em>.
+
+
+
+section#synch-mid-summary
+	h3 Hasta ahora: Sincronización
+	/  ---------------------------
+
+	section#synch-summary_
+		ul
+			li.fragment  Necesidad de sincronizar <em>thread</em> que "compiten por datos"
+			li.fragment  Problema de la sección crítica:
+			ul
+				li.fragment  Exclusión mutua, progreso, espera acotada
+			li.fragment  Primitivas básicas de sincronización:
+			ul
+				li.fragment  <em>Hardware</em>: TaS, CaS
+				li.fragment  <em>Software</em>: Locks, semáforos
+			li.fragment  Estructuras de mayor nivel
+			ul
+				li.fragment  Monitores
+
+
+
+
+
+section#deadlocks
+	h2 <em>Deadlocks</em>
+
+	section#deadlocks_
+		p Hemos visto situaciones de <em>bloqueo mutuo</em> (<em>deadlock</em>)
+
+		ul
+			li.fragment  Cuando los filósofos toman los palillos de a uno
+			li.fragment  Cuando los procesos toman <em>locks</em> o <em>semáforos</em> en distinto orden
+
+  
+	section#dl-transit
+		blockquote.fragment
+			| Ley 18290: Ley de Tránsito.
+			  
+			  Título XI. Derecho preferente de paso.
+			  Artículo 143:
+
+		blockquote.fragment
+			| Todo vehículo que se aproxime a un cruce deberá hacerlo a velocidad razonable y prudente, deteniéndose si fuere necesario, y el de la izquierda cederá el paso al vehículo que se acerque al cruce por la derecha, el que tendrá derecho preferente de paso.
+
+		blockquote.fragment
+			| El conductor del vehículo de la izquierda reiniciará la marcha e ingresará a la intersección sólo cuando se asegure que no hay riesgos de accidente, en atención a la distancia, visibilidad y velocidad de los otros vehículos que se aproximen por la derecha.
+
+
+
+	section#dl-transit-1
+		p También se les llama <em>interbloqueo</em>
+
+		/TODO: change deadlock fig
+		= image_tag 'images/figures/01-cruces.png'
+
+	section#dl-transit-whyyyyy
+		p &hellip; u otros nombres menos favorables
+
+		= image_tag 'images/figures/01-abrazomortal.jpg'
+
+		h2.fragment = "#NOT!!"
+
+  
+	section#dl-codeSample
+		p Puede verse así:
+		pre.fragment
+			code.hljs.c
+				| /* Proc1 */       /* Proc 2 */
+				  wait(a);
+				                    wait(b);
+				  wait(b);
+				  /*  =( */
+				                    wait(a);
+				                    /*  =( */
+				  
+				  /* ... */         /* ... */
+				  release(a);       release(b);
+				  release(b);       release(a);
+
+
+	section#dl-rlSample
+		p O así:
+		= image_tag 'images/figures/01-cruce-gridlock.jpg'
+
+
+	section#dl-init
+		p ¿Cuándo se producen?
+
+		p.fragment Cuando hay <strong>competencia por recursos</strong>
+
+		p.fragment Modelo:
+		ul
+			li.fragment  Cantidad finita de recursos y de procesos
+			li.fragment  Distintas clases de recursos (CPU, dispositvo I/O,&hellip;)
+			li.fragment  Cada proceso ejecuta en algún momento estos pasos:
+			ul
+				li.fragment  <strong>Solicitar</strong> recursos (<em>request</em>)
+				li.fragment  <strong>Utilizar</strong> recurso (<em>use</em>)
+				li.fragment  <strong>Liberar</strong> recurso (<em>release</em>)
+
+
+	section#dl-nc
+		p Condiciones <em>necesarias</em>
+
+		ul
+			li.fragment <strong>Exclusión mutua</strong>           Existe al menos un recurso <strong>no compartible</strong>
+			li.fragment <strong>Hold and Wait</strong>             Un proceso debe poseer el recurso y esperar otro recurso
+			li.fragment <strong>Ausencia de expropiación</strong>  Los recursos sólo pueden ser liberados voluntariamente
+			li.fragment <strong>Espera circular</strong>           Conjunto $\{P_0, P_1,\cdots, P_n\}$ tal que $P_i$ espera a $P_{(i+1)\%N}$
+
+
+section#resourceGraph
+	h2 Grafo de Asignación de Recursos
+
+	section#resourceGraph-def
+		p Herramienta para determinar la ocurrencia de <em>deadlocks</em>
+		p.fragment Grafo dirigido $G=(V,E)$
+		ul
+			li.fragment = '$V = P \cup R$'
+			ul.fragment
+				li = '$P=\{P_1, P_2,\cdots , P_n\}$ son los procesos activos'
+				li = '$R=\{R_1, R_2,\cdots , R_m\}$ son clases de recursos en el sistema'
+			li.fragment = "$E$:"
+			ul
+				li.fragment = '$P_i \to R_j$:   solicitud, $P_i$ está esperando un recurso de clase $R_j$'
+				li.fragment = '$R_j \to P_i$:  asignación, Recurso clase $R_j$ ha sido asignado a $P_i$'
+
+
+	section#resourceGraph-sample
+		p = '$P=\{P_1,P_2,P_3\}$'
+		p = '$R=\{R_1,R_2,R_3,R_4\}, |R_1|=1, |R_2|=2, |R_3|=1, |R_4|=3$'
+		p = '$E=\{P_1 \to R_1, P_2 \to R_3, R_1 \to P_2, R_2 \to P_2, R_2 \to P_1, R_3 \to P_3\}$'
+
+		= image_tag 'images/figures/01-7_01.pdf.png'
+
+		p <em>¿Deadlock?</em>&hellip; <span class="fragment">No (¿por qué?)</span>
+
+
+/XXX
+//	section#
+//		\begin{alertblock}{Condición de <em>deadlock</em>}
+//		  En el grafo de asignación de recursos:
+//		  ul
+//		    li.fragment  Si no hay ciclos $\to$ no hay <em>deadlock</em>
+//		    li.fragment  Si hay ciclos $\to$ puede haber <em>deadlock</em>
+//		  \end{itemize}
+//		\end{alertblock}
+//
+//		p ¿Y si hay una sola instancia de cada clase de recurso?
+//		p Ciclo $\Leftrightarrow$ <em>deadlock</em>
+//
+//  
+//	section#
+//		\frametitle{Grafo de Asignación de Recursos}
+//
+//		\begin{center}
+//		  /== image_tag [width=3cm]{images/figures/01-7_01.pdf.png}
+//		  $P_3$ solicita $R_2$
+//		  /== image_tag [width=3cm]{images/figures/01-7_02.pdf.png}
+//		\end{center}
+//
+//		\onslide<2->{¡<em>Deadlock</em>!}
+//
+//
+//	section#
+//		= image_tag 'images/figures/01-7_03.pdf.png'
+//
+//		p.fragment  ¡Ciclo!<span class="fragment">&hellip; pero sin <em>deadlock</em></span>
+//
+//
+//
+//
+//
+//
+//
+//	section#
+//		\frametitle{¿Como manejar <em>deadlock</em>s?}
+//
+//		Tres alternativas:
+//		ul
+//		  li.fragment  Prevenir o evitar llegar a un estado de <em>deadlock</em>
+//		  li.fragment  Permitir el <em>deadlock</em>, detectarlo, y tomar medidas
+//		  li.fragment  Ignorarlo
+//
+//		= image_tag 'images/figures/01-avestruces.jpg'
+//
+//
+//	section#
+//		\frametitle{Prevención de <em>deadlock</em>s}
+//		\framesubtitle{Decisión política}
+//
+//		Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
+//
+//
+//		ul
+//		  li.fragment  <strong>Impedir ``Exclusión mutua''</strong>. Que todos los recursos sean compartibles.
+//		  li.fragment  <strong>Impedir ``Hold-and-wait''</strong>. No ejecutar mientras no se tengan todos los recursos:
+//		        procesos deben solicitar todos los recursos antes de ejecutar ; o bien,
+//		        no permitir solicitudes a procesos que ya tengan recursos asignados
+//		        ul
+//		          li.fragment  -Posible subutilización de recursos
+//		          li.fragment  -Posible inanición
+//
+//
+//  
+//	section#
+//		\frametitle{Prevención de <em>deadlock</em>s}
+//		\framesubtitle{Decisión política}
+//
+//		Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
+//
+//
+//		ul
+//		  li.fragment  <strong>Impedir ``No expropiación''</strong>. Permitir expropiación.
+//		        Si el proceso tiene recursos, solicita más y no se pueden asignar, entonces
+//		        debe liberar los que ya tiene.
+//		          ul
+//		            li.fragment  O bien, quitarle los que otro proceso necesita
+//		            li.fragment  Aplicable a recursos cuyo estado se puede recuperar
+//		          \end{itemize}
+//
+//		  li.fragment  <strong>Impedir ``Espera circular''</strong>. Que todos los recursos deban ser solicitados en el mismo orden.
+//		        ul
+//		          li.fragment  ¿Por qué esto es suficiente?
+//		          li.fragment  -La regla debe ser respetada por el programador
+//		          li.fragment  FreeBSD incluye objetos <em>witness</em> que verifican este orden
+//  // Chequear ejemplo Figure 7.5!!
+//
+//
+//  
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Solución algorítmica}
+//
+//		En lugar de impedir alguna condición ``políticamente'', tomar
+//		la acción justo antes que ocurra el <em>deadlock</em>.
+//
+//		\onslide<2->{Require examinar dinámicamente el grafo de asignación de recursos}
+//
+//		ul
+//		  li.fragment <3-> Cada procesos debe especificar la cantidad máxima de recursos que puede pedir
+//		\end{itemize}
+//
+//		\onslide<4->{
+//		\begin{exampleblock}{<strong>Estado seguro</strong> (<em>safe state</em>)}
+//		  Un estado es seguro si el sistema puede satisfacer las necesidades de todos los procesos
+//		  en algún orden, y evitar el <em>deadlock</em>.
+//
+//		  Para un conjunto ordenado de procesos $\{P_1, P_2, &hellip;, P_n\}$, el estado es seguro
+//		  si cada proceso $P_i$ puede satisfacer su demanda máxima usando los recursos que tiene,
+//		  y los que tienen los procesos $P_j$, $j<i$.
+//		\end{exampleblock}
+//		}
+//
+//
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//
+//		ul
+//		  li.fragment  Un estado que no es seguro es &hellip; <strong>inseguro</strong>
+//		  li.fragment <2-> Un estado de <em>deadlock</em> es <em>inseguro</em>
+//		  li.fragment <3-> No todo estado <em>inseguro</em> es estado de <em>deadlock</em>
+//		\end{itemize}
+//
+//		\begin{center}
+//		  /== image_tag [width=4cm]{images/figures/01-7_06.pdf.png}
+//		\end{center}
+//
+//		\onslide<4->{
+//		La política es mantenerse siempre en estados seguros
+//		}
+//
+//  
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//
+//		Ejemplo: $P=\{P_0,P_1,P_2\}$, $R=\{R_0\}$, $|R_0|=12$
+//
+//		Solicitud máxima: $S_M=\{10,4,9\}$
+//
+//		Solicitud actual: $S_a=\{5,2,2\}$
+//
+//		\begin{center}
+//		  ¿Está el sistema en un estado seguro?
+//		\end{center}
+//
+//		\onslide<2->{Sí, ya que existe la secuencia $\langle P_1, P_0, P_2 \rangle$}
+//
+//		\onslide<3->{
+//		\begin{center}
+//		  ¿Y si a $P_2$ se le asigna un recurso más?
+//		\end{center}
+//		}
+//
+//		\onslide<4->{
+//		  <strong>¡Estado inseguro!</strong> (¿por qué?)
+//		}
+//
+//
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Volviendo al grafo de asignación de recursos}
+//
+//		Nuevo tipo de arista (existían de solicitud y de asignación):
+//
+//		\onslide<2->{Arista de <strong>demanda</strong>: $P_i\to R_j$ significa que $P_i$ <em>puede</em> solicitar 
+//		             el recurso $R_j$ en el futuro.}
+//
+//		\begin{center}
+//		  /== image_tag [width=3cm]{images/figures/01-7_07.pdf.png}
+//		\end{center}
+//
+//		\onslide<3->{Algoritmo: satisfacer solicitud sólo si al satisfacer demanda
+//		             no se obtiene un ciclo}
+//
+//		\onslide<4->{Costo de detectar ciclo con $n$ procesos: }\onslide<5->{$O(n^2)$}
+//
+//
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
+//
+//		Analogía: el banquero entrega dinero de manera que pueda satisfacer a todos sus clientes
+//
+//		ul
+//		  li.fragment <2-> Cada proceso debe declarar su máximo de demanda para cada (clase de) recurso,
+//		           que no debe ser mayor que el máximo existente
+//		  li.fragment <3-> El algoritmo sólo asigna recursos si se mantiene dentro de un estado seguro
+//		\end{itemize}
+//
+//		\onslide<4->{Estructuras: $m$ recursos, $n$ procesos}
+//		ul
+//		  li.fragment <5-> <code>Available[m]</code>, cantidad disponible para cada recurso
+//		  li.fragment <5-> <code>Max[n][m]</code>, máxima demanda para cada proceso.
+//		    ul
+//		      li.fragment  <code>Max[i][j]=k</code>: $P_i$ puede solicitar hasta $k$ instancias de $R_j$
+//		    \end{itemize}
+//		  li.fragment <5-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
+//		    ul
+//		      li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
+//		    \end{itemize}
+//		  li.fragment <5-> <code>Need[n][m]</code>, solicitud potencial para cada proceso
+//		    ul
+//		      li.fragment  <code>Need[i][j]=k</code>: $P_i$ podría pedir hasta $k$ instancias de $R_j$
+//		      li.fragment  <code>Need[i][j] == Max[i][j] - Allocation[i][j]</code>
+//
+//
+//
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
+//
+//		¿Cómo saber si estamos en un estado seguro?
+//
+//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
+//		  /** Safety Algorithm **/
+//		  int Work[m] = Available;
+//		  bool Finish[n] = FALSE;
+//
+//		  /** encontrar indice $i$ tal que Finish[i]==FALSE y Need[i] $\leq$ Work **/
+//		  while(existe i tal que (!Finish[i] && Need[i] <= Work)) {
+//		    Work = Work + Allocation[i];
+//		    Finish[i] = TRUE;
+//		  }
+//		  for(i=0;i<n;i++) {
+//		    if(Finish[i] == FALSE) {
+//		      return UNSAFE;
+//		    }
+//		  }
+//		  return SAFE;
+//
+//		p Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
+//
+//
+//	section#[fragile]
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
+//
+//		¿Cómo determinar si es posible hacer una asignación de recursos?
+//
+//		Input: <code>Request[i]</code>, solicitud de $P_i$
+//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
+//		  assert(Request[i] <= Need[i]); /** no puede pedir mas de lo que declara **/
+//		  if(Request[i] <= Available) {
+//		    /** Simula una asignacion **/
+//		    Available = Available - Request[i];
+//		    Allocation[i] = Allocation[i] + Request[i];
+//		    Need[i] = Need[i] - Request[i];
+//		    if(safetyAlgorithm() == SAFE) { /** el de la slide anterior **/
+//		      return ALLOCATED;
+//		    }
+//		    else {
+//		      /** deshacer la asignacion **/
+//		      return WAIT;
+//		    }
+//		  }
+//		  else {
+//		    return WAIT;
+//		  }
+//
+//  
+//	section#
+//		\frametitle{Evitar <em>deadlock</em>s}
+//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
+//
+//		Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
+//
+//		$|R_A|=10, |R_B|=5, |R_C|=7$
+//
+//		Estado actual:
+//		\[
+//		\begin{array}{c|c|c|c|}
+//		 \textbf{Alloc} & A & B & C \\ \hline
+//		 P_0 & 0 & 1 & 0 \\ \hline
+//		 P_1 & 2 & 0 & 0 \\ \hline
+//		 P_2 & 3 & 0 & 2 \\ \hline
+//		 P_3 & 2 & 1 & 1 \\ \hline
+//		 P_4 & 0 & 0 & 2 \\ \hline
+//		\end{array}
+//		\qquad 
+//		\begin{array}{c|c|c|c|}
+//		 \textbf{Max} & A & B & C \\ \hline
+//		 P_0 & 7 & 5 & 3 \\ \hline
+//		 P_1 & 3 & 2 & 2 \\ \hline
+//		 P_2 & 9 & 0 & 2 \\ \hline
+//		 P_3 & 2 & 2 & 2 \\ \hline
+//		 P_4 & 4 & 3 & 3 \\ \hline
+//		\end{array}
+//		\qquad
+//		 \begin{array}{c|c|c|c|}
+//		 \textbf{Need} & A & B & C \\ \hline
+//		 P_0 & 7 & 4 & 3 \\ \hline
+//		 P_1 & 1 & 2 & 2 \\ \hline
+//		 P_2 & 6 & 0 & 0 \\ \hline
+//		 P_3 & 0 & 1 & 1 \\ \hline
+//		 P_4 & 4 & 3 & 1 \\ \hline
+//		\end{array}
+//		\]
+//		$\textbf{Available}=\{3,3,2\}$
+//
+//		El estado actual es <strong>safe</strong>, ¿por qué? \onslide<2->{({$\langle P_1,P_3,P_4,P_2,P_0 \rangle$})}
+//
+//		ul.fragment
+//		  li.fragment  Ejecutar <em>request</em> de $P_1$: <code>Request[1]=\{1,0,2\}</code>
+//		  li.fragment  Ejecutar <em>request</em> de $P_4$: <code>Request[4]=\{3,3,0\}</code>
+//		  li.fragment  Ejecutar <em>request</em> de $P_0$: <code>Request[0]=\{0,2,0\}</code>
+//
+//
+//  
+//	section#
+//		\frametitle{Detectar <em>deadlock</em>s}
+//
+//		Si no se toma ninguna acción previa, pueden ocurrir <em>deadlocks</em>
+//
+//		\onslide<2->{Se necesita:}
+//
+//		ul
+//		  li.fragment <3->{Algoritmo para detectar <em>deadlocks</em>}
+//		  li.fragment <3->{Algoritmo para resolver <em>deadlocks</em>}
+//		\end{itemize}
+//
+//		Costo de detectar ciclos en grafo de asignación de $n$ procesos: $O(n^2)$
+//
+//		\begin{center}
+//		  /== image_tag [width=6cm]{images/figures/01-7_09.pdf.png}
+//		\end{center}
+//
+//
+//  
+//	section#
+//		\frametitle{Detectar <em>deadlock</em>s}
+//		\framesubtitle{Pero con múltiples instancias por recurso}
+//
+//		Algoritmo de detección de <em>deadlock</em> basado en el banquero
+//
+//		\onslide<2->{Estructuras: $m$ recursos, $n$ procesos}
+//		ul
+//		  li.fragment <2-> <code>Available[m]</code>, cantidad disponible para cada recurso
+//		  li.fragment <2-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
+//		    ul
+//		      li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
+//		    \end{itemize}
+//		  li.fragment <2-> <code>Request[n][m]</code>, solicitud actual para cada proceso
+//		    ul
+//		      li.fragment  <code>Request[i][j]=k</code>: $P_i$ solicita $k$ instancias de $R_j$
+//
+//  
+//	section#[fragile]
+//		\frametitle{Detectar <em>deadlock</em>s}
+//		\framesubtitle{Pero con múltiples instancias por recurso}
+//
+//		Detección de <em>deadlock</em>
+//
+//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
+//		  /** Deadlock detection algorithm **/
+//		  int Work[m] = Available; bool Finish[n];
+//		  for(i=0;i<n;i++)
+//		    if(Allocation[i] != 0) Finish[i] = FALSE;
+//		    else                   Finish[i] = TRUE;
+//		  /** encontrar indice $i$ tal que Finish[i]==FALSE y Request[i] $\leq$ Work **/
+//		  while(existe i tal que (!Finish[i] && Request[i] <= Work)) {
+//		    Work = Work + Allocation[i];
+//		    Finish[i] = TRUE;
+//		  }
+//		  /** todos pueden terminar? **/
+//		  for(i=0;i<n;i++)
+//		    if(Finish[i] == FALSE) return DEADLOCKED;
+//		  return NOT_DEADLOCKED;
+//		\end{minted}
+//		Todos los procesos para los cuales <code>Finish[i]==FALSE</code> están en <em>deadlock</em>
+//
+//		Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
+//
+//
+//	section#
+//		\frametitle{Detectar <em>deadlock</em>s}
+//
+//		Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
+//
+//		$|R_A|=10, |R_B|=5, |R_C|=7$
+//
+//		Estado actual:
+//		\[
+//		\begin{array}{c|c|c|c|}
+//		 \textbf{Alloc} & A & B & C \\ \hline
+//		 P_0 & 0 & 1 & 0 \\ \hline
+//		 P_1 & 2 & 0 & 0 \\ \hline
+//		 P_2 & 3 & 0 & 3 \\ \hline
+//		 P_3 & 2 & 1 & 1 \\ \hline
+//		 P_4 & 0 & 0 & 2 \\ \hline
+//		\end{array}
+//		\qquad 
+//		\begin{array}{c|c|c|c|}
+//		 \textbf{Req} & A & B & C \\ \hline
+//		 P_0 & 0 & 0 & 0 \\ \hline
+//		 P_1 & 2 & 0 & 2 \\ \hline
+//		 P_2 & 0 & 0 & 0 \\ \hline
+//		 P_3 & 1 & 0 & 0 \\ \hline
+//		 P_4 & 0 & 0 & 2 \\ \hline
+//		\end{array}
+//		\]
+//		$\textbf{Available}=\{0,0,0\}$
+//
+//		El estado actual es <strong>NOT DEADLOCKED</strong>, ¿por qué? \onslide<2->{({$\langle P_0,P_2,P_3,P_1,P_4 \rangle$})}
+//
+//		ul
+//		  li.fragment <3-> Ejecutar <em>request</em> de $P_2$: <code>Request[2]=\{0,0,1\}</code>
+//
+//
+//	section#
+//		\frametitle{Recuperación ante <em>deadlock</em>s}
+//
+//		p OK, hemos detectado el <em>deadlock</em> (so what?)
+//
+//		p.fragment Dos caminos&hellip;
+//		ul
+//		  li.fragment <strong>Matar un proceso</strong> ¿Cuál?
+//		    ul
+//		      li.fragment Todos (solución drástica)
+//		      li.fragment Uno a la vez hasta resolver el <em>deadlock</em>
+//		        ul
+//		          li.fragment  Criterio 1: La cantidad mínima
+//		          li.fragment  Criterio 2: El de menor ``costo''
+//		  li.fragment <strong>Expropiar recursos</strong>
+//		    ul
+//		      li.fragment  ¿A quién?
+//		      li.fragment  <strong>Rollback</strong>
+//
+//  
+//	section#
+//		\frametitle{Recuperación ante <em>deadlock</em>s}
+//		\framesubtitle{Algunos puntos importantes}
+//
+//		ul
+//		  li.fragment  <em>Deadlock</em>: dos o más procesos esperando indefinidamente por un evento
+//		        que sólo puede ser producido por uno de ellos mismos.
+//		        ul
+//		          li.fragment  Requieren: recursos no compartibles, no expropiables, ``retención-y-espera'',
+//		                y espera circular.
+//		          li.fragment  Si se impide una de estas condiciones, no se puede producir <em>deadlock</em>
+//		        \end{itemize}
+//		  li.fragment  Tres alternativas de manejo:
+//		    ul
+//		      li.fragment  Prevenir (que nunca pueda ocurrir), o evitar (esquivarlo antes que pase)
+//		      li.fragment  Permitirlo y recuperarse. Desafío: resolver con el menor ``daño'' posible
+//		      li.fragment  Ignorarlo
+//		  li.fragment  Algoritmo del banquero (Dijkstra, 1977), evita que el proceso llegue a un <em>estado inseguro</em>
+//		  li.fragment  Sistema en <em>estado seguro</em> no puede estar en <em>deadlock</em>
+//
+//
+//	section#
+//		\frametitle{Administración de Procesos}
+//		\framesubtitle{¿Qué debemos recordar?}
+//
+//		ul
+//		  li.fragment  Procesos: programa+recursos, administrados por el S.O. mediante <em>syscall</em>s
+//		  li.fragment  <em>Threads</em>: unidad básica de ejecución visible al programador o al S.O.
+//		  li.fragment  Sincronización de <em>threads</em> permite que puedan ejecutar eficientemente, sin bloquearse,
+//		        y sin provocar inconsistencias en los datos compartidos
+//		  li.fragment  Algoritmos de <em>scheduling</em> permiten seleccionar eficientemente el próximo proceso/<em>thread</em> a ejecutar
+//		  li.fragment  Se debe evitar caer en situación de <em>bloqueo mutuo</em>
