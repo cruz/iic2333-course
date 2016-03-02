@@ -1,5 +1,5 @@
 ---
-title: Caracterización de un Sistema Operativo
+title: 0 - Caracterización de Sistemas Operativos
 layout: slide
 ---
 
@@ -9,42 +9,307 @@ section
 	h2 Estructura de un Sistema Operativo
 	/  ----------------------------------
 
-	section
-		== image_tag '/images/figures/00-ComponentesSistComp.png', :width=>"50%"
+	section data-transition="fade"
+		div ¿Dónde vive el Sistema Operativo?
+		div.fragment == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
+		/	== image_tag '/images/figures/00-ComponentesSistComp.png', :width=>"50%"
 
+	section data-transition="fade"
+		div Sistema Operativo <b>es</b> <i>software</i>
+		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
 
+	section data-transition="fade"
+		div Sistema Operativo <b>habla con</b> el <i>hardware</i>
+		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
+		div.fragment ¿Qué pasaría si no hubiese sistema operativo? ... <span class="fragment">Antes no había</span>
+
+	section data-transition="fade"
+		div ¿Interactuamos con el Sistema Operativo?
+		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
+		div.fragment Normalmente interactuamos con <b>interfaces de usuario</b>: <span class="fragment"><b>shell</b>, <b>GUI</b></span>
+
+	section data-transition="fade"
+		div ¿User mode?, ¿kernel mode?
+		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
+		div.fragment Solo el Sistema Operativo utiliza el <i>kernel mode</i> ... <span class="fragment"><i>(a.k.a. monitor, privileged, system, supervised)</i></span>
+		
 
 section
-	h2 ¿Qué hace un Sistema Operativo?
+	h2 ¿Qué es un Sistema Operativo?
 	/  -------------------------------
 
 	section
+		p.fragment <i>Software</i> ... <span class="fragment">que corre en <i>kernel mode</i></span>
 		p.fragment No hace mucho por sí mismo (es como el gobierno)
+		p.fragment Pero es fundamental
+		p.fragment Sería inútil sin programas/aplicaciones/usuarios (personas)
+
+	section
+		h3 ¿Qué hace el sistema operativo?
 		ul
-			li.fragment Y a la vez es fundamental
-			li.fragment Sería inútil sin programas/aplicaciones/usuarios (personas)
+			li.fragment data-fragment-index="1" Para el usuario:
+			blockquote.fragment data-fragment-index="3" style="background: #F4C7C3;" Permite <strong>utilizar los recursos</strong> del computador (el <i>hardware</i>)
+			<span class="fragment" data-fragment-index="4">Ejecutar programas, leer archivos, efectuar cálculos ... de manera limpia, fácil y rápida</span>
+			br
+			br
+			br
+			li.fragment data-fragment-index="2" Para el sistema computacional:
+			blockquote.fragment data-fragment-index="5" style="background: #F4C7C3;" Permite <b>administrar los recursos</b>
+			<span class="fragment" data-fragment-index="6">Permite <b>multiplexar</b> el uso de los recursos (escasos) entre múltiples programas.</span>
+			ul
+				li.fragment Multiplexión en tiempo: turnos. Ejemplo: uso de CPU(s), uso de impresora
+				li.fragment Multiplexión en espacio: división del recurso. Ejemplo: procesos cargados en memoria, programas almacenados en disco
+
+section
+	h2 Historia de los Sistemas Operativos
+
+	section
+
+		p Érase una vez ...
+
+		/div == image_tag '/images/figures/00-babbage.jpg', :width=>"10%"  
+
+		div.fragment style="display:inline-block; width=50px"
+			div Charles Babbage (1791-1871)
+			div
+				img src='/images/figures/00-babbage.jpg' width="20%"  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+				img src='/images/figures/00-babbage-analytical.jpg' width="20%" 
+		div.fragment style="display:inline-block; width=50px"
+			div style="display:inline-block;" and the Analytical Engine  
+
+
+	section 
+		
+		div style="display:inline-block; width=50px"
+			div Ada Lovelace (1815-1852)
+			div
+				img src='/images/figures/00-AdaLovelace.jpg' width="20%" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+				img src='/images/figures/00-AdaLovelace-algorithm.jpg' width="20%" 
+		div.fragment style="display:inline-block; width=50px"
+			div style="display:inline-block;" and the First Algorithm  		
 
 
 	section
-		h3 Un Sistema Operativo tiene múltiples roles
-		ul
-			li.fragment Para el usuario
-			ul
-				li.fragment Le permite <strong>utilizar los recursos</strong> del computador
-				li.fragment Ejecutar programas, leer archivos, efectuar cálculos... <span class="fragment"> de manera fácil y rápida</span>
-			li.fragment Para el sistema computacional:
-			ul
-				li.fragment Un <strong>administrador de recursos</strong>
-				ul
-					li.fragment Selecciona y provee los recursos necesarios
-					li.fragment Permite que se usen de manera eficiente
-					li.fragment ¿Qué es <em>eficiente</em> para: mainframe, virtual manager, sistema móvil?
-				li.fragment Un <strong>programa de control</strong>... <span class="fragment">que evita el uso indebido</span>
-				ul
-					li.fragment No "botar" otros programas en ejecución
-					li.fragment No sobreescribir por error el sistema operativo
-					li.fragment Evitar que un usuario se apropie del sistema
+		h3 Primera Generación (1945-55): Tubos de vacío
 
+		p Colossus Mark 2 @ Bletchley Park (incluyendo a Alan Turing)
+		div
+			img src='/images/figures/00-colossus.jpg' width="60%"
+
+	section data-transition="fade"
+		h3 Primera Generación (1945-55): Tubos de vacío
+
+		p ENIAC @ U.Pennsylvania
+		div
+			img src='/images/figures/00-ENIAC.jpg' width="40%"
+
+	section data-transition="fade"
+		/h3 Primera Generación (1945-55): Tubos de vacío
+
+		ul
+			li Programación via conexión de cables (y luego, tarjetas perforadas)
+			li No existían los lenguajes de programación (ni siquiera assembler)
+			li Aprox. 20000 tubos de vacío
+
+	section 
+		h3 Segunda Generación (1955-65): Transistores y Sistemas <i>Batch</i>
+
+		p Separación de roles: diseñador, constructor, programador, operador, mantenedor
+
+		p <b>Mainframes</b>
+
+		div
+			img src='/images/figures/00-ibm1401.jpg' width="30%"
+
+		p IBM1402 (card reader), IBM1401 (processing), IBM1403 (printer)
+
+
+	section data-transition="fade"
+		/h3 Segunda Generación (1955-65): Transistores y Sistemas <i>Batch</i>
+
+		p Modo de operación: ejecución de un <b>job</b>
+		ul
+			li Programador escribe en FORTRAN (tarjetas perforadas) y entrega a operador
+			li IBM1401 pasa tarjetas a cinta (operador lleva cinta a IBM7094)
+			li IBM7094 procesa cinta (operador lleva cinta a IBM1403)
+			li IBM1403 imprime resultados
+
+		div
+			img src='/images/figures/00-ibm7094.jpg' width="30%"
+		p IBM7094
+
+	section data-transition="fade"
+		/h3 Segunda Generación (1955-65): Transistores y Sistemas <i>Batch</i>
+
+		p Proceso de <i>trabajo por lotes</i>, <b>batch</b>
+		ul
+			li Uso de lenguajes: assembler y FORTRAN
+			li Sistema Operativo: FMS (Fortran Monitor System)
+			li Sistema Operativo: IBSYS (para el IBM7094)
+
+
+	section
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p IBM unifica sus <i>mainframes</i> en System/360. Misma arquitectura e instruction set.
+
+		blockquote Primeros en utilizar <b>circuitos integrados</b>
+
+		div
+			img src='/images/figures/00-ibms360.jpg' width="40%"
+
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p Si el <i>hardware</i> está unificado, ¿por qué no el <i>software</i>?
+
+		p.fragment <b>OS/360</b> (Fred Brooks)
+
+		p.fragment Mientras se procesa I/O, la CPU no realizaba trabajo
+
+		blockquote.fragment style="background: #F4C7C3;" OS/360 introduce la <b>multiprogramación</b>
+
+		ul
+			li.fragment Particionamiento de la memoria
+			li.fragment Si un proceso no está ocupando la CPU, se entrega a otro
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p Posibilidad de cargar un programa de tarjeta a memoria en el momento que un espacio queda libre
+
+		blockquote.fragment style="background: #F4C7C3;" Simultaneous Peripheral Operation On Line <b>SPOOLing</b>
+
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p Usuarios aún deben esperar horas para obtener un resultado. <span class="fragment">¿Y si hay error de compilación?</span>
+
+		p.fragment Solución: que múltiples usuarios puedan utilizar el computador simultáneamente
+
+		blockquote.fragment style="background: #F4C7C3;" <b>Timesharing</b>
+
+		p.fragment Cada usuario posee un terminal para entregar comandos al computador.
+
+		ul.fragment
+			li CTSS (Compatible Time Sharing System), MIT.
+			li Primer sistema de timesharing de propósito general.
+			li Problema: usuarios deben tener cuidado de no alterar el trabajo de otros
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p MIT, Bell Labs, General Electric, deciden crear un sistema que soporte cientos de usuarios.
+
+		ul
+			li.fragment MULTICS (MULTIplexed Information and Computing Service)
+			li.fragment Escrito en lenguaje PL/I (poco popular y con un compilador deficiente)
+			li.fragment Bell Labs y General Electric abandonan
+
+		p.fragment Visión de MULTICS: sistema de computación que pueda ser accedido por múltiples usuarios, en que el <i>mainframe</i> ejecuta todo, y usuarios acceden a través de terminales "livianos"
+
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p DEC (Digital Equipment Corporation) produjo su propia seria de minicomputadores, desde PDP-1 al PDP-11
+
+		p.fragment 1970. Ken Thompson y Dennis Ritchie escriben una versión reducida de MULTICS para un PDP-7 abandonado.
+
+		blockquote.fragment style="background: #F4C7C3;" Al ser un MULTICS reducido, lo llaman UNICS, y finalmente <b>UNIX</b>
+
+		ul
+			li.fragment 1972. Dennis Ritchie reescribe el código de Unix en C
+			li.fragment Surgen muchas versiones (incompatibles entre sí), pero dos sobreviven
+			li.fragment <b>System V</b>, de AT&T, y <b>BSD</b> (Berkeley Software Distribution) de U.C.Berkeley.
+			li.fragment IEEE desarrolla una interfaz estándar: <b>POSIX</b>
+
+
+	section data-transition="fade"
+		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+
+		p 1987. Andrew Tanenbaum desarrolla una versión simplificada con objetivos educacionales: MINIX
+
+		p.fragment 1991. Linus Torvalds, inspirado en MINIX, escribe su propia versión: <b>LINUX</b>
+
+
+	section 
+		h3 Cuarta Generación (1980-): Computadores Personales
+
+		p LSI (Large Scale Integration) posibilita la construcción de miles de transistores en 1cm2. <span class="fragment">Surgen los computadores personales, o <b>microcomputadores</b></span>
+
+		ul
+			li.fragment 1974. Intel 8080. Primera CPU de propósito general de 8-bit. No tiene S.O.
+			li.fragment Gary Kildall, consultor, escriben <b>CP/M</b> (Control Program for Microcomputers) en un diskette de 8''.
+			li.fragment Intel no se interesa, y entrega CP/M de vuelta a Gary Kildall.
+			li.fragment 1977. Gary Kildall funda Digital Research y adapta CP/M para otras CPU.
+			li.fragment 1980. IBM crea el IBM PC. Para probarlo obtienen un intérprete BASIC de <span class="fragment">Bill Gates</span>
+			li.fragment IBM PC no tiene Sistema Operativo. Bill Gates sugiere que contacten a Gary Kildall
+			li.fragment Kildall rechaza a IBM. IBM solicita un Sistema Operativo a Bill Gates.
+			li.fragment Bill Gates compra <b>DOS</b> a Seatlle Computer Products, y lo ofrece a IBM.
+			li.fragment Bill Gates contrata a Tim Patterson en su nueva compañía, Microsoft, y producen <b>MS-DOS</b>
+			li.fragment MS-DOS se populariza al ser ofrecido a empresas de computación y no a usuarios.
+
+
+	section data-transition="fade"
+		h3 Cuarta Generación (1980-): Computadores Personales
+
+		p GUIs atraen a usuarios que no saben (ni les interesa) el funcionamiento del computador.
+
+		ul
+			li.fragment 1983. IBM PC/AT, con Intel 80286 y MS-DOS.
+			li.fragment MS-DOS ampliamente usado con Intel 80386 y 80486.
+			li.fragment Tanto CP/M como MS-DOS usaban una <b>shell</b> (línea de comandos) como interacción.
+			li.fragment 1960s. Doug Engelbart inventa las <b>GUI</b> (Graphical User Interface), que empiezan a ser usadas en XEROX PARC.
+			li.fragment Steve Jobs conoce la GUI en XEROX PARC y la incorpora su siguiente computador Apple: <span class="fragment">Macintosh</span>
+
+
+	section data-transition="fade" 
+		h3 Cuarta Generación (1980-): Computadores Personales
+
+		p Microsoft adopta GUIs: Windows
+
+		ul
+			li.fragment 1985-1995. MS-DOS ejecuta Windows como una aplicación de usuario.
+			li.fragment 1995. Windows 95 reemplaza a MS-DOS.
+			li.fragment Windows 95 y Windows 98 aún mantienen código assembler Intel 16-bit.
+			li.fragment Microsoft reescribe Windows completamente para 32-bit. Windows New Technology: <span class="fragment">Windows NT</span>
+			li.fragment 1999. Windows NT 4.0 y Windows 2000 se posicionan en el ámbito corporativo.
+			li.fragment Windows Me termina con la línea de Windows 95/98.
+			li.fragment 2001. Windows 2000 evoluciona a Windows XP.
+			li.fragment Línea server. Windows 2003 Server, Windows 2008.
+			li.fragment Línea client. Windows Vista, Windows 7, Windows 8, Windows 10.
+
+	section data-transition="fade" 
+		h3 Cuarta Generación (1980-): Computadores Personales
+
+		p Evolución de UNIX
+
+		ul
+			li.fragment UNIX popular en ambiente de servidores. 
+			li.fragment Linux crece en computadores personales.
+			li.fragment <b>FreeBSD</b> deriva de BSD. OSX es una versión modificada de FreeBSD.
+			li.fragment MIT produce un sistema de ventanas para UNIX: X Windows System (luego X11).
+			li.fragment UNIX adopta GUIs que funcionan sobre X11 (Gnome, KDE, XFCE, etc)
+			li.fragment Windows Me termina con la línea de Windows 95/98.
+
+
+	section 
+		h3 Quinta Generación (1980-): Computadores Móviles
+
+		p Evolución de dispositivos móviles
+
+		ul
+			li.fragment 1946. Primer teléfono móvil. 40 kg.
+			li.fragment 1970. Teléfono móvil de 1 kg. (ladrillo)
+			li.fragment 1990s. Nokia N9000 combina teléfono con PDA (Personal Digital Assistant)
+			li.fragment Primeros sistemas operativos para móviles: SymbianOS
+			li.fragment 2002. RIM. Blackberry OS
+			li.fragment 2007. Apple. iOS.
+			li.fragment 2008. Google. Android. Basado en Linux.
+			li.fragment 2011. Nokia cambia SymbianOS por Windows Phone.
 
 
 section
