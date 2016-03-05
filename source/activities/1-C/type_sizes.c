@@ -1,6 +1,7 @@
 #include "stdio.h"
 
 int main() {
+  printf("         void: %d\n", sizeof(         void));  /* This should not compile */
   printf("         char: %d\n", sizeof(         char));
   printf("    short int: %d\n", sizeof(    short int));
   printf("          int: %d\n", sizeof(          int));

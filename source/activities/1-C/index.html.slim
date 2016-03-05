@@ -27,12 +27,13 @@ article
         /  ------------
         p C tiene los tipos básicos usuales, de hecho, son usuales porque C los tenía.
         ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-          li char
-          li int
-          li float
-          li double
+          li <code> char   </code>
+          li <code> int    </code>
+          li <code> float  </code>
+          li <code> double </code>
+        p También existe un tipo para representar algo que no tiene tipo, <code>void</code>
         p El tamaño de los tipos depende de la implementación. El tamaño de un <strong>char</strong> está dado por la arquitectura, un char debe ser la unidad atómica de información direccionable, esta unidad es 1 Byte, que en las arquitecturas usuales son 8 bits. 'sizeof(T)' devuelve el tamaño en Bytes de un tipo.
-        p Existen los modificadores unsigned, short y long para
+        p Existen los modificadores unsigned, short y long para <code>int</code>.
         / preguntar porqué unsigned no es tan buena idea?
             for(uint i=10; i>=0; i--)
 
@@ -121,7 +122,7 @@ article
                 td.full
                 td.full
 
-        p El orden de los bytes (endiannes) también depende de la implementación.
+        p El orden de los bytes (endianness) también depende de la arquitectura.
 
 
       section
@@ -259,25 +260,26 @@ article
       section
         h5 Memoria dinámica
         /  ----------------
-        p C Requiere administrar la memoria manualmente. Esto da más control, pero también requiere más trabajo.
-        p Se puede obtener acceso a más memoria usando 'malloc' (memory allocate?), función que pide un trozo de memoria del SO de (al menos) x bytes.
-        pre
-          code.hljs
-            | #include "stdlib.h"
-
-              int* canIHasManyInts(int N) {
-                int* manyInts = (int*) malloc( N * sizeof(int) );
-                for(int i=0; i!=N; i++)
-                  manyInts[i] = i;
-                return manyInts;
-              }
-
+        p C Requiere administrar la memoria manualmente. Esto da más control, pero requiere más trabajo.
+        p Se puede obtener acceso a más memoria usando 'malloc' (memory allocate), función que pide un trozo de memoria del SO de (al menos) x bytes.
         p Idealmente los programas deberían pedir recursos sólo mientras los necesitan, por lo que se deberían devolver al SO lo antes posible.
         pre
           code.hljs
-            | void* ptr = malloc(024642);
+            | void* ptr = malloc(N); /* Allocate N bytes */
+              /* Use ptr[] ... */
               free(ptr);   /* Now ptr points to unowned memory */
               ptr = NULL;  /* Now ptr is marked as invalid */
+
+        pre
+          code.hljs
+            | int* manyInts = (int*) malloc( N * sizeof(int) );  /* Allocate N ints */
+              if(manyInts) {  /* Allocation fails if there is not enough memory */
+                /* Do stuff with manyInts... */
+                free(manyInts);
+                manyInts = NULL;
+              }
+
+        p Cuando se pide memoria es útil designar dónde debe ser devuelta.
 
 
     section#preprecessor
@@ -288,8 +290,8 @@ article
       p Lo más interesante del preprocesador son las 'macros', que son funciones que reciben argumentos. Se puede pensar que las constantes son funciones sin argumentos (pi()=3.1415)
       pre
         code.hljs
-          | #define MALLOC(T, N) ((T)*) malloc(N * sizeof(T))
-            #define FREE(P) free(T); P=NULL
+          | #define MALLOC(T, N) ( ((T)*) malloc(N * sizeof(T)) )
+            #define FREE(P) {free(T); P=NULL}
             #define PI 3.14159265358979323846
 
             int* canIHasManyInts(int n) {
@@ -305,7 +307,7 @@ article
       pre
         code.hljs
           | #square(X) X*X
-            int x = square(2+6);  /* 8*8?? */
+            int x = square(2+6);  /* 8*8 != 20 = (2 + 6*2 + 6) */
 
       p Puede ser usado de forma mal intencionada >=)
       pre

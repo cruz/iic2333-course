@@ -1,199 +1,28 @@
 ---
-title: Init
+title: IIC2333
 layout: activity
 ---
 
 article
-  section.top
-    p Para este curso van a necesitar un compilador de C, una shell decente y usar git.
-    p En la actividad de esta semana prepararán su propio entorno de trabajo.
-    p En la actividad de esta semana prepararán su propio entorno de trabajo.
-    p Recuerden que tienen internet y pueden buscar guías y documentación (=
+	section#intro.top
+		p Material del curso
 
-  section
-    h3 Opciones
-    /  --------
-    p Para preparar su entorno pueden:
-    ul
-      li Usar Linux.
-      li Usar una VM con Linux.
-      li Intentar usar Windows, MacOS u otro SO y lograr que todo funcione. (No quieren hacerlo)
+	section#slides
+		h3 Clases
+		/  ------
+		ul
+			li = link_to 'Sistemas Operativos', 'slides/0-os.html'
+			li = link_to 'Procesos',            'slides/1-proc.html'
+			li = link_to 'Scheduling',          'slides/2-scheduling.html'
 
-    section
-      h5 VM
-      /  --------
-      p Si ya usan Linux vayan a la sección de <a href="#programas">programas</a>.
-      p Si no usan Linux, les recomendamos usar una VM, ya que no requiere particionar su disco.
-      p Mientras descargan e instalan pueden comenzar a leer en paralelo la sección de <a href="#git" target="blank">git</a>.
-      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-        li
-          strong = link_to 'VirtualBox (Gratis)', 'https://www.virtualbox.org/wiki/Downloads'
-        li = link_to 'VMWare', 'http://www.vmware.com/'
-        li = link_to 'Parallels', 'http://www.parallels.com/'
-      p En algunos computadores la virtualización debe ser habilitada desde la BIOS.
-      p Existen muchas distribuciones de Linux. Todas ofrecen el kernel de Linux y un package manager, el que permite instalar paquetes de software, los que tienen programas o librerías que se instalan de manera uniforme tanto en interfaz como dentro del sistema de archivos.
+	section#activities
+		h3 Actividades
+		/  -----------
+		ul
+			li = link_to 'Preparación Entorno', 'activities/0-init/'
+			li = link_to 'C',                   'activities/1-C/'
 
-    ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-      li = link_to 'Archlinux', 'https://www.archlinux.org/download'
-      li
-        strong = link_to 'Manjaro (Archlinux-based)',   'https://manjaro.github.io/download'
-      li = link_to 'Debian',    'https://www.debian.org/distrib/netinst'
-      li
-        strong = link_to 'Ubuntu (Debian-based)',    'https://www.ubuntu.com/desktop'
-
-    p Manjaro y Ubuntu ofrecen discos de instalación bastante amigables. Desde ahora en adelante asumiremos que usan Linux.
-
-    section#programas
-      h5 Programas
-      /  --------
-      p Los programas necesarios son:
-      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-        li
-          dl.iinlinenline
-            dt
-              dfn
-                abbr title="GNU Compiler Collection" GCC
-            dd Un compilador de C.
-        li
-          dl.inline
-            dt
-              dfn Qemu
-            dd  Un emulador.
-        li
-          strong git
-        li Un emulador de Terminal.
-        li Una <strong>shell</strong>.
-        li Un editor de texto.
-
-  section
-    h3 Ambiente
-    /  --------
-    p Durante el proyecto y las tareas van a pasar la mayoría del tiempo trabajando con una shell, por lo que es recomendable por lo que es recomendable que inviertan un poco de tiempo en acostumbrarse y hacerla más cómoda.
-    section
-      h5 Terminal
-      /  --------
-
-      p Los <a href="https://en.wikipedia.org/wiki/VT100">terminales</a> son máquinas para usar remotamente un servidor, básicamente una pantalla y un teclado conectado en red al servidor. Hoy ya no se usan máquinas especiales, sólo un programa que simula una, por lo que en la práctica son sólo un programa para interactuar con una shell.
-      p No hay demasiado que aprender y arreglar acá, sólo pueden cambiar la fuente y el colorscheme, así que pueden saltar a la sección de <a href="#shell">Shells</a>.
-      p Varios 'prompts' usan caracteres especiales que necesitan parchar las fuentes para agregarlos, el set más usual es el de powerline, y existen paquetes con versiones parchadas de las fuentes, así que si su prompt se ve mal tienen que instalar y usar una fuente adecuada.
-
-      p Existen varios emuladores de terminal, por lo general los escritorios tienen uno preferido, pero pueden usar cualquiera.
-      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-        li konsole / yakuake <small>(KDE [Qt])</small>
-        li gnome-terminal / guake <small>(Gnome,Unity [GTK])</small>
-        li terminology <small>(Enlightenment [EFL])</small>
-        li terminator <small>([GTK])</small>
-        li
-          small urxvt
-        li
-          small xterm
-
-      p Fonts
-      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-        li = link_to 'powerline/fonts', 'https://github.com/powerline/fonts'
-        li = link_to 'AUR: powerline-fonts-git', 'https://aur.archlinux.org/packages/powerline-fonts-git/'
-      p ColorSchemes
-      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-        li = link_to 'Solarized', 'http://ethanschoonover.com/solarized'
-        li = link_to 'SMYCK', 'http://color.smyck.org/'
-        li = link_to 'Terminal ColorScheme Designer', 'http://ciembor.github.io/4bit/'
-
-
-    section#shell
-      h5 Shell
-      /  -----
-
-      p Una shell es un intérprete de comandos (al igual que el REPL de ruby/python/js/haskell/), lo que tiene de especial es que está orientada a ejecutar otros programas.
-
-      h6 ¿Cuál usar?
-      p Existen varias,
-      ul
-        li bash (generalmente default)
-        li zsh
-        p Casi 100% compatible con bash. La configuración default es mala, pero existen algunos frameworks fáciles de usar para configurarla:
-        ul
-          li
-            strong = link_to 'prezto', 'https://github.com/sorin-ionescu/prezto'
-          li = link_to 'oh-my-zsh', 'https://github.com/robbyrussell/oh-my-zsh'
-        li fish
-        p Muy buena por default. Tiene sintáxis distinta a la de bash, lo que quita portabilidad a sus scripts, pero no es un problema. También existe un framework para instalar plugins y themes:
-        ul
-          li = link_to 'oh-my-fish', 'https://github.com/oh-my-fish/oh-my-fish'
-        li tsh, csh, ksh, ...
-
-      h6 Usando la shell
-      p Existe una lista de directorios donde la shell puede descubrir programas, es conocida como <code>PATH</code>. Es posible extenderla para ejecutar programas desde directorios personales.
-
-      p Ejecutar programas es simple, basta escribir el nombre del programa<small>, o la ruta completa si no están en el PATH</small>. Se le pueden entregar argumentos separados por espacios, todos son strings.
-      p Por ejemplo, podemos llamar a 'telnet' y darle un string como argumento para conectarnos a algún servidor.
-      pre
-        code.hljs
-          | telnet towel.blinkenlights.nl
-
-      h6 Pipes
-      pre
-        code.hljs
-          | echo "Mooo" | cowsay
-      p Acá llamamos a 'echo' con 'Mooo' como argumento, el que ejecuta y pasa su output como input de 'cowsay' sin argumentos. Esto produce el siguiente output:
-      pre
-        code.hljs
-          |   ______
-             < Mooo >
-              ------
-                       \   ^__^
-                        \  (oo)\_______
-                           (__)\       )\/\
-                               ||----w |
-                               ||     ||
-      p El operador pipe <code>|</code> toma el output del programa de la izquierda y se lo entrega como input al de la derecha, se puede usar siempre. La ejecución se hace en paralelo y los datos se intercambian en líneas completas. Hay que notar que algunos programas no pueden generar output antes de consumir todo el input (sort).
-      p Pueden encadenarse varios programas,
-      pre
-        code.hljs
-          | echo "Moooooooo" | cowsay | cowsay -n | cowsay -n
-
-      p Más adelante se verán con más detalle, por ahora basta que sepan que sirven para componer programas.
-
-
-    section
-      h5 Editor
-      /  ------
-      p Existen varios editores de texto. Vim y Emacs son muy configurables, por lo que es cómodo comenzar con una base.
-      ul
-        li vim
-        ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-          li
-            strong = link_to "vim spf13", "https://github.com/spf13/spf13-vim"
-          li = link_to "haskell-vim-now", "https://github.com/begriffs/haskell-vim-now"
-          li = link_to "Derek Wyatt's config", "https://github.com/derekwyatt/vim-config"
-          li = link_to "Vundle (Plugin Manager, DIY config)", "https://github.com/VundleVim/Vundle.vim"
-        li emacs
-        ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
-          li
-            strong = link_to "Spacemacs", "https://github.com/syl20bnr/spacemacs"
-          li = link_to "Aaron Bedra's config", "http://aaronbedra.com/emacs.d/"
-          li = link_to "Sacha Chua's config", "http://pages.sachachua.com/.emacs.d/Sacha.html"
-        li kate/gedit
-        li atom/sublime/notepad++
-        li <small>(ed)</small>
-
-      p Lo más importante es que les sea una herramienta útil y los haga eficientes en vez de ser un obstáculo. Vim y Emacs son superiores a la mayoría, pero hay que aprender a usarlos (comenzar es fácil, gastar 30 minutos y ser más lento al principio se paga).
-
-
-    section#git
-      h5 Git
-      /  ---
-      p Git es un sistema de control de versiones distribuido que se ha convertido en una herramienta esencial para cualquier proyecto serio.
-
-      p Para aprender git existe mucho material en internet.
-      ul
-        li
-          strong = link_to "Book", "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control"
-        li = link_to "Docs", "https://git-scm.com/docs"
-        li
-          strong = link_to "Simple Guide", "http://rogerdudler.github.io/git-guide/"
-        li = link_to "Git Immersion", "http://gitimmersion.com/"
-        li
-          strong = link_to "CodeSchool", "https://try.github.io/levels/1/challenges/1"
-        li = link_to "SO practical guide", "http://stackoverflow.com/questions/315911/git-for-beginners-the-definitive-practical-guide"
-        li = link_to "Git Cheatsheet", "http://ndpsoftware.com/git-cheatsheet.html"
-        li = link_to "Explain git with D3 (tree management)", "http://onlywei.github.io/explain-git-with-d3"
+	section#challenges
+		h3 Desafíos
+		/  --------
+		= link_to 'Edx', 'edx/'
