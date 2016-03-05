@@ -857,7 +857,7 @@ section#deadlocks
   
 	section#dl-codeSample
 		p Puede verse así:
-		pre.fragment
+		pre
 			code.hljs.c
 				| /* Proc1 */       /* Proc 2 */
 				  wait(a);
@@ -921,176 +921,148 @@ section#resourceGraph
 
 
 	section#resourceGraph-sample
-		p = '$P=\{P_1,P_2,P_3\}$'
-		p = '$R=\{R_1,R_2,R_3,R_4\}, |R_1|=1, |R_2|=2, |R_3|=1, |R_4|=3$'
-		p = '$E=\{P_1 \to R_1, P_2 \to R_3, R_1 \to P_2, R_2 \to P_2, R_2 \to P_1, R_3 \to P_3\}$'
-
-		= image_tag 'images/figures/01-7_01.pdf.png'
+		= image_tag 'images/figures/01-7_01.pdf.png', :width=>"25%"
 
 		p <em>¿Deadlock?</em>&hellip; <span class="fragment">No (¿por qué?)</span>
 
 
-/XXX
-//	section#
-//		\begin{alertblock}{Condición de <em>deadlock</em>}
-//		  En el grafo de asignación de recursos:
-//		  ul
-//		    li.fragment  Si no hay ciclos $\to$ no hay <em>deadlock</em>
-//		    li.fragment  Si hay ciclos $\to$ puede haber <em>deadlock</em>
-//		  \end{itemize}
-//		\end{alertblock}
-//
-//		p ¿Y si hay una sola instancia de cada clase de recurso?
-//		p Ciclo $\Leftrightarrow$ <em>deadlock</em>
-//
-//  
-//	section#
-//		\frametitle{Grafo de Asignación de Recursos}
-//
-//		\begin{center}
-//		  /== image_tag [width=3cm]{images/figures/01-7_01.pdf.png}
-//		  $P_3$ solicita $R_2$
-//		  /== image_tag [width=3cm]{images/figures/01-7_02.pdf.png}
-//		\end{center}
-//
-//		\onslide<2->{¡<em>Deadlock</em>!}
-//
-//
-//	section#
-//		= image_tag 'images/figures/01-7_03.pdf.png'
-//
-//		p.fragment  ¡Ciclo!<span class="fragment">&hellip; pero sin <em>deadlock</em></span>
-//
-//
-//
-//
-//
-//
-//
-//	section#
-//		\frametitle{¿Como manejar <em>deadlock</em>s?}
-//
-//		Tres alternativas:
-//		ul
-//		  li.fragment  Prevenir o evitar llegar a un estado de <em>deadlock</em>
-//		  li.fragment  Permitir el <em>deadlock</em>, detectarlo, y tomar medidas
-//		  li.fragment  Ignorarlo
-//
-//		= image_tag 'images/figures/01-avestruces.jpg'
-//
-//
-//	section#
-//		\frametitle{Prevención de <em>deadlock</em>s}
-//		\framesubtitle{Decisión política}
-//
-//		Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
-//
-//
-//		ul
-//		  li.fragment  <strong>Impedir ``Exclusión mutua''</strong>. Que todos los recursos sean compartibles.
-//		  li.fragment  <strong>Impedir ``Hold-and-wait''</strong>. No ejecutar mientras no se tengan todos los recursos:
-//		        procesos deben solicitar todos los recursos antes de ejecutar ; o bien,
-//		        no permitir solicitudes a procesos que ya tengan recursos asignados
-//		        ul
-//		          li.fragment  -Posible subutilización de recursos
-//		          li.fragment  -Posible inanición
-//
-//
-//  
-//	section#
-//		\frametitle{Prevención de <em>deadlock</em>s}
-//		\framesubtitle{Decisión política}
-//
-//		Asegurar que al menos una de las condiciones <strong>no se cumpla</strong>.
-//
-//
-//		ul
-//		  li.fragment  <strong>Impedir ``No expropiación''</strong>. Permitir expropiación.
-//		        Si el proceso tiene recursos, solicita más y no se pueden asignar, entonces
-//		        debe liberar los que ya tiene.
-//		          ul
-//		            li.fragment  O bien, quitarle los que otro proceso necesita
-//		            li.fragment  Aplicable a recursos cuyo estado se puede recuperar
-//		          \end{itemize}
-//
-//		  li.fragment  <strong>Impedir ``Espera circular''</strong>. Que todos los recursos deban ser solicitados en el mismo orden.
-//		        ul
-//		          li.fragment  ¿Por qué esto es suficiente?
-//		          li.fragment  -La regla debe ser respetada por el programador
-//		          li.fragment  FreeBSD incluye objetos <em>witness</em> que verifican este orden
-//  // Chequear ejemplo Figure 7.5!!
-//
-//
-//  
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//		\framesubtitle{Solución algorítmica}
-//
-//		En lugar de impedir alguna condición ``políticamente'', tomar
-//		la acción justo antes que ocurra el <em>deadlock</em>.
-//
-//		\onslide<2->{Require examinar dinámicamente el grafo de asignación de recursos}
-//
-//		ul
-//		  li.fragment <3-> Cada procesos debe especificar la cantidad máxima de recursos que puede pedir
-//		\end{itemize}
-//
-//		\onslide<4->{
-//		\begin{exampleblock}{<strong>Estado seguro</strong> (<em>safe state</em>)}
-//		  Un estado es seguro si el sistema puede satisfacer las necesidades de todos los procesos
-//		  en algún orden, y evitar el <em>deadlock</em>.
-//
-//		  Para un conjunto ordenado de procesos $\{P_1, P_2, &hellip;, P_n\}$, el estado es seguro
-//		  si cada proceso $P_i$ puede satisfacer su demanda máxima usando los recursos que tiene,
-//		  y los que tienen los procesos $P_j$, $j<i$.
-//		\end{exampleblock}
-//		}
-//
-//
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//
-//		ul
-//		  li.fragment  Un estado que no es seguro es &hellip; <strong>inseguro</strong>
-//		  li.fragment <2-> Un estado de <em>deadlock</em> es <em>inseguro</em>
-//		  li.fragment <3-> No todo estado <em>inseguro</em> es estado de <em>deadlock</em>
-//		\end{itemize}
-//
-//		\begin{center}
-//		  /== image_tag [width=4cm]{images/figures/01-7_06.pdf.png}
-//		\end{center}
-//
-//		\onslide<4->{
-//		La política es mantenerse siempre en estados seguros
-//		}
-//
-//  
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//
-//		Ejemplo: $P=\{P_0,P_1,P_2\}$, $R=\{R_0\}$, $|R_0|=12$
-//
-//		Solicitud máxima: $S_M=\{10,4,9\}$
-//
-//		Solicitud actual: $S_a=\{5,2,2\}$
-//
-//		\begin{center}
-//		  ¿Está el sistema en un estado seguro?
-//		\end{center}
-//
-//		\onslide<2->{Sí, ya que existe la secuencia $\langle P_1, P_0, P_2 \rangle$}
-//
-//		\onslide<3->{
-//		\begin{center}
-//		  ¿Y si a $P_2$ se le asigna un recurso más?
-//		\end{center}
-//		}
-//
-//		\onslide<4->{
-//		  <strong>¡Estado inseguro!</strong> (¿por qué?)
-//		}
-//
-//
+	section#resourceGraph-dlCond
+		p Condición de <em>deadlock</em>
+
+		p.fragment  Si en el grafo de asignación de recursos:
+		ul
+			li.fragment  No hay ciclos $\to$ no hay <em>deadlock</em>
+			li.fragment  Hay ciclos $\to$ <strong>puede</strong> haber <em>deadlock</em>
+
+		p.fragment  ¿Y si hay una sola instancia de cada clase de recurso?
+		p.fragment  Ciclo $\Leftrightarrow$ <em>deadlock</em>
+
+
+
+	/ Graph loop samples
+	/ ------------------
+	section#resourceGraph-dl-sample-dl-1
+		== image_tag '/images/figures/01-7_01.pdf.png', :width=>"25%"
+		p.fragment  $P_3$ solicita $R_2$
+
+	section#resourceGraph-dl-sample-dl-2
+		== image_tag '/images/figures/01-7_02.pdf.png', :width=>"25%"
+		p.fragment  ¡<em>Deadlock</em>!
+
+	section#resourceGraph-dl-sample-nodl
+		== image_tag 'images/figures/01-7_03.pdf.png', :width=>"25%"
+		p.fragment  ¡Ciclo!<span class="fragment">&hellip; pero sin <em>deadlock</em></span>
+
+
+
+
+section#dl_handling
+	h2 ¿Como manejar <em>deadlock</em>s?
+
+	section#dl_handling-
+		p Tres alternativas:
+		ul
+			li.fragment  Prevenir o evitar llegar a un estado de <em>deadlock</em>
+			li.fragment  Permitir el <em>deadlock</em>, detectarlo, y tomar medidas
+			.fragment
+				li  Ignorarlo
+				== image_tag '/images/figures/01-avestruces.jpg'
+
+
+
+
+section#dl_prev
+	h2 ¿Como evitar <em>deadlocks</em>?
+	/  ================================
+
+section#dl_prev
+	h2 Prohibición de <em>deadlocks</em>
+
+	section#dl_prev-
+		p Se puede asegurar que al menos una de las condiciones <strong>no se cumpla</strong>
+
+	section#dl_prev-pol-1
+		ul
+			li.fragment  <strong>Impedir "Exclusión mutua"</strong>. Que todos los recursos sean compartibles.
+			li.fragment  <strong>Impedir  "Hold-and-wait" </strong>. No ejecutar mientras no se tengan todos los recursos:
+			ul.fragment
+				li procesos deben solicitar todos los recursos antes de ejecutar
+				li o bien, no permitir solicitudes a procesos que ya tengan recursos asignados
+			ul
+				li.fragment  -Posible subutilización de recursos
+				li.fragment  -Posible inanición
+
+
+
+	section#dl_prev-pol-2
+		ul
+			li.fragment  <strong>Impedir "No expropiación"</strong>. Permitir expropiación.
+				|  Si el proceso tiene recursos, solicita más y no se pueden asignar, entonces
+				|  debe liberar los que ya tiene.
+			ul
+				li.fragment  O bien, quitarle los que otro proceso necesita
+				li.fragment  Aplicable a recursos cuyo estado se puede recuperar
+
+		  li.fragment  <strong>Impedir ``Espera circular''</strong>. Que todos los recursos deban ser solicitados en el mismo orden.
+			ul
+				li.fragment  ¿Por qué esto es suficiente?
+				li.fragment  -La regla debe ser respetada por el programador
+				li.fragment  FreeBSD incluye objetos <em>witness</em> que verifican este orden
+			/ Chequear ejemplo Figure 7.5!!
+
+
+
+section#dl_prev
+	h2 Prevención de <em>deadlocks</em>
+
+	section#dl_prev-alg-1
+		p Solución algorítmica
+
+		p.fragment  En lugar de impedir alguna condición "políticamente", tomar la acción justo antes que ocurra el <em>deadlock</em>.
+		p.fragment  Require examinar dinámicamente el grafo de asignación de recursos
+
+		ul
+			li.fragment  Cada procesos debe especificar la cantidad máxima de recursos que puede pedir
+			ul
+				li.fragment  Pero esta puede no ser conocida antes de la ejecución
+				li.fragment  Y saber cuántos recursos va a pedir un programa es indecidible en general (HALTING).
+
+	section#dl_prev-alg-2-safeState
+		p <strong>Estado seguro</strong> (<em>safe state</em>)
+		blockquote.fragment
+			| Un estado es seguro si el sistema puede satisfacer las necesidades de todos los procesos en algún orden, y evitar el <em>deadlock</em>.
+			  
+			  Para un conjunto ordenado de procesos $\{P_1, P_2,\cdot, P_n\}$, el estado es seguro
+			  si cada proceso $P_i$ puede satisfacer su demanda máxima usando los recursos que tiene,
+			  y los que tienen los procesos $P_j$, $j<i$.
+			  
+			  Es decir, si el uso de recursos es serializable.
+
+
+	section#dl_prev-alg-3
+		p $deadlock(S) \rightarrow \not safe(S)
+		ul
+		  li.fragment  Un estado de <em>deadlock</em> es <em>inseguro</em>
+		  li.fragment  No todo estado <em>inseguro</em> es estado de <em>deadlock</em>
+
+		== image_tag '/images/figures/01-7_06.pdf.png'
+
+		p.fragment  La política es mantenerse siempre en estados seguros
+
+
+	section#dl_prev-alg-4-example
+		p Ejemplo: $P=\{P_0,P_1,P_2\}$, $R=\{R_0\}$, $|R_0|=12$
+
+		p Solicitud máxima: $S_M=\{10,4,9\}$
+		p Solicitud actual: $S_a=\{5,2,2\}$
+
+		br
+		p ¿Está el sistema en un estado seguro?
+
+		p.fragment  Sí, ya que existe la secuencia $\langle P_1, P_0, P_2 \rangle$
+		p.fragment  ¿Y si a $P_2$ se le asigna un recurso más?  <span class="fragment"><strong>¡Estado inseguro!</strong> (¿por qué?)</span>
+
+
 //	section#
 //		\frametitle{Evitar <em>deadlock</em>s}
 //		\framesubtitle{Volviendo al grafo de asignación de recursos}
@@ -1110,62 +1082,54 @@ section#resourceGraph
 //		\onslide<4->{Costo de detectar ciclo con $n$ procesos: }\onslide<5->{$O(n^2)$}
 //
 //
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-//
-//		Analogía: el banquero entrega dinero de manera que pueda satisfacer a todos sus clientes
-//
-//		ul
-//		  li.fragment <2-> Cada proceso debe declarar su máximo de demanda para cada (clase de) recurso,
-//		           que no debe ser mayor que el máximo existente
-//		  li.fragment <3-> El algoritmo sólo asigna recursos si se mantiene dentro de un estado seguro
-//		\end{itemize}
-//
-//		\onslide<4->{Estructuras: $m$ recursos, $n$ procesos}
-//		ul
-//		  li.fragment <5-> <code>Available[m]</code>, cantidad disponible para cada recurso
-//		  li.fragment <5-> <code>Max[n][m]</code>, máxima demanda para cada proceso.
-//		    ul
-//		      li.fragment  <code>Max[i][j]=k</code>: $P_i$ puede solicitar hasta $k$ instancias de $R_j$
-//		    \end{itemize}
-//		  li.fragment <5-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
-//		    ul
-//		      li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
-//		    \end{itemize}
-//		  li.fragment <5-> <code>Need[n][m]</code>, solicitud potencial para cada proceso
-//		    ul
-//		      li.fragment  <code>Need[i][j]=k</code>: $P_i$ podría pedir hasta $k$ instancias de $R_j$
-//		      li.fragment  <code>Need[i][j] == Max[i][j] - Allocation[i][j]</code>
-//
-//
-//
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-//
-//		¿Cómo saber si estamos en un estado seguro?
-//
-//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-//		  /** Safety Algorithm **/
-//		  int Work[m] = Available;
-//		  bool Finish[n] = FALSE;
-//
-//		  /** encontrar indice $i$ tal que Finish[i]==FALSE y Need[i] $\leq$ Work **/
-//		  while(existe i tal que (!Finish[i] && Need[i] <= Work)) {
-//		    Work = Work + Allocation[i];
-//		    Finish[i] = TRUE;
-//		  }
-//		  for(i=0;i<n;i++) {
-//		    if(Finish[i] == FALSE) {
-//		      return UNSAFE;
-//		    }
-//		  }
-//		  return SAFE;
-//
-//		p Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
-//
-//
+
+section#dl_prev-alg-bankersAlg
+	h2  El algoritmo del banquero (E. Dijkstra, 1977)
+
+	section#dl_prev-alg-bankersAlg_
+		p Analogía: el banquero entrega dinero de manera que pueda satisfacer a todos sus clientes
+		ul
+		  li.fragment  Cada proceso declara su demanda máxima para cada (clase de) recurso.
+		  li.fragment  El algoritmo sólo asigna recursos si puede mantenerse en un estado seguro
+
+		p.fragment Estructuras: $m$ recursos, $n$ procesos
+		ul.fragment
+		  li.fragment  <code>Available[m]</code>, cantidad disponible para cada recurso
+		  li.fragment  <code>Max[n][m]</code>, máxima demanda para cada proceso.
+		  ul
+		    li.fragment  <code>Max[i][j]=k</code>: $P_i$ puede solicitar hasta $k$ instancias de $R_j$
+		  li.fragment  <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
+		  ul
+		    li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
+		  li.fragment  <code>Need[n][m]</code>, solicitud potencial para cada proceso
+		  ul
+		    li.fragment  <code>Need[i][j]=k</code>: $P_i$ podría pedir hasta $k$ instancias de $R_j$
+		    li.fragment  <code>Need[i][j] == Max[i][j] - Allocation[i][j]</code>
+
+
+
+/XXX
+	/section#dl_prev-alg-bankersAlg_
+		p ¿Cómo saber si estamos en un estado seguro?
+		pre
+			code.hljs.c
+				| int Work[m] = Available;
+				  bool Finish[n] = FALSE;
+				  
+				  /* encontrar indice $i$ tal que Finish[i]==FALSE y Need[i] $\leq$ Work **/
+				  while(existe i tal que (!Finish[i] && Need[i] <= Work)) {
+				    Work += Allocation[i];
+				    Finish[i] = TRUE;
+				  }
+				  
+				  for(i=0;i<n;i++)
+				    if(!Finish[i])
+				      return UNSAFE;
+				  return SAFE;
+		p Tiempo de ejecución: <span class="fragment">$O(m \times n^2)$</span>
+
+
+
 //	section#[fragile]
 //		\frametitle{Evitar <em>deadlock</em>s}
 //		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
@@ -1334,18 +1298,18 @@ section#resourceGraph
 //		\end{array}
 //		\]
 //		$\textbf{Available}=\{0,0,0\}$
-//
+
 //		El estado actual es <strong>NOT DEADLOCKED</strong>, ¿por qué? \onslide<2->{({$\langle P_0,P_2,P_3,P_1,P_4 \rangle$})}
-//
+
 //		ul
 //		  li.fragment <3-> Ejecutar <em>request</em> de $P_2$: <code>Request[2]=\{0,0,1\}</code>
-//
-//
+
+
 //	section#
 //		\frametitle{Recuperación ante <em>deadlock</em>s}
-//
+
 //		p OK, hemos detectado el <em>deadlock</em> (so what?)
-//
+
 //		p.fragment Dos caminos&hellip;
 //		ul
 //		  li.fragment <strong>Matar un proceso</strong> ¿Cuál?
@@ -1359,8 +1323,8 @@ section#resourceGraph
 //		    ul
 //		      li.fragment  ¿A quién?
 //		      li.fragment  <strong>Rollback</strong>
-//
-//  
+
+
 //	section#
 //		\frametitle{Recuperación ante <em>deadlock</em>s}
 //		\framesubtitle{Algunos puntos importantes}
@@ -1380,16 +1344,23 @@ section#resourceGraph
 //		      li.fragment  Ignorarlo
 //		  li.fragment  Algoritmo del banquero (Dijkstra, 1977), evita que el proceso llegue a un <em>estado inseguro</em>
 //		  li.fragment  Sistema en <em>estado seguro</em> no puede estar en <em>deadlock</em>
-//
-//
-//	section#
-//		\frametitle{Administración de Procesos}
-//		\framesubtitle{¿Qué debemos recordar?}
-//
-//		ul
-//		  li.fragment  Procesos: programa+recursos, administrados por el S.O. mediante <em>syscall</em>s
-//		  li.fragment  <em>Threads</em>: unidad básica de ejecución visible al programador o al S.O.
-//		  li.fragment  Sincronización de <em>threads</em> permite que puedan ejecutar eficientemente, sin bloquearse,
-//		        y sin provocar inconsistencias en los datos compartidos
-//		  li.fragment  Algoritmos de <em>scheduling</em> permiten seleccionar eficientemente el próximo proceso/<em>thread</em> a ejecutar
-//		  li.fragment  Se debe evitar caer en situación de <em>bloqueo mutuo</em>
+
+
+
+
+
+
+section#summary
+	h2  Administración de Procesos
+
+	section#summary_
+		p  ¿Qué debemos recordar?
+
+		ul
+		  li.fragment  Procesos: programa+recursos, administrados por el S.O. mediante <em>syscall</em>s
+		  li.fragment  <em>Threads</em>: unidad básica de ejecución visible al programador o al S.O.
+		  li.fragment  Sincronización de <em>threads</em> permite que puedan ejecutar eficientemente, sin bloquearse, y sin provocar inconsistencias en los datos compartidos
+		  li.fragment  Algoritmos de <em>scheduling</em> permiten seleccionar eficientemente el próximo proceso/<em>thread</em> a ejecutar
+		  li.fragment  Se debe evitar caer en situación de <em>bloqueo mutuo</em>
+
+
