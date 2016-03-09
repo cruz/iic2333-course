@@ -1,5 +1,5 @@
 ---
-title: Administración de Procesos
+title: 1 - Administración de Procesos
 layout: slide
 ---
 
@@ -24,9 +24,8 @@ section
 			li.fragment El código del programa
 			li.fragment Los recursos de la ejecución
 			ul
-				li.fragment Memoria
-				li.fragment Archivos
-				li.fragment <small>Sockets, Dispositivos, Librerías (...)</small>
+				li.fragment Memoria, archivos
+				li.fragment Sockets, Dispositivos, Librerías (...)
 
 
 
@@ -63,11 +62,11 @@ section#states
 		p Un proceso en ejecución puede cambiar de estado
 
 		ul
-			li.fragment <em>[New]       </em>: En creación
-			li.fragment <em>[Running]   </em>: En ejecución
-			li.fragment <em>[Waiting]   </em>: Esperando (I/O, signal)
-			li.fragment <em>[Ready]     </em>: Listo para ejecutar. Esperando asignación de CPU
-			li.fragment <em>[Terminated]</em>: Ejecución terminada
+			li.fragment <b>[New]       </b>: En creación
+			li.fragment <b>[Running]   </b>: En ejecución
+			li.fragment <b>[Waiting]   </b>: Esperando (I/O, signal)
+			li.fragment <b>[Ready]     </b>: Listo para ejecutar. Esperando asignación de CPU
+			li.fragment <b>[Terminated]</b>: Ejecución terminada
 
 
 	section#states-automata
@@ -125,7 +124,7 @@ section#repr
 			li.fragment Información de I/O: archivos y dispositivos abiertos, &hellip;
 
 		== image_tag '/images/figures/01-3_03.pdf.png'
-		p.fragment Miremos en <code>include/linux/sched.h</code>
+		/p.fragment Miremos en <code>include/linux/sched.h</code>
 
 
 	section#repr-contextSwitch
