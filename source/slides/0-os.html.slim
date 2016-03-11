@@ -313,27 +313,18 @@ section
 
 
 section
-	h2 ¿Qué es un Sistema Operativo?
+	h2 ¿De qué tamaño es un Sistema Oprerativo?
 	/  -----------------------------
 
 	section
-		p ¿Qué incluye?
-		ul
-			li.fragment ¿Interfaz gráfica?
-			li.fragment ¿Editores?
-			li.fragment ¿Línea de comando?
-		p.fragment ¿De qué tamaño es? <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">(¿Megas? ¿Kilos? ¿Gigas?)</a>
+		p.fragment <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">(¿Megas? ¿Kilos? ¿Gigas?)</a>
 		ul
 			li.fragment Windows 7: \( \sim 40\times 10^6 \) líneas de código
 			li.fragment Linux: \( \sim 15 \times 10^6 \) líneas de código
-		p.fragment Entonces, el S.O. es "lo que hay" disponible
-		ul
-			li.fragment Lo que obtenemos de Microsoft/Apple
-			li.fragment Lo que bajamos de Linux
-
+		
 
 	section
-		p Lo comúnmente aceptado:
+		h3 ¿Qué incluye?
 		ul
 			li.fragment Sistema Operativo
 
@@ -352,32 +343,32 @@ section
 
 
 
-section
-	h2 ¿Sobre qué <em>hardware</em>?
-	/  -----------------------------
+/ section
+/ 	h2 ¿Sobre qué <em>hardware</em>?
+/ 	/  -----------------------------
 
-	section
-		p Distintas arquitecturas
-		ul
-			div.fragment
-				li Single-core
-				ul
-					li Un procesador de propósito general
-					li Algunas funciones delegadas a procesadores especializados
-			div.fragment
-				li Multi-core
-				ul
-					li Mayor rendimiento: ¿\(N\)?
-					li Economía de escala
-					li Mayor confiabilidad (reliability)
-			div.fragment
-				li Arquitectura en <em>cluster</em>
-				ul
-					li Múltiples procesadores conectados por red
-					li Mayor potencia de cómputo (HPC)
-					li Es necesario manejar balance de carga y consistencia de datos
-		blockquote.fragment
-			| Sistema operativo debe ser capaz de explotar las características de cada arquitectura
+/ 	section
+/ 		p Distintas arquitecturas
+/ 		ul
+/ 			div.fragment
+/ 				li Single-core
+/ 				ul
+/ 					li Un procesador de propósito general
+/ 					li Algunas funciones delegadas a procesadores especializados
+/ 			div.fragment
+/ 				li Multi-core
+/ 				ul
+/ 					li Mayor rendimiento: ¿\(N\)?
+/ 					li Economía de escala
+/ 					li Mayor confiabilidad (reliability)
+/ 			div.fragment
+/ 				li Arquitectura en <em>cluster</em>
+/ 				ul
+/ 					li Múltiples procesadores conectados por red
+/ 					li Mayor potencia de cómputo (HPC)
+/ 					li Es necesario manejar balance de carga y consistencia de datos
+/ 		blockquote.fragment
+/ 			| Sistema operativo debe ser capaz de explotar las características de cada arquitectura
 
 
 
@@ -406,140 +397,130 @@ section
 
 
 
+/ section
+/ 	h2 Evolución de Sistemas Operativos
+/ 	/  --------------------------------
+
+
+
+/ section
+/ 	h2 Versión 1.0
+/ 	/  -----------
+
+/ 	section
+/ 		p Objetivo: acceder transparentemente a <em>hardware</em>
+/ 		ul
+/ 			div.fragment
+/ 				li ¿Cómo?: API para acceder a instrucción de <em>hardware</em> y conjunto de <em>drivers</em> para dispositivos.
+
+/ 			div.fragment
+/ 				li Supuestos:
+/ 				ul
+/ 					li Sólo un usuario accede simultáneamente al computador
+/ 					li Ningún usuario/programa hace uso malicioso del <em>hardware</em>
+
+/ 			div.fragment
+/ 				li Problemas:
+/ 				ul
+/ 					li Baja utilización de <em>hardware</em>: CPU inutilizada mientras se accede a disco
+/ 					li Usuario debe esperar que un programa termine antes de utilizar otro
+
+
+
+/ section
+/ 	h2 Versión 2.0
+/ 	/  -----------
+
+/ 	section
+/ 		p Objetivo: ejecutar múltiples programas simultáneamente. <strong>Multiprogramación</strong>
+
+/ 		ul
+/ 			div.fragment
+/ 				li ¿Cómo?: Si un proceso se bloquea, ejecutar otro.
+
+/ 			div.fragment
+/ 				li Supuestos:
+/ 				ul
+/ 					li Ningún programa utilizará la CPU demasiado tiempo (programas cooperativos)
+/ 					li Ningún programa sobreescribirá datos de otro programa
+
+/ 			div.fragment
+/ 				li Métodos:
+/ 				ul
+/ 					li <em>Preemption</em>: capacidad de <em>expropiar</em> la CPU a un programa
+/ 					li <em>Protección de memoria</em>: definir secciones de memoria para cada programa
+
+
+
+/ section
+/ 	h2 Versión 3.0
+/ 	/  -----------
+
+/ 	section
+/ 		p Objetivo: que más de un usuario pueda utilizar simultáneamente el computador
+
+/ 		ul
+/ 			div.fragment
+/ 				li ¿Cómo?: Dándole un tiempo a cada usuario (<em>multitasking</em>)
+/ 			div.fragment
+/ 				li Problemas:
+/ 				ul
+/ 					li Cada usuario quiere el mayor tiempo posible: <em>planificación y políticas de uso</em>
+/ 					li Cada usuario quiere usar la mayor cantidad de memoria disponible: <em>virtualización de memoria</em>
+/ 					li ¿Hasta cuántos usuarios/programas aceptar? (<em>thrashing</em>)
+
+/ 			div.fragment
+/ 				li Método: niveles de privilegio
+/ 				ul
+/ 					li Programas de usuario (aplicaciones) son <em>no privilegiados</em>
+/ 					li Programas de <em>kernel</em> son <em>privilegiados</em>
+/ 					li Solo programas de <em>kernel</em> pueden modificar el sistema
+
+
 section
-	h2 Evolución de Sistemas Operativos
-	/  --------------------------------
+	h2 Conceptos de Sistemas Operativos
+
+	p.fragment <b>Administración de procesos</b>
+	ul
+		li.fragment Proceso
+		li.fragment Tablas (árbol) de proceso
+		li.fragment Comunicación entre procesos
+
+	p.fragment <b>Administración de memoria</b>
+	ul
+		li.fragment Espacios de direcciones
+		li.fragment Memoria Virtual
 
 
-
-section
-	h2 Versión 1.0
-	/  -----------
-
-	section
-		p Objetivo: acceder transparentemente a <em>hardware</em>
-		ul
-			div.fragment
-				li ¿Cómo?: API para acceder a instrucción de <em>hardware</em> y conjunto de <em>drivers</em> para dispositivos.
-
-			div.fragment
-				li Supuestos:
-				ul
-					li Sólo un usuario accede simultáneamente al computador
-					li Ningún usuario/programa hace uso malicioso del <em>hardware</em>
-
-			div.fragment
-				li Problemas:
-				ul
-					li Baja utilización de <em>hardware</em>: CPU inutilizada mientras se accede a disco
-					li Usuario debe esperar que un programa termine antes de utilizar otro
-
-
-
-section
-	h2 Versión 2.0
-	/  -----------
-
-	section
-		p Objetivo: ejecutar múltiples programas simultáneamente. <strong>Multiprogramación</strong>
-
-		ul
-			div.fragment
-				li ¿Cómo?: Si un proceso se bloquea, ejecutar otro.
-
-			div.fragment
-				li Supuestos:
-				ul
-					li Ningún programa utilizará la CPU demasiado tiempo (programas cooperativos)
-					li Ningún programa sobreescribirá datos de otro programa
-
-			div.fragment
-				li Métodos:
-				ul
-					li <em>Preemption</em>: capacidad de <em>expropiar</em> la CPU a un programa
-					li <em>Protección de memoria</em>: definir secciones de memoria para cada programa
-
-
-
-section
-	h2 Versión 3.0
-	/  -----------
-
-	section
-		p Objetivo: que más de un usuario pueda utilizar simultáneamente el computador
-
-		ul
-			div.fragment
-				li ¿Cómo?: Dándole un tiempo a cada usuario (<em>multitasking</em>)
-			div.fragment
-				li Problemas:
-				ul
-					li Cada usuario quiere el mayor tiempo posible: <em>planificación y políticas de uso</em>
-					li Cada usuario quiere usar la mayor cantidad de memoria disponible: <em>virtualización de memoria</em>
-					li ¿Hasta cuántos usuarios/programas aceptar? (<em>thrashing</em>)
-
-			div.fragment
-				li Método: niveles de privilegio
-				ul
-					li Programas de usuario (aplicaciones) son <em>no privilegiados</em>
-					li Programas de <em>kernel</em> son <em>privilegiados</em>
-					li Solo programas de <em>kernel</em> pueden modificar el sistema
-
-
-
-/ %!
-/ %section
-	/ % h2 ¿Qué se le pide a un Sistema Operativo?
-	/ % explicarlos de manera natural
-
-// %	ul
-// %		ul.fragment Capacidad de ejecutar <strong>procesos</strong> definidos por el usuario
-// %		ul.fragment Capacidad de <strong>multiprogramación</strong>
-// %			ul
-// %				ul.fragment Múltiples procesos en memoria (¿y si no caben?)
-// %				ul.fragment Mover algunos a disco (¿cuáles?)
-// %				ul.fragment Mantener siempre uno en ejecución (¿cuál?)
-// %				ul.fragment Debe hacer planificación: <strong>job+CPU scheduling</strong>
-// %				%li Ejemplo vida real
-// %
-// %		ul.fragment Capacidad de <strong>time-sharing} o {\bf multitasking</strong>
-// %			ul
-// %				ul.fragment Cambio frecuentes entre programas
-// %				ul.fragment Permite que múltiples usuarios utilicen el sistema
-// %				ul.fragment Permite aplicaciones interactivas
-// %
-// %		ul.fragment Capacidad de administrar la <strong>memoria</strong> del sistema
-// %			ul
-// %				ul.fragment Cada proceso requiere memoria, pero ésta es limitada
-// %				ul.fragment Swapping ... \onslide<13-> memoria virtual
-// %
-// %		ul.fragment Capacidad de utilizar <strong>almacenamiento no-volátil</strong>
-// %
-// %
+	p.fragment <b>Administración de almacenamiento</b>
+	ul
+		li.fragment Archivos
+		li.fragment Directorios
+		li.fragment Rutas absolutas y relativas
 
 
 
 section
 	h2 ¿Cómo funciona el Sistema Operativo?
 	/  ------------------------------------
-	/ explicarlos de manera natural
+	
+	p El Sistema Operativo está siempre en ejecución <span class="fragment">¿y el usuario?</span>
 
-	blockquote
-		| Si está siempre ejecutando, ¿cuándo le toca al usuario?
-		| <br/><span class="fragment">Los Sistemas Operativos son manejados por <em>interrupciones</em> / <em>traps.</em></span>
+	blockquote.fragment
+		| Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
 
 	p.fragment Mientras nadie (usuario/programa) lo llame, el S.O. no hace nada.
 	ul
 		li.fragment <em>Trap</em>: interrupción generada por software
-		ul
-			li.fragment Error o solicitud de un programa
-			li.fragment Por cada solicitud, el S.O. toma una acción
+		ul.fragment
+			li Error o solicitud de un programa
+			li Por cada solicitud, el S.O. toma una acción
 
 		li.fragment S.O. debe asegurar que errores en un programa no afecten a otro
-		ul
-			li.fragment ¿Qué pasa si un programa entra en un loop infinito?
-			li.fragment ¿Si un programa trata de modificar memoria de otro programa? ¿o del S.O.?
-			li.fragment Habría que asegurar que solo un proceso puede estar en modo ejecutable
+		ul.fragment
+			li ¿Qué pasa si un programa entra en un loop infinito?
+			li ¿Si un programa trata de modificar memoria de otro programa? ¿o del S.O.?
+			li Habría que asegurar que solo un proceso puede estar en modo ejecutable
 
 		li.fragment Pero el S.O. sí debería poder modificar la memoria de otro programa, para cargarlo/descargarlo
 
@@ -593,170 +574,15 @@ section
 		ul
 			li.fragment Mode bit permite protección de hardware
 			li.fragment Si un programa comete un acceso indebido o error, trap al S.O.
-			ul
-				li.fragment S.O. termina el programa <em>abnormally</em>
+			/ul
+			/	li.fragment S.O. termina el programa <em>abnormally</em>
 
 			li.fragment ¿Cómo evitar que un programa no devuelva el control al SO?
-			ul
-				li.fragment S.O. usa un timer que genera un trap a intervalo definido
-				li.fragment Timer también debe ser establecido en modo Kernel
+			/ul
+			/	li.fragment S.O. usa un timer que genera un trap a intervalo definido
+			/	li.fragment Timer también debe ser establecido en modo Kernel
 
 
-
-section
-	h2 Entonces...
-	/  -----------
-
-	section
-		p 3 tareas fundamentales para un Sistema Operativo:
-
-		ul
-			li Administración de procesos
-			li Administración de memoria
-			li Administración de dispositivos de I/O
-
-
-
-// %section
-// %	\frametitle{Tarea: Administración de Procesos}
-// %
-// %	Administración de la unidad principal de trabajo: <strong>proceso</strong>.
-// %
-// %	\onslide<2->{Un proceso necesita diversos recursos:}
-// %	ul
-// %		ul.fragment CPU, memoria, archivos, dispositivos IO
-// %		ul.fragment Más que un programa (programa es pasivo, proceso es activo)
-// %
-// %
-// %	\onslide<4->{Hay procesos de usuario y procesos de sistema}
-// %
-// %	\begin{block}<5->{<strong>SO es responsable de:}</strong>
-// %	ul
-// %		ul.fragment Planificar procesos y threads en la CPU
-// %		ul.fragment Crear y borrar procesos de usuario y de sistema
-// %		ul.fragment Suspender y continuar procesos
-// %		ul.fragment Proveer mecanismos de sincronización
-// %		ul.fragment Proveer mecanismos de comunicación
-
-
-
-// %section
-// %	\frametitle{Tarea: Administración de Memoria}
-// %
-// %	La interacción de la CPU es principalmente con la memoria.
-// %
-// %	<strong>Memoria:}\onslide<2->{ Un arreglo contínuo de bytes, cada uno con su propia dirección.</strong>
-// %
-// %	ul
-// %		ul.fragment Instruction-fetch y data-fetch ocurren con la memoria
-// %		ul.fragment Aún las lecturas de disco o de IO deben pasar por memoria
-// %		ul.fragment Las direcciones de un programa deben ser mapeadas a direcciones absolutas
-// %		ul.fragment Un uso eficiente requiere que haya múltiples procesos con su memoria listos para ejecutar
-// %
-// %
-// %	\begin{block}<5->{<strong>SO es responsable de:}</strong>
-// %	ul
-// %		ul.fragment Mantener un registro de los sectores de memoria utilizados y por quién
-// %		ul.fragment Determinar qué procesos o parte de ellos deben ser cargados y descargados
-// %		ul.fragment Asignar y deasignar espacios de memoria
-
-
-
-// %section
-// %	\frametitle{Tarea: Administración de Almacenamiento}
-// %
-// %	== image_tag '/images/figures/00-1_09.pdf.png'
-// %
-// %	Distribución de memoria en un sistema de multiprogramación
-// %
-
-// %---------------------------------------------------------------------
-// %section
-// %	\frametitle{Tarea: Administración de Almacenamiento}
-// %
-// %	Los sistemas de almacenamiento abstraen las propiedades físicas del medio
-// %	usando una unidad lógica de almacenamiento llamada \ldots \onslide<2->{<strong>archivo}</strong>
-// %
-// %	\onslide<2->{<strong>Archivo:}}\onslide<3->{ colección de datos relacionados, definida por su creador</strong>
-// %	\onslide<4->{(sí, es algo muy general)}
-// %
-// %	\onslide<5->{S.O. mapea archivos a ubicaciones dentro de medios físicos}
-// %
-// %	ul
-// %		ul.fragment Distintos medios: discos magnéticos, ópticos, estado sólido, cintas
-// %		ul.fragment Distintas propiedades: velocidad de acceso, de transferencia, método de acceso (seq/aleatorio)
-// %		ul.fragment Debe definir quién puede acceder un archivo
-// %
-// %
-// %	\begin{block}<6->{<strong>SO es responsable de:}</strong>
-// %	ul
-// %		ul.fragment Crear y borrar archivos, y directorios que permitan organizar archivos
-// %		ul.fragment Proveer primitivas para manipulación de archivos y directorios
-// %		ul.fragment Mapear archivos a almacenamiento secundario
-// %		ul.fragment Almacenar archivos en medios no-volátiles
-
-
-
-// %section
-// %	\frametitle{Tarea: Administración de Almacenamiento}
-// %
-// %	El almacenamiento secundario debe ser utilizado eficientemente
-// %
-// %	ul
-// %		ul.fragment Su acceso suele limitar la velocidad de ejecución
-// %
-// %
-// %	\begin{block}<3->{<strong>SO es responsable de:}</strong>
-// %	ul
-// %		li Administrar espacio disponible
-// %		li Asignación de destino de almacenamiento
-// %		li Planificación de disco
-
-
-
-// %---------------------------------------------------------------------
-// %section
-// %	\frametitle{Caching}
-// %	\framesubtitle{El problema de la jerarquía de memoria}
-// %
-// %	Fundamental para asegurar un funcionamiento eficiente.
-// %
-// %	Existe por la diferencia en los accesos a la jerarquía de memoria
-// %
-// %	\begin{center}
-// %		/== image_tag [width=6cm]{images/figures/00-1_04.pdf.png}
-// %	\end{center}
-
-// %section
-// %	\frametitle{Caching}
-// %
-// %	ul
-// %		li Datos viven en memoria principal
-// %		li Al usarla se copia en almacenamiento más rápido
-// %		li Al buscarla, se busca primero en caché
-// %		li Si no se encuentra, se lee de memoria principal y se copia en caché
-// %
-// %	\onslide<2->{Caché}
-// %	ul
-// %		ul.fragment Registros: caché más cercano, administrado por programador/compilador
-// %		ul.fragment Cachés implementados en hardware, fuera del control de SO
-// %		ul.fragment Algunos datos deben ser borrados del caché, ¿cuáles?
-// %		ul.fragment Administración de caché es importante
-// %
-// %
-// %	\onslide<3->{¿Qué pasa cuando hay múltiples copias? ¿Con más de un proceso?}
-// %
-// %	\onslide<4->{<strong>Coherencia de caché}} \onslide<5->{\ldots ¿Y en un ambiente distribuido?</strong>
-
-
-// %section
-// %	\frametitle{Caching}
-// %
-// %	Tiempos de acceso
-// %
-// %	\begin{center}
-// %		/== image_tag [width=10cm]{images/figures/00-1_11.pdf.png}
-// %	\end{center}
 
 
 // %section
@@ -791,6 +617,62 @@ section
 // %		ul.fragment Asociación de privilegios/permisos
 // %		ul.fragment Métodos seguros para escalar privilegios (setuid)
 
+
+section
+	h2 Llamadas al sistema
+	/  -------------------
+
+	section
+		h4 System Calls
+		p Programas utilizan llamadas al sistemas frecuentemente
+		p Ej: <code>copy source.txt dest.txt</code>... ¿qué requiere?
+
+		ul
+			div.fragment
+				li Abrir <code>source.txt</code>
+				ul
+					li ¿Existe? ¿Tiene permisos?
+
+			div.fragment
+				li Abrir <code>dest.txt</code>
+				ul
+					li ¿Existe? ¿se reemplaza? ¿Se puede escribir?
+
+			li.fragment Lectura/escritura en disco requiere llamadas al sistema
+			li.fragment Terminar el programa en caso de error, requiere llamadas al sistema
+
+		/p.fragment ...pero el programador no quiere programar todas las llamadas
+
+
+	section
+		h4 API: Application Programming Interface
+
+		p Sistemas Operativos proveen una API para el programador.
+		ul
+			li.fragment Windows API
+			li.fragment POSIX API (UNIX, Linux, MacOS X), a través de <span style="font-family:'Lucida Console', monospace">libc</span>
+			li.fragment Java API (para la JVM)
+
+		br
+		p.fragment ¿Cómo usarla?
+		div.fragment
+			p eg:
+			pre style="width:50%;"
+				code.hljs
+					| count = read(fd, buffer, nbytes);
+
+	section
+		= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+
+	section
+		= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
+
+
+	section
+		= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
+
+	section
+		= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
 
 
 section
@@ -917,114 +799,8 @@ section
 
 
 
-section
-	h2 Llamadas al sistema
-	/  -------------------
-
-	section
-		h4 System Calls
-		p Programas utilizan llamadas al sistemas frecuentemente
-		p Ej: <code>copy source.txt dest.txt</code>... ¿qué requiere?
-
-		ul
-			div.fragment
-				li Abrir <code>source.txt</code>
-				ul
-					li ¿Existe?
-					li ¿Tiene permisos?
-
-			div.fragment
-				li Abrir <code>dest.txt</code>
-				ul
-					li ¿Existe? ¿se reemplaza?
-					li ¿Se puede escribir?
-
-			li.fragment Lectura/escritura en disco requiere llamadas al sistema
-			li.fragment Terminar el programa en caso de error, requiere llamadas al sistema
-
-		p.fragment ...pero el programador no quiere programar todas las llamadas
 
 
-	section
-		h4 API: Application Programming Interface
-
-		p Sistemas Operativos proveen una API para el programador.
-		ul
-			li.fragment Windows API
-			li.fragment POSIX API (UNIX, Linux, MacOS X), a través de {\tt libc}
-			li.fragment Java API (para la JVM)
-
-		br
-		p.fragment ¿Cómo usarla?
-		div.fragment
-			p eg:
-			pre style="width:50%;"
-				code.hljs
-					| man read
-
-
-	section
-		= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
-
-
-	section
-		= image_tag "/images/figures/00-syscalls.png", :style => 'max-width:50%; max-height:50%'
-
-
-
-// %\section{Decisiones de diseño}
-
-// %section
-// %	\frametitle{Decisiones de diseño}
-// %	¿Cuál es la mejor forma de diesñar un Sistema Operativo?
-// %
-// %	\onslide<2->{(si se supiera no habrían <em>OS wars})</em>
-// %
-// %	ul
-// %		ul.fragment Uso de <strong>estructuras de datos</strong> apropiadas
-// %		ul.fragment Aplicando principios de <strong>ingeniería de software</strong>
-// %		ul.fragment Aprovechando las capacidades que permite la <strong>arquitectura del hardware</strong>
-
-
-// %section
-// %	\frametitle{Decisiones de diseño}
-// %
-// %%	ul
-// %%		li <strong>Mecanismo}: {\em cómo</strong> se implementa una funcionalidad (decisión estática)
-// %%			ul
-// %%				li Ej: Mecanismo para asignar prioridades a procesos.
-// %%
-// %%		li <strong>Política}: {\em qué</strong> decisión se va a implementar
-// %%			ul
-// %%				li Ej: Bajo qué criterio se asignan prioridades
-// %%
-// %%
-// %	\onslide<2->{
-// %	Principio de <strong>separación de preocupaciones} ({\em separation of concerns</strong>)
-// %	ul
-// %		li <em>Microkernels</em> definen un conjunto pequeño de primitivas
-// %		li Mecanismo deberían <em>de propósito general</em>
-// %	}
-
-
-// %---------------------------------------------------------------------
-// %section
-// %	\frametitle{¿En qué lo programo?}
-// %
-// %	¿En qué se programa un sistema operativo?
-// %	ul
-// %		ul.fragment Los primeros ... en <em>assembler</em>
-// %		ul.fragment Más modernos en C, C++ (Windows, Linux)
-// %		ul.fragment Actuales incluyen muchos lenguajes
-// %			ul
-// %				li Bajo nivel en assembler
-// %				li Interacciones principales en C
-// %				li Utilidades de alto nivel en lenguaje interpretado (python, perl)
-// %
-// %	\onslide<5->{Al usar un lenguaje de alto nivel es más fácil hacer un <strong>port}</strong>
-// %	ul
-// %		li <6-> MS-DOS fue escrito en Assembler de Intel 8088
-// %		li <6-> Para otras arquitecturas se requiere un <strong>emulador</strong>
 
 
 
@@ -1069,11 +845,13 @@ section
 		ul
 			li          Capa \(M\) invoca llamadas sobre capa \(M-1\)
 			li.fragment Ventaja: Facilidad de <em>debugging</em>
-			li.fragment Desventaja: dificultad de definición de capas (¿a qué nivel va qué funcionalidad?)
-			li.fragment Desventaja: eficiencia (¿cuántas capas?)
+			li.fragment Desventaja: dificultad de definición de capas, eficiencia
+
 
 		= image_tag "/images/figures/00-2_13.pdf.png", :width => '25%'
 
+
+		p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
 
 
 section
@@ -1081,18 +859,27 @@ section
 	/  ---------------------------------
 
 	section
-		p <strong>Mach</strong>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
+		p <b>Mach</b>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
 
 		ul
 			li.fragment Set de funcionalidades mínimas
 			li.fragment Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
 			li.fragment Ventaja: Sistemas pequeño y fácil de portar
 			li.fragment Desventaja: Mucha más interacción a través de <em>syscalls</em>!
-			li.fragment <strong>Darwin</strong> (MacOS X kernel) basado parcialmente en modelo Mach
-			li.fragment <strong>Windows NT</strong> usaba microkernel pero era más lento que Win95.
-			li.fragment <strong>GNU/Hurd</strong> es más lento que Linux.
+			li.fragment <b>Darwin</b> (MacOS X kernel) basado parcialmente en modelo Mach
+			li.fragment <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
+			li.fragment <b>GNU/Hurd</b> es más lento que Linux.
 
 		= image_tag "/images/figures/00-2_14.pdf.png", :width=>'50%'
+
+
+section
+	h2 Estructura: <i>Monolíticos</i> vs <i>microkernels</i>
+	/  ---------------------------------
+
+	section
+
+		= image_tag "/images/figures/00-mono-micro.png", :width=>'100%'
 
 
 
@@ -1128,40 +915,4 @@ section
 
 
 
-// %section
-// %	\frametitle{Ejemplo: Apple Mac OS X}
-// %
-// %	ul
-// %		li <strong>Cocoa</strong>: API para Objective-C
-// %		li Kernel: Mach microkernel + BSD Unix Kernel
-// %		ul
-// %			li Mach: manejo de memoria, RPC, IPC, paso de mensajes, <em>threads</em>
-// %			li BSD: CLI, networking, sistemas de archivos, API POSIX
-// %		li Módulos cargables: <strong>kernel extensions</strong>
-// %
-// %	== image_tag 'images/figures/00-2_16.pdf.png'
-
-
-
-// %section
-// %	\frametitle{Ejemplo: Apple iOS}
-// %
-// %	ul
-// %		li <strong>Cocoa Touch</strong> = Cocoa + soporte para gestos
-// %		li Media: soporte gráfico + audio + video
-// %		li Core: kernel basado en Mac OS X
-// %
-// %	== image_tag 'images/figures/00-2_17.pdf.png'
-
-
-
-// %section
-// %	\frametitle{Ejemplo: Android}
-// %
-// %	ul
-// %		li Modelo por capas + kernel Linux
-// %		li Implementación de máquina virtual <strong>Dalvik</strong>
-// %		li Frameworks para desarrollo: webkit, SQLite, libc
-// %
-// %	== image_tag 'images/figures/00-2_18.pdf.png'
 
