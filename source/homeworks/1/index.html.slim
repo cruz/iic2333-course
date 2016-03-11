@@ -1,0 +1,204 @@
+---
+title: Tarea 1
+layout: activity
+---
+
+article
+	section.top
+		p En esta tarea van a preparar el stack de llamadas para los programas.
+		p La tarea se divide en 2 partes independientes,
+		ul
+			li  Preparar un stack en un programa pequeño.
+			li  Preparar el stack de Pintos, un SO educacional.
+
+	section
+		h2 El stack de llamadas
+		/  --------------------
+		p Es usual ver el stack de llamadas en la terminación abrupta de algún programa, así que es seguro decir que ya han visto muchos de ellos.
+
+		p Consideremos el siguiente programa,
+		pre
+			code.hljs
+				| int factorial(int n) {
+				    if(n<=0)
+				      return 1;
+				    return n * factorial(n-1);
+				  }
+				  
+				  int main() {
+				    return factorial(5);
+				  }
+
+		h4 ¿Cómo se ejecuta?
+		p Primero veamos una versión no-comprimida de lo que hay que calcular.
+		pre
+			code.hljs
+				| /* -- */  int factorial(int n) {
+				  /* 02 */    if(n<=0)
+				  /* 03 */      return 1;  /* <-- */
+				  /* 04 */    int r = factorial(n-1);
+				  /* 05 */    return n*r;
+				  /* -- */  }
+				  /* -- */  
+				  /* -- */  int main() {
+				  /* 09 */    int r = factorial(4);
+				  /* 10 */    return r;
+				  /* -- */  }
+
+		p Supongamos que queremos llegar hasta la línea 3.
+
+		p Como todo programa, se comienza a calcular <code>main()</code>
+		ul
+			li
+				pre
+					code.hljs.c
+						| main() /* ... */
+				p Pero mientras calculamos <code>main()</code> hay que calcular otra función,
+				pre
+			ul
+				li
+					pre
+						code.hljs.c
+							| factorial(n=4) /* ... */
+					p y otra&hellip;
+				ul
+					li
+						pre
+							code.hljs.c
+								| factorial(n=3) /* ... */
+					ul
+						li
+							pre
+								code.hljs.c
+									| factorial(n=2) /* ... */
+						ul
+							li
+								pre
+									code.hljs.c
+										| factorial(n=1) /* ... */
+							ul
+								li
+									pre
+										code.hljs.c
+											| factorial(n=0) /* ... */
+											  /* 03 */    return 1;
+
+		p Mientras se computa una función hay que ser capaces de pausar el cálculo mientras se computa otra.
+		p Y hay que reanudar el cálculo una vez que se conozca el valor de la función.
+
+		h4 ¿Cómo hacemos todos los cálculos en memoria?
+		p Primero hay que notar que todas las llamadas asignan a <code>r</code>, pero esa variable es local para cada cálculo. Hay más variables de las que parece tener el programa.
+		ul
+			li
+				pre
+					code.hljs.c
+						| main() /* ... */
+						  /* 09 */    int r = factorial(4);
+			ul
+				li
+					pre
+						code.hljs.c
+							| factorial(n=4) /* ... */
+							  /* 04 */    int r = factorial(n-1);
+				ul
+					li
+						pre
+							code.hljs.c
+								| factorial(n=3) /* ... */
+								  /* 04 */    int r = factorial(n-1);
+					ul
+						li
+							pre
+								code.hljs.c
+									| factorial(n=2) /* ... */
+									  /* 04 */    int r = factorial(n-1);
+						ul
+							li
+								pre
+									code.hljs.c
+										| factorial(n=1) /* ... */
+										  /* 04 */    int r = factorial(n-1);
+							ul
+								li
+									pre
+										code.hljs.c
+											| factorial(n=0) /* ... */
+											  /* 03 */    return 1;
+
+		p Agruparemos la información de cada función en un <code>frame</code>.
+		p Un frame necesita tener:
+		ul
+			li Un puntero a la instrucción que se está ejecutando (lo necesitaremos para reanudar el cálculo)
+			ul
+				li Con ese puntero queda implícita la función que se estaba calculando, es la dueña de esa instrucción.
+			li Los argumentos que le entregaron a la función.
+			li Las variables locales de la función.
+
+		p Para almacenar la ejecución completa podríamos tener un arreglo de frames y un índice al frame actual.
+		ul
+			li Pero no todas las funciones usan la misma cantidad de argumentos y variables locales.
+			li Además no nos interesa poder acceder a cualquier función, sólo necesitamos un orden LIFO.
+			li Un stack de <code>frames</code> de tamaño variable.
+
+		p Durante la ejecución de un programa, el compilador transforma las llamadas a funciones y retornos a operaciones del stack de funciones.
+		p Pero eso es una vez que ya está corriendo el programa.
+		p ¿Quién hace el caso base? El SO cuando carga el programa...
+
+
+	section
+		br
+	section#hw1
+		h2 Tarea 1
+		/  -------
+		/section#hw1-formalidades
+			h5 Formalidades
+			/  ------------
+			p La tarea será entregada vía <code>git</code>
+			ul
+				li  La entrega es el 25 de Marzo a las 23:59.
+				li  Su repositorio DEBE ser privado, de lo contrario calificará como copia (alguien les podría haber copiado).
+				li  La entrega será automatizada, basta que registren su grupo y repositorio
+				ul
+					li  Como el repositorio debe ser privado, tendrán que <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html">permitir</a> acceso especial al curso, autorizando al servidor de tareas acceder al contenido.
+					ul
+						li  Para esto basta registrar la <a href="/os-id_rsa.pub">llave pública del curso</a> en las <em>Deployment Keys</em> de su repositorio.
+
+
+		section
+			h5 Repositorio
+			/  -----
+			p El código de la tarea se encuentra en <a href="https://bitbucket.org/Dietr1ch/pintos/commits/branch/os16-1" target="_blank">el repositorio del curso</a> y para trabajar en el deben <a href="https://bitbucket.org/Dietr1ch/pintos/fork" target="_blank">hacer un fork</a> PRIVADO!
+			ul
+				li  Lo más cómodo es que usen bitbucket, pero pueden usar github u otro host mientras sea privado.
+			p El "repo" del curso es un fork del proyecto <a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_1.html#SEC1" target="_blank">pintos</a> de Stanford
+
+			h5 TODO:
+			/  -----
+			p Como ya se dijo, la tarea se divide en 2 partes independientes,
+			ul
+				li  <em>Warmup</em>: Preparar un stack en un programa pequeño.
+				ul
+					li
+						code = "extra/argParse.c"
+				li  <em>Tarea</em>: Preparar el stack de Pintos
+				ul
+					li
+						code = "src/userprog/process.c"
+
+
+			h6 Parte 1
+			p Para ejecutarlo deben compilarlo
+			pre
+				code.hljs.bash
+					| cd path/to/pintos/
+					  cd extra
+					  $CC -g -o argParse argParse.c  # CC = "gcc" || "clang"
+			p Y luego lo pueden ejecutar,
+			pre
+				code.hljs.bash
+					| ./argParse
+
+			p Sólo cambiando <code>int parse()</code> debería ejecutar sin errores.
+
+			h6 Parte 2
+			p TODO: =)
