@@ -157,7 +157,7 @@ article
 			ul
 				li  La entrega es el 25 de Marzo a las 23:59.
 				li  Su repositorio DEBE ser privado, de lo contrario calificará como copia (alguien les podría haber copiado).
-				li  La entrega será automatizada, basta que registren su grupo y repositorio
+				li  La entrega será automatizada, basta que <a href="http://goo.gl/forms/Oph3ORVNLv" target="_blank">registren</a> su grupo y repositorio
 				ul
 					li  Como el repositorio debe ser privado, tendrán que <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html">permitir</a> acceso especial al curso, autorizando al servidor de tareas acceder al contenido.
 					ul
@@ -186,98 +186,106 @@ article
 						code = "/src/userprog/process.c"
 
 
-			h5 Parte 1
-			p Para ejecutarlo deben compilarlo
-			pre
-				code.hljs.bash
-					| cd path/to/pintos/
-					  cd extra
-					  $CC -g -o argParse argParse.c  # CC = "gcc" || "clang"
-			p Y luego lo pueden ejecutar,
-			pre
-				code.hljs.bash
-					| ./argParse
+			section
+				h5 Parte 1
+				/  -------
+				p Para ejecutarlo deben compilarlo
+				pre
+					code.hljs.bash
+						| cd path/to/pintos/
+						  cd extra
+						  $CC -g -o argParse argParse.c  # CC = "gcc" || "clang"
+				p Y luego lo pueden ejecutar,
+				pre
+					code.hljs.bash
+						| ./argParse
 
-			p Sólo cambiando <code>int parse()</code> debería ejecutar sin errores.
+				p Sólo cambiando <code>int parse()</code> debería ejecutar sin errores.
 
-			h5 Parte 2
-			p  Para trabajar con el resto de pintos deben compilar distintos módulos del kernel y preparar un "disco duro" con programas para ejecutar 
-			p  Los módulos se encuentran en <code>/src/</code> 
-			ul
-				li  <code>threads</code>
-				li  <code>userprog</code>
-				li  <code>vm</code>
-				li  <code>examples</code>
-				li  <code>filesys</code>
-			p  Para compilar los módulos, basta ejecutar <code>make</code> en cada uno de los directorios.
-			p  La preparación del disco necesita ejecutar la máquina virtual varias veces,
-			ul
-				li  Hay que crear un archivo que sirva de "disco duro" para pintos.
-				li  Hay que formatear el disco, ya que el disco se usa con una estructura particular en vez de como un arreglo gigante de bytes.
-				li  Hay que copiar programas al disco duro (ya que comienza vacío)
+
+			section
+				h5 Parte 2
+				/  -------
+				p  Para trabajar con el resto de pintos deben compilar distintos módulos del kernel y preparar un "disco duro" con programas para ejecutar 
+				p  Los módulos se encuentran en <code>/src/</code> 
 				ul
-					li  Para la tarea cualquier programa que use argumentos es útil
+					li  <code>threads</code>
+					li  <code>userprog</code>
+					li  <code>vm</code>
+					li  <code>examples</code>
+					li  <code>filesys</code>
+				p  Para compilar los módulos, basta ejecutar <code>make</code> en cada uno de los directorios.
+				p  La preparación del disco necesita ejecutar la máquina virtual varias veces,
+				ul
+					li  Hay que crear un archivo que sirva de "disco duro" para pintos.
+					li  Hay que formatear el disco, ya que el disco se usa con una estructura particular en vez de como un arreglo gigante de bytes.
+					li  Hay que copiar programas al disco duro (ya que comienza vacío)
 					ul
-						li  cowsay
-						li  interecho
-						li  &hellip;
-			br
-			p  Una vez hecho esto, desde <code>/src/userprog</code> se puede ejecutar pintos y pedirle que luego de comenzar ejecute algún programa de los que se copiaron
-			pre
-				code.hljs.bash
-					| cd path/to/pintos
-					  cd src/userprog
-					  ../utils/pintos -- run programName
-			h6 Branch del curso
-			p  Obviamente la preparación de esto hace que sea tedioso probar el programa, es por esto que en el repo del curso hay un <a href="https://bitbucket.org/Dietr1ch/pintos/commits/branch/os16-1" target="_blank"><em>branch</em></a> que aliviana la tarea, <code>os16-1</code>. Se sugiere fuertemente que hagan <em>merge</em> de ese <em>branch</em> al <em>branch</em> principal de su 'repo'.
-			p  En el branch se mejora el <code>Makefile</code> de <code>/</code> ("root", el directorio base del proyecto) para simplificar el proceso,
-			ul
-				li  Crea <code>TAGS</code> para <a href="https://en.wikipedia.org/wiki/Ctags#Editors_that_support_ctags" target="_blank">navegar el código</a> (si tienen <code>ctags</code> instalado).
-				li  Compila todos los módulos.
-			p  También se agrega un script de <code>bash</code> para preparar el disco, <code>build-disk</code>, este no se ejecuta desde <code>make</code> ya que puede no ser necesario recrear el disco
-			p  Pronto se agregará un commit con soporte parcial de la syscall <code>write</code>, lo que permitirá que los programas del disco duro puedan imprimir por <code>stdout</code>.
-			pre
-				code.hljs.bash
-					| cd path/to/pintos
-					  make         # Builds all modules
-					  ./build-disk # Prepares a disks with a few programs
-
-			h6 ¿Dónde comenzar?
-			p El <em>hack</em> de <a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC40" target="_blank">sugerido por la documentación</a> ya fue aplicado en el branch del curso, pero se espera lo eliminen cuando implementen esta tarea.
-			ul
-				li
-					a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos.html" target="_blank" Documentación de Pintos
-					p = "(Recuerden que la documentación de Pintos cubre más cosas y habla sobre tareas mucho más extensas que esta)"
+						li  Para la tarea cualquier programa que use argumentos es útil
+						ul
+							li  cowsay
+							li  interecho
+							li  &hellip;
+				br
+				p  Una vez hecho esto, desde <code>/src/userprog</code> se puede ejecutar pintos y pedirle que luego de comenzar ejecute algún programa de los que se copiaron
+				pre
+					code.hljs.bash
+						| cd path/to/pintos
+						  cd src/userprog
+						  ../utils/pintos -- run programName
+				h6 Branch del curso
+				p  Obviamente la preparación de esto hace que sea tedioso probar el programa, es por esto que en el repo del curso hay un <a href="https://bitbucket.org/Dietr1ch/pintos/commits/branch/os16-1" target="_blank"><em>branch</em></a> que aliviana la tarea, <code>os16-1</code>. Se sugiere fuertemente que hagan <em>merge</em> de ese <em>branch</em> al <em>branch</em> principal de su 'repo'.
+				p  En el branch se mejora el <code>Makefile</code> de <code>/</code> ("root", el directorio base del proyecto) para simplificar el proceso,
 				ul
-					li
-						a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC44" target="_blank" Argument Passing
+					li  Crea <code>TAGS</code> para <a href="https://en.wikipedia.org/wiki/Ctags#Editors_that_support_ctags" target="_blank">navegar el código</a> (si tienen <code>ctags</code> instalado).
+					li  Compila todos los módulos.
+				p  También se agrega un script de <code>bash</code> para preparar el disco, <code>build-disk</code>, este no se ejecuta desde <code>make</code> ya que puede no ser necesario recrear el disco
+				p  Pronto se agregará un commit con soporte parcial de la syscall <code>write</code>, lo que permitirá que los programas del disco duro puedan imprimir por <code>stdout</code>.
+				pre
+					code.hljs.bash
+						| cd path/to/pintos
+						  make         # Builds all modules
+						  ./build-disk # Prepares a disks with a few programs
+
+				section
+					h6 ¿Dónde comenzar?
+					p El <em>hack</em> de <a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC40" target="_blank">sugerido por la documentación</a> ya fue aplicado en el branch del curso, pero se espera lo eliminen cuando implementen esta tarea.
 					ul
 						li
-							a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC51" target="_blank" Program Startup
-					li
-						a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_10.html#SEC145" target="_blank" Debugging Tools
-						p Se recomienda intentar en este orden: print, backtraces y <code>gdb</code>. Pero una vez que ya sepan usar <code>gdb</code> (con breakpoints y evaluar expresiones basta) no van a querer depender de prints y backtraces.
+							a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos.html" target="_blank" Documentación de Pintos
+							p = "(Recuerden que la documentación de Pintos cubre más cosas y habla sobre tareas mucho más extensas que esta)"
+						ul
+							li
+								a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC44" target="_blank" Argument Passing
+							ul
+								li
+									a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_3.html#SEC51" target="_blank" Program Startup
+							li
+								a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos_10.html#SEC145" target="_blank" Debugging Tools
+								p Se recomienda intentar en este orden: print, backtraces y <code>gdb</code>. Pero una vez que ya sepan usar <code>gdb</code> (con breakpoints y evaluar expresiones basta) no van a querer depender de prints y backtraces.
 
 
-			h6 ¿Qué debería modificar?
-			p <code>/src/userprog/process.c</code>
-			ul
-				li <code>setup_stack(...)</code>
+				section
+					h6 ¿Qué debería modificar?
+					p <code>/src/userprog/process.c</code>
+					ul
+						li <code>setup_stack(...)</code>
 
-			h6 Resumen
-			pre
-				code.hljs.bash
-					| git clone urlMyPrivateFork
-					  cd project
-					  # Add remote and merge changes
-					  
-					  $EDITOR .    # Work
-					  make         # Builds all modules
-					  ./build-disk # Prepares a disks with a few programs
-					  
-					  cd src/userprog/
-					  ../utils/pintos -- run program  # Test changes
-					  
-					  git commit
-					  git push
-					  
+				section
+					h6 Resumen
+					pre
+						code.hljs.bash
+							| git clone urlMyPrivateFork
+							  cd project
+							  # Add remote and merge changes
+							  
+							  $EDITOR .    # Work
+							  make         # Builds all modules
+							  ./build-disk # Prepares a disks with a few programs
+							  
+							  cd src/userprog/
+							  ../utils/pintos -- run program  # Test changes
+							  
+							  git commit
+							  git push
+
