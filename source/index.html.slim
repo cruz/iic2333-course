@@ -11,9 +11,26 @@ article
 		h3 Clases
 		/  ------
 		ul
-			li = link_to '0 - Sistemas Operativos', 'slides/0-os.html'
-			li = link_to '1 - Procesos',            'slides/1-proc.html'
-			li = link_to 'Scheduling',          'slides/2-scheduling.html'
+			li  Procesos
+			ul
+				li = link_to 'Sistemas Operativos',  'slides/0-os.html'
+				li = link_to 'Procesos',             'slides/1-proc.html'
+				li = link_to 'Scheduling',           'slides/2-scheduling.html'
+				/li = link_to 'Sincronización',       'slides/3-synch.html'
+			/li  Datos
+			/ul
+				li = link_to 'Memoria',     'slides/4-mem.html'
+				/li = link_to 'Disco',       'slides/5-disk.html'
+				/li = link_to 'Protección',  'slides/6-sec.html'
+			/li  Redes
+			/ul
+				li = link_to 'Redes',        'slides/7-net.html'
+				li Capas
+				ul
+					li = link_to 'Física',       'slides/8-net-phy.html'
+					li = link_to 'Routing',      'slides/9-net-routing.html'
+					li = link_to 'Transporte',   'slides/10-net-tp.html'
+					li = link_to 'Aplicaciones', 'slides/11-net-app.html'
 
 	section#activities
 		h3 Actividades
