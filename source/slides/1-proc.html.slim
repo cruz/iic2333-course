@@ -447,69 +447,69 @@ section#ipc-_shm
 			li <code>shm_open()</code>, <code>ftruncate()</code>, <code>mmap()</code>, <code>shm_unlink()</code>
 
 
-	section#ipc-shm-prod_cons
-		p Un problema clásico de coordinación
+	/section#ipc-shm-prod_cons
+	/	p Un problema clásico de coordinación
 
-		p
-			em Problema del productor y consumidor
-		ul.fragment
-			li Proceso <strong>productor</strong> produce información.
-			li Proceso <strong>consumidor</strong> consume información del productor.
-		pre
-			== image_tag '/images/figures/01-ProdCons.png'
-		.fragment
-			p Variantes: con <strong>buffer limitado</strong> ó <strong>ilimitado</strong>
-			ul
-				li.fragment Con <strong>buffer limitado</strong> el productor puede tener que esperar
-
-
-
-	section#ipc-shm-prod_cons-code
-		p Buffer limitado (<em>bounded</em>) en memoria compartida
-		pre
-			code.hljs.lang-c
-				| #define BUFFER_SIZE 10
-				  
-				  typedef struct {
-				    /* ... */
-				  } item;
-				  
-				  item buffer[BUFFER_SIZE];
-				  int in = 0;     // proxima posicion libre
-				  int out = 0;    // primera posicion llena
-		p ¿Cuándo está lleno el buffer? ¿Cuándo está vacío?
+	/	p
+	/		em Problema del productor y consumidor
+	/	ul.fragment
+	/		li Proceso <strong>productor</strong> produce información.
+	/		li Proceso <strong>consumidor</strong> consume información del productor.
+	/	pre
+	/		== image_tag '/images/figures/01-ProdCons.png'
+	/	.fragment
+	/		p Variantes: con <strong>buffer limitado</strong> ó <strong>ilimitado</strong>
+	/		ul
+	/			li.fragment Con <strong>buffer limitado</strong> el productor puede tener que esperar
 
 
-	section#ipc-shm-prod_cons-code-prod
-		p Proceso <strong>productor</strong>
-		pre
-			code.hljs.lang-c
-				| item next_product;
-				  while(true) {
-				    next_product = produce();
-				    while ( ((in+1)%BUFFER_SIZE) == out);  /* !!! */
-				    
-				    buffer[in] = next_product;
-				    in = (in+1)%BUFFER_SIZE;
-				  }
+
+	/section#ipc-shm-prod_cons-code
+	/	p Buffer limitado (<em>bounded</em>) en memoria compartida
+	/	pre
+	/		code.hljs.lang-c
+	/			| #define BUFFER_SIZE 10
+	/			  
+	/			  typedef struct {
+	/			    /* ... */
+	/			  } item;
+	/			  
+	/			  item buffer[BUFFER_SIZE];
+	/			  int in = 0;     // proxima posicion libre
+	/			  int out = 0;    // primera posicion llena
+	/	p ¿Cuándo está lleno el buffer? ¿Cuándo está vacío?
 
 
-	section#ipc-shm-prod_cons-code-cons
-		p Proceso <strong>consumidor</strong>
+	/section#ipc-shm-prod_cons-code-prod
+	/	p Proceso <strong>productor</strong>
+	/	pre
+	/		code.hljs.lang-c
+	/			| item next_product;
+	/			  while(true) {
+	/			    next_product = produce();
+	/			    while ( ((in+1)%BUFFER_SIZE) == out);  /* !!! */
+	/			    
+	/			    buffer[in] = next_product;
+	/			    in = (in+1)%BUFFER_SIZE;
+	/			  }
 
-		pre
-			code.hljs.lang-c
-				| item next_consumed;
-				  
-				  while(true) {
-				    while(in == out); /* !!! */
-				    
-				    next_consumed = buffer[out];
-				    out = (out+1)%BUFFER_SIZE;
-				    
-				    consume(next_consumed);
-				  }
-		p ¿Cuántos ítemes puede haber como máximo en el <em>buffer</em>?
+
+	/section#ipc-shm-prod_cons-code-cons
+	/	p Proceso <strong>consumidor</strong>
+
+	/	pre
+	/		code.hljs.lang-c
+	/			| item next_consumed;
+	/			  
+	/			  while(true) {
+	/			    while(in == out); /* !!! */
+	/			    
+	/			    next_consumed = buffer[out];
+	/			    out = (out+1)%BUFFER_SIZE;
+	/			    
+	/			    consume(next_consumed);
+	/			  }
+	/	p ¿Cuántos ítemes puede haber como máximo en el <em>buffer</em>?
 
 
 
@@ -523,13 +523,13 @@ section#ipc-_mp
 			li <code>send(message)</code>
 			li <code>receive(message)</code>
 
-		p.fragment ¿Cómo habilitar la comunicación? Varios aspectos a decidir
-		ul
-			li.fragment Comunicación directa o indirecta
-			ul
-				li.fragment <code>send(P, message)</code>, <code>recv(Q, message)</code>, <code>recv(&id, message)</code>
-				li.fragment <code>send(A, message)</code>, <code>recv(A, message)</code>
-			li.fragment Comunicación síncrona o asíncrona
+		/p.fragment ¿Cómo habilitar la comunicación? Varios aspectos a decidir
+		/ul
+		/	li.fragment Comunicación directa o indirecta
+		/	ul
+		/		li.fragment <code>send(P, message)</code>, <code>recv(Q, message)</code>, <code>recv(&id, message)</code>
+		/		li.fragment <code>send(A, message)</code>, <code>recv(A, message)</code>
+		/	li.fragment Comunicación síncrona o asíncrona
 
 
 	section#ipc-mp-d-u
@@ -561,71 +561,71 @@ section#ipc-_mp
 
 
 
-	section#ipc-mp-buf
-		p Comunicación <em>buffered</em> o <em>unbuffered</em>
+	/section#ipc-mp-buf
+	/	p Comunicación <em>buffered</em> o <em>unbuffered</em>
 
-		p.fragment Sistemas Operativos usan <em>colas</em> temporales para transmitir mensajes
-		ul
-			li.fragment <strong>Cola de capacidad cero</strong>: fuerza <code>send()</code> bloqueante
-			li.fragment <strong>Cola de capacidad limitada</strong>: máximo de $n$ mensajes encolados mientras no sean recibidos.
-			ul
-				li.fragment Si se llena, el siguiente <code>send()</code> se bloquea
-			li.fragment <strong>Cola de capacidad ilimitada</strong>: cola potencialmente infinita
-
-
-section#ipc-hl
-	h2 Más comunicación inter-procesos
-	small Algunas técnicas de más alto nivel
+	/	p.fragment Sistemas Operativos usan <em>colas</em> temporales para transmitir mensajes
+	/	ul
+	/		li.fragment <strong>Cola de capacidad cero</strong>: fuerza <code>send()</code> bloqueante
+	/		li.fragment <strong>Cola de capacidad limitada</strong>: máximo de $n$ mensajes encolados mientras no sean recibidos.
+	/		ul
+	/			li.fragment Si se llena, el siguiente <code>send()</code> se bloquea
+	/		li.fragment <strong>Cola de capacidad ilimitada</strong>: cola potencialmente infinita
 
 
-	section#ipc-hl-sockets
-		p.fragment <strong>Sockets</strong>: punto de comunicación de servicios
+/section#ipc-hl
+/	h2 Más comunicación inter-procesos
+/	small Algunas técnicas de más alto nivel
 
-		ul
-			li.fragment Indexado
-			li.fragment Comunicación cliente/servidor
-			li.fragment Para comunicación TCP o UDP
+
+/	section#ipc-hl-sockets
+/		p.fragment <strong>Sockets</strong>: punto de comunicación de servicios
+
+/		ul
+/			li.fragment Indexado
+/			li.fragment Comunicación cliente/servidor
+/			li.fragment Para comunicación TCP o UDP
 			/ \footnote{Si no sabe que es esto, búsquelo en Google o espere hasta los capítulos de redes}
-		== image_tag '/images/figures/01-3_20.pdf.png', :width=>"50%", :style=>"float:right;"
+/		== image_tag '/images/figures/01-3_20.pdf.png', :width=>"50%", :style=>"float:right;"
 
 
-	section#ipc-hl-rpc
-		p <strong>RPC</strong>: Remote Procedure Call
+/	section#ipc-hl-rpc
+/		p <strong>RPC</strong>: Remote Procedure Call
 		/ \footnote{Más de esto en IIC2523, Sistemas Distribuidos}
-		ul
-			li.fragment Comunicación a nivel de funciones (métodos) en otro proceso
-			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
-			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
-			li.fragment Mismo esquema usado por <em>Web Services</em>
+/		ul
+/			li.fragment Comunicación a nivel de funciones (métodos) en otro proceso
+/			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
+/			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
+/			li.fragment Mismo esquema usado por <em>Web Services</em>
 
-		== image_tag '/images/figures/01-RPC.png', :width=>"40%"
-
-
-	section#ipc-hl-rpc
-		p <strong>Pipes</strong>: <em>tubo</em> entre dos procesos
-
-		ul
-			li.fragment  Unidireccionales o bidireccionales
-			li.fragment  Un proceso escribe en un extremo (<em>write-end</em>), y otro proceso lee desde el otro extremo (<em>read-end</em>)
-			li.fragment  Pueden ser tratadas como archivos
-			li.fragment  Implementación implícita en consolas. Ej: <code>ls | more</code>
-		== image_tag '/images/figures/01-pipes.png'
+/		== image_tag '/images/figures/01-RPC.png', :width=>"40%"
 
 
-section#summary
-	h2 Resumen: Procesos
+/	section#ipc-hl-rpc
+/		p <strong>Pipes</strong>: <em>tubo</em> entre dos procesos
+
+/		ul
+/			li.fragment  Unidireccionales o bidireccionales
+/			li.fragment  Un proceso escribe en un extremo (<em>write-end</em>), y otro proceso lee desde el otro extremo (<em>read-end</em>)
+/			li.fragment  Pueden ser tratadas como archivos
+/			li.fragment  Implementación implícita en consolas. Ej: <code>ls | more</code>
+/		== image_tag '/images/figures/01-pipes.png'
+
+
+/section#summary
+/	h2 Resumen: Procesos
 	/ \framesubtitle{Algunos puntos clave}
 
-	section#summary-proc
-		p Procesos
-		ul
-			li.fragment  Programa en ejecución + recursos
-			li.fragment  Pasan por estados
-			li.fragment  Representados por PCBs
-			li.fragment  Proceso que no está en ejecución se mantiene en una cola
+/	section#summary-proc
+/		p Procesos
+/		ul
+/			li.fragment  Programa en ejecución + recursos
+/			li.fragment  Pasan por estados
+/			li.fragment  Representados por PCBs
+/			li.fragment  Proceso que no está en ejecución se mantiene en una cola
 			/ li.fragment  <em>Scheduler</em> decide qué proceso debe ejecutar
-			li.fragment  Pueden crear otros procesos, estableciendo relación <em>padre-hijo</em>
-			li.fragment  Pueden comunicarse usando varios métodos
+/			li.fragment  Pueden crear otros procesos, estableciendo relación <em>padre-hijo</em>
+/			li.fragment  Pueden comunicarse usando varios métodos
 
 
 
@@ -761,17 +761,17 @@ section#mt
 	h2 <em>Multi-threading</em>
 
 	section#mt
-		p <em>Multi-threading</em>
-		span.fragment.fade-out data-fragment-index="0"
-			small ¿Fácil?
+		/p <em>Multi-threading</em>
+		/span.fragment.fade-out data-fragment-index="0"
+		/	small ¿Fácil?
 
-		p.fragment  data-fragment-index="0" Surgen desafíos para poder aprovechar el <em>multithreading</em>
-		ul.fragment data-fragment-index="1"
-			li <em>División de tareas</em>    ¿Qué tareas ejecuto en paralelo? Ideal: que sean independientes
-			li <em>Balance de carga</em>      Idealmente: tareas de tamaño similar
-			li <em>División de datos</em>     ¿Bajo qué criterio divido los datos entre <em>threads</em>?
-			li <em>Dependencias de datos</em> ¿Hay competencia por datos? ¿Necesito sincronizar accesos? ¿Puedo perder concurrencia?
-			li <em>Testing + Debugging</em>   ¿Cómo <em>debuggear</em> una aplicación <em>multithreaded</em>?
+		/p.fragment  data-fragment-index="0" Surgen desafíos para poder aprovechar el <em>multithreading</em>
+		/ul.fragment data-fragment-index="1"
+		/	li <em>División de tareas</em>    ¿Qué tareas ejecuto en paralelo? Ideal: que sean independientes
+		/	li <em>Balance de carga</em>      Idealmente: tareas de tamaño similar
+		/	li <em>División de datos</em>     ¿Bajo qué criterio divido los datos entre <em>threads</em>?
+		/	li <em>Dependencias de datos</em> ¿Hay competencia por datos? ¿Necesito sincronizar accesos? ¿Puedo perder concurrencia?
+		/	li <em>Testing + Debugging</em>   ¿Cómo <em>debuggear</em> una aplicación <em>multithreaded</em>?
 
 
 	section#mt-dataModels
