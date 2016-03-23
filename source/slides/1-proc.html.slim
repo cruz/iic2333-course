@@ -813,7 +813,7 @@ section#mt
 			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
 		== image_tag '/images/figures/01-4_06.pdf.png', :width=>"60%"
 		br
-		p.fragment Linux & Windows
+		/p.fragment Linux & Windows
 
 	section#mt-dataModels-m2m
 		p <em>Many-to-many</em>
@@ -880,24 +880,24 @@ section#mt
 			li.fragment  Esperar que un <em>thread</em> hijo termine: <code>join()</code>
 
 
-	section#mt-threadingLibs-support
-		p Usar eficientemente <em>thread</em>s no es fácil.
+	/section#mt-threadingLibs-support
+	/	p Usar eficientemente <em>thread</em>s no es fácil.
 
-		p.fragment ¿Y si le dejamos el trabajo al compilador o bibliotecas?
-		ul
-			li.fragment  <em>Thread-pools</em>: piscinas de <em>threads</em> disponibles
-			ul.fragment
-				li  Windows API: <code>QueueUserWorkItem( &PoolFunction, &hellip;)</code>
-				li  Java: package <code>java.util.concurrent</code>
-			li.fragment  <code>OpenMP</code>: directivas para identificar regiones paralelas
-			ul.fragment
-				li  Popular en C, C++, FORTRAN
-				li  Número de <em>threads</em> elegidos dinámicamente (p.ej: $\#$cores)
-			li.fragment  <code>Grand Central Dispatch</code>
-			ul.fragment
-				li  Extensiones para C, C++
-				li  Usado en Mac OS X, y en iOS
-				li  Bloques de paralelismo: esencialmente funciones anónimas ($\lambda$)
+	/	p.fragment ¿Y si le dejamos el trabajo al compilador o bibliotecas?
+	/	ul
+	/		li.fragment  <em>Thread-pools</em>: piscinas de <em>threads</em> disponibles
+	/		ul.fragment
+	/			li  Windows API: <code>QueueUserWorkItem( &PoolFunction, &hellip;)</code>
+	/			li  Java: package <code>java.util.concurrent</code>
+	/		li.fragment  <code>OpenMP</code>: directivas para identificar regiones paralelas
+	/		ul.fragment
+	/			li  Popular en C, C++, FORTRAN
+	/			li  Número de <em>threads</em> elegidos dinámicamente (p.ej: $\#$cores)
+	/		li.fragment  <code>Grand Central Dispatch</code>
+	/		ul.fragment
+	/			li  Extensiones para C, C++
+	/			li  Usado en Mac OS X, y en iOS
+	/			li  Bloques de paralelismo: esencialmente funciones anónimas ($\lambda$)
 
 
 section#semantics
