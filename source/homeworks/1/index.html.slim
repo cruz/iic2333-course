@@ -196,6 +196,10 @@ article
 						| cd path/to/pintos/
 						  cd extra
 						  $CC -g -o argParse argParse.c  # CC = "gcc" || "clang"
+						  
+						  # Common problems:
+						  #  * $CC May be not set on some environments, set it or just pick a compiler
+						  #  * Old compilers don't use C11 by default (use -std=C11 to force it)
 				p Y luego lo pueden ejecutar,
 				pre
 					code.hljs.bash
@@ -233,7 +237,7 @@ article
 					code.hljs.bash
 						| cd path/to/pintos
 						  cd src/userprog
-						  ../utils/pintos -- run programName
+						  ../utils/pintos -- run "programName programArgs.."
 				h6 Branch del curso
 				p  Obviamente la preparación de esto hace que sea tedioso probar el programa, es por esto que en el repo del curso hay un <a href="https://bitbucket.org/Dietr1ch/pintos/commits/branch/os16-1" target="_blank"><em>branch</em></a> que aliviana la tarea, <code>os16-1</code>. Se sugiere fuertemente que hagan <em>merge</em> de ese <em>branch</em> al <em>branch</em> principal de su 'repo'.
 				p  En el branch se mejora el <code>Makefile</code> de <code>/</code> ("root", el directorio base del proyecto) para simplificar el proceso,
