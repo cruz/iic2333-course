@@ -210,9 +210,9 @@ section#peterson
 
 			ul
 				li.fragment  $P_i$ puede entrar solamente si <code>flag[j]==false</code> ó <code>turn == i</code>
-				li.fragment  Si $P_i$ y $P_j$ se encuentran ambos en la SC, entonces <code>flag[0]==flag[1]==true</code>
-				li.fragment  <code>flag[0]==true</code> $\Rightarrow$ <code>turn=i</code>
-				li.fragment  <code>flag[1]==true</code> $\Rightarrow$ <code>turn=j</code>
+				li.fragment  Si $P_i$ y $P_j$ se encuentran ambos en la SC, entonces <code>flag[i]==flag[j]==true</code>
+				li.fragment  <code>flag[i]==true</code> $\Rightarrow$ <code>turn=j</code>
+				li.fragment  <code>flag[j]==true</code> $\Rightarrow$ <code>turn=i</code>
 				li.fragment  Pero <code>i</code>$\neq$<code>j</code>, por lo tanto no pueden estar ambos en su SC
 
 
@@ -529,20 +529,20 @@ section#block-prodCons-sema
 				    in = ++in%BUFFER_SIZE;   /* Advance save target */
 				    
 				    signal(mutex);
-				    signal(full);
+				    signal(pending);
 				  } while(1);
 
 		pre
 			code.hljs.c
 				| do {
-				    wait(full);
+				    wait(pending);
 				    wait(mutex);
 				    
 				    consume(  buffer[out]  );  /* Use Item */
 				    out = ++out%BUFFER_SIZE;   /* Target next item */
 				    
 				    signal(mutex);
-				    signal(empty);
+				    signal(missing);
 				  } while(2);
 
 		p.fragment  ¿Qué pasa si se pide el mutex antes?
@@ -679,7 +679,7 @@ section#block-mon
 			ul
 				li.fragment  <code>Condition::wait()</code>   bloquea <strong>siempre</strong> el <em>thread</em>
 				li.fragment  <code>Condition::signal()</code> despierta a un <em>thread</em> bloqueado, si lo hay
-			li.fragment  No son iguales a semáforos (pero pueden implementarse con ellos
+			li.fragment  No son iguales a semáforos (pero pueden implementarse con ellos)
 
 		p.fragment ¿Semántica para <code>signal()</code>?
 		ul
