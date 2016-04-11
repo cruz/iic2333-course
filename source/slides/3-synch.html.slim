@@ -1108,221 +1108,326 @@ section#dl_prev-alg-bankersAlg
 
 
 
-/XXX
-	/section#dl_prev-alg-bankersAlg_
+	section#dl_prev-alg-bankersAlg2
 		p ¿Cómo saber si estamos en un estado seguro?
 		pre
 			code.hljs.c
 				| int Work[m] = Available;
 				  bool Finish[n] = FALSE;
 				  
-				  /* encontrar indice $i$ tal que Finish[i]==FALSE y Need[i] $\leq$ Work **/
+				  /* encontrar indice i tal que Finish[i]==FALSE y Need[i] <= Work */
 				  while(existe i tal que (!Finish[i] && Need[i] <= Work)) {
 				    Work += Allocation[i];
 				    Finish[i] = TRUE;
 				  }
 				  
-				  for(i=0;i<n;i++)
+				  for(int i=0;i < n;i++) {
 				    if(!Finish[i])
 				      return UNSAFE;
+				  }
 				  return SAFE;
 		p Tiempo de ejecución: <span class="fragment">$O(m \times n^2)$</span>
 
 
 
-//	section#[fragile]
-//		\frametitle{Evitar <em>deadlock</em>s}
-//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-//
-//		¿Cómo determinar si es posible hacer una asignación de recursos?
-//
-//		Input: <code>Request[i]</code>, solicitud de $P_i$
-//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-//		  assert(Request[i] <= Need[i]); /** no puede pedir mas de lo que declara **/
-//		  if(Request[i] <= Available) {
-//		    /** Simula una asignacion **/
-//		    Available = Available - Request[i];
-//		    Allocation[i] = Allocation[i] + Request[i];
-//		    Need[i] = Need[i] - Request[i];
-//		    if(safetyAlgorithm() == SAFE) { /** el de la slide anterior **/
-//		      return ALLOCATED;
-//		    }
-//		    else {
-//		      /** deshacer la asignacion **/
-//		      return WAIT;
-//		    }
-//		  }
-//		  else {
-//		    return WAIT;
-//		  }
-//
-//  
-//	section#
-//		\frametitle{Evitar <em>deadlock</em>s}
-//		\framesubtitle{Algoritmo del banquero (E.W.Dijkstra, 1977)}
-//
-//		Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
-//
-//		$|R_A|=10, |R_B|=5, |R_C|=7$
-//
-//		Estado actual:
-//		\[
-//		\begin{array}{c|c|c|c|}
-//		 \textbf{Alloc} & A & B & C \\ \hline
-//		 P_0 & 0 & 1 & 0 \\ \hline
-//		 P_1 & 2 & 0 & 0 \\ \hline
-//		 P_2 & 3 & 0 & 2 \\ \hline
-//		 P_3 & 2 & 1 & 1 \\ \hline
-//		 P_4 & 0 & 0 & 2 \\ \hline
-//		\end{array}
-//		\qquad 
-//		\begin{array}{c|c|c|c|}
-//		 \textbf{Max} & A & B & C \\ \hline
-//		 P_0 & 7 & 5 & 3 \\ \hline
-//		 P_1 & 3 & 2 & 2 \\ \hline
-//		 P_2 & 9 & 0 & 2 \\ \hline
-//		 P_3 & 2 & 2 & 2 \\ \hline
-//		 P_4 & 4 & 3 & 3 \\ \hline
-//		\end{array}
-//		\qquad
-//		 \begin{array}{c|c|c|c|}
-//		 \textbf{Need} & A & B & C \\ \hline
-//		 P_0 & 7 & 4 & 3 \\ \hline
-//		 P_1 & 1 & 2 & 2 \\ \hline
-//		 P_2 & 6 & 0 & 0 \\ \hline
-//		 P_3 & 0 & 1 & 1 \\ \hline
-//		 P_4 & 4 & 3 & 1 \\ \hline
-//		\end{array}
-//		\]
-//		$\textbf{Available}=\{3,3,2\}$
-//
-//		El estado actual es <strong>safe</strong>, ¿por qué? \onslide<2->{({$\langle P_1,P_3,P_4,P_2,P_0 \rangle$})}
-//
-//		ul.fragment
-//		  li.fragment  Ejecutar <em>request</em> de $P_1$: <code>Request[1]=\{1,0,2\}</code>
-//		  li.fragment  Ejecutar <em>request</em> de $P_4$: <code>Request[4]=\{3,3,0\}</code>
-//		  li.fragment  Ejecutar <em>request</em> de $P_0$: <code>Request[0]=\{0,2,0\}</code>
-//
-//
-//  
-//	section#
-//		\frametitle{Detectar <em>deadlock</em>s}
-//
-//		Si no se toma ninguna acción previa, pueden ocurrir <em>deadlocks</em>
-//
-//		\onslide<2->{Se necesita:}
-//
-//		ul
-//		  li.fragment <3->{Algoritmo para detectar <em>deadlocks</em>}
-//		  li.fragment <3->{Algoritmo para resolver <em>deadlocks</em>}
-//		\end{itemize}
-//
-//		Costo de detectar ciclos en grafo de asignación de $n$ procesos: $O(n^2)$
-//
-//		\begin{center}
-//		  /== image_tag [width=6cm]{images/figures/01-7_09.pdf.png}
-//		\end{center}
-//
-//
-//  
-//	section#
-//		\frametitle{Detectar <em>deadlock</em>s}
-//		\framesubtitle{Pero con múltiples instancias por recurso}
-//
-//		Algoritmo de detección de <em>deadlock</em> basado en el banquero
-//
-//		\onslide<2->{Estructuras: $m$ recursos, $n$ procesos}
-//		ul
-//		  li.fragment <2-> <code>Available[m]</code>, cantidad disponible para cada recurso
-//		  li.fragment <2-> <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
-//		    ul
-//		      li.fragment  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
-//		    \end{itemize}
-//		  li.fragment <2-> <code>Request[n][m]</code>, solicitud actual para cada proceso
-//		    ul
-//		      li.fragment  <code>Request[i][j]=k</code>: $P_i$ solicita $k$ instancias de $R_j$
-//
-//  
-//	section#[fragile]
-//		\frametitle{Detectar <em>deadlock</em>s}
-//		\framesubtitle{Pero con múltiples instancias por recurso}
-//
-//		Detección de <em>deadlock</em>
-//
-//		\begin{minted}[mathescape,numbersep=5pt,gobble=2,frame=lines,framesep=2mm,fontsize=\scriptsize,linenos=false]{c}
-//		  /** Deadlock detection algorithm **/
-//		  int Work[m] = Available; bool Finish[n];
-//		  for(i=0;i<n;i++)
-//		    if(Allocation[i] != 0) Finish[i] = FALSE;
-//		    else                   Finish[i] = TRUE;
-//		  /** encontrar indice $i$ tal que Finish[i]==FALSE y Request[i] $\leq$ Work **/
-//		  while(existe i tal que (!Finish[i] && Request[i] <= Work)) {
-//		    Work = Work + Allocation[i];
-//		    Finish[i] = TRUE;
-//		  }
-//		  /** todos pueden terminar? **/
-//		  for(i=0;i<n;i++)
-//		    if(Finish[i] == FALSE) return DEADLOCKED;
-//		  return NOT_DEADLOCKED;
-//		\end{minted}
-//		Todos los procesos para los cuales <code>Finish[i]==FALSE</code> están en <em>deadlock</em>
-//
-//		Tiempo de ejecución: \onslide<2->{$O(m \times n^2)$}
-//
-//
-//	section#
-//		\frametitle{Detectar <em>deadlock</em>s}
-//
-//		Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
-//
-//		$|R_A|=10, |R_B|=5, |R_C|=7$
-//
-//		Estado actual:
-//		\[
-//		\begin{array}{c|c|c|c|}
-//		 \textbf{Alloc} & A & B & C \\ \hline
-//		 P_0 & 0 & 1 & 0 \\ \hline
-//		 P_1 & 2 & 0 & 0 \\ \hline
-//		 P_2 & 3 & 0 & 3 \\ \hline
-//		 P_3 & 2 & 1 & 1 \\ \hline
-//		 P_4 & 0 & 0 & 2 \\ \hline
-//		\end{array}
-//		\qquad 
-//		\begin{array}{c|c|c|c|}
-//		 \textbf{Req} & A & B & C \\ \hline
-//		 P_0 & 0 & 0 & 0 \\ \hline
-//		 P_1 & 2 & 0 & 2 \\ \hline
-//		 P_2 & 0 & 0 & 0 \\ \hline
-//		 P_3 & 1 & 0 & 0 \\ \hline
-//		 P_4 & 0 & 0 & 2 \\ \hline
-//		\end{array}
-//		\]
-//		$\textbf{Available}=\{0,0,0\}$
+	section#dl_prev-alg-bankersAlg3
+		p ¿Cómo determinar si es posible hacer una asignación de recursos?
 
-//		El estado actual es <strong>NOT DEADLOCKED</strong>, ¿por qué? \onslide<2->{({$\langle P_0,P_2,P_3,P_1,P_4 \rangle$})}
+		p <code>Request[i]</code>, solicitud de $P_i$
+		pre.fragment
+			code.hljs.c
+				| assert(Request[i] <= Need[i]); /** no puede pedir mas de lo que declara **/
+				  if(Request[i] <= Available) {
+				    /** Simula una asignacion **/
+					Available = Available - Request[i];
+					Allocation[i] = Allocation[i] + Request[i];
+					Need[i] = Need[i] - Request[i];
+					if(safetyAlgorithm() == SAFE) { /** el de la slide anterior **/
+					  return ALLOCATED;
+					}
+				    else {
+					  /** deshacer la asignacion **/
+					  return WAIT;
+				    }
+				  }
+	              else {
+					return WAIT;
+				  }
 
-//		ul
-//		  li.fragment <3-> Ejecutar <em>request</em> de $P_2$: <code>Request[2]=\{0,0,1\}</code>
+	section#dl_prev-alg-bankersAlg4
+		p Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
+
+		p Ejemplo: $|R_A|=10$, $|R_B|=5$, $|R_C|=7$
+
+		p Estado actual:
+
+		table border=1
+			tr
+				td
+					table border=5
+						tr
+							td ALLOC
+							td A
+							td B
+							td C
+						tr
+							td $P_0$
+							td 0
+							td 1
+							td 0
+						tr
+							td $P_1$
+							td 2
+							td 0
+							td 0
+						tr
+							td $P_2$
+							td 3
+							td 0
+							td 2
+						tr
+							td $P_3$
+							td 2
+							td 1
+							td 1
+						tr
+							td $P_4$
+							td 0
+							td 0
+							td 2
+				td
+					table border=1
+						tr
+							td MAX
+							td A
+							td B
+							td C
+						tr
+							td $P_0$
+							td 7
+							td 5
+							td 3
+						tr
+							td $P_1$
+							td 3
+							td 2
+							td 2
+						tr
+							td $P_2$
+							td 9
+							td 0
+							td 2
+						tr
+							td $P_3$
+							td 2
+							td 2
+							td 2
+						tr
+							td $P_4$
+							td 4
+							td 3
+							td 3
+				td
+					table border=1
+						tr
+							td NEED
+							td A
+							td B
+							td C
+						tr
+							td $P_0$
+							td 7
+							td 4
+							td 3
+						tr
+							td $P_1$
+							td 1
+							td 2
+							td 2
+						tr
+							td $P_2$
+							td 6
+							td 0
+							td 0
+						tr
+							td $P_3$
+							td 0
+							td 1
+							td 1
+						tr
+							td $P_4$
+							td 4
+							td 3
+							td 1
+
+		p Available $={3,3,2}$	
+
+		p El estado actual es <strong>safe</strong>, ¿por qué? <span class="fragment">$\langle P_1,P_3,P_4,P_2,P_0 \rangle$</span>
+
+		ul.fragment
+		  li.fragment  Ejecutar <em>request</em> de $P_1$: <code>Request[1]={1,0,2}</code>
+		  li.fragment  Ejecutar <em>request</em> de $P_4$: <code>Request[4]={3,3,0}</code>
+		  li.fragment  Ejecutar <em>request</em> de $P_0$: <code>Request[0]={0,2,0}</code>
 
 
-//	section#
-//		\frametitle{Recuperación ante <em>deadlock</em>s}
+  
+section#detectDeadlock1
+	h2 Detectar <em>deadlock</em>
 
-//		p OK, hemos detectado el <em>deadlock</em> (so what?)
+	section#detect1
+		p Si no se toma ninguna acción previa, pueden ocurrir <em>deadlocks</em>
 
-//		p.fragment Dos caminos&hellip;
-//		ul
-//		  li.fragment <strong>Matar un proceso</strong> ¿Cuál?
-//		    ul
-//		      li.fragment Todos (solución drástica)
-//		      li.fragment Uno a la vez hasta resolver el <em>deadlock</em>
-//		        ul
-//		          li.fragment  Criterio 1: La cantidad mínima
-//		          li.fragment  Criterio 2: El de menor ``costo''
-//		  li.fragment <strong>Expropiar recursos</strong>
-//		    ul
-//		      li.fragment  ¿A quién?
-//		      li.fragment  <strong>Rollback</strong>
+		p Se necesita:
+
+		ul
+	       li Algoritmo para detectar <em>deadlocks</em>
+		   li Algoritmo para resolver <em>deadlocks</em>
+
+		p Costo de detectar ciclos en grafo de asignación de $n$ procesos: $O(n^2)$
+
+		== image_tag 'images/figures/01-7_09.pdf.png', :width=>"40%"
+
+	section#detect2
+		p Algoritmo de detección de <em>deadlock</em> basado en el banquero
+
+		p $m$ recursos, $n$ procesos
+
+		ul
+		  li <code>Available[m]</code>, cantidad disponible para cada recurso
+		  li <code>Allocation[n][m]</code>, cantidades asignadas a cada proceso.
+		  
+		  ul
+		    li  <code>Allocation[i][j]=k</code>: $P_i$ tiene $k$ instancias de $R_j$
+
+		  li <code>Request[n][m]</code>, solicitud actual para cada proceso
+		  
+		  ul
+		  	li  <code>Request[i][j]=k</code>: $P_i$ solicita $k$ instancias de $R_j$
+
+  
+	section#detect3
+		p Detección de <em>deadlock</em>
+
+		pre
+			code.hljs.c
+				| /** Deadlock detection algorithm **/
+				  int Work[m] = Available; bool Finish[n];
+				  for(i = 0;i < n; i++)
+				    if(Allocation[i] != 0) Finish[i] = FALSE;
+				    else                   Finish[i] = TRUE;
+				  /** encontrar indice $i$ tal que Finish[i]==FALSE y Request[i] $\leq$ Work **/
+				  while(existe i tal que (!Finish[i] && Request[i] <= Work)) {
+				    Work = Work + Allocation[i];
+				    Finish[i] = TRUE;
+				  }
+				  /** todos pueden terminar? **/
+				  for(i = 0;i < n; i++)
+				    if(Finish[i] == FALSE) return DEADLOCKED;
+				  return NOT_DEADLOCKED;
+
+		p Todos los procesos para los cuales <code>Finish[i]==FALSE</code> están en <em>deadlock</em>
+
+		p Tiempo de ejecución: $O(m \times n^2)$
+
+	section#detect4
+
+		p Ejemplo: $P=\{P_0,P_1,P_2,P_3,P_4\}, R=\{R_A,R_B,R_C\}$
+
+		p Estado actual: $|R_A|=10, |R_B|=5, |R_C|=7$
+
+		table
+			tr
+				td
+					table
+						tr
+							td ALLOC
+							td A
+							td B
+							td C
+						tr
+							td $P_0$
+							td 0
+							td 1
+							td 0
+						tr
+							td $P_1$
+							td 2
+							td 0
+							td 0
+						tr
+							td $P_2$
+							td 3
+							td 0
+							td 3
+						tr
+							td $P_3$
+							td 2
+							td 1
+							td 1
+						tr
+							td $P_4$
+							td 0
+							td 0
+							td 2
+				td
+					table
+						tr
+							td REQ
+							td A
+							td B
+							td C
+						tr
+							td $P_0$
+							td 0
+							td 0
+							td 0
+						tr
+							td $P_1$
+							td 2
+							td 0
+							td 2
+						tr
+							td $P_2$
+							td 0
+							td 0
+							td 0
+						tr
+							td $P_3$
+							td 1
+							td 0
+							td 0
+						tr
+							td $P_4$
+							td 0
+							td 0
+							td 2
+
+		p Available $=\{0,0,0\}$
+
+		p El estado actual es <strong>NOT DEADLOCKED</strong>, ¿por qué? <span class="fragment">$\langle P_0,P_2,P_3,P_1,P_4 \rangle$</span>
+
+		ul
+		  li.fragment Ejecutar <em>request</em> de $P_2$: <code>Request[2]={0,0,1}</code>
+
+
+	section#detect5
+		h3 Recuperación ante <em>deadlock</em>s
+
+		p OK, hemos detectado el <em>deadlock</em> (so what?)
+
+		p.fragment Dos caminos&hellip;
+		ul
+			li.fragment <strong>Matar un proceso</strong> ¿Cuál?
+		    ul
+		      li.fragment Todos (solución drástica)
+		      li.fragment Uno a la vez hasta resolver el <em>deadlock</em>
+		      ul
+		        li.fragment  Criterio 1: La cantidad mínima
+		        li.fragment  Criterio 2: El de menor ``costo''
+		    li.fragment <strong>Expropiar recursos</strong>
+		    ul
+		      li.fragment  ¿A quién?
+		      li.fragment  <strong>Rollback</strong>
 
 
 //	section#
