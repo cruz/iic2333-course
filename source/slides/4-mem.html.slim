@@ -1,220 +1,175 @@
 ---
-title: Administración de Procesos
+title: Administración de Memoria
 layout: slide
 ---
 
 
+section
+  h2 Direccionamiento de Memoria
 
-section#map
-	h2 Direccionamiento de Memoria
+section
+  h2 Direccionamiento de Memoria
 
-	section#map-init
-		p ¿Definición? 
-		ul
-			li.fragment  Un gran arreglo de <em>bytes</em>
-			li.fragment  Cada uno con su propia <strong>dirección</strong>
+  section#memory0
+    div <b>MEMORIA</b> 
+    ul
+      li Un gran arreglo de <i>bytes</i>
+      li Cada uno con su propia <b>dirección</b>
 
-		p.fragment ¿Para qué?&hellip; <span class="fragment">¡para todo!</span>
-		ul.fragment
-			li  PC lee instrucciones desde una dirección de memoria
-			li  Instrucciones pueden requerir leer operaandos desde otra dirección de memoria
-			li  Resultados suelen ser almacenados en alguna dirección de memoria
-  
-		p.fragment La unidad de memoria ve un flujo de solicitudes de lectura + escritura
-  
-    
-  
+    div == image_tag '/images/figures/04-memory1.png', :width=>"50%"
 
+    ul.fragment
+      li  PC lee instrucciones desde una dirección de memoria
+      li  Instrucciones pueden requerir leer operandos desde otra dirección de memoria
+      li  Resultados suelen ser almacenados en alguna dirección de memoria
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Memoria}
-  \framesubtitle{¿Cómo funciona?}
+  section#memory1
+    div <b>Velocidad</b>
+    ul.fragment
+      li Registro: acceso en un ciclo de CPU
+      li Memoria: requiere acceso al <i>bus de memoria</i>
+      li ¿Solución? <span class="fragment">caché</span>
 
-  Dos problemas: velocidad y protección
-  
-  <strong>Velocidad</strong>
-  
-  ul
-    li.fragment  <strong>Registros</strong> suelen ser accedido en un ciclo de CPU
-    li.fragment  <strong>Memoria</strong> debe ser accedida a través de solicitud al <strong>bus de memoria</strong>
-      ul
-        li.fragment  Varios ciclos de espera
-        li.fragment  Caché como unidad de memoria intermedia de rápido acceso
-      
-  
+  section#memory2
+    div.fragment <b>Protección</b>
+    ul.fragment
+      li Multiprogramación. Procesos no deben acceder a memoria de otro procesos
+      li ¿Si hay dos procesos que hagan referencia a la misma dirección?
 
-  <strong>Protección</strong>
-  
-  ul
-    li.fragment  Procesos no deben poder acceder memoria de otros procesos
-    li.fragment  Por cada acceso se debe verificar si está dentro de los límites
-      ul
-        li.fragment  Pero es lento si el S.O. debe intervenir en cada acceso
-        li.fragment  Protección implementada por <em>hardware</em>
-      
-  
-  
+    div == image_tag '/images/figures/04-spaces.png', :width=>"35%"
+    div.fragment Referencias absolutas
 
+  section#memory3
+    div Procesos poseen registros <i>base</i> y <i>limit</i>
 
+    div == image_tag '/images/figures/02-8_01.pdf.png', :width=>"30%"
 
+    ul.fragment
+      li ¿S.O. verifica cada acceso? <span class="fragment">leeeento</span>
+      li.fragment ¿Solución? <span class="fragment">Verificación por <i>hardware</i></span>
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Memoria}
-  \framesubtitle{Protección por <em>hardware</em>}
+  section#memory4
+    div Registros <i>base</i> y <i>limit</i> se cargan, y son verificados por <i>hardware</i>.
 
-  Rango de direcciones <em>legales</em> por proceso
+    div == image_tag '/images/figures/02-8_02.pdf.png', :width=>"70%"
 
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      Dos registros:
-        ul
-          li.fragment  <strong>Base</strong>
-          li.fragment  <strong>Límite</strong>
-        
-      Definidos para cada proceso
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/02-8_01.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
-    
+    div ¿Quién hace esto? <span class="fragment">MMU: <i>Memory Manager Unit</i></span>
+    div.fragment Referencias relativas:  <b>JMP 28 + base</b>, en lugar de <b>JMP 28</b>
 
+  section#memory5
+    div Procesos piden una dirección de memoria ... <span class="fragment"> pero MMU les entrega otra</span>
+    ul.fragment
+      li <b>Dirección lógica o virtual</b>: solicitado por el proceso (JMP 28)
+      li <b>Dirección física</b>: accedida en la memoría física (JMP 16384+28)
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Memoria}
-  \framesubtitle{Protección por <em>hardware</em>}
+    div == image_tag '/images/figures/04-twoprocs.png', :width=>"25%"
 
-  Registro <strong>base</strong> y <strong>limite</strong> se cargan en registro de <em>hardware</em>.
+    div.fragment ¿Cuándo se determina la dirección física? (1) Compilación (2) Ejecución (3) Carga
 
-  \begin{center}
-    \includegraphics[width=10cm]{figs/02-8_02.pdf}
-  \end{center}
+section#spaces0
+  h2 Cargando procesos
 
-  ¿En qué modo pueden modificarse estos registros? \onslide<2->{Sólo modo monitor}
-  
+  section#spaces1
+    div Procesos pueden ser cargados y descargados de la memoria
 
+    div == image_tag '/images/figures/02-8_05.pdf.png', :width=>"50%"
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Memoria}
-  \framesubtitle{Asociación de direcciones (<em>address binding</em>)}
+  section#spaces2
+    div Espacio libre se modifica en cada carga/<i>swap-in</i> o descarga/<i>swap-out</i>
 
-  ¿Cómo saber a qué dirección acceder?
-  
-  \onslide<2->{
-  Sistema Operativo <em>carga</em> un programa en memoria copiando su código
-  a <em>alguna</em> sección de la memoria (¿secuencialmente?)
-  }
-  
-  \onslide<3->{
-  Instrucción de un programa:
-  \begin{center}
-    <em>Leer dirección 0x00F3</em>
-  \end{center}
-  }
-  \onslide<4->{Sistema Operativo debe haber cargado el programa de la dirección 0x0000}
-  
-  \onslide<5->{¿Y si otro programa hace la misma solicitud?}
-  
-  \onslide<6->{Compiladores no escriben (casi nunca) direcciones absolutas:
-  
-  \begin{center}
-    <em>Leer dirección F3 posiciones desde el inicio</em>
-  \end{center}
-  }
-  
+    div == image_tag '/images/figures/04-loadprocs.png', :width=>"70%"
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Direccionamiento}
-  \framesubtitle{¿Cuándo se hace la asociación?}
+  section#spaces3
+    div Direcciones deben ajustarse ante cada carga
 
-  \begin{columns}[c]
-    \begin{column}[T]{8cm}
-      En alguna de estas etapas:
-      ul
-        li.fragment  <strong>Tiempo de compilación</strong> (<em>Compile time</em>).
-              Requiere conocer dónde será cargado el programa. Si eso cambia se debe recompilar.
-              Ej: programas MS-DOS.
-        li.fragment  <strong>Tiempo de carga</strong> (<em>Load time</em>).
-              Código generado debe ser <em>relocalizable</em>. Una vez que se carga, la dirección queda fija.
-        li.fragment  <strong>Tiempo de ejecución</strong> (<em>Execution time</em>, <em>Run time</em>).
-              Permite que el proceso sea sacado y regresado a distintos sectores de memoria.
-      
-    \end{column}
-    
-    \begin{column}[T]{3.5cm}
-      \begin{center}
-        \includegraphics[width=3cm]{figs/02-8_03.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
+    div == image_tag '/images/figures/02-8_06.pdf.png', :width=>"70%"
+
+  section#spaces4
+    div <b>¿Dónde ubicar un proceso nuevo?</b>
+
+    div Estrategias
+    ul
+      li.fragment <strong>First-fit</strong>. En el primer lugar disponible.
+      li.fragment <strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
+      li.fragment <strong>Worst-fit</strong>. En el que deja más (el más grande).
+
+    div.framgent ¿Cuál es mejor?
+
+  section#spaces5
+    div <b>Problema: FRAGMENTACION</b>
+
+    div En dos variedades
+
+    ul
+      li.fragment <b>Fragmentación Externa</b>: Hay espacio para otro proceso, pero no contiguo.
+      li.fragment <b>Fragmentación Interna</b>: Espacio sobre-asignado a un proceso.
+
+  section#spaces6
+    div <b>¿Cómo evitar la fragmentación externa?</b>
+
+    div.fragment <b>Compactación</b>: fusionar huecos
+    div.fragment == image_tag '/images/figures/02-fusion.png', :width=>"20%"
+
+    div.framgment ¿Pero?
+    ul
+      li.fragment Es <b>costoso</b>. No voy esperar que mis 16GB se reacomoden.
+      li.fragment ¿Otras soluciones? <span class="fragment">Técnicas de <i>memoria virtuual</i>: <span class="fragment"><b>segmentación</b>, </span><span class="fragment"><b>paginación</b>
+
+section#seg
+  h2 Segmentación
+
+  section#seg1
+    div Espacio de direcciones se divide en segmentos lógicos
+    ul
+      li.fragment  Código
+      li.fragment  Variables globales
+      li.fragment  <em>Heap</em> (para asignación dinámica de memoria)
+      li.fragment  <em>Stacks</em> para cada <em>thread</em>
+      li.fragment  Código de la librería estándar de C
+
+    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
 
 
+  section#seg2
 
+    div Cada <b>segmento</b> se puede cargar en regiones distintas de memoria.
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Direccionamiento}
-  \framesubtitle{Direcciones física y lógicas}
+    div Segmentos poseen: identificador y longitud
 
-  Dirección solicitada por CPU: <strong>dirección lógica</strong>
-  
-  Dirección recibida por memoria: <strong>dirección física</strong>
-  
-  \onslide<2->{¿Qué pasa entre medio? &hellip; depende de la etapa de generación}
+    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
 
-  ul
-    li.fragment  <3-> Tiempo de compilación y carga $\to$ direcc. lógica == física
-    li.fragment  <4-> Tiempo de ejecución $\to$ conversión vía <em>memory management unit</em>
-  
+    div Una dirección de memoria específica en memoria segmentada está formada por una tupla con dos datos (un par):
+      $\langle$ <code>numeroDeSegmento</code>, <code>offset</code> $\rangle$
 
-  \begin{center}
-    \includegraphics[width=5cm]{figs/02-8_04.pdf}
-  \end{center}
+  section#seg3
+
+    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
+
+    div Información de segmentos cargados se almacena en: <b>Tabla de segmentos</b>
+
+    div == image_tag '/images/figures/02-8_09.pdf.png', :width=>"40%"
+
+  section#seg4
+
+    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
+
+    div MMU usa la <b>Tabla de segmentos</b> para obtener la <b>dirección física</b>
+
+    div == image_tag '/images/figures/02-8_08.pdf.png', :width=>"50%"
 
 
 
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Direccionamiento}
-  \framesubtitle{Direcciones física y lógicas}
-
-  Direccionamiento consiste en efectuar la transformación:
-  \[
-    f: \mathcal{L} \to \mathcal{F}
-  \]
-  $\mathcal{L}$: espacio de direcciones lógicas (o virtuales)
-
-  $\mathcal{F}$: espacio de direcciones físicas
-
-  \onslide<2->{Una versión muy simple.}
-  
-  \onslide<3->{Dado el registro de <em>relocation</em> $R$:
-  \[
-    f: \{0&hellip; \mathit{max}\} \to \{R &hellip; R + \mathit{max} \}
-  \]
-  \[
-    f(d_L) = R + d_L
-  \]
-  }
-  
 
 /---------------------------------------------------------------------
 / Frame
   \frametitle{Direccionamiento}
   \framesubtitle{Otros conceptos comunes}
-
+/
   \begin{description}
-    li.fragment [<strong>Carga dinámica</strong>] Cargar sólo parte del proceso. Cuando una rutina se necesita,
+ //   li.fragment [<strong>Carga dinámica</strong>] Cargar sólo parte del proceso. Cuando una rutina se necesita,
                                 se carga la sección necesaria de código.
-    li.fragment [<strong>Bibliotecas</strong>] Conjunto de rutinas de uso común que se <em>agregan</em> al programa
+ //   li.fragment [<strong>Bibliotecas</strong>] Conjunto de rutinas de uso común que se <em>agregan</em> al programa
       ul
         li.fragment  <strong>Enlace Estático</strong> (<code>.lib</code>, <code>.a</code>). Rutinas se enlazan dentro del binario final.
             ul
@@ -230,263 +185,18 @@ section#map
               li.fragment  Pueden reemplazarse <em>en caliente</em> (con un esquema de versiones)
             
                               
-      
-  \end{description}
+  /    
+  //\end{description}
   
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{<em>Swapping</em>}
-/  \framesubtitle{Otros conceptos comunes}
-
-  Traspaso <em>temporal</em> de memoria de un proceso a <em>memoria secundaria</em>
-  
-  \begin{center}
-    \includegraphics[width=5cm]{figs/02-8_05.pdf}
-  \end{center}
-
-  ul
-    li.fragment  ¿Cuándo? Cuando queda poca memoria libre.
-      ul
-        li.fragment  Objetivo: maximizar el nivel de multiprogramación
-      
-    li.fragment  ¿Cuánto? Todo, o lo que no esté utilizando
-      ul
-        li.fragment  Require informar al SO cuánta memoria se está utilizando
-      
-    li.fragment  ¿Cuál? Uno que no esté en ejecución ni esperando E/S
-      ul
-        li.fragment  Pero pueden haber muchos criterios
-      
-  
-
-
-
-/---------------------------------------------------------------------
-
-\subsection{Asignación contigua}
-
-/ Frame
-  \frametitle{Asignación contigua}
-  \framesubtitle{La primera estrategia (adivinen si se usa)}
-
-  Secciones bajas: Sistema Operativo
-  
-  A continuación se agrega cada proceso nuevo de manera contigua.
-  
-  ul
-    li.fragment  MMU utiliza registro límite y registro de <em>relocation</em>
-  
-
-  \begin{center}
-    \includegraphics[width=8cm]{figs/02-8_06.pdf}
-  \end{center}
-
-  Procesos pueden ser <em>reubicados</em>
-
-
-/---------------------------------------------------------------------
-/ Frame
-/  \frametitle{Asignación contigua}
-/  \framesubtitle{¿Cómo dividir la memoria?}
 /
-/  Memoria se divide en <em>particiones</em>: una para cada proceso.
-/  
-/  El nivel de multiprogramación está dado por la cantidad de particiones.
-/  
-/  ul
-/    li.fragment  Tamaño fijo: IBM OS/360
-/    li.fragment  Tamaño variable: tabla indicando particiones ocupadas
-/  
-/
-/  \onslide<2->{Procesos se cargan en memoria solamente si hay espacios disponibles.}
-/  
-/  \onslide<3->{Cuando un proceso termina, su memoria es recuperada.}
-/  
-/
-/
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación contigua}
-  \framesubtitle{¿Dónde ubicar el siguiente proceso?}
-
-  Luego de algunas ejecuciones, el espacio queda con <em>huecos</em>.
-
-  \onslide<2->{¿Dónde se carga el siguiente proceso?}
-  
-  \onslide<3->{Distintas estrategias de asignación:}
-  ul
-    li.fragment <4-><strong>First-fit</strong>. En el primer lugar disponible.
-    li.fragment <4-><strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
-    li.fragment <4-><strong>Worst-fit</strong>. En el que deja más (el más grande).
-  
-  
-  \onslide<5->{¿Cuál es mejor?}
-  ul
-    li.fragment  <5-> Best-fit y First-fit suelen funcionar mejor que Worst-fit
-    li.fragment  <5-> First-fit es más rápido
-  
-
 
 /---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación contigua}
-  \framesubtitle{Fragmentación}
-
-  \begin{block}{<strong>Fragmentación externa</strong>}
-    \onslide<2->{Hay espacio para otro proceso, pero no contiguo.}
-  \end{block}
-    
-  \begin{block}{<strong>Fragmentación interna</strong>}
-    \onslide<3->{Espacio sobre-asignado a procesos}
-
-    \onslide<4->{Usualmente se asignan huecos en unidades de tamaño fijo}
-  \end{block}
-
-  \onslide<5->{¿Cómo evitar la fragmentación?}
-    
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación contigua}
-  \framesubtitle{Fragmentación}
-
-  ¿Cómo evitar la fragmentación?
-  
-  ul
-    li.fragment <2-> Fusionando huecos: <strong>compactación</strong>
-      \begin{center}
-        \includegraphics[width=3cm]{figs/02-fusion.png}
-      \end{center}
-      ul
-		li.fragment  Requiere asignaciones en tiempo de ejecución
-        li.fragment  Lento y costoso (en tiempo)
-      
-    li.fragment <3-> Mejor: realizar asignaciones <strong>no-contiguas</strong>
-      ul
-        li.fragment <4-> Después de todo, solo basta tener una buena transformación
-        li.fragment <4-> Dos técnicas: <strong>segmentación</strong> y <strong>paginación</strong>
-      
-  
-
-
-/---------------------------------------------------------------------
-\subsection{Segmentación}
-
-/ Frame
-  \frametitle{Segmentación}
-  
-  La ``visión del programador'' de su propio código no es necesariamente la misma
-  que ocurre en la memoria física.
-  
-  Programador suele pensar en:
-  ul
-    li.fragment  Funciones y métodos
-    li.fragment  Memoria de <em>Heap</em>
-    li.fragment  <em>Stack</em> de ejecución
-    li.fragment  Bibliotecas
-    li.fragment  Variables y objetos
-  
-  
-  Memoria sólo ve una secuencia de bytes
-  
-  \begin{block}{Idea de la Segmentación}
-    En lugar de asignar memoria contiguamente, se asigna memoria a <em>segmentos</em> del programa.
-  \end{block}
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Segmentos de un programa en C}
-
-  \begin{columns}[c]
-    \begin{column}[T]{7cm}
-      Un compilador de C típicamente genera segmentos para:
-      ul
-        li.fragment  Código
-        li.fragment  Variables globales
-        li.fragment  <em>Heap</em> (para asignación dinámica de memoria)
-        li.fragment  <em>Stacks</em> para cada <em>thread</em>
-        li.fragment  Código de la librería estándar de C
-      
-    \end{column}
-    
-    \begin{column}[T]{4cm}
-      \begin{center}
-        \includegraphics[width=4cm]{figs/02-8_07.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{¿Segmentos?}
-
-  Segmentos tienen:
-  ul
-    li.fragment  Nombre (identificador)
-    li.fragment  Longitud
-  
-
-  Una dirección de memoria específica en memoria segmentada está formada por una tupla con dos datos (un par):
-  \begin{center}
-  $\langle$ <code>numeroDeSegmento</code>, <code>offset</code> $\rangle$
-  \end{center}
-  
-  <strong>Sin embargo,</strong> la dirección de memoria es <em>unidimensional</em>.
-  ¿Cómo indicar ambos valores?
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{MMU para segmentación}
-
-    ul
-      li.fragment  Dirección lógica es $\langle$ segmento, offset $\rangle$
-      li.fragment  Asociación se hace con una <strong>tabla de segmentos</strong> con valores <strong>base</strong> y <strong>límite</strong>
-    
-
-    \begin{center}
-      \includegraphics[width=8cm]{figs/02-8_08.pdf}
-    \end{center}
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Ejemplo de Segmentación}
-
-  \begin{center}
-    \includegraphics[width=8cm]{figs/02-8_09.pdf}
-  \end{center}
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Límites de la Segmentación}
-
-  ul
-    li.fragment  Permite asignar porciones de memoria del proceso a distintos
-          sectores de memoria física.
-    li.fragment  Asignación de segmentos aún es contigua.
-    li.fragment  Problema se ha reducido de tamaños de memoria ``grandes'' a tamaños
-          pequeños.
-  
-  <strong>Aún puede haber fragmentación externa</strong>
-
-
-/---------------------------------------------------------------------
-\subsection{Paginación}
+/\subsection{Paginación}
 
 / Frame
   \frametitle{Paginación}
 
-  Dos divisiones en unidades de tamaño fijo:
+/  Dos divisiones en unidades de tamaño fijo:
   ul
     li.fragment  Memoria física se divide en <strong>frames</strong> (marcos)
     li.fragment  Memoria lógica se divide en <strong>páginas</strong>
@@ -509,12 +219,12 @@ section#map
 / Frame
   \frametitle{Paginación}
 
-  Dirección de memoria paginada contiene:
+/  Dirección de memoria paginada contiene:
   \begin{center}
     $\langle$ <code>numeroDePagina</code>, <code>offset</code> $\rangle$
   \end{center}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=9cm]{figs/02-8_10.pdf}
   \end{center}
 
@@ -524,7 +234,7 @@ section#map
 / Frame
   \frametitle{Ejemplo de Paginación}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=8cm]{figs/02-8_11.pdf}
   \end{center}
   
@@ -534,7 +244,7 @@ section#map
 / Frame
   \frametitle{Tamaños de páginas y frames}
 
-  ul
+/  ul
     li.fragment  Tamaño de páginas y frames determinado por <em>hardware</em>
     li.fragment  Típicamente potencia de 2. Entre 512 bytes a 1GB por página.
     li.fragment  ¿Por qué potencia de 2? &hellip; Hace todo más fácil
@@ -557,7 +267,7 @@ section#map
 / Frame
   \frametitle{Ejemplo de paginación}
 
-  Páginas de $2^n$ bytes, $n=2$. Direcciones lógicas de $m$-bit, $m=4$.
+/  Páginas de $2^n$ bytes, $n=2$. Direcciones lógicas de $m$-bit, $m=4$.
   
   Memoria física de 32 bytes == 8 páginas.
   
@@ -570,7 +280,7 @@ section#map
 / Frame
   \frametitle{Límites de la paginación}
 
-  ul
+/  ul
     li.fragment  ¿Fragmentación externa? \onslide<2->{&hellip; ¡0!}
     li.fragment <2-> Se produce fragmentación interna
       ul
@@ -589,9 +299,9 @@ section#map
 / Frame
   \frametitle{Tamaño de la tabla de páginas}
 
-  Ejemplo: DEC PDP-11. Máquina de 16-bit, $1970\sim 1990$
+/  Ejemplo: DEC PDP-11. Máquina de 16-bit, $1970\sim 1990$
 
-  \includegraphics[width=5cm]{figs/02-PDP-11-70-DDS570.png}
+/  \includegraphics[width=5cm]{figs/02-PDP-11-70-DDS570.png}
   \hfill
   \includegraphics[width=5cm]{figs/02-Pdp-11-70-panel.png}
   
@@ -603,9 +313,9 @@ section#map
 / Frame
   \frametitle{Tamaño de la tabla de páginas}
 
-  Otro ejemplo: 32-bit. Páginas de 4KB.
+/ Otro ejemplo: 32-bit. Páginas de 4KB.
 
-  ¿Tamaño de la tabla de páginas?  
+/  ¿Tamaño de la tabla de páginas?  
   \onslide<2->{¡$2^{20}$ entradas!}
   ul
     li.fragment  <3->{Accesos pueden hacerse lentos}
@@ -625,19 +335,19 @@ section#map
 / Frame
   \frametitle{<em>Translation Look-aside Buffer</em>}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=9cm]{figs/02-8_14.pdf}
   \end{center}
 
 
 
 /---------------------------------------------------------------------
-\subsection{Tablas de Páginas}
+/\subsection{Tablas de Páginas}
 
 / Frame
   \frametitle{Tablas de Páginas}
 
-  Tablas de páginas pueden implementarse de distintas maneras
+/  Tablas de páginas pueden implementarse de distintas maneras
   
   \onslide<2->{Tamaños comunes:}
   ul
@@ -653,9 +363,9 @@ section#map
 / Frame
   \frametitle{Tablas de Páginas Jerárquicas}
 
-  Ejemplo: esquema de dos niveles
+/  Ejemplo: esquema de dos niveles
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-8_17.pdf}
   \end{center}
   
@@ -665,9 +375,9 @@ section#map
 / Frame
   \frametitle{Tablas de Páginas Jerárquicas}
 
-  Direccionamiento de dos niveles
+/  Direccionamiento de dos niveles
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=9cm]{figs/02-8_18.pdf}
   \end{center}
   
@@ -682,15 +392,15 @@ section#map
 / Frame
   \frametitle{Tablas de Páginas Jerárquicas}
 
-  ¿Cuántos niveles? 
+/  ¿Cuántos niveles? 
   
-  Ejemplo: Direcciones de 64-bit
+/  Ejemplo: Direcciones de 64-bit
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-in-8_4.pdf}
   \end{center}
 
-  \onslide<2->{Otro nivel de paginación &hellip;}
+/  \onslide<2->{Otro nivel de paginación &hellip;}
   
   \onslide<3->{
   \begin{center}
@@ -698,7 +408,7 @@ section#map
   \end{center}  
   }
 
-  \onslide<4->{64-bit UltraSPARC poseía 7 niveles de paginación}
+/  \onslide<4->{64-bit UltraSPARC poseía 7 niveles de paginación}
   
 
 
@@ -706,11 +416,11 @@ section#map
 / Frame
   \frametitle{Tablas de Páginas con <em>hash</em>}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=9cm]{figs/02-8_19.pdf}
   \end{center}
 
-  Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
+/  Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
 
 
 
@@ -718,27 +428,27 @@ section#map
 / Frame
   \frametitle{Tablas de Páginas invertidas}
 
-  ul
+/  ul
     li.fragment  Una entrada por frame (en lugar de página)
     li.fragment  Sólo una tabla en el sistema (no por proceso)
   
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=8cm]{figs/02-8_20.pdf}
   \end{center}
 
-  Usada en 64-bit UltraSPARC, y PowerPC
+/  Usada en 64-bit UltraSPARC, y PowerPC
 
 
 /---------------------------------------------------------------------
-\section{Memoria Virtual}
+/\section{Memoria Virtual}
 
-\subsection{Funcionamiento}
+/\subsection{Funcionamiento}
 
 / Frame
   \frametitle{Funcionamiento}
 
-  Estrategias de direccionamiento
+/  Estrategias de direccionamiento
   
   ul
     li.fragment  Orientadas a dar ilusión de que todo el programa se encuentra en memoria contínua
@@ -750,7 +460,7 @@ section#map
       
   
 
-  \onslide<2->{
+/  \onslide<2->{
   Pero mantener todo el programa en memoria es muy restrictivo
   }
   ul
@@ -763,7 +473,7 @@ section#map
 / Frame
   \frametitle{Funcionamiento}
 
-  <strong>Memoria Virtual</strong> aumenta la separación entre la memoria visible por el programador,
+/  <strong>Memoria Virtual</strong> aumenta la separación entre la memoria visible por el programador,
   y la memoria física de la máquina en que se ejecuta el programa.
   
   \begin{center}
@@ -784,12 +494,12 @@ section#map
 /
 /
 /---------------------------------------------------------------------
-\subsection{Paginación por demanda}
+/\subsection{Paginación por demanda}
 
 / Frame
   \frametitle{Paginación por demanda}
 
-  Primera etapa: mantener registro de páginas cargadas
+/  Primera etapa: mantener registro de páginas cargadas
   ul
     li.fragment  Bit adicional en tabla de páginas
       ul
@@ -800,7 +510,7 @@ section#map
           y se establece el bit a <em>valid</em>
   
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=5cm]{figs/02-9_05.pdf}
   \end{center}
   
@@ -810,13 +520,13 @@ section#map
 / Frame
   \frametitle{Paginación por demanda}
 
-  Segunda etapa: cargar páginas que se necesiten
+/  Segunda etapa: cargar páginas que se necesiten
   
   ul
     li.fragment  Proceso de carga se activa ante un <strong>page-fault</strong>
   
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-9_06.pdf}
   \end{center}
 
@@ -829,7 +539,7 @@ section#map
 / Frame
   \frametitle{Paginación por demanda}
 
-  Rendimiento de la paginación por demanda
+/  Rendimiento de la paginación por demanda
   ul
     li.fragment  $p$, probabilidad de <em>page fault</em>
     li.fragment  $t_{ma}$, tiempo de acceso a memoria, $\sim 200 \times 10^{-9}s$
@@ -852,12 +562,12 @@ section#map
   }
 
 /---------------------------------------------------------------------
-\subsection{<em>Copy-on-Write</em>}
+/\subsection{<em>Copy-on-Write</em>}
 
 / Frame
   \frametitle{<em>Copy-on-Write</em>}
 
-  Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
+/  Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
   
   ul
     li.fragment  ¿Y si el hijo no escribe en su memoria?
@@ -873,23 +583,23 @@ section#map
     \includegraphics[width=5.5cm]{figs/02-9_08.pdf}
   \end{center}
 
-  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
+/  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
   
 
 
 /---------------------------------------------------------------------
-\subsection{Reemplazo de páginas}
+/\subsection{Reemplazo de páginas}
 
 / Frame
   \frametitle{Reemplazo de páginas}
 
-  Si sólo se carga la mitad de la memoria de un proceso, podemos cargar
+/  Si sólo se carga la mitad de la memoria de un proceso, podemos cargar
   más en memoria $\to$ más multiprogramación
 
-  Si no hay más espacio en memoria, se debe pasar a <em>swap</em> una de las páginas
+/  Si no hay más espacio en memoria, se debe pasar a <em>swap</em> una de las páginas
   actualmente asignadas.
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=7cm]{figs/02-9_09.pdf}
   \end{center}
   
@@ -901,14 +611,14 @@ section#map
 / Frame
   \frametitle{Reemplazo de páginas}
 
-  Sistema Operativo necesita <strong>reemplazar</strong> una página existente,
+/  Sistema Operativo necesita <strong>reemplazar</strong> una página existente,
   hacer <em>swap</em> y cargar otra
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=7cm]{figs/02-9_10.pdf}
   \end{center}
 
-  Algoritmos para elegir una página <em>víctima</em>  
+/  Algoritmos para elegir una página <em>víctima</em>  
   
 
 
@@ -916,11 +626,11 @@ section#map
 / Frame
   \frametitle{Reemplazo de páginas}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-9_10.pdf}
   \end{center}
 
-  Dos transferencias de páginas (pasos 1 y 3)
+/  Dos transferencias de páginas (pasos 1 y 3)
   ul
     li.fragment  Páginas que no han sido modificadas no necesitan escribirse
           a disco
@@ -935,7 +645,7 @@ section#map
 / Frame
   \frametitle{Reemplazo de páginas}
 
-  Algoritmos para decidir <em>qué página reemplazar</em>
+/  Algoritmos para decidir <em>qué página reemplazar</em>
   ul
     li.fragment  ¿Cuál es mejor?
     li.fragment  Uno que genere pocos <em>page faults</em>
@@ -959,7 +669,7 @@ section#map
 / Frame
   \frametitle{Reemplazo de páginas}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-9_11.pdf}
   \end{center}
   
@@ -971,15 +681,15 @@ section#map
 / Frame
   \frametitle{Reemplazo FIFO}
 
-  \begin{block}{<strong>FIFO</strong>}
+/  \begin{block}{<strong>FIFO</strong>}
     Reemplazar la página que fue cargada hace más tiempo
   \end{block}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=10cm]{figs/02-9_12.pdf}
   \end{center}
 
-  Se reemplaza la página más antigua en haber sido cargada
+/  Se reemplaza la página más antigua en haber sido cargada
   ul
     li.fragment  +Fácil de implementar
     li.fragment  -Compartamiento impredecible
@@ -990,7 +700,7 @@ section#map
 / Frame
   \frametitle{Reemplazo FIFO}
 
-  Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
+/  Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
   
   ul
     li.fragment  Ejemplo. Secuencia 1,2,3,4,1,2,5,1,2,3,4,5
@@ -1002,7 +712,7 @@ section#map
     \includegraphics[width=5.5cm]{figs/02-9_13.pdf}
   \end{center}
 
-  Este problema se conoce como <strong>anomalía de Bélády</strong>\footnote{Planteada por el húngaro László Bélády, 1969} 
+/  Este problema se conoce como <strong>anomalía de Bélády</strong>\footnote{Planteada por el húngaro László Bélády, 1969} 
 
 
 
@@ -1010,17 +720,17 @@ section#map
 / Frame
   \frametitle{Reemplazo Óptimo}
 
-  \begin{block}{<strong>OPT</strong> ó <strong>MIN</strong>}
+/  \begin{block}{<strong>OPT</strong> ó <strong>MIN</strong>}
     Reemplazar la página que no será usada por mayor tiempo
   \end{block}
 
-  No sufre la anomalía de Bélády.
+/  No sufre la anomalía de Bélády.
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=8cm]{figs/02-9_14.pdf}
   \end{center}
 
-  ul
+/  ul
     li.fragment  +Óptimo
     li.fragment  -Difícil de implementar, pues requiere conocimiento futuro (como SJF)
   
@@ -1031,7 +741,7 @@ section#map
   \frametitle{Reemplazo LRU (<em>Least Recently Used</em>)}
   \framesubtitle{Si no puedes obtener el óptimo, aproxímalo}
 
-  \begin{block}{<strong>LRU</strong>}
+/  \begin{block}{<strong>LRU</strong>}
     Reemplazar la página que no ha sido usada por más tiempo
   \end{block}
   
@@ -1039,26 +749,26 @@ section#map
     \includegraphics[width=8cm]{figs/02-9_15.pdf}
   \end{center}
 
-  Parece un buen compromiso. ¿Cómo implementarlo?
+/  Parece un buen compromiso. ¿Cómo implementarlo?
   ul
     li.fragment  Contadores, actualizado con valor de <em>timer</em>
     li.fragment  <em>Stack</em>, el último acceso avanza al tope del <em>stack</em>
   
 
-  En cualquier caso se requiere ayuda de <em>hardware</em>
+/  En cualquier caso se requiere ayuda de <em>hardware</em>
 
 /---------------------------------------------------------------------
 / Frame
   \frametitle{Aproximación a LRU}
 
-  Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
+/  Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
   
   ul
     li.fragment  <strong>Reference bit</strong> se marca para indicar páginas referenciadas
     li.fragment  Permite determinar qué páginas se han usado y cuáles no (sin orden)
   
 
-  Una técnica para incorporar orden:
+/  Una técnica para incorporar orden:
   ul
     li.fragment  8-bit reference (<em>reference byte</em>) funcionan como ``bit de historia''
     li.fragment  A intervalo $r$ ($\sim 100$ms) se hace <em>right shift</em>
@@ -1074,7 +784,7 @@ section#map
   \frametitle{Aproximación a LRU: Algoritmo de segunda oportunidad}
   \framesubtitle{Otra oportunidad, otra oportunidad, &hellip;}
 
-  Inicialmente, algoritmo FIFO, ordenado por tiempo de carga
+/  Inicialmente, algoritmo FIFO, ordenado por tiempo de carga
   ul
     li.fragment  Al ser elegida, se observa su <em>reference bit</em>
       ul
@@ -1084,7 +794,7 @@ section#map
       
   
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=4cm]{figs/02-9_17.pdf}
   \end{center}
   
@@ -1095,7 +805,7 @@ section#map
 / Frame
   \frametitle{Aproximación a LRU: Segunda oportunidad mejorada}
 
-  2da oportunidad considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
+/  2da oportunidad considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
   
   ul
     li.fragment  (0,0), no usado recientemente ni modificada
@@ -1135,12 +845,12 @@ section#map
 
 
 /---------------------------------------------------------------------
-\subsection{Asignación de <em>Frames</em> y <em>Thrashing</em>}
+/\subsection{Asignación de <em>Frames</em> y <em>Thrashing</em>}
 
 / Frame
   \frametitle{Asignación de <em>Frames</em>}
 
-  La pregunta: ¿cuántos <em>frames</em> asignar a cada proceso?
+/  La pregunta: ¿cuántos <em>frames</em> asignar a cada proceso?
   
   <strong>Mínimo</strong>
   ul
@@ -1161,7 +871,7 @@ section#map
 / Frame
   \frametitle{Asignación de <em>Frames</em>}
 
-  $m$ <em>frames</em> y $n$ procesos
+/  $m$ <em>frames</em> y $n$ procesos
   ul
     li.fragment  <strong>Asignación equitativa</strong>: $\lfloor m/n \rfloor$ a cada uno. 
     li.fragment  <strong>Asignación proporcional</strong>: sea $s_i$ el tamaño de la memoria virtual del proceso $p_i$,
@@ -1177,26 +887,26 @@ section#map
 / Frame
   \frametitle{<em>Thrashing</em>}
 
-  Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
+/  Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
   
   \vspace{1em}
 
-  \onslide<2->{Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em>
+/  \onslide<2->{Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em>
                entre disco y memoria}
   \vspace{1em}        
 
-  \onslide<3->{Se produce <strong>thrashing</strong>}
+/  \onslide<3->{Se produce <strong>thrashing</strong>}
 
 
 /---------------------------------------------------------------------
 / Frame
   \frametitle{<em>Thrashing</em>}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=6cm]{figs/02-9_18.pdf}
   \end{center}
 
-  ul
+/  ul
     li.fragment  Baja utilización de CPU
     li.fragment  <em>Scheduler</em> incrementa nivel de multiprogramación
     li.fragment  Procesos nuevos requieren <em>frames</em>.
@@ -1212,7 +922,7 @@ section#map
 / Frame
   \frametitle{Localidad de referencia}
 
-  Estrategia para evitar <em>thrashing</em>: aprovechar la <strong>localidad de referencia</strong>
+/  Estrategia para evitar <em>thrashing</em>: aprovechar la <strong>localidad de referencia</strong>
   
   ul
     li.fragment  Teoría: procesos saltan de una localidad a otra
@@ -1231,15 +941,15 @@ section#map
 / Frame
   \frametitle{Modelo de <em>Working Set</em>}
 
-  \begin{block}<strong>Working Set</strong>
+/  \begin{block}<strong>Working Set</strong>
     Conjunto de páginas usadas en los últimos $\Delta$ accesos
   \end{block}
 
-  \begin{center}
+/  \begin{center}
     \includegraphics[width=9cm]{figs/02-9_20.pdf}
   \end{center}
 
-  $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
+/  $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
   
   \vspace{1em}
   
@@ -1256,7 +966,7 @@ section#map
   \frametitle{Modelo de <em>Working Set</em>}
   \framesubtitle{¿Cómo implementarlo?}
 
-  Aprovechar los <em>reference bit</em>
+/  Aprovechar los <em>reference bit</em>
   
   ul
     li.fragment  Observar <em>reference bit</em> a intervalos regulares, cada $R$ referencias
@@ -1273,7 +983,7 @@ section#map
 / Frame
   \frametitle{Resumen}
 
-  ul
+/  ul
     li.fragment  Direccionamiento de memoria
       ul
         li.fragment  Transformaciones de dirección lógica a física
@@ -1287,5 +997,3 @@ section#map
         li.fragment  Reemplaza FIFO, OPT, LRU
         li.fragment  Cantidad de <em>frames</em> asignados a cada proceso debe ser el apropiado,
               de lo contrario se puede producir <em>thrashing</em>
-
-
