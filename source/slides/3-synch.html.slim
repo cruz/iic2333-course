@@ -1315,7 +1315,7 @@ section#detectDeadlock1
 				  for(i = 0;i < n; i++)
 				    if(Allocation[i] != 0) Finish[i] = FALSE;
 				    else                   Finish[i] = TRUE;
-				  /** encontrar indice $i$ tal que Finish[i]==FALSE y Request[i] $\leq$ Work **/
+				  /** encontrar indice i tal que Finish[i]==FALSE y Request[i] <= Work **/
 				  while(existe i tal que (!Finish[i] && Request[i] <= Work)) {
 				    Work = Work + Allocation[i];
 				    Finish[i] = TRUE;
