@@ -59,6 +59,7 @@ article
 
 		h5 Tests
 		/  -----
+		p En <code>src/tests/threads/</code> pueden encontrar algunos tests para revisar esta tarea. (No dice que todos lo hacen..)
 		ul
 			li priority-change
 			li priority-preempt
@@ -67,10 +68,22 @@ article
 			ul
 				li Sólo para <em>locks</em>
 
+		p Ejecución de tests,
+		pre
+			code.hljs.bash
+				| cd /path/to/pintos/
+				 
+				  cd src/threads/
+				  make  # Root's make still works, but it does more work.
+				 
+				  ../utils/pintos -- run TestName  # where TestName is the basename of a test (priority-change.c => priority-change)
+
+
 
 		h5 Estadísticas
 		/  ------------
 
+		p Es necesario obtener las siguientes medidas,
 		ul
 			li Por Proceso
 			ul
@@ -88,3 +101,5 @@ article
 				li Cambios de contexto
 				li Procesos que ejecutaron
 				li Espera promedio en ready
+
+		p El cálculo de estas debería ser lo más barato posible. Es posible medir diferencias con contadores globales para calcular rangos de tiempo y ocurrencias.
