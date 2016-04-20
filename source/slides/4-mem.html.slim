@@ -157,8 +157,147 @@ section#seg
 
     div == image_tag '/images/figures/02-8_08.pdf.png', :width=>"50%"
 
+section#pag
+  h2 Paginación
+
+  section#pag1
+    div style="text-align:left;" Segmentación reduce el problema de la fragmentación externa <span class="fragment"> ... pero no lo soluciona</span>
+
+    div.fragment style="text-align:left;" <b>Paginación</b> divide el espacio virtual de direcciones en regiones de igual tamaño
+    ul
+      li.fragment Espacio virtual (lógico) de direcciones se divide en <b>páginas</b>
+      li.fragment Espacio físico de direcciones se divide en <b>frames</b> (marcos)
+      li.fragment Páginas y <i>frames</i> son del mismo tamaño
 
 
+    div.fragment ¿De qué tamaño son las páginas de su sistema?
+
+  section#pag2
+    div Dirección de memoria paginada está compuesta de<br/>
+        $\langle$ <code>numeroDePagina</code>, <code>offset</code> $\rangle$
+
+    div ==image_tag '/images/figures/02-8_10.pdf.png', :width=>"60%"
+
+  section#pag3
+
+    div ==image_tag '/images/figures/02-8_11.pdf.png', :width=>"45%"
+
+
+  section#pag4
+    div style="text-align:left;" Tamaños posibles de páginas y frames son determinados por <i>hardware</i>
+
+    div style="text-align:left;" Al ser potencias de 2, se evitan sumas.
+
+    ul
+      li.fragment Direcciones lógicas de $m$-bit
+      li.fragment Tamaño de página de $2^n$ bytes
+
+    div 
+      img src='/images/figures/02-in-8_1.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div.fragment Cantidad de páginas posibles: $2^{m-n}$
+
+  section#pag5
+    div style="text-align:left;" Dirección virtual: $m=4$ bit, $n=2$
+    ul 
+      li.fragment $2$-bit: número de página... $2^{m-n} = 4$ páginas
+      li.fragment $2$-bit: <i>offset</i>... Páginas de tamaño $2^{n}=4$ byte.
+      li.fragment Memoria física: 32 byte... $8$ <i>frames</i> de memoria.
+
+    div 
+      img src='/images/figures/02-8_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    div.fragment Dirección lógica: 1001 <span class="fragment">, ... dirección física: 0101</span>
+
+  section#pag6
+    div style="text-align:left;" Paginación elimina <b>fragmentación externa</b>...<span class="fragment">pero tenemos <b>fragmentación interna</b></span>
+
+    div style="text-align:left;" Ejemplo: Páginas de $4$KB, y un proceso solicita $8$KB.
+    ul
+      li.fragment Se asignan 21 páginas de $4$KB... <span class="fragment">$3$KB desperdiciados.</span>
+
+  section#pag7
+    div style="text-align:left;" Ejemplo: Páginas de $8$KB. Direcciones virtuales de $16$-bit.
+
+    ul
+      li.fragment ¿Cuántas páginas?
+      li.fragment ¿Tamaño de la tabla de páginas?
+
+  section#pag8
+    div style="text-align:left;" Ejemplo: Páginas de $4$KB. Direcciones virtuales de $32$-bit.
+
+    ul
+      li.fragment ¿Cuántas páginas? <span class="fragment">$2^{20}$</span>
+      li.fragment ¿Tamaño de la tabla de páginas? <span class="fragment">$\geq 1$MB</span>
+
+    div.fragment Accesos pueden hacerse lentos. ¿Por qué?
+
+  section#pag9
+    div <b>Translation Look-aside Buffer (TLB)</b>
+
+    div style="text-align:left;" Caché en <i>hardware</i> para las entradas de la tabla de páginas (32 a 1024 entradas).
+
+    div.fragment
+      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section#pag10
+    div
+      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    ul
+      li.fragment Tiempo de acceso a TLB: $100$ns
+      li.fragment Tiempo de acceso a memoria: $500$ns
+      li.fragment ¿Tiempo promedio de acceso con $80\%$ hit-rate?
+
+  section#pag11
+    div <b>Tablas de páginas jerárquicas</b>
+
+    div
+      img src='/images/figures/02-8_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section#pag12
+    div <b>Tablas de páginas jerárquicas</b>
+    div Direccionamiento de dos niveles
+
+    div
+      img src='/images/figures/02-8_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div
+      img src='/images/figures/02-in-8_2.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+
+  section#pag13
+    div <b>Tablas de páginas jerárquicas</b>
+    div Direcciones de 64-bit
+
+    div
+      img src='/images/figures/02-in-8_4.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Con otro nivel de paginación
+
+    div
+      img src='/images/figures/02-in-8_5.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+
+  section#pag14
+    div <b>Tablas de páginas con <i>hash</i></b>
+
+    div
+      img src='/images/figures/02-8_19.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
+
+  section#pag15
+    div <b>Tablas de páginas invertida</b>
+
+    ul
+      li.fragment  Una entrada por frame (en lugar de página)
+      li.fragment  Sólo una tabla en el sistema (no por proceso)
+  
+    div
+      img src='/images/figures/02-8_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+    div Usada en 64-bit UltraSPARC, y PowerPC
 
 
 /---------------------------------------------------------------------
@@ -183,410 +322,99 @@ section#seg
               li.fragment  -Lento, pero sólo al primer acceso
               li.fragment  +Binario más pequeño
               li.fragment  Pueden reemplazarse <em>en caliente</em> (con un esquema de versiones)
-            
-                              
-  /    
-  //\end{description}
-  
-/
 
-/---------------------------------------------------------------------
-/\subsection{Paginación}
 
-/ Frame
-  \frametitle{Paginación}
+section#virmem
+  h2 Memoria Virtual
 
-/  Dos divisiones en unidades de tamaño fijo:
-  ul
-    li.fragment  Memoria física se divide en <strong>frames</strong> (marcos)
-    li.fragment  Memoria lógica se divide en <strong>páginas</strong>
-  
-  
-  Memoria se carga en trozos de tamaño fijo
-  
-  ul
-    li.fragment  Permite separar el espacio de direcciones lógico ($\mathcal{L}$) del espacio de direcciones físico ($\mathcal{F}$).
-    li.fragment  Permite que $|\mathcal{L}| > |\mathcal{F}|$
+  section#virmem1
+
+    div style="text-align:left;" Segmentación y paginación intentan dar la ilusión que toda la memoria es contínua.
+
+    div.fragment style="text-align:left;" ... pero el programa aún debe estar completamente en memoria
+
+    div.fragment style="text-align:left;" Pero no es siempre necesario.
+
+    div.fragment style="text-align:left;" &nbsp<br/>&nbsp;<br/>
+
+    ul
+      li.fragment Carga dinámica
+      li.fragment ¿Se requiere todo el código en memoria? ¿Librerías (estáticas y dinámicas)?
+      li.fragment ¿Y si un proceso solicita más memoria que la memoria física del sistema?
+
+  section#virmem2
+
+    div <i>Frames</i> se cargan de disco a medida que se necesitan.
+
+    div
+      img src='/images/figures/02-9_01.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+  section#virmem3
+    div Bibliotecas compartidas se asigna a <em>frames</em> ya cargados
+
+    div
+      img src='/images/figures/02-9_03.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+  section#virmem4
+    div style="text-align:left;" <b>Paginación por demanda</b> <span class="fragment">Primera etapa: mantener registro de páginas cargadas</span>
+    
+    ul.fragment
+      li Bit adicional en tabla de páginas
       ul
-        li.fragment  No es menor. Sistema con $2^{32}$ (4G) direcciones de memoria física
-              puede albergar procesos con direcciones de 64-bit.
+        li <em>Valid</em>: Página en memoria
+        li <em>Invalid</em>: Página almacenada en disco, pero no en memoria
       
+      li.fragment  Al detectar un acceso a una página <em>invalid</em>, ésta se carga dinámicamente y marca el bit a <em>valid</em>
   
+    div
+      img src='/images/figures/02-9_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
   
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Paginación}
-
-/  Dirección de memoria paginada contiene:
-  \begin{center}
-    $\langle$ <code>numeroDePagina</code>, <code>offset</code> $\rangle$
-  \end{center}
-
-/  \begin{center}
-    \includegraphics[width=9cm]{figs/02-8_10.pdf}
-  \end{center}
-
-
- 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Ejemplo de Paginación}
-
-/  \begin{center}
-    \includegraphics[width=8cm]{figs/02-8_11.pdf}
-  \end{center}
+  section#virmem5
+    div style="text-align:left;" Segunda etapa: cargar páginas que se necesiten
   
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tamaños de páginas y frames}
-
-/  ul
-    li.fragment  Tamaño de páginas y frames determinado por <em>hardware</em>
-    li.fragment  Típicamente potencia de 2. Entre 512 bytes a 1GB por página.
-    li.fragment  ¿Por qué potencia de 2? &hellip; Hace todo más fácil
-      ul
-        li.fragment  Transformación se hace reemplazando bits de la dirección lógica
-        li.fragment  No requiere operaciones adicionales
-      
+    div style="text-align:left;" Proceso de carga se activa ante un <strong><i>page-fault</i></strong>
   
-  Ejemplo:
-  ul
-    li.fragment  Direcciones lógicas de $m$-bit
-    li.fragment  Tamaño de página de $2^n$ bytes
-      \begin{center}
-        \includegraphics[width=7cm]{figs/02-in-8_1.pdf}
-      \end{center}
+    div
+      img src='/images/figures/02-9_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    ul
+      li.fragment  Proceso podría empezar con una única página en memoria: <strong>paginación por demanda pura</strong>
   
+  section#virmem6
+    div style="text-align:left;" Rendimiento de la paginación por demanda
+    ul
+      li.fragment  $p$, probabilidad de <em>page fault</em>
+      li.fragment  $t_{ma}$, tiempo de acceso a memoria, $\sim 200 \times 10^{-9}s$
+      li.fragment  $t_{pf}$, tiempo generado por <em>page fault</em>
   
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Ejemplo de paginación}
-
-/  Páginas de $2^n$ bytes, $n=2$. Direcciones lógicas de $m$-bit, $m=4$.
+    div.fragment style="text-align:left;" Tiempo efectivo de acceso a memoria, $t_e$: 
+    div.fragment &nbsp; $t_e = (1-p) \times t_{ma} + p \times t_{pf}$
   
-  Memoria física de 32 bytes == 8 páginas.
+    div.fragment style="text-align:left;" Con $t_{pf} = 8 \text{ms}$:
+    div.fragment &nbsp; $t_{e} = 200 + 7999800 p$
+
+    div.fragment style="text-align:left;" Si queremos que la degradación no sea mayor a $10\%$: 
+    div.fragment &nbsp; $220 > 200 + 7999800p \Rightarrow p < 0.0000025$
+
+  section#virmem7
+    div style="text-align:left;" Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
   
-  \begin{center}
-    \includegraphics[width=5.2cm]{figs/02-8_12.pdf}
-  \end{center}
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Límites de la paginación}
-
-/  ul
-    li.fragment  ¿Fragmentación externa? \onslide<2->{&hellip; ¡0!}
-    li.fragment <2-> Se produce fragmentación interna
-      ul
-        li.fragment  Páginas de 4KB.
-        li.fragment <3-> Si el proceso necesita $20\times 4\text{KB} + 512\text{B}$,
-              se asignan 21 páginas.
-        li.fragment <4-> Se pierden $4096 - 512 = 3584$ bytes
-        li.fragment <5-> Peor caso: solicitud de $N$ páginas más $1$ byte 
-                  asigna $N+1$ páginas.
-      
+    ul
+      li.fragment  ¿Y si el hijo no escribe en su memoria o hace inmediatamente <code>exec()</code>?
   
+    div.fragment Estrategia <strong>copy-on-write</strong> mantiene las páginas del padre como <em>región compartida para el hijo</em>
   
+    div
+      img src='/images/figures/02-9_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
+    div
+      img src='/images/figures/02-9_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tamaño de la tabla de páginas}
-
-/  Ejemplo: DEC PDP-11. Máquina de 16-bit, $1970\sim 1990$
-
-/  \includegraphics[width=5cm]{figs/02-PDP-11-70-DDS570.png}
-  \hfill
-  \includegraphics[width=5cm]{figs/02-Pdp-11-70-panel.png}
+    /  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
   
-  Páginas de 8KB. ¿Tamaño de la tabla de páginas?
-  
+  section#virmem8
 
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tamaño de la tabla de páginas}
-
-/ Otro ejemplo: 32-bit. Páginas de 4KB.
-
-/  ¿Tamaño de la tabla de páginas?  
-  \onslide<2->{¡$2^{20}$ entradas!}
-  ul
-    li.fragment  <3->{Accesos pueden hacerse lentos}
-    li.fragment  <4->{¿Solución? Otro tipo de <em>caché</em>}
-  
-  
-  \onslide<5->{
-  <strong>Translation Look-aside Buffer</strong> (TLB)
-  ul
-    li.fragment  Subconjunto de tabla de páginas en registro de rápido acceso
-    li.fragment  Entre 32 a 1024 entradas
-  
-  }
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{<em>Translation Look-aside Buffer</em>}
-
-/  \begin{center}
-    \includegraphics[width=9cm]{figs/02-8_14.pdf}
-  \end{center}
-
-
-
-/---------------------------------------------------------------------
-/\subsection{Tablas de Páginas}
-
-/ Frame
-  \frametitle{Tablas de Páginas}
-
-/  Tablas de páginas pueden implementarse de distintas maneras
-  
-  \onslide<2->{Tamaños comunes:}
-  ul
-    li.fragment <3-> Direcciones lógicas de 32-bit. \onslide<4->{$2^{32}=4G$ direcciones}
-    li.fragment <5-> Páginas de $4\text{KB}=2^{12}$
-    li.fragment <6-> Tabla puede tener hasta $2^{20}$ entradas. 
-    li.fragment <7-> Si cada entrada ocupa 4 bytes, la tabla de páginas ocupa $4\text{MB}$
-    li.fragment <8-> ¡La tabla de páginas no cabe en una página!
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tablas de Páginas Jerárquicas}
-
-/  Ejemplo: esquema de dos niveles
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-8_17.pdf}
-  \end{center}
-  
-  
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tablas de Páginas Jerárquicas}
-
-/  Direccionamiento de dos niveles
-
-/  \begin{center}
-    \includegraphics[width=9cm]{figs/02-8_18.pdf}
-  \end{center}
-  
-  \begin{center}
-    \includegraphics[width=6cm]{figs/02-in-8_2.pdf}
-  \end{center}
-  
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tablas de Páginas Jerárquicas}
-
-/  ¿Cuántos niveles? 
-  
-/  Ejemplo: Direcciones de 64-bit
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-in-8_4.pdf}
-  \end{center}
-
-/  \onslide<2->{Otro nivel de paginación &hellip;}
-  
-  \onslide<3->{
-  \begin{center}
-    \includegraphics[width=6cm]{figs/02-in-8_5.pdf}
-  \end{center}  
-  }
-
-/  \onslide<4->{64-bit UltraSPARC poseía 7 niveles de paginación}
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tablas de Páginas con <em>hash</em>}
-
-/  \begin{center}
-    \includegraphics[width=9cm]{figs/02-8_19.pdf}
-  \end{center}
-
-/  Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Tablas de Páginas invertidas}
-
-/  ul
-    li.fragment  Una entrada por frame (en lugar de página)
-    li.fragment  Sólo una tabla en el sistema (no por proceso)
-  
-
-/  \begin{center}
-    \includegraphics[width=8cm]{figs/02-8_20.pdf}
-  \end{center}
-
-/  Usada en 64-bit UltraSPARC, y PowerPC
-
-
-/---------------------------------------------------------------------
-/\section{Memoria Virtual}
-
-/\subsection{Funcionamiento}
-
-/ Frame
-  \frametitle{Funcionamiento}
-
-/  Estrategias de direccionamiento
-  
-  ul
-    li.fragment  Orientadas a dar ilusión de que todo el programa se encuentra en memoria contínua
-    li.fragment  Pero &hellip; aún se necesita al programa completo cargado en memoria
-    li.fragment  ¿Y la carga dinámica?
-      ul
-        li.fragment  Hace la carga más rápida, pero una vez cargado debe seguir en memoria
-        li.fragment  A menos que se haga <em>swap</em>
-      
-  
-
-/  \onslide<2->{
-  Pero mantener todo el programa en memoria es muy restrictivo
-  }
-  ul
-    li.fragment <3-> No todas las partes del código se requieren simultáneamente
-    li.fragment <3-> Un proceso que solicita más memoria que la memoria física disponible no podría cargarse
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Funcionamiento}
-
-/  <strong>Memoria Virtual</strong> aumenta la separación entre la memoria visible por el programador,
-  y la memoria física de la máquina en que se ejecuta el programa.
-  
-  \begin{center}
-    \includegraphics[width=8cm]{figs/02-9_01.pdf}
-  \end{center}
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-/  \frametitle{Funcionamiento}
-/
-/  Bibliotecas compartidas se asigna a <em>frames</em> ya cargados
-/  
-/  \begin{center}
-/    \includegraphics[width=8cm]{figs/02-9_03.pdf}
-/  \end{center}
-/
-/
-/---------------------------------------------------------------------
-/\subsection{Paginación por demanda}
-
-/ Frame
-  \frametitle{Paginación por demanda}
-
-/  Primera etapa: mantener registro de páginas cargadas
-  ul
-    li.fragment  Bit adicional en tabla de páginas
-      ul
-        li.fragment  <em>Valid</em>: Página en memoria
-        li.fragment  <em>Invalid</em>: Página almacenada en disco, pero no en memoria
-      
-    li.fragment  Al detectar un acceso a una página <em>inválida</em>, ésta se carga dinámicamente
-          y se establece el bit a <em>valid</em>
-  
-
-/  \begin{center}
-    \includegraphics[width=5cm]{figs/02-9_05.pdf}
-  \end{center}
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Paginación por demanda}
-
-/  Segunda etapa: cargar páginas que se necesiten
-  
-  ul
-    li.fragment  Proceso de carga se activa ante un <strong>page-fault</strong>
-  
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-9_06.pdf}
-  \end{center}
-
-  ul
-    li.fragment  Proceso podría empezar con una única página en memoria: <strong>paginación por demanda pura</strong>
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Paginación por demanda}
-
-/  Rendimiento de la paginación por demanda
-  ul
-    li.fragment  $p$, probabilidad de <em>page fault</em>
-    li.fragment  $t_{ma}$, tiempo de acceso a memoria, $\sim 200 \times 10^{-9}s$
-    li.fragment  $t_{pf}$, tiempo generado por <em>page fault</em>
-  
-  
-  \onslide<2->{
-  Tiempo efectivo de acceso a memoria, $t_e$
-  \[ t_e = (1-p) \times t_{ma} + p \times t_{pf} \]
-  }
-  
-  \onslide<3->{
-  Con $t_{pf} = 8 \text{ms}$:
-  \[ t_{e} = 200 + 7999800 p \]
-  }
-  
-  \onslide<4->{  
-  Si queremos que la degradación no sea mayor a $10\%$:
-  \[ 220 > 200 + 7999800p \Rightarrow p < 0.0000025 \]
-  }
-
-/---------------------------------------------------------------------
-/\subsection{<em>Copy-on-Write</em>}
-
-/ Frame
-  \frametitle{<em>Copy-on-Write</em>}
-
-/  Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
-  
-  ul
-    li.fragment  ¿Y si el hijo no escribe en su memoria?
-    li.fragment  ¿Y si el hijo hace inmediatemente <code>exec()</code>?
-  
-  
-  Estrategia <strong>copy-on-write</strong> mantiene las páginas del padre como
-  <em>región compartida para el hijo</em>
-  
-  \begin{center}
-    \includegraphics[width=5.5cm]{figs/02-9_07.pdf}
-    \,\,\,\,\,\,
-    \includegraphics[width=5.5cm]{figs/02-9_08.pdf}
-  \end{center}
-
-/  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
-  
-
-
+    div Reemplazo de páginas
 /---------------------------------------------------------------------
 /\subsection{Reemplazo de páginas}
 
