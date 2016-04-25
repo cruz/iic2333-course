@@ -412,416 +412,257 @@ section#virmem
 
     /  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
   
-  section#virmem8
-
-    div Reemplazo de páginas
-/---------------------------------------------------------------------
-/\subsection{Reemplazo de páginas}
-
-/ Frame
-  \frametitle{Reemplazo de páginas}
-
-/  Si sólo se carga la mitad de la memoria de un proceso, podemos cargar
-  más en memoria $\to$ más multiprogramación
-
-/  Si no hay más espacio en memoria, se debe pasar a <em>swap</em> una de las páginas
-  actualmente asignadas.
-
-/  \begin{center}
-    \includegraphics[width=7cm]{figs/02-9_09.pdf}
-  \end{center}
-  
-  
-
-
 
 /---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo de páginas}
+section#reemp
+  h2 Reemplazo de páginas
 
-/  Sistema Operativo necesita <strong>reemplazar</strong> una página existente,
-  hacer <em>swap</em> y cargar otra
+  section#reemp1
 
-/  \begin{center}
-    \includegraphics[width=7cm]{figs/02-9_10.pdf}
-  \end{center}
+    div Cuando no hay espacio en memoria se necesita <i>reemplazar una página </i>
 
-/  Algoritmos para elegir una página <em>víctima</em>  
+    div
+      img src='/images/figures/02-9_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
+
+  section#reemp2
+
+    div Sistema Operativo ejecuta un algoritmo para elegir una página como <i>víctima</i> a reemplazar.
+
+    div
+      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
+
+  section#reemp3
+
+    div
+      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+    div Dos transferencias de páginas (pasos 1 y 3)
+
+    ul
+      li.fragment  Páginas que no han sido modificadas no necesitan escribirse a disco
+      li.fragment  <strong>Modify bit</strong> o <strong>Dirty bit</strong> indican si la página ha sido modificada desde la última vez que se cargó
+      li.fragment  Páginas <em>read-only</em> nunca modifican su <strong>dirty bit</strong>
   
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo de páginas}
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-9_10.pdf}
-  \end{center}
-
-/  Dos transferencias de páginas (pasos 1 y 3)
-  ul
-    li.fragment  Páginas que no han sido modificadas no necesitan escribirse
-          a disco
-    li.fragment  <strong>Modify bit</strong> o <strong>Dirty bit</strong> indican si la página ha sido modificada
-          desde la última vez que se cargó
-    li.fragment  Páginas <em>read-only</em> nunca modifican su <strong>dirty bit</strong>
+  section#reemp4
   
+    div ¿Cuál conviene reemplazar? ... <span class="fragment">una que genere pocos <i>page faults</i></span>
 
+    div Supongamos páginas que almacenan 100 direcciones. Con esta secuencia de acceso:
 
+    div.fragment 0145, 0400, 0102, 0670, 0110, 0672, 0112, 0198, 0153, 0602, 0170
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo de páginas}
+    div.fragment Esto significa que se accede a las siguientes páginas:
 
-/  Algoritmos para decidir <em>qué página reemplazar</em>
-  ul
-    li.fragment  ¿Cuál es mejor?
-    li.fragment  Uno que genere pocos <em>page faults</em>
-  
-  
-  Comparables usando una misma secuencia de acceso a memoria
-  ul
-    li.fragment  Ej: Con esta secuencia de accesos a memoria
-      ul
-        li.fragment  0145, 0400, 0102, 0670, 0110, 0672, 0112, 0198, 0153, 0602, 0170
+    div.fragment 1,4,1,6,1,6,1,6,1
       
-    li.fragment  Y con páginas que almacenen 100 direcciones, la secuencia de acceso es:
-      ul
-        li.fragment  1,4,1,6,1,6,1,6,1
+  section#reemp5
+
+    div
+      img src='/images/figures/02-9_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+    div La tasa de <i>page faults</i> también depende de la cantidad de <i>frame</i>s disponibles.
+
+  section#reemp6
+
+    h3 Reemplazo FIFO
+
+    div Reemplazar la página que fue cargada hace más tiempo
+
+    div
+      img src='/images/figures/02-9_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
+
+    ul.fragment
+      li  +Fácil de implementar
+      li  -Comportamiento impredecible
+  
+  section#reemp7
+
+    div Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
+  
+    ul
+      li.fragment  Ejemplo. Secuencia 1,2,3,4,1,2,5,1,2,3,4,5
+      li.fragment  Con 3 frames genera 9 <em>page faults</em>
+      li.fragment  Con 4 frames genera 10 <em>page faults</em> (¿?)
+  
+    div
+      img src='/images/figures/02-9_13.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
+  
+    div Este problema se conoce como <strong>anomalía de Bélády</strong>. Fue planteada por el húngaro László Bélády, 1969.
+
+  section#reemp8
+
+    h3 Reemplaza óptimo
+
+    div Reemplaza la página que no será usada durante el mayor tiempo (en el futuro)
+
+    div
+      img src='/images/figures/02-9_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
+
+    li.fragment +Óptimo
+    li.fragment +No sufre la anomalía de Bélády
+    li.fragment -Difícil de implementar, pues requiere conocimiento futuro (como SJF)
+  
+  section#reemp9
+
+    h3 Reemplaza LRU (<i> Least Recently Used</i>)
+
+    div Reemplazar la página que no ha sido usada por más tiempo
+
+    div
+      img src='/images/figures/02-9_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
+  
+    div.fragment Compromiso más razonable para el óptimo. ¿Cómo implementarlo?
+    ul
+      li.fragment  Contadores, actualizado con valor de <em>timer</em>
+      li.fragment  <em>Stack</em>, el último acceso avanza al tope del <em>stack</em>
+      li.fragment En cualquier caso se requiere ayuda de <em>hardware</em>
+
+  section#reemp10
+    
+    h3 Aproximación a LRU
+
+    div Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
+  
+    ul
+      li.fragment  <strong>Reference bit</strong> se marca para indicar páginas referenciadas
+      li.fragment  Permite determinar qué páginas se han usado y cuáles no (sin orden)
+  
+    div.fragment Una técnica para incorporar orden:
+
+    ul
+      li.fragment  8-bit reference (<em>reference byte</em>) funcionan como "bit de historia"
+      li.fragment  A intervalo $r$ ($\sim 100$ms) se hace <em>right shift</em> del <em>reference bit</em>
+      li.fragment  Frame con mayor <em>reference byte</em> es el usado más recientemente    
+  
+    div.fragment Valores pueden no ser únicos. Entre ellos se decide de manera FIFO.
+  
+  section#reemp11
+
+    div <b>Algoritmo de segunda oportunidad:</b> Inicialmente, FIFO, ordenado por tiempo de carga. 
+
+    ul
+      li.fragment  Reference bit 0: se reemplaza
+      li.fragment  Reference bit 1: 2da oportunidad. Se cambia a 0, se establece tiempo de carga al tiempo actual, y se pasa a la siguiente página
       
+    div
+      img src='/images/figures/02-9_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
   
+    div ¿Qué pasa si todos los bit están marcados como 1?
 
+  section#reemp12
 
+    div <b>Segunda oportunidad mejorada</b>
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo de páginas}
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-9_11.pdf}
-  \end{center}
+    div Segunda oportunidad, considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
   
-  Tasa de <em>page faults</em> también depende de la cantidad de <em>frame</em> disponibles
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo FIFO}
-
-/  \begin{block}{<strong>FIFO</strong>}
-    Reemplazar la página que fue cargada hace más tiempo
-  \end{block}
-
-/  \begin{center}
-    \includegraphics[width=10cm]{figs/02-9_12.pdf}
-  \end{center}
-
-/  Se reemplaza la página más antigua en haber sido cargada
-  ul
-    li.fragment  +Fácil de implementar
-    li.fragment  -Compartamiento impredecible
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo FIFO}
-
-/  Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
-  
-  ul
-    li.fragment  Ejemplo. Secuencia 1,2,3,4,1,2,5,1,2,3,4,5
-    li.fragment  Con 3 frames genera 9 <em>page faults</em>
-    li.fragment  Con 4 frames genera 10 <em>page faults</em> (¿?)
-  
-  
-  \begin{center}
-    \includegraphics[width=5.5cm]{figs/02-9_13.pdf}
-  \end{center}
-
-/  Este problema se conoce como <strong>anomalía de Bélády</strong>\footnote{Planteada por el húngaro László Bélády, 1969} 
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo Óptimo}
-
-/  \begin{block}{<strong>OPT</strong> ó <strong>MIN</strong>}
-    Reemplazar la página que no será usada por mayor tiempo
-  \end{block}
-
-/  No sufre la anomalía de Bélády.
-
-/  \begin{center}
-    \includegraphics[width=8cm]{figs/02-9_14.pdf}
-  \end{center}
-
-/  ul
-    li.fragment  +Óptimo
-    li.fragment  -Difícil de implementar, pues requiere conocimiento futuro (como SJF)
-  
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reemplazo LRU (<em>Least Recently Used</em>)}
-  \framesubtitle{Si no puedes obtener el óptimo, aproxímalo}
-
-/  \begin{block}{<strong>LRU</strong>}
-    Reemplazar la página que no ha sido usada por más tiempo
-  \end{block}
-  
-  \begin{center}
-    \includegraphics[width=8cm]{figs/02-9_15.pdf}
-  \end{center}
-
-/  Parece un buen compromiso. ¿Cómo implementarlo?
-  ul
-    li.fragment  Contadores, actualizado con valor de <em>timer</em>
-    li.fragment  <em>Stack</em>, el último acceso avanza al tope del <em>stack</em>
-  
-
-/  En cualquier caso se requiere ayuda de <em>hardware</em>
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Aproximación a LRU}
-
-/  Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
-  
-  ul
-    li.fragment  <strong>Reference bit</strong> se marca para indicar páginas referenciadas
-    li.fragment  Permite determinar qué páginas se han usado y cuáles no (sin orden)
-  
-
-/  Una técnica para incorporar orden:
-  ul
-    li.fragment  8-bit reference (<em>reference byte</em>) funcionan como ``bit de historia''
-    li.fragment  A intervalo $r$ ($\sim 100$ms) se hace <em>right shift</em>
-          del <em>reference bit</em>
-    li.fragment  Frame con mayor <em>reference byte</em> es el usado más recientemente    
-  
-  
-  Valores pueden no ser únicos. Entre ellos se decide de manera FIFO.
-  
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Aproximación a LRU: Algoritmo de segunda oportunidad}
-  \framesubtitle{Otra oportunidad, otra oportunidad, &hellip;}
-
-/  Inicialmente, algoritmo FIFO, ordenado por tiempo de carga
-  ul
-    li.fragment  Al ser elegida, se observa su <em>reference bit</em>
-      ul
-        li.fragment  Reference bit 0: se reemplaza
-        li.fragment  Reference bit 1: 2da oportunidad. Se cambia a 0, se establece tiempo de carga al tiempo actual, 
-              y se pasa a la siguiente página
-      
-  
-
-/  \begin{center}
-    \includegraphics[width=4cm]{figs/02-9_17.pdf}
-  \end{center}
-  
-  ¿Qué pasa si todos los bit están marcados como 1?
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Aproximación a LRU: Segunda oportunidad mejorada}
-
-/  2da oportunidad considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
-  
-  ul
-    li.fragment  (0,0), no usado recientemente ni modificada
+    ul
+      li.fragment Si es (0,0), no usado recientemente ni modificada
       ul
         li.fragment  Buena víctima
       
-    li.fragment  (0,1), no usada recientemente, pero modificada
+      li.fragment Si es (0,1), no usada recientemente, pero modificada
       ul
         li.fragment  Casi buena víctima. Requiere escribirla.
       
-    li.fragment  (1,0), recientemente usada, pero no modificada
+      li.fragment Si es (1,0), recientemente usada, pero no modificada
       ul
         li.fragment  Probablemente será leída pronto
       
-    li.fragment  (1,1), recienemente usada, y modificada
+      li.fragment Si es (1,1), recientemente usada, y modificada
       ul
         li.fragment  Probablemente será leída pronto
       
-  
+  section#reemp13
 
+    h3 Otros algoritmos
 
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Otros algoritmos}
-  
-  Con contador de accesos (costoso de implementar)
-  ul
-    li.fragment  <strong>Least Frequently Used</strong>. Una página muy accedida debe tener alto contador.
-       ul
-         li.fragment  ¿Y si se usó solo al inicio?
-         li.fragment  Se puede complementar haciendo <em>shift</em> del contador periæodicamente
+    div Con contador de accesos (costoso de implementar)
+    ul
+      li.fragment  <strong>Least Frequently Used</strong>. Una página muy accedida debe tener alto contador.
+      ul
+        li.fragment  ¿Y si se usó solo al inicio?
+        li.fragment  Se puede complementar haciendo <em>shift</em> del contador periódicamente
        
-    li.fragment  <strong>Most Frequently Used</strong>. La página que tiene pocos accesos probablemente fue cargada recientemente
-          y aún no ha sido muy usada
+      li.fragment  <strong>Most Frequently Used</strong>. La página que tiene pocos accesos probablemente fue cargada recientemente y aún no ha sido muy usada
+
+section#last
   
+  h2 Asignación de frames
 
-
-/---------------------------------------------------------------------
-/\subsection{Asignación de <em>Frames</em> y <em>Thrashing</em>}
-
-/ Frame
-  \frametitle{Asignación de <em>Frames</em>}
-
-/  La pregunta: ¿cuántos <em>frames</em> asignar a cada proceso?
+  section#last1
+    div ¿Cuántos <em>frames</em> asignar a cada proceso?
   
-  <strong>Mínimo</strong>
-  ul
-    li.fragment  Puede ser definido por la arquitectura
-    li.fragment  O bien, depender de la cantidad de direcciones referenciables en una instrucción
+    div <strong>Mínimo</strong>
+    ul
+      li.fragment  Puede ser definido por la arquitectura
+      li.fragment  O bien, depender de la cantidad de direcciones referenciables en una instrucción
       ul
         li.fragment  <code>load r1, 0x0160</code>. Dos frames: para la instrucción y para la dirección.
         li.fragment  Más complejo cuando se permiten indirecciones
   
-  <strong>Máximo</strong>
-  ul
-    li.fragment  ¿Cómo dividir $m$ <em>frames</em> entre $n$ procesos?
+    div <strong>Máximo</strong>
+    ul
+      li.fragment  ¿Cómo dividir $m$ <em>frames</em> entre $n$ procesos?
   
 
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de <em>Frames</em>}
-
-/  $m$ <em>frames</em> y $n$ procesos
-  ul
-    li.fragment  <strong>Asignación equitativa</strong>: $\lfloor m/n \rfloor$ a cada uno. 
-    li.fragment  <strong>Asignación proporcional</strong>: sea $s_i$ el tamaño de la memoria virtual del proceso $p_i$,
-          cada proceso recibe $a_i$ <em>frames</em>: 
-          \[ a_i = \frac{s_i}{\sum{s_i}} \times m \]
-          Proporción también puede estar relacionada a la prioridad del proceso
+  section#last2
+    div $m$ <em>frames</em> y $n$ procesos
+    ul
+      li.fragment  <strong>Asignación equitativa</strong>: $\lfloor m/n \rfloor$ a cada uno. 
+      li.fragment  <strong>Asignación proporcional</strong>: sea $s_i$ el tamaño de la memoria virtual del proceso $p_i$, cada proceso recibe $a_i$ <em>frames</em>: 
           
+          \[ a_i = \frac{s_i}{\sum{s_i}} \times m \]
+          
+    div Proporción también puede estar relacionada a la prioridad del proceso
+          
+  section#last3  
+    
+    h3 Thrashing
+
+    div Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
+  
+    div.fragment Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em> entre disco y memoria
+
+    div
+      img src='/images/figures/02-9_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    ul
+      li.fragment  Baja utilización de CPU
+      li.fragment  <em>Scheduler</em> incrementa nivel de multiprogramación
+      li.fragment  Procesos nuevos requieren <em>frames</em>.
+      li.fragment  S.O. quita <em>frames</em> a procesos en ejecución
+      li.fragment  Procesos en ejecución aumentan su tasa de <em>page fault</em>
+      li.fragment  S.O. gasta más tiempo cargando <em>frames</em>
+      /li.fragment  Baja utilización de CPU
   
 
+  section#last4
 
+    h3 Modelo de <i>working set</i>
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{<em>Thrashing</em>}
+    div Conjunto de páginas usadas en los últimos $\Delta$ accesos
 
-/  Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
+    div
+      img src='/images/figures/02-9_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
   
-  \vspace{1em}
-
-/  \onslide<2->{Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em>
-               entre disco y memoria}
-  \vspace{1em}        
-
-/  \onslide<3->{Se produce <strong>thrashing</strong>}
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{<em>Thrashing</em>}
-
-/  \begin{center}
-    \includegraphics[width=6cm]{figs/02-9_18.pdf}
-  \end{center}
-
-/  ul
-    li.fragment  Baja utilización de CPU
-    li.fragment  <em>Scheduler</em> incrementa nivel de multiprogramación
-    li.fragment  Procesos nuevos requieren <em>frames</em>.
-    li.fragment  S.O. quita <em>frames</em> a procesos en ejecución
-    li.fragment  Procesos en ejecución aumentan su tasa de <em>page fault</em>
-    li.fragment  S.O. gasta más tiempo cargando <em>frames</em>
-    li.fragment  Baja utilización de CPU
+    div Demanda por páginas: $D=\sum{\text{WSS}_i}$
   
+    div Si hay $m$ frames, y $D > m$, entonces habrá <em>thrashing</em>
 
+  section#last5
 
+    h3 Working set
 
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Localidad de referencia}
-
-/  Estrategia para evitar <em>thrashing</em>: aprovechar la <strong>localidad de referencia</strong>
+    div ¿Cómo implementarlo?: aprovechando los <em>reference bit</em>
   
-  ul
-    li.fragment  Teoría: procesos saltan de una localidad a otra
-    li.fragment  Referencias se dan principalmente en una localidad de memoria y,
-          con baja frecuencia, saltan a otro localidad
+    ul
+      li.fragment  Observar <em>reference bit</em> a intervalos regulares, cada $R$ referencias
+      li.fragment  <em>Reference bit</em> se copian y se borran
+      li.fragment  En la siguiente observación se comparan los valores copiados y los nuevos <em>reference bit</em>.
+      li.fragment  Páginas modificadas se mantienen dentro del <em>working set</em>
   
-  
-  \begin{center}
-    \includegraphics[width=4cm]{figs/02-9_19.pdf}
-  \end{center}
+    div Permite aproximar el <em>working set</em>, a menor costo que analizar todas las referencias
 
 
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Modelo de <em>Working Set</em>}
-
-/  \begin{block}<strong>Working Set</strong>
-    Conjunto de páginas usadas en los últimos $\Delta$ accesos
-  \end{block}
-
-/  \begin{center}
-    \includegraphics[width=9cm]{figs/02-9_20.pdf}
-  \end{center}
-
-/  $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
-  
-  \vspace{1em}
-  
-  Demanda por páginas: $D=\sum{\text{WSS}_i}$
-  
-  \vspace{1em}
-  
-  Si hay $m$ frames, y $D > m$, entonces habrá <em>thrashing</em>
-
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Modelo de <em>Working Set</em>}
-  \framesubtitle{¿Cómo implementarlo?}
-
-/  Aprovechar los <em>reference bit</em>
-  
-  ul
-    li.fragment  Observar <em>reference bit</em> a intervalos regulares, cada $R$ referencias
-    li.fragment  <em>Reference bit</em> se copian y se borran
-    li.fragment  En la siguiente observación se comparan los valores copiados
-          y los nuevos <em>reference bit</em>.
-    li.fragment  Páginas modificadas se mantienen dentro del <em>working set</em>
-  
-  Permite aproximar el <em>working set</em>, a menor costo que analizar todas las referencias
-
-
-/---------------------------------------------------------------------
-
-/ Frame
-  \frametitle{Resumen}
-
-/  ul
-    li.fragment  Direccionamiento de memoria
-      ul
-        li.fragment  Transformaciones de dirección lógica a física
-        li.fragment  Tipos de asignacioens: contigua, segmentada, paginada
-      
-    li.fragment  Memoria Virtual
-      ul
-        li.fragment  Permite direccionar más memoria que la memoria física disponible
-        li.fragment  Páginas se asignan a <em>frames</em> en la medida que se necesiten
-        li.fragment  Si no hay <em>frames</em> disponibles se debe reemplazar alguna página
-        li.fragment  Reemplaza FIFO, OPT, LRU
-        li.fragment  Cantidad de <em>frames</em> asignados a cada proceso debe ser el apropiado,
-              de lo contrario se puede producir <em>thrashing</em>
