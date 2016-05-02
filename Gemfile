@@ -2,6 +2,7 @@
 # the following line to use 'http://' instead
 source 'https://rubygems.org'
 
+gem 'middleman-gh-pages'
 gem 'slim', '>= 3.0'
 
 # For faster file watcher updates on Windows:
