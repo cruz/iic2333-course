@@ -1,791 +1,217 @@
-\frame{\titlepage}
+---
+title: Administración de Almacenamiento
+layout: slide
+---
 
-%---------------------------------------------------------------------
-/ Frame
-\frametitle{Contenidos}
-%\tableofcontents[currentsection]
-\tableofcontents
+section 
+  h2 Sistemas de Disco
 
+  section
+    div <b>Memoria Secundaria</b>
 
+    div Almacenamiento de alta capacidad
 
-%---------------------------------------------------------------------
-\section{Sistemas de Disco}
+    ul
+      li.fragment  Memoria secundaria
+      li.fragment  Más lenta que almacenamiento principal
+      li.fragment  Memoria no-volátil
 
-\subsection{Dispositivos y estructura}
+  section
+    div <b>Discos Magnéticos</b>
 
-/ Frame
-  \frametitle{Memoria secundaria}
-  Estructuras de almacenamiento de alta capacidad
+    ul
+      li.fragment  <b>Brazos</b> (arms) se mueven juntos.
+      li.fragment  <i>Platos</i> divididos en <i>tracks</i> circulares
+      li.fragment  <b>Tracks</b> divididos en <i>sectores</i>
+      li.fragment  Conjunto de <b>sectores</b> entre varios platos forman un <b>cilindro</b>
+      li.fragment  Velocidades de rotación: 5400, 7200, 10000, 15000 RPM (rotaciones por minuto)
 
-  ul
-    li.fragment  Memoria secundaria
-    li.fragment  Más rápida que almacenamiento principal
-    li.fragment  Memoria no-volátil
-  \end{itemize}
+    div == image_tag '/images/figures/03-10_01.pdf.png', :width=>"50%"
 
+  section
 
+    div style="text-align:left;" Para un disco magnéticos, importa la <i>tasa de transferencia</i> de datos entre disco y memoria principal. (MB/sec)
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Discos magnéticos}
-  \framesubtitle{¿Y los diskettes?}
+    div style="text-align:left;" <b>Tiempo de posicionamiento</b> depende de:
+    ul
+      li.fragment  <b> Seek time</b>, tiempo de búsqueda, para mover el brazo hasta el cilindro buscado
+      li.fragment  <b> Latencia rotacional</b>, tiempo necesario para que el sector buscado quede debajo del brazo
+      li.fragment  Ambos del orden de <i>msec</i>
 
-  \begin{columns}[c]
-    \begin{column}[T]{7cm}
-      ul
-        li.fragment  {\bf Brazos} (arms) se mueven juntos.
-        li.fragment  "Platos" divididos en {\bf tracks} circulares
-        li.fragment  {\bf Tracks} divididos en {\bf sectores}
-        li.fragment  Conjunto de {\bf sectores} entre varios platos
-              forman un {\bf cilindro}
-        li.fragment  Velocidades de rotación: 5400, 7200, 10000, 15000 RPM (rotaciones por minuto)
-      \end{itemize}
-    \end{column}
-    
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-10_01.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
+    div style="text-align:left;" Componentes:
+    ul
+      li.fragment  <b>Host controller</b> es parte del sistema computacional
+      li.fragment  <b>Disk controller</b> es parte del disco
+      li.fragment  S.O. hace solicitudes al <i>host controller</i>, el cual envía comandos al <i>disk controller</i>
 
+  section
 
+    div == image_tag '/images/figures/03-disks.png', :width=>"80%"
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Discos magnéticos}
-  
-  Lo que importa es la {\bf tasa de transferencia} de datos entre
-  disco y memoria principal.
+  section
+    div Discos de estado sólido
+    ul
+      li.fragment  Sin <i>seek time</i> ni <i>latencia rotacional</i>
+      li.fragment  Más rápidos
+      li.fragment  Más costoso por MB
+      li.fragment  Menor consumo eléctrico
 
-  {\bf Tiempo de posicionamiento} o ``tiempo de acceso aleatorio''
-  depende de:
-  ul
-    li.fragment  {\bf Seek time}, tiempo de búsqueda, para mover el brazo hasta el cilindro buscado
-    li.fragment  {\bf Latencia rotacional}, tiempo necesario para que el sector buscado quede debajo del brazo
-    li.fragment  Ambos del orden de {\em msec}
-  \end{itemize}
-  Tasas de transferencia pueden llegar a los MB/{\em sec}
-  
-  ul
-    li.fragment  {\bf Host controller} es parte del sistema computacional
-    li.fragment  {\bf Disk controller} es parte del disco
-    li.fragment  S.O. hace solicitudes al {\bf host controller}, el cual envía comandos al {\bf device controller}
-  \end{itemize}
+  section
+    div Discos se organizan como arreglos de <i>bloques lógicos</i>
 
+    ul
+      li.fragment  Bloques lógicos típicamente de 512 bytes
+      li.fragment  Bloques lógicos se mapean a sectores
+      li.fragment  Sector 0 es el primer sector del primer <i>track</i> del cilindro más externo
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Discos de Estado Sólido (SSD)}
+    div Conociendo número de platos, <i>tracks</i> (cilindros $\sim m \times 10^4$) y <i>sectores</i> ($\sim n \times 10^2$) es posible traducir bloque lógico a $\langle \mathit{plato}, \mathit{track}, \mathit{sector} \rangle$.
 
-  ul
-    li.fragment  Sin {\bf seek time} ni {\bf latencia rotacional}
-    li.fragment  Más rápidos
-    li.fragment  Más costoso por MB
-    li.fragment  Menor consumo eléctrico
-  \end{itemize}
+    ul
+      li.fragment Aún hay que considerar densidad de sectores
+      li.fragment Sectores de cilindros externos <i>pueden</i> tener más densidad que en sectores internos
 
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Organización}
-
-  Discos están organizados como un arreglo de {\bf bloques lógicos}
-  ul
-    li.fragment  Bloques lógicos típicamente de 512 bytes
-    li.fragment  Bloques lógicos se mapean a sectores
-    li.fragment  Sector 0 es el primer sector del primer {\em track} del cilindro más externo
-  \end{itemize}
-
-  Conocienco número de platos, {\em tracks} (cilindros $\sim m \times 10^4$ y {\em sectores} ($\sim n \times 10^2$) es posible traducir
-  bloque lógico a $\langle \mathit{plato}, \mathit{track}, \mathit{sector} \rangle$
-  ul
-    li.fragment  Aún hay que considerar densidad de sectores
-    li.fragment  Sectores de cilindros externos {\em pueden} tener más densidad que en sectores internos
-  \end{itemize}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Formatos de disco}
-
-  Disco no es más que un conjunto de material magnético
-  
-  ul
-    li.fragment  {\bf Formateo de bajo nivel} o {\bf formateo físico}: crea estructura de sectores
+  section
+    div Discos pueden ser formateados en distintos niveles
+    ul
+      li.fragment <b>Formateo de bajo nivel</b> o <b>formateo físico</b>: crea estructura de sectores
       ul
         li.fragment  Sector: header + data + trailer (incluyendo ECC)
-        li.fragment  ECC: Error-Correcting Code, calculado a partir de {\em data}
-      \end{itemize}
-    li.fragment  {\bf Particionamiento}: agrupación de cilindros que son tratados como discos separados
+        li.fragment  ECC: Error-Correcting Code, calculado a partir de <i>data</i>
+      li.fragment <b>Particionamiento</b>: agrupación de cilindros que son tratados como discos separados
       ul
-        li.fragment  Tabla de particiones accesible desde un {\bf Master Boot Record} en el primer sector
+        li.fragment  Tabla de particiones accesible desde un <b>Master Boot Record</b> en el primer sector
         li.fragment  Típicamente: 4 particiones primarias, o 3 primarias + 1 extendida
         li.fragment  Particiones contienen tipos de sistema de archivo
-      \end{itemize}
-    li.fragment  {\bf Formateo lógico}: estructuras para {\em sistema de archivos}
-  \end{itemize}
+      li.fragment <b>Formateo lógico</b>: estructuras para <i>sistema de archivos</i>
 
+section
+  h2 Scheduling de accesos
 
-%---------------------------------------------------------------------
-\subsection{{\em Scheduling de accesos}}
-
-/ Frame
-  \frametitle{Estructura de solicitudes de acceso}
-
-  S.O. efectúa solicitud indicando:
-  ul
-    li.fragment  Lectura o escritura
-    li.fragment  Dirección de disco
-    li.fragment  Dirección de memoria (física)
-    li.fragment  Número de sectores a transferir
-  \end{itemize}
+  section
+    div style="text-align:left;" S.O. efectúa solicitud indicando:
+    ul
+      li.fragment  Lectura o escritura
+      li.fragment  Dirección de disco
+      li.fragment  Dirección de memoria (física)
+      li.fragment  Número de sectores a transferir
   
-  Solicitudes son encoladas. 
-  ul
-    li.fragment  El orden en que son atendidas determina la latencia efectiva del controlador de disco
-  \end{itemize}
+    div Solicitudes son encoladas. 
+    ul
+      li.fragment  El orden en que son atendidas determina la latencia efectiva del controlador de disco
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{{\em Scheduling} FCFS}
-  \framesubtitle{Una vez más, {\em First Come, First Served}}
-  
-  Justo, pero no necesariamente el de mejor servicio
-  
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-10_04.pdf}
-  \end{center}
+  section 
+    div <b>Scheduling FCFS</b>
+    
+    div Justo, pero no necesariamente el de mejor servicio
 
-  Medida de latencia: desplazamiento que debe hacer el brazo \onslide<2->{$=640$}
+    div 
+      img src='/images/figures/03-10_04.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Medida de latencia: desplazamiento que debe hacer el brazo $=640$
   
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{{\em Scheduling} SSTF}
-  \framesubtitle{{\em Shortest Seek Time First}}
+  section 
+    div <b>Scheduling SSTF</b>
 
-  Busca el que esté más cerca de la posición actual
+    div <i>Shortest Seek Time First</i>
 
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-10_05.pdf}
-  \end{center}
+    div Busca el que esté más cerca de la posición actual
 
-  Desplazamiento \onslide<2->{$=208$}
+    div 
+      img src='/images/figures/03-10_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Desplazamiento $=208$
+    
+    div No es óptimo, (¿por qué?)
+
+
+  section 
+    div <b>Scheduling SCAN</b>
+
+    div <i>(a.k.a. el elevador)</i>
+
+    div Brazo se mueve de un extremo a otro y sirve todo lo que encuentre en el camino ...
+    
+    div 
+      img src='/images/figures/03-10_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    /div Desplazamiento \onslide<3->{$=$}
+
+
+  section 
+    div <b>Scheduling C-SCAN</b>
+
+    div <i>(a.k.a. el elevador)</i>
+
+    div Las solicitudes que llegan justo después que el brazo ha pasado "llevan más tiempo esperando"
+    
+    div Brazo llega a un extremo y se mueve completamente al extremo opuesto, para continuar en el mismo sentido
+
+    div 
+      img src='/images/figures/03-10_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Objetivo es disminuir el tiempo de espera de cada solicitud
+    
+    /%Desplazamiento \onslide<3->{$=$}
+
+
+  section 
+    div <b>Scheduling LOOK y C-LOOK</b>
+
+    div Similares a SCAN y C-SCAN, pero no se mueven hasta los extremos si no es necesario
+
+    div 
+      img src='/images/figures/03-10_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
   
-  \onslide<3->{{\bf No es óptimo} (¿por qué?)}
+section
+  h2 RAID
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{{\em Scheduling} SCAN}
-  \framesubtitle{a.k.a. el {\em elevador}}
+  section 
+    div <i>Redundant Array of Independent Disks</i>
+    
+    div Discos tienen <i>tasas de falla</i>
+    
+    ul
+      li.fragment Disco que falla una vez cada $100000$ accesos
+      li.fragment En un grupo de 100 discos falla uno cada $1000$ horas
 
-  Brazo se mueve de un extremo a otro y sirve todo lo que encuentre en el camino \ldots
-  \onslide<2->{como un ascensor}
-  
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-10_06.pdf}
-  \end{center}
-
-  %Desplazamiento \onslide<3->{$=$}
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{{\em Scheduling} C-SCAN}
-  \framesubtitle{a.k.a. el {\em elevador circular} }
-
-  Las solicitudes que llegan justo después que el brazo ha pasado
-  ``llevan más tiempo esperando''
-  
-  Brazo llega a un extremo y se mueve completamente al extremo opuesto, para continuar en el mismo sentido
-  \ldots \onslide<2->{como un ascensor circular}
-  
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-10_07.pdf}
-  \end{center}
-
-  Objetivo es disminuir el tiempo de espera de cada solicitud
-  %Desplazamiento \onslide<3->{$=$}
+    div Una manera simple de protegerse ante falla es la <b>redundancia</b>
+    ul
+      li.fragment Estrategia básica de redundancia: <b>mirroring</b>
 
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{{\em Scheduling} LOOK y C-LOOK}
+  section
+    div Diversas estrategias (niveles) de RAID
 
-  Similares a SCAN y C-SCAN, pero no se mueven hasta los extremos si no es necesario
+    ul
+      li.fragment  <b>RAID 0</b>: Stripping
+      li.fragment  <b>RAID 1</b>: Mirroring
+      li.fragment  <b>RAID 2</b>: $N$ discos y $N-1$ parity bits
+      li.fragment  <b>RAID 3</b>: $N$ discos $+ 1$ disco de paridad
+      li.fragment  <b>RAID 4</b>: Paridad por bloques
+      li.fragment  <b>RAID 5</b>: Paridad por bloques y distribuida
+      li.fragment  <b>RAID 6</b>: RAID 5 + información adicional para soportar fallas de dos discos
 
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-10_08.pdf}
-  \end{center}
-  
-  
-
-%---------------------------------------------------------------------
-\subsection{RAID}
-
-/ Frame
-  \frametitle{RAID}
-  \framesubtitle{Redundant Array of Independent Disks}
-  
-  Discos tienen {\em tasas de falla}.
-  
-  ul
-    li.fragment  <2->Disco que falla una vez cada $100000$
-    li.fragment  <3->En un grupo de 100 discos falla uno cada \ldots \onslide<4->{$1000$ horas}
-  \end{itemize}
-  
-  \onslide<5->{Una manera simple de protegerse ante falla es la {\bf redundancia}}
-  ul
-    li.fragment  <6->Estrategia básica de redundancia: {\bf mirroring}
-  \end{itemize}
-  
+    div 
+      img src='/images/figures/03-10_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="15%"
 
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{RAID}
-  \framesubtitle{Redundant Array of Independent Disks}
+  section
+    div Otras estrategias
 
-  Diversas estrategias (niveles) de RAID
-  \begin{columns}[c]
-    \begin{column}[T]{7cm}
+    ul
+      li.fragment  <b>RAID 0+1</b>: Stripe con mirroring
       ul
-        li.fragment  {\bf RAID 0}: Stripping
-        li.fragment  {\bf RAID 1}: Mirroring
-        li.fragment  {\bf RAID 2}: $N$ discos y $N-1$ parity bits
-        li.fragment  {\bf RAID 3}: $N$ discos $+ 1$ disco de paridad
-        li.fragment  {\bf RAID 4}: Paridad por bloques
-        li.fragment  {\bf RAID 5}: Paridad por bloques y distribuida
-        li.fragment  {\bf RAID 6}: RAID 5 + información adicional para 
-                            soportar fallas de dos discos
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{3.5cm}
-      \begin{center}
-        \includegraphics[width=3.5cm]{figs/03-10_11.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{RAID}
-  \framesubtitle{Redundant Array of Independent Disks}
-
-  \begin{columns}[c]
-    \begin{column}[T]{7cm}
+        li.fragment  Performance de RAID 0
+        li.fragment  Confiabilidad de RAID 1
+        li.fragment  Si falla un disco se pierde un <i>stripe</i>
+    ul
+      li.fragment  <b>RAID 1+0</b>: Mirror de pares de discos
       ul
-        li.fragment  {\bf RAID 0+1}: Stripe con mirroring
-          ul
-            li.fragment  Performance de RAID 0
-            li.fragment  Confiabilidad de RAID 1
-            li.fragment  Si falla un disco se pierde un {\em stripe}
-          \end{itemize}
-        li.fragment  {\bf RAID 1+0}: Mirror de pares de discos
-          ul
-            li.fragment  Si falla un disco se pierde solo un disco
-          \end{itemize}
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-10_12.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
+       li.fragment  Si falla un disco se pierde solo un disco
 
+    div 
+      img src='/images/figures/03-10_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="25 %"
 
 
-%---------------------------------------------------------------------
-\section{Sistemas de Archivos}
-
-\subsection{Archivos}
-
-/ Frame
-  \frametitle{Archivos}
-  
-  \begin{block}{{\bf Archivo}}
-    Colección de información en almacenamiento secundario  
-  \end{block}
-  ul
-    li.fragment <2->{Unidad mínima de alamcenamiento para el usuario}
-    li.fragment <3->{Agrupación lógica de {\em bytes}}
-  \end{itemize}
-  
-  \onslide<4->{Contenido: cualquier cosa}
-  ul
-    li.fragment <5-> Significado está determinado por la forma en que se utiliza
-          su contenido
-    li.fragment <5-> Texto, imagen, código fuente, código binario (ejecutable), \ldots
-  \end{itemize}
-  
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Archivos}
-  \framesubtitle{Atributos de archivos}
-  
-  Cómo caracterizar un archivo
-  ul
-    li.fragment  {\bf Nombre} (simbólico). Información {\em human-readable}
-    li.fragment  {\bf Identificador}. Determinado por el S.O.
-    li.fragment  {\bf Tipo}.
-    li.fragment  {\bf Ubicación}. Puntero a dirección de disco.
-    li.fragment  {\bf Tamaño}. Tamaño actual en {\em bytes}, {\em words} ó {\em blocks}. 
-                  Puede incluir un tamaño máximo.
-    li.fragment  {\bf Proteccion}. Datos de control de acceso. Lecturas, escritura, ejecución.
-    li.fragment  {\bf Fecha}. Creación, acceso, modificación.
-    li.fragment  {\bf Usario}. Propietario.
-    li.fragment  {\bf Atributos extendidos}
-      ul
-        li.fragment  Codificación, {\em checksum}, programas asociados
-      \end{itemize}
-  \end{itemize}
-  Información de archivos de se almacena en la estructura de directorios.
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Archivos}
-  \framesubtitle{Operaciones sobre archivos}
-
-  S.O. provee {\em syscalls} para ejecutar operaciones sobre archivos
-  
-  ul
-    li.fragment  {\bf Creación}
-    li.fragment  {\bf Escritura}
-    li.fragment  {\bf Lectura}
-    li.fragment  {\bf Reposicionamiento}
-    li.fragment  {\bf Eliminación} (borrar)
-    li.fragment  {\bf Reducción} (truncar) 
-  \end{itemize}
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Archivos}
-  \framesubtitle{Apertura y cierre}
-
-  Acceder un archivo requiere {\bf buscarlo} en una estructura de directorio
-  
-  \onslide<2->{Para evitar este proceso, se usa una {\bf lista de archivos abiertos}}
-  
-  ul
-    li.fragment <3-> {\tt open()}. Al abrir un archivo se carga en esta lista algunos datos
-      ul
-        li.fragment  Puntero de acceso. Desplazamiento ({\em offset}) desde el inicio del archivo.
-        li.fragment  Cantidad de aperturas. Contador de cuántas veces se encuentra abierto.
-        li.fragment  Ubicación en disco.
-        li.fragment  Permisos de acceso.
-      \end{itemize}
-    li.fragment <4-> {\tt close()}. Cierra el archivo. Si nadie más lo está ocupando, es eliminado
-              de la lista.
-  \end{itemize}
-  \onslide<5->{S.O. permiten definir {\em locks} de escritura y/o lectura sobre archivos}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Archivos}
-  \framesubtitle{Tipos de archivo}
-
-  \begin{columns}[c]
-    \begin{column}[T]{7cm}
-      ul
-        li.fragment  Ayudan a determinar qué hacer con el archivo
-        li.fragment  Ayudan a navegar su estructura
-        li.fragment  Almacenado como atributo del archivo
-        li.fragment  \ldots o usando {\em extensiones} en el nombre
-          ul
-            li.fragment  Extensión puede no coincidir con el tipo de archivo
-            li.fragment  Algunos SS.OO. usan un código identificar en cada archivo:
-                {\bf magic number}
-          \end{itemize}
-      \end{itemize}
-    \end{column}
-
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-11_03.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Archivos}
-  \framesubtitle{Acceso a archivos}
-
-  Secuencial \ldots \onslide<2->{o no-secuencial}
-  
-  ul
-    li.fragment  Archivos se abren con un {\em puntero} a la próxima ubicación
-          que será leída/escrita
-    li.fragment  Puntero inicializado en $0$
-    li.fragment  {\bf Acceso Secuencial} permite acceder a una posición a la vez
-    li.fragment  {\bf Acceso Directo} permite posicionar el puntero en cierta posición del archivo
-      ul
-        li.fragment  ¿Cómo llegar a una posición cualquiera?
-        li.fragment  La estructura de almacenamiento de archivo debe permitirlo (S.O.)
-      \end{itemize}
-  \end{itemize}
-
-
-%---------------------------------------------------------------------
-\subsection{Directorios}
-
-/ Frame
-  \frametitle{Directorios}
-
-  ¿Cómo encontrar archivos?
-  
-  ul
-    li.fragment  Sistemas de archivos mantienen {\em listas} de archivos y sus ubicaciones
-          en bloques de disco
-    li.fragment  Archivos se listan en una {\bf tabla de contenidos} ó {\bf directorio}
-  \end{itemize}
-  
-  Operaciones importantes
-  ul
-    li.fragment  Buscar un archivo: {\tt find}, {\tt grep}, {\tt locate}
-    li.fragment  Agregar un archivo a directorio: {\tt mv}, {\tt cp}, {\tt move}, {\tt copy}
-    li.fragment  Eliminar un archivo del directorio: {\tt rm}, {\tt del}
-    li.fragment  Listar los archivo en un directorio: {\tt ls}, {\tt dir}
-    li.fragment  Reubicar un archivo entre directorios: {\tt mv}, {\tt move}
-    li.fragment  Navegar por los directorios: {\tt cd}
-  \end{itemize}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Directorio de uno y dos niveles ({\em single-level} y {\em two-level)}}
-
-  Todos en el mismo directorio
-  \begin{center}
-    \includegraphics[width=8cm]{figs/03-11_09.pdf}
-  \end{center}
-
-  Un directorio por usuario
-  \begin{center}
-    \includegraphics[width=8cm]{figs/03-11_10.pdf}
-  \end{center}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Árboles de directorios}
-
-  ul
-    %li.fragment  Entradas en un directorio pueden ser archivos o directorios
-    li.fragment  Camino desde la raíz al directorio: {\bf ruta} ó {\bf path}
-    li.fragment  Cada proceso tiene un directorio actual: {\bf current directory} ({\tt pwd})
-    li.fragment  {\bf Ruta absoluta}: Ruta desde la raíz. Ej: {\tt /spell/mail/exp}
-    li.fragment  {\bf Ruta relativa}: Ruta desde la ubicación actual ({\em current directory}).
-          Ej: {\tt p/list} solo existe si el directorio actual es {\tt /programs/}
-  \end{itemize}
-
-  \begin{center}
-    \includegraphics[width=7cm]{figs/03-11_11.pdf}
-  \end{center}
-
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Directorios como grafos acíclicos}
-
-  Una manera sencilla de compartir archivos: que el mismo archivo pertenezca a dos directorios
-  \begin{center}
-    \includegraphics[width=5cm]{figs/03-11_12.pdf}
-  \end{center}
-  ul
-    li.fragment  Implementación usando {\bf link}s
-      ul
-        li.fragment  {\bf Symbolic links}: {\em link} a nombre de archivo ({\tt ln -s})
-        li.fragment  {\bf Hard link}: {\em link} a archivo ({\tt ln})
-      \end{itemize}
-    li.fragment  ¿Cómo recorrer el directorio?
-  \end{itemize}
-  
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Directorios como grafos acíclicos}
-
-  ¿Qué hacer al borrar un archivo?
-  ul
-    li.fragment  {\bf Symbolic links}. Si se borra el archivo original, el {\em link}
-          sigue existiendo, y debe ser eliminado manualmente
-          \begin{center}
-            \includegraphics[width=6cm]{figs/03-deadlink.png}
-          \end{center}
-    li.fragment  {\bf Hard links}. {\em Links} aumentan un contador de referencias el archivo.
-          El archivo solo es eliminado cuando no quedan más referencias a él.
-  \end{itemize}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Montaje de sistemas de archivos}
-
-  Para acceder a sistemas de archivos se necesita un {\em punto de acceso},
-  que asigna una posición de directorio a bloques de disco (por ejemplo, particiones)
-  ul
-    li.fragment  Operación {\tt mount} hace que un sistema de archivos sea accesible desde un lugar
-          conocido, como {\bf mount point}
-    li.fragment  Ejecución: {\tt mount /users /device/disk2}
-  \end{itemize}
-
-  \begin{center}
-    \includegraphics[width=6cm]{figs/03-11_14.pdf}
-    \includegraphics[width=3cm]{figs/03-11_15.pdf}
-  \end{center}
-
-
-%---------------------------------------------------------------------
-\subsection{Implementación de Sistema de Archivos}
-
-/ Frame
-  \frametitle{Sistemas de archivos}
-
-  Un {\bf sistema de archivos} permite obtener una dirección de disco,
-  a partir de un datos simbólicos: nombre de archivo, directorio, rutas, links, \ldots
-  
-  Algunos ejemplos:
-  ul
-    li.fragment  ISO9660 (CD-ROMs)
-    li.fragment  UFS: Unix File System, basado Berkeley Fast File System (FFS)
-    li.fragment  FAT, FAT32, NTFS: Windows
-    li.fragment  ext3, ext4: Linux
-    li.fragment  GFS, FUSE
-  \end{itemize}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Sistemas de archivos}
-
-  Elementos típicos de un sistema de archivos:
-  ul
-    li.fragment  {\bf Boot Control Block}. Uno por volumen. Permite utilizar el sistema de archivo para arranque.
-      ul
-        li.fragment  Unix: Boot block
-        li.fragment  Windows: Partition Boot Sector
-      \end{itemize}
-    li.fragment  {\bf Volume Control Block}. Contiene datos de formato de la partición.
-      ul
-        li.fragment  Unix: Superblock
-        li.fragment  Windows: Master File Table
-      \end{itemize}
-    li.fragment  Estructura de {\bf directorio}. Ubicaciones de archivos.
-    li.fragment  {\bf File Control Block}. Uno por archivo. Contiene atributos de archivo.
-  \end{itemize}
-
-  \begin{center}
-    \includegraphics[width=4cm]{figs/03-12_02.pdf}
-  \end{center}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Sistemas de archivos}
-  Estructuras en memoria principal:
-  ul
-    li.fragment  {\bf Mount table}. Tabla de sistema de archivos montados.
-    li.fragment  Directorios recientes
-    li.fragment  Tabla de archivos abiertos en el sistema
-    li.fragment  Tabla de archivos abiertos por proceso
-    li.fragment  Buffers de bloques de disco
-  \end{itemize}
-  
-  \begin{center}
-    \includegraphics[width=6cm]{figs/03-12_03.pdf}
-  \end{center}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-
-  Cada archivo requiere utilizar bloques de disco
-  
-  ul
-    li.fragment  Bloques deben ser asignados de manera eficiente
-    li.fragment  Mala asignación provocará demoras en tiempos de acceso
-    li.fragment  Estrategias de asignación de bloques
-  \end{itemize}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-  \framesubtitle{Asignación contigua}
-  
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      ul
-        li.fragment  Archivo de $n$ bloques, bloque inicial $b$
-        li.fragment  Bloques: $b, b+1, \ldots b+n-1$
-        li.fragment  Fácil de acceder a siguiente bloque
-        li.fragment  <2-> -Problema: fragmentación externa
-        li.fragment  <3-> -Require operaciones de {\bf compactación}
-              (defragmentación)
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_05.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-  \framesubtitle{Asignación enlazada ({\em linked})}
-
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      ul
-        li.fragment  Almacena punteros
-              a bloque siguiente
-        li.fragment  Ej: bloque de 512 bytes, solo puede guardar 508 bytes
-        li.fragment  No requiere tamaño inicial de archivo. Puede crecer.
-        li.fragment  <2-> -Acceso solo secuencial
-        li.fragment  <3-> -Se pierde espacio en punteros
-        li.fragment  <4-> Alternativa: almacenar {\em clusters} de bloques en lugar
-                   de bloques individuales (fragmentación interna)
-        li.fragment  <5-> Vulnerable a falla de un bloque
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_06.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}  
-  
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-  \framesubtitle{Asignación enlazada ({\em linked}): FAT}
-
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      ul
-        li.fragment  FAT: {\bf File Allocation Table}
-        li.fragment  Tabla al inicio del disco con una entrada por archivo
-        li.fragment  Último cluster almacena EOF ({\em end-of-file})
-        li.fragment  <2-> +Mejor acceso aleatorio
-        li.fragment  <3-> -Limitado por tamaño de tabla (para FAT32, 4GB por archivo)
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_07.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}  
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-  \framesubtitle{Asignación indexada}
-
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      ul
-        li.fragment  Archivos contienen {\em index block}
-        li.fragment  {\em Index Block} contiene bloques del archivo
-        li.fragment  Último cluster almacena EOF ({\em end-of-file})
-        li.fragment  <2-> +Acceso aleatorio sin frag. externa
-        li.fragment  <3-> -Se pierde espacio por tamaño de {\em index block}
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_08.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Asignación de bloques}
-  \framesubtitle{Asignación indexada: tamaño del {\em index block}}
-
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      ul
-        li.fragment  {\bf Esquema enlazado}: última entrada de {\em index block} apunta a otro {\em index block}
-        li.fragment  {\bf Índice multinivel}: similar a tablas de página multinivel
-          ul
-            li.fragment  Ej: blocks de 4KB, permiten 1024 punteros (de 32-bit)
-            li.fragment  Dos niveles permiten direccionar $1048576$ bloques $\to 4$GB
-          \end{itemize}
-        li.fragment  {\bf Esquema combinado}: primeros $p$ punteros son bloques directos,
-              los siguientes apunta bloque de índice simple, los siguientes a bloque 
-              de índice doble, etc
-      \end{itemize}
-    \end{column}
-    \begin{column}[T]{5cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_09.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Espacio libre}
-  \framesubtitle{¿Cómo encontrarlo?}
-
-  {\bf Bit vector} ó {\bf bitmap} de bloques libres
-  
-  ul
-    li.fragment  +Sencillo, eficiente, e implementable en {\em hardware}
-    li.fragment  -No escala tan bien
-      ul
-        li.fragment  Disco de 1.3GB, con bloques de 512 byte $\to 332$KB
-        li.fragment  Disco de 1TB, con bloques de 4KB $\to 256$MB 
-      \end{itemize}
-  \end{itemize}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Espacio libre}
-
-  \begin{columns}[c]
-    \begin{column}[T]{6cm}
-      {\bf Lista enlazada}
-        ul
-          li.fragment  Punteros a bloques libres
-          li.fragment  Bloques nuevos se agregan a la lista
-          li.fragment  -Poco eficiente
-          li.fragment  <2-> Mejora: agrupar espacios contiguos
-          li.fragment  <3-> Mantener punteros a espacios libres + número de espacios contiguos
-        \end{itemize}
-    \end{column}
-    \begin{column}[T]{6cm}
-      \begin{center}
-        \includegraphics[width=5cm]{figs/03-12_10.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
 
