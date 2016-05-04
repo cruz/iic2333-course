@@ -181,8 +181,7 @@ section
 
 
   section
-    div Diversas estrategias (niveles) de RAID
-
+    
     ul
       li.fragment  <b>RAID 0</b>: Stripping
       li.fragment  <b>RAID 1</b>: Mirroring
@@ -197,7 +196,6 @@ section
 
 
   section
-    div Otras estrategias
 
     ul
       li.fragment  <b>RAID 0+1</b>: Stripe con mirroring
@@ -211,7 +209,294 @@ section
        li.fragment  Si falla un disco se pierde solo un disco
 
     div 
-      img src='/images/figures/03-10_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="25 %"
+      img src='/images/figures/03-10_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+section
+  h2 Sistemas de Archivos
+
+  section 
+    div <b>Archivos</b>
+
+    div style="text-align:left;" Colección de información en almacenamiento secundario  
+    ul.fragment style="text-align:left;"
+      li Unidad mínima de almacenamiento para el usuario
+      li Agrupación lógica de <i>bytes</i>
+  
+    div.fragment style="text-align:left;" Contenido: cualquier cosa
+    ul
+      li.fragment Significado está determinado por la forma en que se utiliza su contenido
+      li.fragment Texto, imagen, código fuente, código binario (ejecutable), ...
+
+  section
+    div Caracterizando un archivo
+    ul.fragment style="text-align:left;"
+    li style="text-align:left;" Nombre (simbólico). Información human-readable
+    li style="text-align:left;" Identificador. Determinado por el S.O.
+    li style="text-align:left;" Tipo.
+    li style="text-align:left;" Ubicación. Puntero a dirección de disco.
+    li style="text-align:left;" Tamaño. Tamaño actual en bytes, words ó blocks. Puede incluir un tamaño máximo.
+    li style="text-align:left;" Proteccion. Datos de control de acceso. Lecturas, escritura, ejecución.
+    li style="text-align:left;" Fecha. Creación, acceso, modificación.
+    li style="text-align:left;" Usuario. Propietario.
+    li style="text-align:left;" Atributos extendidos (metadata)
+    ul style="text-align:left;"
+      li style="text-align:left;" Codificación, checksum, programas asociados
+
+    div style="text-align:left;" Información de archivos de se almacena en la estructura de directorios.
+
+  section
+    div <b><i>Syscalls</i> para operaciones sobre archivos</b>
+
+    ul
+      li.fragment Creación
+      li.fragment Escritura
+      li.fragment Lectura
+      li.fragment Reposicionamiento
+      li.fragment Eliminación (borrar)
+      li.fragment Reducción (truncar) 
+
+  section 
+    div <b>Archivos abiertos</b>
+
+    div style="text-align:left;" Archivos se buscan en una estructura de directorio.
+
+    div style="text-align:left;" Al <b>abrir</b> un archivo, se mantiene su información en una lista <b>lista de archivos abiertos</b>
+
+    ul
+      li.fragment <code>open()</code>. Al abrir un archivo se carga en esta lista una estructura con:
+      ul
+        li.fragment  Puntero de acceso. Desplazamiento <i>offset</i> desde el inicio del archivo.
+        li.fragment  Cantidad de aperturas. Contador de cuántas veces se encuentra abierto.
+        li.fragment  Ubicación en disco.
+        li.fragment  Permisos de acceso.
+      
+      li.fragment <code>close()</code>. Cierra el archivo. Si nadie más lo está ocupando, es eliminado de la lista.
+
+  section
+    h3 Directorios
+
+    div <b>¿Cómo encontrar archivos?</b>
+  
+    ul
+      li.fragment  Sistemas de archivos mantienen <i>listas</i> de archivos y sus ubicaciones en bloques de disco
+      li.fragment  Archivos se listan en una <b>tabla de contenidos</b> ó <b>directorio</b>
+  
+    div <b>Operaciones importantes</b>
+    ul
+      li.fragment  Buscar un archivo: <code>find</code>, <code>grep</code>, <code>locate</code>
+      li.fragment  Agregar un archivo a directorio: <code>mv</code>, <code>cp</code>, <code>move</code>, <code>copy</code>
+      li.fragment  Eliminar un archivo del directorio: <code>rm</code>, <code>del</code>
+      li.fragment  Listar los archivo en un directorio: <code>ls</code>, <code>dir</code>
+      li.fragment  Reubicar un archivo entre directorios: <code>mv</code>, <code>move</code>
+      li.fragment  Navegar por los directorios: <code>cd</code>    
+
+  section
+    div <b>Acceso a archivos</b>
+
+    div Secuencial ... o no-secuencial
+  
+    ul
+      li.fragment  Archivos se abren con un <i>puntero</i> a la próxima ubicación que será leída/escrita
+      li.fragment  Puntero inicializado en $0$
+      li.fragment  <b>Acceso Secuencial</b> permite acceder a una posición a la vez
+      li.fragment  <b>Acceso Directo</b> permite posicionar el puntero en cierta posición del archivo
+      ul
+        li.fragment  La estructura de almacenamiento de archivo debe permitirlo (sist. de archivos)
+
+  section
+    div <b>Árboles de directorios</b>
+
+    ul
+      li.fragment  Entradas en un directorio pueden ser archivos o directorios
+      li.fragment  Camino desde la raíz al directorio: <b>ruta</b> ó <b>path</b>
+      li.fragment  Cada proceso tiene un directorio actual: <b>current directory</b> (<code>pwd</code>)
+      li.fragment  <b>Ruta absoluta</b>: Ruta desde la raíz.<br> Ej: <code>/spell/mail/exp</code>
+      li.fragment  <b>Ruta relativa</b>: Ruta desde la ubicación actual (<i>current directory</i>).<br>Ej: <code>p/list</code> solo existe si el directorio actual es <code>/programs/</code>
+
+    div 
+      img src='/images/figures/03-11_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section 
+    div <b>Links</b>
+
+    div Una manera sencilla de compartir archivos: que el mismo archivo pertenezca a dos directorios
+    div 
+      img src='/images/figures/03-11_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    ul
+      li.fragment  Implementación usando <b>link</b>s
+      ul
+        li.fragment  <b>Symbolic links</b>: <i>link</i> a nombre de archivo (<code>ln -s</code>)
+        li.fragment  <b>Hard link</b>: <i>link</i> a archivo (<code>ln</code>)
+    
+  section 
+    div ¿Qué hacer al borrar un archivo?
+    
+    ul
+      li.fragment <b>Symbolic links</b>. Si se borra el archivo original, el <i>link</i> sigue existiendo, y debe ser eliminado manualmente
+    div 
+      img src='/images/figures/03-deadlink.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    ul
+      li.fragment <b>Hard links</b>. <i>Links</i> aumentan un contador de referencias el archivo. El archivo solo es eliminado cuando no quedan más referencias a él.
+
+  section
+    div <b>Montando sistemas de archivos</b>
+
+    div style="text-align:left;" Para acceder a sistemas de archivos se necesita un <i>punto de acceso</i>, que asigna una posición de directorio a bloques de disco (por ejemplo, particiones)
+    
+    ul
+      li.fragment  Operación <code>mount</code> hace que un sistema de archivos sea accesible desde un lugar conocido, como <b>mount point</b>
+      li.fragment  Ejecución: <code>mount /users /device/disk2</code>
+
+    div 
+      img src='/images/figures/03-11_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+      img src='/images/figures/03-11_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
+
+section
+  h2 Implementación de sistemas de archivos
+
+  section 
+    div El <b>sistema de archivos</b> permite obtener una dirección de disco (un <i>bloque</i>) a partir de un conjunto de datos simbólicos: nombre de archivo, directorio, rutas, links, ...
+  
+    ul
+      li.fragment  ISO9660 (CD-ROMs)
+      li.fragment  UFS: Unix File System, basado Berkeley Fast File System (FFS)
+      li.fragment  FAT, FAT32, NTFS: Windows
+      li.fragment  ext3, ext4: Linux
+      li.fragment  GFS, FUSE
+
+  section
+
+    ul
+      li.fragment <b>Boot Control Block</b>. Uno por volumen. Permite utilizar el sistema de archivo para arranque.
+      ul
+        li.fragment Unix: Boot block
+        li.fragment Windows: Partition Boot Sector
+
+      li.fragment <b>Volume Control Block</b>. Contiene datos de formato de la partición.
+      ul
+        li.fragment  Unix: Superblock
+        li.fragment  Windows: Master File Table
+
+      li.fragment  Estructura de directorio. Ubicaciones de archivos.
+      li.fragment  <b>File Control Block</b>. Uno por archivo. Contiene atributos de archivo.
+
+    div 
+      img src='/images/figures/03-12_02.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    div Estructuras en memoria principal
+    ul
+      li.fragment  <b>Mount table</b>. Tabla de sistema de archivos montados.
+      li.fragment  Directorios recientes
+      li.fragment  Tabla de archivos abiertos en el sistema
+      li.fragment  Tabla de archivos abiertos por proceso
+      li.fragment  Buffers de bloques de disco
+
+  
+    div 
+      img src='/images/figures/03-12_03.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section 
+    h3 Asignación de bloques
+
+    div Cada archivo requiere utilizar bloques de disco
+  
+    ul
+      li.fragment  Bloques deben ser asignados de manera eficiente
+      li.fragment  Mala asignación provocará demoras en tiempos de acceso
+      li.fragment  Estrategias de asignación de bloques
+
+  section
+    h3 Asignación contigua
+
+    ul
+      li.fragment  Archivo de $n$ bloques: $b, b+1, \ldots b+n-1$
+      li.fragment  Fácil de acceder a siguiente bloque
+      li.fragment  -Problema: fragmentación externa
+      li.fragment  Require operaciones de <b>compactación</b> (defragmentación)
+
+    div 
+      img src='/images/figures/03-12_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+  section
+    h3 Asignación enlazada (<i>linked</i>)
+
+    ul
+      li.fragment  Almacena punteros a bloque siguiente
+      li.fragment  Ej: bloque de 512 bytes, solo puede guardar 508 bytes. Se pierde espacion.
+      li.fragment  No requiere tamaño inicial de archivo. Puede crecer.
+      li.fragment  -Acceso solo secuencial.
+      li.fragment  Alternativa: almacenar <i>clusters</i> de bloques en lugar de bloques individuales (frag. interna)
+      li.fragment  -Vulnerable a falla de un bloque
+
+    div 
+      img src='/images/figures/03-12_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
+  
+  section
+    h3 Asignación enlazada (<i>linked</i>): FAT
+
+    ul
+      li.fragment  FAT: <b>File Allocation Table</b>
+      li.fragment  Tabla al inicio del disco con una entrada por archivo
+      li.fragment  Último cluster almacena EOF (<i>end-of-file</i>)
+      li.fragment  +Mejor acceso aleatorio
+      li.fragment  -Limitado por tamaño de tabla (para FAT32, 4GB por archivo)
+    div 
+      img src='/images/figures/03-12_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+  
+  section
+    h3 Asignación indexada
+    ul
+      li.fragment  Archivos contienen <i>index block</i>
+      li.fragment  <i>Index Block</i> contiene bloques del archivo
+      li.fragment  Último cluster almacena EOF (<i>end-of-file</i>)
+      li.fragment  +Acceso aleatorio sin frag. externa
+      li.fragment  Se pierde espacio por tamaño de <i>index block</i>
+    div 
+      img src='/images/figures/03-12_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    h3 Asignación indexada: tamaño del <i>index block</i>
+
+    ul
+      li.fragment  <b>Esquema enlazado</b>: última entrada de <i>index block</i> apunta a otro <i>index block</i>
+      li.fragment  <b>Índice multinivel</b>: similar a tablas de página multinivel
+      ul
+        li.fragment  Ej: blocks de 4KB, permiten 1024 punteros (de 32-bit)
+        li.fragment  Dos niveles permiten direccionar $1048576$ bloques $\to 4$GB
+
+      li.fragment  <b>Esquema combinado</b>: primeros $p$ punteros son bloques directos, los siguientes apuntan a bloque de índice simple, los siguientes a bloque de índice doble, etc
+    div 
+      img src='/images/figures/03-12_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+  section
+    h3 Espacio libre
+
+    div ¿Cómo encontrar bloques libres?
+
+    div <b>Bit vector</b> ó <b>bitmap</b> de bloques libres
+  
+    ul
+      li.fragment  +Sencillo, eficiente, e implementable en <i>hardware</i>
+      li.fragment  -No escala tan bien
+      ul
+        li.fragment  Disco de 1.3GB, con bloques de 512 byte $\to 332$KB
+        li.fragment  Disco de 1TB, con bloques de 4KB $\to 256$MB 
+
+  section
+    h3 Espacio libre
+
+    div <b>Lista enlazada</b>
+    ul
+      li.fragment  Punteros a bloques libres
+      li.fragment  Bloques nuevos se agregan a la lista
+      li.fragment  -Poco eficiente
+      li.fragment  Mejora: agrupar espacios contiguos
+      li.fragment  Mantener punteros a espacios libres + número de espacios contiguos
+    div 
+      img src='/images/figures/03-12_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
 
 
 
