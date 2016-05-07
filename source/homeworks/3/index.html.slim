@@ -1,0 +1,89 @@
+---
+title: Tarea 3 (15/5 23:59)
+layout: activity
+---
+
+article
+	section.top
+		p En esta tarea van a implementar un algoritmo de reemplazo para las entradas de la TLB.
+		p La tarea no depende de pintos (está en /extra/vm/)
+		p La nota dependerá del desempeño relativo en una competencia.
+		ul
+			li Se medirá el hit-rate de las soluciones para varios patrones de acceso.
+			li La mejor solución obtendrá (al menos) un 7.
+			li Una solución simple fijará un rojo
+
+
+	section#todo
+
+		h3 <em>TLB</em>
+		/  ============
+		p Al usar direcciones virtuales de memoria se necesita designar un mapping entre regiones de memoria virtuales (páginas) y las reales (frames).
+
+		p Al elegir el mapping es necesario preocuparse del posicionamiento de las páginas de modo de intentar mantener páginas del mismo programa en frames cercanos.
+		  Ese mapping no puede estar fijo, ya que eso limitaría el nivel de multiprogramación (ej: frames pares al programa 0 y el resto al programa 1).
+		p Como el mapping debe ser dinámico para adaptarse a la ejecución, entonces debemos mantener la función en memoria.
+		  La forma más usual es mediante una tabla, la que tiende a ser mucho más grande que el <em>cache</em> cercano a la CPU.
+
+		p Los accesos a memoria virtual en realidad necesitan 2 accesos a memoria física, uno para revisar el mapping, y otro para acceder al lugar designado por el mapping.
+		p Para evitar que el acceso a memoria virtual sea el doble de lento que uno a memoria real se utiliza un <em>cache</em> para parte del mapping.
+		  Ese cache está hecho en hardware y es conocido como <em>Translation Lookaside Buffer</em>.
+
+		p Una vez que el mapping está determinado, es necesario implementar el <em>caching</em>.
+
+		h4 <em>Caching</em>
+		/  ----------------
+		p La TLB puede evitar el acceso al mapping que está en la memoria principal si es que ya tiene la dirección del frame de la página que buscamos.
+		p Lamentablemente la TLB no tiene el mapping completo (no cabe mucha memoria tan cerca de la CPU).
+		/ https://www.youtube.com/watch?v=9eyFDBPk4Yw
+		/ http://superuser.com/questions/808830/why-is-cache-memory-so-expensive
+
+		p La restricción de la TLB es la memoria física disponible para almacenarla. Esa memoria puede ser usada de distintas maneras.
+		ul
+			li Se puede guardar pares de direcciones (page -> frame).
+			ul
+				li Pero al momento de guardar una entrada nueva hay que adivinar cuál es mejor reemplazar.
+				ul
+					li No se puede hacer bien siempre.
+			li Puede usarse más información adicional para ayudar en el reemplazo.
+			ul
+				li ¡¡Pero habrá menos espacio para el mapping!!.
+				li ¿Qué guardar?
+				li ¿Cómo usarlo?
+
+		p El dilema anterior es el que deberán intentar resolver.
+
+		h4 <em>Tarea</em>
+		/  --------------
+		p En <code>extra/vm</code> se agregó un programa simple que simula una TLB.
+		p Setup (¿del 2000?)
+		/ http://www.topdesignmag.com/top-performance-computer-looked-the-year-2000/
+
+		ul
+			li Direcciones de 32 bits (un int).
+			li Páginas de 4KB.
+			li 128MB de RAM disponibles, 256MB máximo soportado por el hardware.
+			li La memoria se ve así: <code>[pppppFFF FFFFFFFF FFFFoooo oooooooo]</code>
+
+		p Podrán usar una cantidad de memoria fija que puede alojar 128 pares de int (de 4B), es decir, 1KB.
+		p Utilícenlo lo mejor posible.
+		ul
+			li Considerar estadísticas de los accesos debería ayudar.
+			li No todo gasta 4 Bytes!.
+
+		h5 Tests
+		/  -----
+		p En <code>vm_test.c</code> existen algunas funciones que simulan accesos a páginas ejecutando algunos algoritmos de uso intensivo de memoria.
+
+		p Pueden revisar qué tan bien funciona su cache ejecutándolos.
+		pre
+			code.hljs.bash
+				| cd /path/to/pintos/
+				 
+				  cd extra/vm/
+				  make
+				 
+				  ./vm
+
+
+
