@@ -1,0 +1,288 @@
+---
+title: Redes de Computadores
+layout: slide
+---
+
+section
+  h2 Introducción
+
+section
+  h2 Introducción
+
+  section
+
+    div <b>OBJETIVO</b>: Permitir que un proceso se <b>comunique</b> con otro
+  
+    ul
+      li.fragment ¿Dónde se encuentra el otro proceso?
+      ul
+        li.fragment Si se encuentra en la misma máquina: <i>pipe</i>, <i>shared memory</i>
+        li.fragment Si no, S.O. debe utilizar el sistema de Entrada/Salida
+
+      li.fragment ¿Qué medio utilizar para el envío? (Cable, aire, ...)
+      ul
+        li.fragment ¿Cómo expresar un mensaje en ese medio? Problema Físico
+        
+      li.fragment ¿Cómo se envía información por un medio de red?
+      ul
+        li.fragment ¿Cómo se transmite el mensaje? ¿Se manda completo?
+        
+      li.fragment ¿A quién se le transmite el mensaje?
+      ul
+        li.fragment ¿Hay sólo un receptor? ¿lo estoy "gritando" a todos?
+        
+      li.fragment ¿Cómo se encuentra el destinatario?
+      ul
+        li.fragment Destinatario debe tener una dirección "única"
+        li.fragment ¿Cómo "encaminar" el mensaje?
+        
+      li.fragment El destinatario, ¿está dispuesto a recibir el mensaje?
+      ul
+        li.fragment Comunicación debe seguir un orden: <i>protocolo</i>
+      
+  section
+
+    div ¿Para qué establecer comunicación entre dos procesos?
+
+    div Comunicación de procesos <i>remotos</i> para compartir recursos
+  
+    ul
+      li.fragment Recursos: impresoras, discos, archivos, ciclos de CPU
+      li.fragment Acceso a recursos <i>escasos</i> que no se encuentran <i>geográficamente</i> cerca
+      li.fragment Modelo <b>cliente-servidor</b> o <b>peer-to-peer</b>
+      
+    div
+      img src='/images/figures/05-clientserver.png' style="background:none; border:none; box-shadow:none;" width="30%"
+      img src='/images/figures/05-peertopeer.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    
+    ul
+      li.fragment Acceso a recursos <i>descentralizados</i>
+      li.fragment Mensajería, <i>streaming</i>, distribución de contenido
+
+section 
+  h2 Conceptos de Hardware
+
+  section
+
+    div Hardware de redes
+
+    div
+      img src='/images/figures/05-definiciones.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+
+    h3 Tecnologías de transmisión
+
+    div <b>Broadcast</b>: todos reciben el mensaje
+    div <b>Punto a punto</b>: solo emisor y destinatario
+  
+    div
+      img src='/images/figures/05-wally1.png' style="background:none; border:none; box-shadow:none;" width="20%"
+      img src='/images/figures/05-wally2.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+
+    div <b>Broadcast</b>
+
+    ul
+      li.fragment Todos reciben el mensaje
+      li.fragment Receptores observan el campo destinatario y descartan o procesan el mensaje
+    
+    div
+      img src='/images/figures/05-wally1.png' style="background:none; border:none; box-shadow:none;" width="10%"
+      img src='/images/figures/05-wally2.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    ul
+      li.fragment Comunicación <i>wireless</i>
+      li.fragment Llamando a alguien en una multitud
+      li.fragment Transmisión de televisión análoga
+   
+    div <b>Multicast</b>
+  
+    ul
+      li.fragment Transmisión a un subconjunto de máquinas
+
+  section
+
+    div <b>Broadcast</b>
+
+    div Utilizado cuando hay solo un <i>canal</i> de comunicación
+
+    div Protocolos dinámicos para utilizar el canal único
+    ul
+      li.fragment Token ring: turnos de transmisión
+      li.fragment Aloha: precursor de <i>ethernet</i>
+      li.fragment CSMA-CD: <i>ethernet</i>
+    
+    div Protocolos estáticos
+    ul
+      li.fragment Multiplexión por tiempo
+      li.fragment Multiplexión por frecuencia
+
+  section
+
+    div <b>Punto a punto (unicast)</b>
+
+    ul
+      li.fragment Mensaje se subdivide en <b>paquetes</b>
+      li.fragment Paquetes se envían al destinatario a través de intermediarios, formando una ruta de comunicación
+      ul
+        li.fragment ¿Cómo encontrar la ruta? Protocolos de ruteo (<i>routing</i>)
+        li.fragment ¿En qué orden enviar los paquetes? Protocolos de transporte
+          
+      li.fragment ¿Cómo asignar el canal de comunicación?
+      ul
+        li.fragment <i>Full-duplex</i>. Ambos leen y escriben al mismo tiempo.
+        li.fragment <i>Half-duplex</i>. Sólo uno lee y escribe a la vez.
+
+  section
+    h3 Tamaño de redes
+
+    ul
+      li.fragment PAN: <i>Personal Area Network</i>
+      li.fragment LAN: <i>Local Area Network</i>
+      li.fragment MAN: <i>Metropolitan Area Network</i>
+      li.fragment WAN: <i>Wide Area Network</i>
+
+  section
+    div <b>PAN: <i>Personal Area Network</i></b>
+
+    div Comunicación a distancia de una persona, usando tecnologías de corto alcance
+
+    ul
+      li.fragment Ejemplo: <i>Bluetooth</i>, <i>RFID</i>
+      ul
+        li.fragment <i>Master</i> habla con teclado, <i>mouse</i>, <i>handsfree</i>
+        li.fragment Conexión por acercamiento: <i>tag</i>, tarjeta BIP
+      
+    div
+      img src='/images/figures/05-pan.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  
+  section
+    div <b>LAN: <i>Local Area Network</i></b>
+
+    div Recursos compartidos a nivel de oficinas o edificios
+
+    ul
+      li.fragment Medios basados en cables de cobre o fibra óptica
+      li.fragment Tamaño conocido permite acotar tiempos de transmisión
+      li.fragment Velocidades: 100Mbps, 1Gbps, 10Gbps
+      li.fragment Topología común: punto a punto
+      li.fragment Estándar IEEE 802.3: <b>Ethernet</b>
+      li.fragment <b>Switch</b>: dispositivo que dirige paquetes entre dispositivos conectados
+
+    div
+      img src='/images/figures/05-wiredlan.png' style="background:none; border:none; box-shadow:none;" width="25%"
+      
+  section
+    div <b>LAN: <i>Local Area Network</i></b> (versión clásica)
+
+    ul
+      li.fragment Topología clásica: broadcast
+      li.fragment Acceso al medio: ante colisiones cada dispositivo espera un tiempo <i>random</i>
+      li.fragment <b>Hub</b>: concentrador. Dispositivo que recibe paquetes y reenvía a todos los dispositivos conectados. Topología de bus.
+  
+    div Es posible subdividir un LAN entre redes más pequeñas
+    ul
+      li.fragment Tráfico de una LAN puede pasar a otra solamente a través de un punto
+      li.fragment <b>Virtual LAN</b> o <b>VLAN</b>
+
+  section
+    div <b>Wireless LAN: WLAN</b>
+  
+    ul
+      li.fragment Comunicación vía <i>broadcast</i>
+      li.fragment Comunicación a través de dispositivo: <b>Access Point</b>, <b>Wireless Router</b>, <b>Base Station</b>
+      li.fragment Standard de acceso: IEEE 802.11 (WiFi)
+      li.fragment Velocidad: desde 6Mbps (802.11a), 54Mbps (802.11g), 150Mbps (802.11n), 866Mbps (802.11ac)
+      li.fragment Rango: $\sim 70m$ indoor, $\sim 250m$ outdoor
+  
+    div
+      img src='/images/figures/05-wirelesslan.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+
+  section
+    div <b>MAN: <i>Metropolitan Area Network</i></b>
+
+    ul
+      li.fragment Redes de televisión por cable
+      li.fragment Standard: IEEE 802.6 DQDB ($\sim 30$km, $34$-$155$Mbps)
+      li.fragment Velocidades: $37\sim 219Mbps$ downstream, $17\sim 140Mbps$ upstream
+      li.fragment Velocidad límite depende de la distancia (inversamente proporcional)
+      li.fragment Rango: kms
+    
+    div
+      img src='/images/figures/05-man.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    div <b>WAN: <i>Wide Area Network</i></b>
+
+    div style="text-align:left;" Rango de países o continentes
+    ul
+      li.fragment Conexión de <b>hosts</b> a grandes distancias
+      li.fragment Organizada en subredes
+  
+    div style="text-align:left;" Elementos:
+    ul
+      li.fragment Líneas de transmisión: cables de cobre, fibra óptica, ondas de radio
+      li.fragment <b>Router</b>: dispositivo que permite conectar dos o más subredes
+      li.fragment Subredes pueden ser redes de diferentes tecnologías
+      li.fragment <i>Interredes</i>: redes compuestas. <b>Internet</b> es un ejemplo
+      
+    div style="text-align:left;" Ejemplos wireless:
+    ul
+      li.fragment Redes satelitales
+      li.fragment Redes de celulares (ya en su 4ta generación)
+  
+
+  section
+    div <b>WAN: <i>Wide Area Network</i></b>
+
+    div Modelo general. Compañía con oficinas en diferentes lugares geográficos
+
+    div
+      img src='/images/figures/05-wan1.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+
+  section
+    div <b>WAN: <i>Wide Area Network</i></b>
+
+    div <b>Virtual Private Network</b> (VPN)
+
+    ul
+      li.fragment Formaciones de subredes privadas sobre WAN existentes
+      li.fragment Ventaja: virtualización (flexibilidad)
+      li.fragment Desventaja: virtualización (calidad de enlace)
+
+    div
+      img src='/images/figures/05-wan2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div <b>WAN: <i>Wide Area Network</i></b>
+
+    div Subredes operadas por diferentes compañías
+
+    ul
+      li.fragment Operador se llama <b>ISP</b>: <b>Internet Service Provider</b>
+      li.fragment Operador permite acceso a su red a clientes
+    
+    div
+      img src='/images/figures/05-wan3.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+
+  section
+    h3 Topologías
+
+    div Diferentes topologías para conectar nodos/hosts
+  
+    div
+      img src='/images/figures/05-topologias.png' style="background:none; border:none; box-shadow:none;" width="50%"
+  
+
+
+
+
+
+
+
