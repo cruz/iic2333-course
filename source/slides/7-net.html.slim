@@ -279,10 +279,270 @@ section
     div
       img src='/images/figures/05-topologias.png' style="background:none; border:none; box-shadow:none;" width="50%"
   
+section
+  h2 Conceptos de Software
+
+  section 
+    div <i>Hardware</i> soluciona la mitad de la tarea
+    ul
+      li El mensaje debe llegar a un proceso
+      li Redes se organizan en base a un modelo de capas
+      li Capas se comunican usando <b>protocolos</b>
+
+    h3 Protocolo
+
+    div Contrato de comunicación entre distintas partes acerca de la manera en que se producirá la comunicación
+
+  section
+
+    div
+      img src='/images/figures/05-layers.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Una instanciación de este modelo define un <i>stack de protocolos</i>
+
+  section
+
+    div
+      img src='/images/figures/05-translations.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Mensajes pueden ser modificados en cada capa, agregando <i>headers</i> o modificando todo el mensaje.
+
+  section
+
+    div <b>¿Servicios o protocolos?</b>
+
+    div style="text-align:left;" <b>Servicio</b>: conjunto de primitivas que provee una funcionalidad
+  
+    div style="text-align:left;" <b>Protocolo</b>: conjunto de reglas para intercambio de paquetes y comunicación
+  
+    div
+      img src='/images/figures/05-servicioprotocolo.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Protocolo puede ser cambiado sin afectar al servicio  
+
+  section
+
+    div <b>Un protocolo de comunicación</b>
+
+    div Protocolo de comunicación basado en Berkeley Sockets
+  
+    ul
+      li <code>LISTEN</code>: bloquea esperando conexión
+      li <code>CONNECT</code>: establece conexión con un <i>peer</i>
+      li <code>ACCEPT</code>: acepta conexión desde un <i>peer</i>
+      li <code>RECEIVE</code>: bloquea esperando un mensaje
+      li <code>SEND</code>: envía un mensaje al <i>peer</i>
+      li <code>DISCONNECT</code>: cierra conexión
+
+  section
+
+    div <b>Un protocolo de comunicación</b>
+
+    ul
+      li Server ejecuta <code>LISTEN</code>
+      li Client ejecuta <code>CONNECT</code> especificando dirección del servidor
+      ul
+        li SO envía paquete y bloquea al client esperando respuesta
+        
+      li SO recibe paquete, busca algún proceso que haya hecho <code>LISTEN</code>, copia paquete y desbloquea
+      li Server puede decidir si acepta la conexión haciendo <code>ACCEPT</code>
+      ul
+        li SO server envía mensajes de aceptación a client
+        li SO client recibe mensaje y desbloquea a proceso client
+        
+      li Proceso client y server quedan conectados y puede enviarse mensajes
+
+  section
+
+    div <b>Un protocolo de comunicación</b>
+
+    ul
+      li Server ejecuta <code>RECEIVE</code> para esperar mensajes
+      li Client ejecuta <code>SEND</code> para enviar mensajes
+      li Client finaliza comunicación con <code>DISCONNECT</code>
+    
+    div
+      img src='/images/figures/05-ejemploprotocolo.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+section
+  h2 Modelos de referencia
+
+  section
+    div Modelo ISO <b>OSI</b> (<b>Open Systems Interface</b>)
+
+    ul
+      li Propuesto en 1983 por Day y Zimmerman, revisado en 1995
+      li <b>Modelo de referencia</b>
+      ul
+        li Define responsabilidades para cada capa
+        li No define estándares, ni protocolos, ni implementaciones
+      
+    div
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    
+  section
+
+    div
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="50%"
+  
+  section
+    h3 ¿Qué hace cada nivel?
+
+    ul
+      li <b>Capa Física</b>. Transmisión de <b>bits</b> en canal de comunicación.
+      ul
+        li Tiempo de transmisión, frecuencia de transmisición, codificación
+      
+      li <b>Capa de Enlace</b> (<i>data link</i>). Transmisión secuencial de grupos de bits: <i>frames</i> de manera que lleguen sin errores.
+      ul
+        li Control de velocidad de transmisión.
+        li Control de acceso al medio (MAC)
+      
+      li <b>Capa de Red</b> (<i>network</i>). Transmisión de paquetes de datos entre nodos de la red.
+      ul
+        li ¿Cómo encontrar al destinatario? Direccionamiento
+        li ¿Qué ruta deben seguir los paquetes para llegar?
+      
+  section
+    h3 ¿Qué hace cada nivel?
+
+    ul
+      li <b>Capa de Transporte</b>. Transmisión del mensajes solicitados desde la fuentel espacio al destinatario
+      ul
+        li Orden y velocidad de transmisión de paquetes (control de flujo)
+        li ¿Cómo asegurar que todos los paquetes hayan llegado?
+        li Connection-oriented vs connection-less
+      
+      li <b>Capa de Sesión</b>. Mantenimiento de sesiones, turnos de transmisión, sincronización
+      li <b>Capa de Presentación</b>. Definición de sintaxis y semántica de datos a transmitir.
+      li <b>Capa de Aplicación</b>. Protocolos de comunicación entre procesos para objetivos específicos
+      ul
+        li HTTP, FTP, SSH, SMTP, IMAP, XMPP, DNS, TELNET, DHCP, \ldots
+      
+  section
+    h3 Modelo TCP/IP 
+
+    div Originado como <i>stack</i> de protocolos para ARPANET, proyecto de investigación del DoD
+    ul
+      li Propuesto por Vinton Cerf y Robert E. Kahn, 1974
+      li Estandarizado en 1989
+    
+    div
+      img src='/images/figures/05-tcpip.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
 
+  section
+    h3 Modelo TCP/IP 
 
+    ul
+      li <b>Link layer</b>. Incluye funciones de capas OSI 1 y 2.
+      ul
+        li Inyección de paquetes de capa superior a algún medio de transmisión .
+        li También llamado <i>ost-to-network</i>. Poco especificada.
+      
+      li <b>Internet layer</b> (interred). Transmisión de paquetes entre redes.
+      ul
+        li Protocolo IP. Internet Protocol.
+        li Protocolo ICMP. Internet Control Message Protocol.
+      
+      li <b>Transport layer</b>. Transmisión de mensajes entre fuente y destinatario.
+      ul
+        li TCP. Transmission Control Protocol. Connection-oriented.
+        li UDP. User Datagram Protocol. Connectionless.
+      
+      li <b>Application Layer</b>. Equivalente a capas 5,6 y 7 de OSI.
+      ul
+        li Protocolos de aplicaciones visibles para el usuario.
+        li Conexiones a través de <i>sockets</i>.
+        li Servicios estandarizados en <i>well-known</i> ports por <b>IANA</b> (Internet Assigned Numbers Authority)
+        
 
+  section
+    h3 Modelo TCP/IP 
+
+    div
+      img src='/images/figures/05-tcpip-osi.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Modelo TCP/IP 
+
+    div
+      img src='/images/figures/05-tcpip-resumen.jpg' style="background:none; border:none; box-shadow:none;" width="65%"
+
+  section
+    h3 Modelo de capas 
+
+    div Mensajes van adquiriendo <i>header</i>s en cada capa
+  
+    div
+      img src='/images/figures/05-mensajes.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 <i>Header</i> TCP
+
+    div
+      img src='/images/figures/05-headertcp.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 <i>Header</i> IP
+
+    div
+      img src='/images/figures/05-headerip.png' style="background:none; border:none; box-shadow:none;" width="50%"
+  
+  section
+    h3 Paquete 802.11
+
+    div
+      img src='/images/figures/05-header80211.png' style="background:none; border:none; box-shadow:none;" width="50%"
+  
+section
+  h2 Redes
+  
+  section
+    h3 Internet
+
+    div
+      img src='/images/figures/05-internet.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    a src='http://www.submarinecablemap.com/' http://www.submarinecablemap.com/
+
+  section
+
+    h3 Comunicación Móvil
+
+    ul
+      li 1G. AMPS (Advanced Mobile Phone System). Análogo, 1982.
+      li 2G. GSM (Global System for Mobile Communications) 1991.
+      li 3G. Voz digital + banda ancha de datos, 2001.
+      ul
+        li UMTS (Universal Mobile Telecommunications Systems) a.k.a. WCDMA (Wideband Code Division Multiple Access)
+        li $\sim 14$Mbps <i>downlink</i>, $\sim 6$Mbps <i>uplink</i>
+        li Recurso escaso: espectro de frecuencias. Celdas adyacentes usan frecuencias distintas
+    
+    div
+      img src='/images/figures/05-mobile1.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    h3 Comunicación Móvil
+
+    div Arquitectura
+    ul
+      li RNC, Radio Network Controller
+      li PSTN, Public Switched Telephone Network
+
+    div
+      img src='/images/figures/05-mobile2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+    
+  section
+    h3 Comunicación Móvil
+
+    div Redes móviles tienen el desafío del <b>handover</b>
+    ul
+      li <b>Hard handover</b>. Desconectarse de una celda antes de conectarse a la siguiente.
+      li <b>Soft handover</b>. Mantener la conexión hasta encontrar otra celda.
+  
+    div
+      img src='/images/figures/05-mobile3.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
 
 
