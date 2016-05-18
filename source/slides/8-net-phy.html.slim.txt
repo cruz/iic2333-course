@@ -1,114 +1,4 @@
-\frame{\titlepage}
 
-%---------------------------------------------------------------------
-/ Frame
-\frametitle{Contenidos}
-%\tableofcontents[currentsection]
-\tableofcontents
-
-
-
-%---------------------------------------------------------------------
-\section{Señales y Medios de Transmisión}
-
-\subsection{Transmisión de señales}
-
-/ Frame
-  \frametitle{Capa Física}
-  Objetivo: transmisión de bits a través de un medio físico
-  
-  \onslide<2->{¿Cómo se transmiten información por un cable?}
-  
-  ul
-    li.fragment<3->{¡Variaciones de voltaje!}
-    li.fragment<4->{Voltaje puede ser expresado como una función que depende del tiempo: $g(t)$}
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame  
-  \frametitle{Capa Física}
-
-  Objetivo: transmitir la siguiente secuencia de bits:
-  
-  \begin{center}
-    \includegraphics[width=6cm]{figs/06-bits.png}
-  \end{center}
-
-
-
-%---------------------------------------------------------------------
-/ Frame  
-  \frametitle{Capa Física}
-
-  Problema: la señal no es perfecta
-  
-  \begin{center}
-    \includegraphics[width=6cm]{figs/06-bits-real.png}
-  \end{center}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Series de Fourier}
-
-  \begin{alertblock}{Jean-Baptiste Fourier, S.XIX}
-    Cualquier función periódica $g(t)$, con periodo $T$ puede ser construida como una suma,
-    posiblemente infinita, de senos y cosenos
-    
-    \[g(t) = \frac{1}{2}c + \sum^\infty_{n=1}a_n \sin(2\pi nft) + \sum^\infty_{n=1}b_n \cos(2\pi nft) \]
-  \end{alertblock}
-  
-  donde:
-  ul
-    li.fragment $f=1/T$ es la frecuencia fundamental
-    li.fragment $a_n$ y $b_n$ son las amplitudes de los $n$-ésimo armónicos
-    li.fragment $c$ es una constante
-  
-  Conociendo $a_n$, $b_n$, $c$ y $T$, se puede reconstruir la función
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{¿Armónicos?}
-
-  Múltiplos de una frecuencia fundamental
-  
-  \begin{center}
-    \includegraphics[width=6cm]{figs/06-armonicos.png}
-  \end{center}
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Sumando armónicos}
-
-  Reconstruyendo señales
-  
-  \begin{center}
-    \includegraphics[width=10cm]{figs/06-fouriers.png}
-  \end{center}
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Reconstrucción de una señal}
-
-  Ejemplo: Transmisión del caracter ASCII {\tt b}$=01100010$
-  
-  \begin{center}
-    \includegraphics<1>[width=6cm]{figs/06-bits.png}
-    \includegraphics<2>[width=10cm]{figs/06-fouriers-1.png}
-    \includegraphics<3>[width=10cm]{figs/06-fouriers-2.png}
-    \includegraphics<4>[width=10cm]{figs/06-fouriers-3.png}
-    \includegraphics<5>[width=10cm]{figs/06-fouriers-4.png}
-  \end{center}
 
 
 %---------------------------------------------------------------------
@@ -120,7 +10,7 @@
   Todos los medios sufren atenuación
   ul
     li.fragment Hasta cierta frecuencia $f_c$ (en Hz) las amplitudes de los armónicos más altos se pierden
-    li.fragment La capacidad de frecuencias (harmónicos) que se pueden enviar por el canal
+    li.fragment La capacidad de frecuencias (armónicos) que se pueden enviar por el canal
           sin ser (muy) atenuadas, determina el {\bf ancho de banda}
   
   Si queremos enviar $8$-bit, a $b$ bits/sec (bps)
@@ -142,57 +32,6 @@
     \includegraphics[width=10cm]{figs/06-bitrates.png}
   \end{center}
 
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Ancho de banda máximo}
-
-  Henry Nyquist (1924): Una señal con frecuencia $B$ puede ser completamente reconstruída
-  tomando exactamente $2B$ muestra por segundo
-  
-  \begin{alertblock}{Teorema de Nyquist}
-    \[\text{Máxima tasa de transferencia} = 2B \log_2 V \text{bps}\]
-  \end{alertblock}
-  
-  donde:
-  ul
-    li.fragment $B$: frecuencia máxima de la señal
-    li.fragment $V$: cantidad de niveles discretos
-  
-  Ejemplo
-  ul
-    li.fragment Canal perfecto de $3000$ Hz.
-    li.fragment Transmisión binaria, $V=2$
-    li.fragment Tasa máxima: $6000$ bps
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Ancho de banda máximo}
-
-  Pero los canales tienen ruido.
-  
-  Claude Shannon (1948) presentó una fórmula para este caso
-  
-  \begin{alertblock}{Teorema de Shannon}
-    \[\text{Máxima tasa de transferencia} = B \log_2 (1+\frac{S}{N}) \text{bps}\]
-  \end{alertblock}
-  donde:
-  ul
-    li.fragment $S$: potencia de señal; $N$: potencia de ruido 
-      ul
-        li.fragment $S/N$: SNR, Signal-to-Noise Ratio.
-        li.fragment Expresado en escala logarítimca: {\bf decibeles}
-        li.fragment $S/N=10=10\text{db}$;$100=20\text{db}$;$1000=30\text{db}$
-      
-  
-  Ejemplo: línea ADSL sobre red telefónica: 1MHz
-  ul
-    li.fragment Ancho de banda depende de SNR.
-    li.fragment SNR$=40$db, $1\sim 2$Km (bueno)
-    li.fragment Ancho de banda máximo: 13Mbps
-  
 
 
 %---------------------------------------------------------------------

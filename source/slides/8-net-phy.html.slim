@@ -1,0 +1,209 @@
+---
+title: Capa Física
+layout: slide
+---
+
+section
+  h2 Transmisión de Señales
+
+  section
+    div style="text-align:left;" <b>Objetivo</b>: Transmisión de bits a través de un medio físico
+
+    div.fragment style="text-align:left;" ¿Cómo transmitir información a través de un cable?
+    ul.fragment
+      li Mediante varaciones de voltaje: $v(t)$
+
+    div.fragment
+      img src='/images/figures/06-bits.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div.fragment Pero la señal no es perfecta
+  
+    div.fragment
+      img src='/images/figures/06-bits-real.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+
+  section
+    div style="text-align:left;" Pero existen las <i>Series de Fourier</i> (Jean-Baptiste Fourier, S.XIX)
+
+    div style="text-align:left;" Cualquier función periódica $g(t)$, con periodo $T$ puede ser construida como una suma, posiblemente infinita, de senos y cosenos
+    
+    div \[g(t) = \frac{1}{2}c + \sum^\infty_{n=1}a_n \sin(2\pi nft) + \sum^\infty_{n=1}b_n \cos(2\pi nft) \]
+  
+    ul
+      li Donde $f=1/T$ es la frecuencia fundamental 
+      li $a_n$ y $b_n$ son las amplitudes de los $n$-ésimo armónicos
+      li $c$ es una constante
+    
+    div style="text-align:left;" Conociendo $a_n$, $b_n$, $c$ y $T$, se puede reconstruir la función
+
+  section
+    div Múltiplos de una frecuencia fundamental
+  
+    div
+      img src='/images/figures/06-armonicos.png' style="background:none; border:none; box-shadow:none;" width="35%"
+  
+  section
+    div Reconstruyendo señales
+
+    div
+      img src='/images/figures/06-fouriers.png' style="background:none; border:none; box-shadow:none;" width="55%"
+  
+  section
+    div Transmisión del caracter ASCII <code>b</code>$=01100010$
+    img src='/images/figures/06-bits.png' style="background:none; border:none; box-shadow:none;" width="20%"
+
+    div
+      img src='/images/figures/06-fouriers-1.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    div
+      img src='/images/figures/06-fouriers-2.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    div
+      img src='/images/figures/06-fouriers-3.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    div
+      img src='/images/figures/06-fouriers-4.png' style="background:none; border:none; box-shadow:none;" width="25%"
+  
+
+  section
+    div Hay un límite de lo que se puede mandar por un canal. Lo dijo Claude Shannon (1948)
+
+    div Máxima tasa de transferencia $= B \log_2 (1+\frac{S}{N}) \text{bps}$
+
+    div style="text-align:left;"
+      ul style="text-align:left;"
+        li style="text-align:left;" $S$: potencia de señal; $N$: potencia de ruido 
+        li style="text-align:left;" $S/N$: SNR, Signal-to-Noise Ratio, expresado en escala logarítmica  <b>decibeles</b>
+        li style="text-align:left;" $S/N=10=10\text{db}$;$100=20\text{db}$;$1000=30\text{db}$
+      
+  
+    div style="text-align:left;" Ejemplo: línea ADSL sobre red telefónica: 1MHz
+    ul
+      li Ancho de banda depende de SNR.
+      li SNR $=40$db, $1\sim 2$Km (bueno)
+      li Ancho de banda máximo: 13Mbps
+      
+
+  section
+    div
+      img src='/images/figures/06-espectro.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+/ Frame
+  \frametitle{Espectro electromagnético}
+  
+  \begin{center}
+    \includegraphics[width=10cm]{figs/06-espectro.png}
+  \end{center}
+
+
+section
+  h2 Medios de transmisión
+
+  section
+    div Cableado estructurado
+
+    div
+      img src='/images/figures/06-cables.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    ul
+      li Cables trenzados se comportan como una antena
+      li Categorías según cuan trenzados están: 3, 5, 5b, 6
+      li Recorren varios kilómetros ($\sim 5$km) sin atenuarse
+      li Uso para telefonía, ethernet
+  
+    div
+      img src='/images/figures/06-trenzados.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div Cable coaxial de cobre
+
+    ul
+      li Alta resistencia al ruido externo
+      li Ancho de banda depende de la distancia
+      li Fácil de modificar para insertar nodos nuevos
+      
+    div
+      img src='/images/figures/06-coaxial.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    div Fibra óptica
+
+    ul
+      li Transmisión y detección de luz
+      li Cables hechos de vidrio
+      li Alta velocidad de transferencia
+  
+    div
+      img src='/images/figures/06-fibra1.png' style="background:none; border:none; box-shadow:none;" width="15%"
+
+    ul
+      li Monomodo: un haz de luz
+      li Multimodo: múltiples haces a distintos ángulos
+  
+    div
+      img src='/images/figures/06-fibra2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    div Medios inalámbricos
+
+    div
+      img src='/images/figures/06-satelite1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div
+      img src='/images/figures/06-satelite2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div Medios inalámbricos terrestres
+
+    ul
+      li Señal se debilita en el aire al propagarse
+      li Interferencia con otras señales: asignación de frecuencias
+      li Propagación multicamino: señales llegan por distintos caminos
+
+    div
+      img src='/images/figures/06-multipath.jpg' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div Estándares inalámbricos
+  
+    div
+      img src='/images/figures/06-wireless.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+    div IEEE 802.11, Wireless LAN
+
+    div
+      img src='/images/figures/06-802.11.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    ul
+      li.fragment Estación base: <i>Access Point</i> (AP)
+      li.fragment BSS: Basic Service Set
+      li.fragment Modos de operación: <i>infrastructure</i> y <i>ad-hoc</i>
+  
+  section
+    div IEEE 802.11, Wireless LAN}
+
+    div Canales. Espectro 2.4GHz $\sim$ 2.485GHz dividido en 11 canales
+  
+    ul
+      li.fragment Administrador de AP elige el canal
+      li.fragment <i>Host</i> escucha canales y detecta <i>beacons</i> enviados por AP
+      li.fragment <i>Beacons</i> contienen SSID (nombre de AP) y MAC Address de AP
+    
+
+    div
+      img src='/images/figures/06-channels.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    div Mobile standards
+
+    div
+      img src='/images/figures/06-mobilestds.jpg' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    div Mobile standards
+
+    div
+      img src='/images/figures/06-mobilestds2.jpg' style="background:none; border:none; box-shadow:none;" width="60%"
+
