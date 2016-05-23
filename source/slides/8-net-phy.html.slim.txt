@@ -10,7 +10,7 @@
   Todos los medios sufren atenuación
   ul
     li.fragment Hasta cierta frecuencia $f_c$ (en Hz) las amplitudes de los armónicos más altos se pierden
-    li.fragment La capacidad de frecuencias (armónicos) que se pueden enviar por el canal
+    li.fragment La capacidad de frecuencias (harmónicos) que se pueden enviar por el canal
           sin ser (muy) atenuadas, determina el {\bf ancho de banda}
   
   Si queremos enviar $8$-bit, a $b$ bits/sec (bps)
@@ -33,82 +33,35 @@
   \end{center}
 
 
-
 %---------------------------------------------------------------------
 / Frame
-  \frametitle{Espectro electromagnético}
+  \frametitle{Ancho de banda máximo}
+
+  Henry Nyquist (1924): Una señal con frecuencia $B$ puede ser completamente reconstruída
+  tomando exactamente $2B$ muestra por segundo
   
-  \begin{center}
-    \includegraphics[width=10cm]{figs/06-espectro.png}
-  \end{center}
+  \begin{alertblock}{Teorema de Nyquist}
+    \[\text{Máxima tasa de transferencia} = 2B \log_2 V \text{bps}\]
+  \end{alertblock}
+  
+  donde:
+  ul
+    li.fragment $B$: frecuencia máxima de la señal
+    li.fragment $V$: cantidad de niveles discretos
+  
+  Ejemplo
+  ul
+    li.fragment Canal perfecto de $3000$ Hz.
+    li.fragment Transmisión binaria, $V=2$
+    li.fragment Tasa máxima: $6000$ bps
+  
+
 
 
 
 %---------------------------------------------------------------------
 \subsection{Medios de transmisión}
 
-/ Frame
-  \frametitle{Cableado Estructurado}
-
-  \begin{center}
-    \includegraphics[width=10cm]{figs/06-cables.png}
-  \end{center}
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Cableado Estructurado}
-
-  ul
-    li.fragment Cables trenzados se comportan como una antena
-    li.fragment Categorías según cuan trenzados estén: 3, 5, 5b, 6
-    li.fragment Recorren varios kilómetros ($\sim 5$km) sin atenuarse
-  
-  \begin{center}
-    \includegraphics[width=5cm]{figs/06-trenzados.png}
-  \end{center}
-  Uso:
-  ul
-    li.fragment Telefonía, ethernet
-  
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Cableado Estructurado}
-  
-  Cable coaxial de cobre
-  ul
-    li.fragment Alta resistencia al ruido externo
-    li.fragment Ancho de banda depende de la distancia
-    li.fragment Fácil de modificar para insertar nodos nuevos
-    %li.fragment Difícil detectar fallos
-  
-  \begin{center}
-    \includegraphics[width=4cm]{figs/06-coaxial.png}
-  \end{center}
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Cableado Estructurado}
-
-  Fibra óptica
-  ul
-    li.fragment Transmisión y detección de luz
-    li.fragment Cables hechos de vidrio
-    li.fragment Alta velocidad de transferencia
-  
-  \begin{center}
-    \includegraphics[width=2cm]{figs/06-fibra1.png}
-  \end{center}
-  ul
-    li.fragment Monomodo: un haz de luz
-    li.fragment Multimodo: múltiples haces a distintos ángulos
-  
-  \begin{center}
-    \includegraphics[width=7cm]{figs/06-fibra2.png}
-  \end{center}
 
 %---------------------------------------------------------------------
 / Frame
@@ -129,45 +82,6 @@
   
 
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Medios Inalámbricos}
-
-  \begin{center}
-    \includegraphics[width=7cm]{figs/06-satelite1.png}
-  \end{center}
-
-  \begin{center}
-    \includegraphics[width=7cm]{figs/06-satelite2.png}
-  \end{center}
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Medios Inalámbricos}
-
-  Medios inalámbricos ``terrestres''
-  ul
-    li.fragment Señal se debilita en el aire al propagarse
-    li.fragment Interferencia con otras señales: asignación de frecuencias
-    li.fragment Propagación multicamino: señales llegan por distintos caminos
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Medios Inalámbricos}
-
-  Estándares de comunicación inalámbrica
-  
-  \begin{center}
-    \includegraphics[width=10cm]{figs/06-wireless.png}
-  \end{center}
-  
-
-
 
 %---------------------------------------------------------------------
 / Frame
@@ -182,21 +96,6 @@
     li.fragment 802.11n, $2.4\sim 2.5$GHz, 200 Mbps, múltiples antenas
   
 
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Medios Inalámbricos}
-  \framesubtitle{IEEE 802.11, Wireless LAN}
-
-  \begin{center}
-    \includegraphics[width=4cm]{figs/06-wlan.png}
-  \end{center}
-
-  ul
-    li.fragment Estación base: {\em Access Point} (AP)
-    li.fragment BSS: Basic Service Set
-    li.fragment Modos de operación: {\em infrastructure} y {\em ad-hoc}
-  
   
 
 %---------------------------------------------------------------------
@@ -291,34 +190,6 @@
 %---------------------------------------------------------------------
 \section{Frames, control de flujo, corrección de errores}
 
-/ Frame
-  \frametitle{Capa de Enlace}
-  
-  Objetivo: transmitir datos de la capa de red a través un enlace particular
-  
-  ul
-    li.fragment Unidad de transmisión: {\bf frame}
-  
-  
-  Desafíos:
-  ul
-    li.fragment Múltiples nodos intentando acceder a un medio compartido
-    li.fragment Cómo asegurar que un {\bf frame} llegue íntegramente: {\bf detección de errores}
-    li.fragment Qué hacer si un {\em host} llega a un punto de saturación y no puede recibir/emitir más frames:
-          {\bf control de flujo}
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Capa de Enlace}
-  
-  ul
-    li.fragment Datos de capa de red se encapsula en un {\em frame} delimitado
-          por {\em header} y {\em trailer}
-    li.fragment Identificación de {\em hosts} de origen y destino: {\bf MAC Address}
-  
 
 
 %---------------------------------------------------------------------
@@ -335,22 +206,6 @@
         li.fragment Si se agrega código de corrección, receptor puede corregir
       
   
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Capa de Enlace}
-
-  ¿Dónde se implementa?
-  
-  ul
-    li.fragment {\bf Network Interface Card} (NIC)
-  
-
-  \begin{center}
-    \includegraphics[width=6cm]{figs/06-nic.png}
-  \end{center}
-
 
 
 %---------------------------------------------------------------------
@@ -384,131 +239,15 @@
 
 
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Detección de errores}
-  \framesubtitle{Shit happens}
-  
-  ¿Cómo saber si un {\em frame} llegó con errores?
-  
-  ul
-    li.fragment Se agregan bits de ``comprobación'' que ayuden a detectar algunos errores.
-  
-
-  \begin{center}
-    \includegraphics[width=9cm]{figs/06-errordetection.png}
-  \end{center}
-
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Detección de errores}
-  \framesubtitle{Bits de paridad}
-
-  ul
-    li.fragment Paridad simple. Para detectores errores de un bit
-      \begin{center}
-        \includegraphics[width=3cm]{figs/06-paritysimple.png}
-      \end{center}
-    li.fragment Paridad doble. Para detectar {\bf y corregir} errores de un bit
-      \begin{center}
-        \includegraphics[width=4cm]{figs/06-paritydouble.png}
-      \end{center}
-  
-
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{CRC: {\em Cyclic Redundancy Check}}
-  \framesubtitle{Comprobación de Redundancia Cíclica}
-
-  ul
-    li.fragment $D$: secuencia de $d$ bit de datos
-    li.fragment $R$: secuencia de $r$ bit de comprobación (CRC)
-    li.fragment Se usa un patrón conocido $G$, de $r+1$ bit
-    ul
-      li.fragment La secuencia $\langle D,R \rangle$ debe ser divisible por $G$
-      li.fragment Receptor puede chequear el resto de dividir $\langle D,R \rangle$ por $G$
-      li.fragment Esquema detecta errores de hasta $r$ bit
-    
-    li.fragment Teoría: 
-      ul
-        li.fragment $(D\times 2^r) \oplus R = nG$
-        li.fragment $(D\times 2^r) = nG \oplus R$
-        li.fragment $R$ es el resto de la división binaria $\frac{D \times 2^r}{G}$
-      
-  
-  
-
-
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{CRC: {\em Cyclic Redundancy Check}}
-  \framesubtitle{Comprobación de Redundancia Cíclica}
-
-  Ejemplo: $D=101110$, $G=1001$, determinar $R$
-  
-  \begin{tabular}{ccccccccc}
-    1 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\
-    1 & 0 & 0 & 1 &   &   &   &   &   \\ \hline
-    0 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 \\
-      &   & 1 & 0 & 0 & 1 &   &   &   \\ \hline
-      &   & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
-      &   &   &   & 1 & 0 & 0 & 1 &   \\ \hline
-      &   &   &   & 0 & 1 & 0 & 1 & 0 \\
-      &   &   &   &   & 1 & 0 & 0 & 1 \\ \hline
-      &   &   &   &   & 0 & 0 & 1 & 1 \\ \hline
-  \end{tabular}
-  $R = 011$
-  ul
-    li.fragment Se envía: $101110011$
-  
-  Paridad simple es un caso particular, con $G=1$
 
 
 %---------------------------------------------------------------------
 \section{Acceso al medio: ethernet y wireless LAN}
-
-/ Frame
-  \frametitle{Acceso al medio: MAC}
-  \framesubtitle{{\em Medium Access Control}}
   
-  Problema: múltiples usuarios requieren acceso a un medio
-  ul
-    li.fragment Importante para medios compartidos ({\em broadcast})
-  Tres tipos de soluciones
-  ul
-    li.fragment Partición de canal: tiempo, frecuencia o código
-    li.fragment Acceso aleatorio
-    li.fragment Turnos
-  
-    
   
 
 
 
-%---------------------------------------------------------------------
-/ Frame
-  \frametitle{Partición de canal: TDMA}
-  \framesubtitle{{\em Time Division Multiple Access}}
-
-  ul
-    li.fragment Acceso por turnos fijos
-    li.fragment Cada nodo tiene un {\em slot} que es múltiplo de un periodo de tiempo
-      ul
-        li.fragment Con $N$ nodos y {\em slot} de tiempo $T$, se hacen rondas de $NT$
-        li.fragment Nodo $i$ durante $[(rN+i)\times T, (rN+i+1)\times T)$
-        li.fragment Con 6 nodos de 5 sec, nodo 0 transmite durante $[0,5), [30,35), [60,65), \ldots$
-      
-    li.fragment {\em Slot}s no utilizados se pierden
-  
-  
-  \begin{center}
-    \includegraphics[width=7cm]{figs/06-tdma.png}
-  \end{center}
 
 
 

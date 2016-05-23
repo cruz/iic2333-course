@@ -11,10 +11,293 @@ section
 
     div style="text-align:left;" <b>Unidad de transmisión</b>: <i>frame</i>
 
+    div style="text-align:left;" <b>Servicios</b>:
+    ul
+      li Transforme un <i>paquete</i> en <i>frames</i>, y transmitirlo a través de UN enlace.
+      li Determinar quién puede usar el medio compartidor: <b>Medium Access Control</b> (MAC)
+      li Transferencia confiable en medios con alta tasa de errores.
+      li Detección y corrección de errores.
+      li Qué hacer si un <i>host</i> llega a un punto de saturación y no puede recibir/emitir más frames:
+         <b>control de flujo</b>
+      
+  section
+    div
+      img src='/images/figures/07-linkhops.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+    div Cada enlace funciona de manera independiente de los demás.
+
+  section
+    div ¿Dónde se implementa la capa de red?
+
+    ul
+      li <b>Network Interface Card</b> (NIC)
+  
+    div
+      img src='/images/figures/06-nic.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+section
+  h2 Detección de errores
+
+  section
+    div ¿Cómo saber si un <i>frame</i> llegó con errores?
+  
+    ul
+      li Se agregan bits de redundancia que ayuden a detectar algunos errores.
+  
+    div                        
+      img src='/images/figures/06-errordetection2.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    h3 Parity Check
+
+    div Paridad simple. Errores de un bit
+
+    div                        
+      img src='/images/figures/06-paritysimple2.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div Paridad doble. Detectar <b>y corrige</b> errores de un bit. Detecta errores de 2 bit.
+    div                        
+      img src='/images/figures/06-paritydouble2.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    h3 Checksums
+
+    div Los bits se toman como secuencias de enteros de $k$ bit ($k < d$), y se suman. 
+
+    div                        
+      img src='/images/figures/06-paritysimple2.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div Facil de implementar en software, pero no protege contra muchos errores.
+
+  section
+    h3 Cyclic Redundancy Check (CRC)
+
+    ul
+      li  $D$: secuencia de $d$ bit de datos
+      li  $R$: secuencia de $r$ bit de comprobación (CRC)
+      li  $G$: patrón conocido $G$, de $r+1$ bit
+
+    ul
+      li La secuencia $\langle D,R \rangle$ debe ser divisible por $G$
+      li Receptor puede chequear el resto de dividir $\langle D,R \rangle$ por $G$
+      li Detecta errores de hasta $r$ bit
+    
+    div Teoría
+    ul
+      li  $(D\times 2^r) \oplus R = nG$
+      li  $(D\times 2^r) = nG \oplus R$
+      li  $R$ es el resto de la división binaria $\frac{D \times 2^r}{G}$
+
+    div                        
+      img src='/images/figures/06-crc2.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    div Ejemplo: $D=101110$, $G=1001$, determinar $R$
+ 
+    div                        
+      img src='/images/figures/06-crc3.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div Se envía: $101110011$
+
 
 section
   h2 MAC: Acceso al medio
 
+  section
+    div Problema de acceso al medio. Presente en medios compartidos (broadcast)
+    ul
+      li Partición de canal: tiempo, frecuencia o código
+      li Acceso aleatorio
+      li Turnos
+
+    div
+      img src='/images/figures/06-macproblem.png' style="background:none; border:none; box-shadow:none;" width="40%"
+  
+  section
+    h3 Particionamiento por tiempo: Time-Division Multiple Access (TDMA)
+
+    ul
+      li Acceso por turnos fijos
+      li Cada nodo tiene un <i>slot</i> que es múltiplo de un periodo de tiempo
+      ul
+        li Con $N$ nodos y <i>slot</i> de tiempo $T$, se hacen rondas de $NT$
+        li Nodo $i$ durante $[(rN+i)\times T, (rN+i+1)\times T)$
+        li Con 6 nodos de 5 sec, nodo 0 transmite durante $[0,5), [30,35), [60,65), \ldots$
+      
+    li <i>Slot</i>s no utilizados se pierden
+  
+    div                        
+      img src='/images/figures/06-tdma2.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    h3 Particionamiento por frecuencia: Frequency-Division Multiple Access (FDMA)
+
+    ul
+      li División por bandas de frecuencia. (Ej: canales de radio, televisión)
+      li Cada estación tiene una banda fija asignada
+      li Bandas no utilizadas quedan inactivas
+  
+
+    div                        
+      img src='/images/figures/06-fdma.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Particionamiento por código: Code-Division Multiple Access (CDMA)
+
+    ul
+      li Permite que varios usuarios transmitan en la misma frecuencia
+      li Cada usuario posee un código de transmisión: códigos debe ser ortogonales
+      ul
+        li Señal a transmitir: <i>data cliente</i> $ \cdot $ <i>código cliente</i>
+        li Señal recibida: <i>data recibida</i> $ \cdot $ <i>código cliente</i>
+
+  section
+
+    div                        
+      img src='/images/figures/06-cdma11.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+
+    div                        
+      img src='/images/figures/06-cdma22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Acceso aleatorio
+
+    div Protocolos optimistas
+
+    ul
+      li Cada nodo transmite cuando lo desea ocupando todo el ancho de banda disponible
+      li Si dos o más transmite al mismo tiempo, se produce <b>colisión</b>
+      li Protocolo debe determinar:
+      ul
+        li Cómo detectar colisiones
+        li Qué hacer ante una colisión (cómo recuperarse)
+      
+    li Protocolos:
+    ul
+      li ALOHA particionado
+      li ALOHA
+      li CSMA, CSMA/CD, CSMA/CA
+
+  section
+    h3 ALOHA PARTICIONADO
+
+    ul
+      li Todos los frames deben tener el mismo tamaño
+      li El tiempo se divide en particiones del tamaño requerido para transmitir un frame
+      li Nodos pueden empezar a transmitir sólo al comienzo de estas particiones
+      li Si dos o más empiezan a transmitir en la misma partición, se detecta <b>colisión</b>
+    
+    div Ante una colisión:
+    ul
+      li Cada nodo vuelve a transmitir en la siguiente partición, con probabilidad $p$, hasta que no haya colisiones
+  
+    div                        
+      img src='/images/figures/06-alohapart22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 ALOHA particionado
+
+    div                        
+      img src='/images/figures/06-alohapart22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Eficiencia
+    ul
+      li $N$ nodos con <i>frames</i> a enviar. Probabilidad de enviar $p$.
+      li Probabilidad que un nodo dado pueda transmitir: $p(1-p)^{N-1}$
+      li Probabilidad que cualquier nodo pueda transmitir: $Np(1-p)^{N-1}$
+      li $p^*$ que maximiza $Np(1-p)^{N-1}$
+      li Maximo valor para esta expresión $\sim 0.368$
+      li Canal es utilizado a los más el $37\%$ del tiempo
+   
+  section
+    h3 ALOHA
+
+    div No hay sincronización al momento de empezar a transmitir
+    ul
+      li Mayor probabilidad de colisiones
+      li Frame enviado en instante $t_0$ puede colisionar con frames enviados entre $[t_0-1,t_0+1]$
+      li Eficiencia $\sim 0.18$
+    
+    div                        
+      img src='/images/figures/06-aloha2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Carrier Sense Multiple Access: CSMA
+
+    div No interrumpir a los demás. Emisor escucha antes de transmitir
+    ul
+      li Si detecta canal inactivo, envía. Si detecta canal activo, espera hasta dejar de detectar actividad
+      li Retrasos en la propagación permite que ocurran colisiones
+    
+
+    div                        
+      img src='/images/figures/06-csma2.png' style="background:none; border:none; box-shadow:none;" width="29%"
+
+
+  section
+    h3 CSMA, with Colission Detection: CSMA/CD
+
+    ul
+      li Detección rápida de colisiones. Aborta en cuanto se detecta colisión, usando <i>jam signal</i>
+      li Usando en LAN (Ethernet): comparando nivel de fuerza de señales. WLAN: difícil de detectar
+  
+    div                        
+      img src='/images/figures/06-csma-cd2.png' style="background:none; border:none; box-shadow:none;" width="29%"
+
+  section
+    h3 CSMA, with Colission Avoidance: CSMA/CA
+
+    ul
+      li Si se detecta colisión se espera un tiempo aleatorio (con <i>exponential backoff</i>)
+      li Se envía un <i>frame</i> ACK para confirmar recepción (CRC correcto)
+
+    div                        
+      img src='/images/figures/06-csma-ca11.png' style="background:none; border:none; box-shadow:none;" width="22%"
+
+  section
+    h3 CSMA, with Colission Avoidance: CSMA/CA
+
+    div Pero puede haber <b>terminales ocultos</b>
+    div                        
+      img src='/images/figures/06-csma-ca22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 CSMA, with Colission Avoidance: CSMA/CA
+
+    div Complementado con paquetes adicionales: RTS (Request to Send) y CTS (Clear to Send)
+
+    div                        
+      img src='/images/figures/06-csma-ca33.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+
+  section
+    h3 Protocolos por turnos: Master/Slave (polling)
+
+    ul
+      li Master invita a los slaves a transmitir (polling)
+      li Eficiente con terminales ``tontos''
+      li Alta latencia con muchos slaves
+      li Punto de falla centralizado
+      li Usado en Bluetooth
+    
+    div                        
+      img src='/images/figures/06-turnos1.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+    h3 Protocolos por turnos: Token
+
+    ul
+      li Nodos se pasan un <i>token</i>
+      li Sólo el que tiene el <i>token</i> puede transmitir
+      li Alta latencia con muchos miembros
+      li ¿Qué pasa si el nodo que tiene el <i>token</i> desaparece?
+
+    div                        
+      img src='/images/figures/06-turnos2.png' style="background:none; border:none; box-shadow:none;" width="20%"
+
+    div FDDI, IEEE 802.5 Token ring
 section
   h2 Hardware de Capa de Enlace
 
