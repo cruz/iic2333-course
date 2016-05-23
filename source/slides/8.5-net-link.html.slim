@@ -298,6 +298,252 @@ section
       img src='/images/figures/06-turnos2.png' style="background:none; border:none; box-shadow:none;" width="20%"
 
     div FDDI, IEEE 802.5 Token ring
+
 section
-  h2 Hardware de Capa de Enlace
+  h2 Hardware de Capa de Enlace: Switched LANs
+
+  section
+    div                        
+      img src='/images/figures/06-switchedlan.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div Switched LAN y 4 subredes
+
+  section
+    h3 Direcciones MAC
+
+    div <b>MAC address</b>, o <b>Dirección Física</b>, o <b>Dirección de Hardware</b>
+
+    div                        
+      img src='/images/figures/06-macaddress2.png' style="background:none; border:none; box-shadow:none;" width="27%"
+
+    div Identificador único de 48 bit (6 byte). Modificable por software
+    ul
+      li 24 bit para fabricante, 24 bit para NIC
+      li Estructura de direccionamiento plana
+      li FF-FF-FF-FF-FF-FF es dirección de <i>broadcast</i>
+
+  section
+    h3 Address Resolution Protocol (ARP)
+
+    div Tabla ARP contiene asociaciones $\langle \text{IP},\text{MAC},TTL \rangle$
+    ul
+      li Cada nodo (host,router, algunos switch) mantiene una tabla ARP
+      li TTL: Time-To-Live, indica el tiempo que será recordada esa entrada
+    
+    div                        
+      img src='/images/figures/06-arp22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+
+    div                        
+      img src='/images/figures/06-arp22.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div Tabla para 222.222.222.220 (comando <code>arp</code>)
+
+    div                        
+      img src='/images/figures/06-arp33.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div ¿Cómo encontrar una dirección MAC?
+
+    div
+      img src='/images/figures/06-arp22.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/06-arp-header.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    ul
+      li $C$ quiere comunicarse con $A$, que no está en su tabla
+      li $C$ envía mensaje <b>ARP Query</b> con IP de $A$ y MAC <code>FF-FF-FF-FF-FF-FF</code>
+      li Todos reciben el mensaje
+      li Solo $A$ envía mensaje <b>ARP Responde packet</b> con su dirección MAC
+      li $C$ guarda en su tabla ARP la asocación IP(A),MAC(A)
+
+  section
+    div Atrevesando subredes: ¿si el mensaje va a otra subred?
+
+    div
+      img src='/images/figures/06-arp-subnets2.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    ul
+      li <code>111.111.111.111</code> desea enviar <i>frame</i> a <code>222.222.222.222</code>
+      li <code>222.222.222.222</code> no está en su tabla ARP (ni en broadcast)
+      li Envía: $\langle \text{IP}=222.222.222.222, \text{MAC}=? \rangle$.
+      li Si MAC=<code>49-BD-D2-C7-56-2A</code>, el <i>frame</i> no sale de la subred.
+      li Debe ser MAC=<code>E6-E9-00-17-BB-4B</code>. <i>Router</i> recibe y pasa a su capa de red.
+      li Router envía frame con $\langle \text{IP}=222.222.222.222, \text{MAC}=\text{49-BD-D2-C7-56-2A} \rangle$
+
+
+  section
+    h3 Ethernet
+
+    div Ampliamente usado para LAN. Original de 1970's. Switched desde 1990's.
+    ul
+      li Basado en <b>coaxial</b>: <i>broadcast LAN</i>. Topología de bus.
+      li Basado en <b>hub</b>: <i>broadcast LAN</i>. Topología estrella.
+      li Basado en <b>switch</b>. Evita colision. Dispositivo L2. 
+
+    div
+      img src='/images/figures/06-frame-ethernet.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 Frame Ethernet
+
+    div
+      img src='/images/figures/06-frame-ethernet2.gif' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    ul
+      li <i>Data</i>. 46 a 1500 byte. Ethernet MTU: 1500 byte. Jumbo frame $\sim$ 9000 byte.
+      li <i>Destination MAC</i>. Destinatario la procesa solo si es la propia o FF-FF-FF-FF-FF-FF.
+      li <i>Source MAC</i>.
+      li <i>Type</i>. Protocolo: IP, Novell IPX, AppleTalk, ARP
+      li <i>CRC</i>. Ethernet <b>descarta</b> <i>frame</i>s erróneos. No avisa. No confiable.
+      li <i>Preamble</i>. $7 \times $<code>10101010</code>, $1 \times $<code>10101011</code>
+
+
+  section
+    h3 L2 Switches
+
+    div style="text-align:left;" Switch recibe <i>frame</i> y retransmite por el enlace apropiado, <b>basado en MAC</b>
+
+    div style="text-align:left;" <b>Filtering</b>: determine si debe hacer <b>forward</b> o <b>drop</b>
+
+    div style="text-align:left;" <b>Forwarding</b>: determina por cuál enlace retransmitir.
+    
+    div                        
+      img src='/images/figures/06-switchedlan.png' style="background:none; border:none; box-shadow:none;" width="45%"
+      img src='/images/figures/06-switch-table-22.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+  section
+    h3 Switch Table
+
+    div Switch recibe frame en enlace $x$, con destino MAC = <code>DD-DD-DD-DD-DD-DD</code>
+    ul
+      li Si no hay entrada para <code>DD-DD-DD-DD-DD-DD</code>, broadcast por todos los enlaces, salvo $x$
+      li Si hay entrada para <code>DD-DD-DD-DD-DD-DD</code> con enlace $x$, descarta (filtering).
+      li Si hay entrada para <code>DD-DD-DD-DD-DD-DD</code> con enlace $y \neq x$, reenvía (forwarding).
+
+    div                        
+      img src='/images/figures/06-switchedlan.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/06-switch-table-22.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Switch Table
+
+    div Switch <b>aprenden</b> automáticamente su tabla.
+
+    ul
+      li Tabla inicialmente vacía
+      li Para cada <i>frame</i> recibido, switch almacena:
+      ol 
+        li <i>source</i> MAC
+        li enlace de recepción
+        li tiempo de recepción.
+      li Después de un <b>aging time</b>, el switch elimina la entrada. Un host puede ser reemplazado, y esta información llega eventualmente al switch.
+      li Un switch es <b>plug-and-play</b>
+
+    div                        
+      img src='/images/figures/06-switch-table-33.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+  section
+    h3 Switch y ciclos
+
+    div Ciclos son malos para el brodcast.
+
+    div                        
+      img src='/images/figures/06-stp-11.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+
+  section
+    h3 Switches: Spanning Tree Protocol
+
+    div Etapas:
+    ul
+      li Elegir un <b>root bridge</b>. En base a una prioridad + identificar (MAC)
+      li Cada uno (salvo root) elige enlace en dirección al <b>root bridge</b> (RP)
+      li Cada uno determina sus <b>designated port</b> 
+      li Puertos no usados quedan como <b>blocked</b> (alternativos)
+
+  section
+    h3 Switches: Spanning Tree Protocol
+
+    div Topología final se autoconfigura como un <i>spanning tree</i>
+
+    div
+      img src='/images/figures/06-stp-22.png' style="background:none; border:none; box-shadow:none;" width="25%"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      img src='/images/figures/06-stp-33.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+  section
+    h3 Switch vs Router
+
+    div <b>Switch</b> es L2 (decide en base a MAC). <b>Router</b> es L3 (decide en base a IP)
+
+    div <b>Switch</b> se autoconfigura. <b>Router</b> debe ser configurado.
+
+    div <b>Switch</b> no resuelve ARP (no conoce IP). <b>Router</b> sí.
+
+    div <b>Switch</b> es susceptible a <b>switch poisoning</b>, y <b>broadcast storm</b>
+
+    div                        
+      img src='/images/figures/06-switch-v-router.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/06-switch-v-router-v-hub.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Virtual LANs (VLAN)
+
+    div Switches no proveen <i>suficiente</i> <b>traffic isolation</b>.
+    ul
+      li Broadcasts (ARP, DHCP) pueden pasar por todo la red Switched LAN. ¿Sniffers?
+      li Entonces, usemos múltipes switches.
+      li Si un usuario se cambia de "grupo de trabajo", se necesita re-cablear al <i>switch</i> correcto
+
+    div                        
+      img src='/images/figures/06-switchedlan.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+
+  section
+    h3 Virtual LANs (VLAN)
+
+    div Routers solucionan los problemas, pero VLANs están más al alcance.
+
+    div                        
+      img src='/images/figures/06-vlans-22.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div 2 VLANs sobre la misma LAN física.
+
+
+  section
+    h3 Virtual LANs (VLAN)
+
+    div Ahora queremos VLANs distribuidas entre switches. <b>VLAN trunking</b>
+
+    div                        
+      img src='/images/figures/06-vlans-33.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div <i>Trunking port</i> pertence a TODAS las VLANs y hace <i>forward</i>.
+
+    div ¿Cómo saber que un <i>frame</i> debe ir de un <i>switch</i> a otro (porque va en la misma VLAN)?
+
+
+  section
+    h3 Virtual LANs (VLAN)
+
+    div ¡Modificamos el <i>frame</i> ethernet! <b>IEEE 802.1Q</b>
+    ul
+      li <b>Tag Control Information</b> indica número de VLAN
+
+    div                        
+      img src='/images/figures/06-vlans-frame.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div Hay varias formas de construir VLANs
+    ul
+      li VLAN en base a puertos (este ejemplo)
+      li VLAN en base a MAC
+      li VLAN en base a IP
+
+
+
+
+
+
+
+
 
