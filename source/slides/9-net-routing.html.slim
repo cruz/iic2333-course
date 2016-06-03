@@ -4,7 +4,7 @@ layout: slide
 ---
 
 section
-  h2 Modos de Conexión
+  h2 Capa de Red
 
   section
     div style="text-align:left;" <b>Objetivo</b>: Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
@@ -20,4 +20,259 @@ section
       li Utiliza algoritmos para determinar <i>rutas</i>. Algoritmos de enrutamiento (<i>routing</i>)
 
   section
-    div style="text-align:left;" <b>Objetivo</b>: Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
+    div Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
+    
+    img src='/images/figures/09-network.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div style="text-align:left;" <b>Forwarding</b>: Decisión local. Reenvía paquete por puerta apropiada. <i>Forwarding Table</i>.
+
+    div style="text-align:left;" <b>Routing</b>: Decisión distribuida. Permite que el paquete llegue de origen a destino. Algoritmo de <i>routing</i> permite armar las <i>forwarding tables</i>.
+
+    img src='/images/figures/09-forward.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+section
+  h2 Modos de Conexión
+
+  section 
+    div Conexión entre nodos
+
+    div style="text-align:left;" <b>Virtual Circuit network</b>: camino único entre origen-destino. Redes ATM, <i>frame relay </i>
+
+    div style="text-align:left;" <b>Datagram network</b>: servicio <i>connectionless</i>. Decisión de retransmisión
+      se toma en cada <i>router</i>. Internet.
+
+  section
+    h3 Virtual Circuit
+
+    ul
+      li Camino (path). Ejemplo: A-R1-R2-B.
+      li VC ID. Número para cada <i>enlace</i>. Cada paquetes lleva un VC ID.
+      li Entrada en <i>forwarding table</i>.
+      li <i>Router</i> mantiene <b>estado de la conexión.</b>
+
+    div
+      img src='/images/figures/09-vc1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/09-vc2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Posible tabla para R1
+
+  section
+    h3 Virtual Circuit
+
+    ul
+      li Etapa 1. Setup del VC. Permite reserva ancho de banda.
+      li Etapa 2. Data transfer.
+      li Etapa 3. Destrucción del VC.
+
+    div
+      img src='/images/figures/09-vc3.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    h3 Datagram network
+
+    ul
+      li Cada paquete lleva la dirección de destino.
+      li <i>Routers</i> reenvían de acuerdo a su <i>forwarding table</i>
+      li Paquetes podrían tener distintos caminos.
+      li <i>Routers</i> no saben de caminos ni estado. <b>Connectionless</b>.
+
+    div
+      img src='/images/figures/09-dg1.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+
+    ul
+      li Destinos para cada dirección posible. Usualmente <i>forwarding table</i> contiene <b>prefijos</b>
+    div
+      img src='/images/figures/09-dg2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Ejemplo con direcciones de 32 bit (!)
+
+    div
+      img src='/images/figures/09-dg3.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+
+
+section
+  h2 Direccionamiento de Red
+
+  section
+    div ¿Cómo un mensaje encuentra su destinatario? Gracias al <b>datagrama (paquete) IP</b>
+
+
+    div
+      img src='/images/figures/09-ip.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+    ul
+      li Longitud típica < 1500 byte.
+      li TTL: Time-to-live. Cantidad máxima de saltos (<i>hop</i>s).
+      li Si no hay <i>options</i>, header es de 20 byte.
+
+  section
+    h3 Fragmentación
+
+    div Cada enlace puede tener distintas MTU
+
+    div
+      img src='/images/figures/09-fragmentation.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/09-fragmentation2.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    h3 Dirección IP
+
+    div Direcciones de $32$ bit $= 4$ byte (IPv4). $2^{32} = 4294967296$ direcciones.
+
+    div <b>Dotted-decimal notation</b>. Grupo de $8$ bit. ($0$ a $255$).
+
+    div $146.155.13.45$ es $10010010.10011011.00001101.00101101$
+
+    div Dirección <b>única globalmente</b> (casi)
+
+    div
+      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Subredes
+
+    div Conjunto de nodos conectados a un <i>router</i>
+
+    div style="text-align:left;" <code>a.b.c.d/x</code>. <b>CIDR: Classless Interdomain Routing .</b> (RFC4632). Ejemplo: <code>223.1.1.0/24</code>. 
+    ul 
+      li Primeros $x$ bit definen la <b>subred</b>. Ejemplo: 223.1.1.0. Máscara <code>/24</code>, o <code>255.255.255.0</code>
+      li Ultimos $32-x$ bit definen el <b>host</b> dentro de la subred. Ejemplo: <code>233.1.1.40</code>
+
+    div
+      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+
+    div
+      img src='/images/figures/09-subnets2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+
+    div Subred: <code>146.155.13.0/24</code>
+
+    ul
+      li Subred: Bits de <i>host</i> en 0. Ejemplo <code>146.155.13.0</code>
+      li Broadcast subred: Bits de <i>host</i> en 1. Ejemplo  <code>146.155.13.255</code>
+      li Máscara (mask): $x$ bit en 1, $32-x$ bit en 0. Ejemplo <code>255.255.255.0</code>
+
+    div
+      img src='/images/figures/09-cidrexample.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Subredes y direcciones especiales
+
+    div Direcciones reservadas
+    ul
+      li 0.0.0.0. Dirección de host actual (sólo sirve como origen). "Todas las IPs locales".
+      li 127.0.0.1. Dirección <i>loopback</i> (localhost)
+
+    div Subredes reservadas
+    ul
+      li Red local: 0.0.0.0/8
+      li Red loopback: 127.0.0.0/8
+      li Redes privadas (RFC1918): 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+
+  section
+    h3 Classful routing
+
+    div Old school. En el principio existían clases de redes.
+
+    div
+      img src='/images/figures/07-ip-subnets-clases.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+
+  section
+    h3 Asignación de direcciones
+
+    div style="text-align:left;" ISPs asignan bloques de direcciones a organizaciones, y publicitan sus bloques. 
+
+    div style="text-align:left;" Organizaciones pueden crear nuevas subredes dentro de su bloque
+
+    div
+      img src='/images/figures/09-isps.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Asignación de direcciones
+
+    div ¿Quién administra direcciones? ¿Cómo las obtiene el ISP?
+
+    div ICANN: Internet Corportation for Assigned Names and Numbers
+
+    div ICANN asigna direcciones a "regional Internet registries"
+
+    div
+      img src='/images/figures/09-regions.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+section
+  h2 Direcciones dinámicas: DHCP
+
+  section
+    h3 Dynamic Host Configuration Protocol
+
+    div Pocas veces configuramos nuestra IP. DHCP es un protocolo <i>plug-and-play</i> (RFC2131)
+
+    div
+      img src='/images/figures/09-dhcp1.png' style="background:none; border:none; box-shadow:none;" width="45%"
+
+  section
+    h3 Dynamic Host Configuration Protocol
+
+    div Protocolo cliente-servidor de 4 etapas
+    ul
+      li DHCP Server Discovery. Cliente envía <b>DHCP discover message</b>. Destino 255.255.255.255.
+      li DHCP Server Offer(s). Server envía <b>DHCP offer message</b>. Destino 255.255.255.255.
+      li DHCP Request. Cliente envía <b>DHCP request message</b>.
+      li DHCP ACK. Server envía <b>DHCP ACK messag</b>.
+
+  section
+
+    div
+      img src='/images/figures/09-dhcp2.png' style="background:none; border:none; box-shadow:none;" width="33%"
+
+section
+  h2 NAT: Network Address Translation
+
+  section
+    div style="text-align:left;" Oficinas pequeñas y casas forman una LANs. Pero ISP provee cantidad limitada de IPs (a veces una).
+    div style="text-align:left;" NAT (RFC2663, RFC3022) permite multiplexar direcciones IP en redes privadas (RFC1918).
+
+    div
+      img src='/images/figures/09-nat1.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+    h3 NAT Traversal
+    
+    div ¿Cómo contactar un servicio detrás de NAT?
+
+    div Protocolo UPnp (Universal Plug and Play) permite establecer <i>mappings</i> dinámicos
+
+    div Mapeo (privateIP, privatePort) $\to$ (publicIP, publicPort)
+
+    div
+      img src='/images/figures/07-nat-3.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Anti NATs
+
+    div NAT es ampliamente usado. Pero tiene detractores.
+
+    div style="text-align:left;" <b>Detractores</b>:
+    ul
+      li Números de puerto son para <b>procesos</b>. No para <b>hosts</b>.
+      li <i>Routers</i> son de capa 3. NAT requiere que modifiquen puertos. Puerto no son de capa 3.
+      li NAT viola el principio de extremo-a-extremo. Comunicación sin modificaciones intermedias.
+      li NAT es un parche. Con IPv6 ya nunca deberíamos necesitar NAT.
+
+section 
+  h2 ICMP
+
+section
+  h2 IPv6
+
+section
+  h2 Algoritmos de <i>Routing</i>
+
