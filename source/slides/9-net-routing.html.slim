@@ -270,9 +270,293 @@ section
 section 
   h2 ICMP
 
+  section
+    h3 Internet Control Message Protocol
+
+    div RFC 792. Usado para mensajes de diagnóstico y control en capa de red.
+    ul
+      li Se transmiten como <i>payload</i> en paquetes IP. Campo <i>upper-layer protocol</i> indica ICMP.
+      li ICMP contiene dos campos: (<i>ICMP type</i>, <i>ICMP code</i>)
+
+    div
+      img src='/images/figures/09-icmps.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Internet Control Message Protocol
+
+    div Mensajes (8,0) y (0,0): <code>echo request</code> y <code>echo reply</code>
+
+    div Programa <code>traceroute</code> usa mensajes ICMP con distintos TTL.
+
+    div
+      img src='/images/figures/09-icmps.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
 section
   h2 IPv6
 
+  section 
+    div style="text-align:left;" En 1990s, la IEFT se dio cuenta que IPv4 no era suficiente. Empieza el desarrollo de IPv6.
+
+    div style="text-align:left;" Febrero 2011. IANA asigna último bloque IPv4.
+
+    div style="text-align:left;" Header IPv6: 40 byte. Prioridad es agilizar el procesamiento.
+
+    div
+      img src='/images/figures/09-ipv6.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    ul 
+      li IPv6 no considera fragmentación intermedia. Solo en los extremos. ICMP <code>Packet too big</code>.
+      li IPv6 no usa <i>checksum</i> del header. 
+      li ICMPv6 agrega mensajes adicionales.
+
+  section 
+    div ¿Cómo hacemos la transición?
+
+    div style="text-align:left;" Routes IPv6 puede ser <i>backwards compatible</i>, pero routers IPv4 no.
+
+    ul
+      li Establecer un día de cambio mundial (<i>flag day</i>). Se intentó hace 25 años para NCP a TCP.
+      li Usar routers <i>dual-stack</i>, IPv6/IPv4. Algunos campos se pueden perder en la conversión
+
+    div
+      img src='/images/figures/09-ipv6-1.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+
+    div style="text-align:left;" Otra solución: <b>tunneling</b>
+
+    div
+      img src='/images/figures/09-ipv6-2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+
 section
   h2 Algoritmos de <i>Routing</i>
+
+  section
+    div style="text-align:left;" <b>Objetivo:</b> conseguir que el paquete llega desde un <i>router</i> de origen a un <i>router</i> de destino
+
+    ul
+      li Conjunto de <i>routers</i> se modela como un grafo $G=(V,E)$
+      li Costo entre conexiones: ancho de banda, congestión, costo, distancia, ...
+
+    div
+      img src='/images/figures/09-routers-1.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    div Dos tipos de algoritmos
+    ul
+      li <b>Algoritmos centralizados</b>: nodos conocen la información completa de la red. Algoritmos <b>Link-State (LS)</b>.
+      li <b>Algoritmos decentralizados</b>: cálculo iterativo y distribuido entre nodos, sin conocer la topología completa.
+
+    div
+      img src='/images/figures/09-routers-1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Link-State Routing
+
+    ul
+      li Cada nodo envía su información de conectividad (vecinos y costos) a sus vecinos
+      li Información se comunica a los demás vía <i>flooding</i>
+      li Cuando todos tiene información de la topología, cada uno calcula las rutas más cortas
+      li Algoritmo de Dijkstra (1957)
+
+    div
+      img src='/images/figures/09-ls-dijkstra.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    
+  section
+    ul  
+      li $D(v)$: costo del camino más corto de $u$ hasta $v$  
+      li $p(v)$: predecesor de $v$ en el camino más corto de $u$ hasta $v$
+      li $N'$: subconjunto de nodos para los cuales se ha calculado el camino más corto
+
+    div
+      img src='/images/figures/09-ls-dijkstra.png' style="background:none; border:none; box-shadow:none;" width="55%"
+
+  section
+    div
+      img src='/images/figures/09-routers-1.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div
+      img src='/images/figures/09-ls-dijkstra-2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  /section
+
+    /div
+      /img src='/images/figures/09-ls-oscil.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Distance Vector (DV) algorithm
+
+    div Distribuido, asíncrono, iterativo. Basado en ecuación de Bellman-Ford
+  
+    div $d(x,y) = min_v\{c(x,v) + d(v,y)\}$
+  
+    ul
+      li Cada nodo mantiene una tabla de la mejor ruta a sus vecinos
+      li Cada nodo comparte su tabla con sus vecinos
+      li Cuando la información se ha propagado a todos los nodos, cada uno conoce las mejores rutas
+      li Diferencia con LS: se propaga información de rutas, en lugar de enlaces
+    
+    div Funciona de manera distribuida
+    ul
+      li Se gatilla ante cambios locales de costos
+      li Se gatilla al recibir mensajes de vecinos
+    
+  section
+
+    div
+      img src='/images/figures/09-dv-1.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+
+    div
+      img src='/images/figures/09-dv-2.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    div Comportamiento ante cambios. $D_y(x)=4$, $D_y(z)=1$, $D_z(y)=1$, $D_z(x)=5$
+
+    div
+      img src='/images/figures/09-dv-change.png' style="background:none; border:none; box-shadow:none;" width="65%"
+
+    ul
+      li.fragment Disminuciones (buenas noticias) se propagan rápidamente
+      li.fragment Aumentos (malas noticias) se propagan lentamanete. <i>Count-to-infinity</i>
+      li.fragment ¿Como evitarlo? Anunciando ruta infinita. <i>Poisoned-reverse</i>
+
+  section
+    div Link-State vs Distance Vector
+
+    div Link State
+    ul
+      li $N$ nodos, $E$ enlaces: $O(NE)$ mensajes
+      li $O(N^2)$ complejidad en cada nodo
+      li Ante errores, se propaga ausencia de enlace local.
+  
+    div Distance Vector
+    ul
+      li Se ejecuta en paralelo y solo se propaga la ruta a los vecinos.
+      li Ante errores, se propaga el error.
+      li Puede converger muy lentamente. Tiempo de convergencia indeterminada.
+    
+  section
+    div <b>Routing de gran escala</b>
+
+    div No es factible almacenar tablas para todos los routers de Internet.
+    ul
+      li Redes están organizadas jerárquicamente.
+      li <i>Routers</i> pertenecen a distintas organizaciones.
+      li <i>Routers</i> pertenecientes al mismo dominio administrativo forman un <b>sistema autónomo</b>
+
+    div
+      img src='/images/figures/09-as123.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    div <b>Routing de Internet</b>
+
+    ul
+      li Internet se compone de <b>Sistemas Autónomos</b> (AS) interconectados
+      li Algoritmos <i>intra-AS</i> resuelven ruteo en un subconjunto de la red
+      li Algoritmos <i>inter-AS</i> ayudan a determinar <i>forwarding tables</i> entre distintos AS
+      li <i>Routers</i> de salida son <b>gateway routers</b>
+
+    div
+      img src='/images/figures/09-as123.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+
+  section
+    div <b>IGP: Interior Gateway Protocol</b>
+
+    div Enrutamiento Intra-AS
+
+    ul
+      li RIP: Routing Information Protocol
+      li OSPF: Open Shortest-Path First 
+      ul
+        li IS-IS es similar a OSPF
+
+  section
+    div <b>Routing Information Protocol: RIP</b>
+
+    div Algoritmo de vector de distancias
+
+    ul
+      li Uno de los más antiguos (implementado en ARPANet). Se distribuía con BSD Unix.
+      li Métrica: número de saltos (<i>hops</i>). Cada <i>link</i> tiene costo 1.
+      li Envía actualizaciones cada 30 segundos
+      li Mecanismos para evitar errores
+      ul
+        li <i>Split Horizon</i>: Evita propagación de rutas redundantes
+        li <i>Poison reverse</i>: Limita la cantidad de saltos. Más de 15 saltos se considera $\infty$
+        li <i>Holddown</i>: Evita actualizar rutas por un tiempo antes un aviso de {\em network unreachable}
+
+  section
+    div <b>Open Shortest-Path First: OSPF</b>
+
+    div Algoritmo {\em Link-State}
+
+    ul
+      li Muy similar a IS-IS (Interior System - Interior System)
+      li Común en <i>upper tier</i> ISPs. RIP es más común en <i>lower tier</i> ISPs.
+      li Anuncios transportados directamento en encabezados IP
+      li Permite propagar múltiples rutas con métricas para diferentes tipos de medios
+      li Permite implementaciones jerárquicas
+    
+  section
+    div <b>Inter-AS. Border Gateway Protocol: BGP</b>
+
+    div Estándar de facto para comunicación Inter-AS
+    ul
+      li Permite conectar una subred anunciar su existencia a Internet
+      li Provee medios para:
+      ul
+        li Obtener información de <i>reachability</i> de otras subredes
+        li Propagar información de <i>reachability</i> a nodos internos
+        li Determinar buenas rutas o otras subredes, en base <i>reachability</i> o políticas específicas.
+      
+    div BGP permite que subredes anuncien su existencia, y que este anuncio se propague por la Internet.
+
+  section
+    div Parejas de routers (pares BGP) intercambian información de ruteo
+    ul
+      li Sesiones TCP semipermanentes (port 179)
+      li Sesiones entre routers de distintos AS: <b>eBGP</b>
+      li Sesiones entre routers del mismo AS: <b>iBGP</b>
+
+    div
+      img src='/images/figures/09-bgp1.png' style="background:none; border:none; box-shadow:none;" width="60%"
+   
+  section
+    ul
+      li AS-PATH: ASs por los que ha pasado el prefijo
+      li NEXT-HOP: Router de destino del anuncio
+
+    div
+      img src='/images/figures/09-bgp2.png' style="background:none; border:none; box-shadow:none;" width="50%"
+  
+  section
+    h3 BGP: Border Gateway Protocol
+
+    div
+      img src='/images/figures/09-bgp3.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div ISPs: A,B,C; Clientes: X,W,Y
+    ul
+      li $A$ anuncia a $B$ el camino $(A,W)$
+      li $B$ anuncia a $X$ el camino $(B,A,W)$
+      li ¿Debería $B$ anunciar a $C$ el camino $(B,A,W)$?
+      ul
+        li $B$ no obtiene beneficio por enrutar $(C,B,A,W)$
+        li $B$ quiere enrutar sólo a sus clientes
+        li $B$ quiere forzar a que $C$ deba enrutar hasta $W$ a través de $A$
+      
+
+
+
+
+
+
+
+
+
+
 
