@@ -1,0 +1,207 @@
+---
+title: Capa de Transporte
+layout: slide
+---
+
+section
+  h2 Protocolos de Transporte
+
+  section
+    div style="text-align:left;" <b>Objetivo</b>: Conseguir que un mensaje llegue desde <i>emisor</i> a <i>receptor</i>
+
+    div style="text-align:left;" Entonces, ¿qué hacían las otras capas?
+
+    ul
+      li Física: transmisión de bits a través de un enlace
+      li Enlace: comunicación a través de un enlace
+      li Red: enrutamiento de <b>paquetes</b> de <i>origen</i> a <i>destino</i>
+      li Transporte: transmisión de <b>mensajes</b> desde <i>origen</i> a <i>destino</i>
+
+  section
+    h3 Enlace
+    div
+      img src='/images/figures/07-linkhops.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 Red
+    div
+      img src='/images/figures/09-network.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    h3 Transporte
+    div
+      img src='/images/figures/10-transporte.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    div style="text-align:left;" Protocolos de transporte transmiten información de un proceso en <i>emisor</i> a un proceso en <i>host</i> receptor
+    ul
+      li <b>Emisor</b>: recibe un mensaje de capa de aplicación, lo divide en segmentos, y solicita a la capa de red que envíe los segmentos al receptor. Routers no examinan <i>headers</i> de transporte.
+      li <b>Receptor</b>: recibe segmentos, los ensambla para formar el mensaje, y lo entrega a la capa de aplicación.
+  
+    div style="text-align:left;" Dos protocolos representativos de medios de transporte:
+    ul
+      li <b>TCP</b>: Entrega confiable y ordenada. Control de flujo. Establecimiento de conexión.
+      li <b>UDP</b>: Entrega no confiable y desordenada. Mejor esfuerzo.
+
+  section
+    div <b>Segmentos</b>
+
+    div Mensaje se divide en segmentos. Segmentos se transmiten en paquetes IP.
+  
+    div ¿Cómo identificar mensajes a distintos procesos?
+    ul
+      li Se utiliza un <b>puerto</b> para establecer diferencias entre procesos de origen y destino dentro de un mismo emisor o receptor.
+      li <b>Multiplexión</b> de mensajes
+  
+    div
+      img src='/images/figures/10-segmento.png' style="background:none; border:none; box-shadow:none;" width="20%"
+
+  section
+    h3 Multiplexión y Demultiplexión
+
+    div tyle="text-align:left;" Cada aplicación (proceso) envía mensajes a través de un objeto intermediario del Sistema Operativo: <b>socket</b>
+
+    ul
+      li Cada <b>socket</b> se crea con un número de puerto específico
+      li Cada <i>host</i> puede tener múltiples <b>sockets</b> abiertos
+
+    div
+      img src='/images/figures/10-sockets.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Multiplexión y Demultiplexión
+
+    div style="text-align:left;" Algunos puertos están reservados
+
+    ul
+      li Puerto 80, para protocolo de aplicación HTTP
+      li Puerto 21, para protocolo de aplicación FTP
+      li 16-bit para puertos. 0 a 65536.
+      li Puertos 0 a 1023, reservado para puertos conocidos.
+      li RFC1700 lista <i>puertos conocidos</i>, <b>well-known ports</b>. Mantenido por IANA (RFC3232)
+
+    div
+      img src='/images/figures/10-sockets.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Demultiplexión sin conexión
+
+    div style="text-align:left;" Segmento UDP identificado por: $\langle$IP destino, puerto destino$\rangle$
+  
+    ul
+      li Receptor observa el puerto de destino
+      li Pasa el segmento al proceso asociado al puerto de destino
+
+    div
+      img src='/images/figures/10-udpports.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 Demultiplexión con conexión
+
+    div Segmento TCP identificado por: $\langle$ IP origen, puerto origen, IP destino, puerto destino$\rangle$
+  
+    div Servidores pueden gestionar múltiples conexiones TCP
+    ul
+      li Se pueden asociar distintos sockets a distintos clientes
+
+    div
+      img src='/images/figures/10-tcpports.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    h3 TCP versus UDP
+
+    div
+      img src='/images/figures/10-udpvtcp.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+
+section
+  h2 UDP
+
+  section 
+    h3 User Datagram Protocol
+
+    ul
+      li Servicio de "mejor esfuerzo" (best-effort). Segmentos pueden perderse.
+      li Segmentos pueden llegar y entregarse a capa de aplicación en distinto orden
+    
+    div Servicio <b>no orientado a conexión</b> (<i>connection-less</i>)
+    ul
+      li No se establece conexión previa
+      li Cada segmento UDP se gestiona de manera independiente
+  
+  section
+    h3 UDP Segment
+
+    div
+      img src='/images/figures/10-udpsegment.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div Segmento UDP solo tiene 8 byte de <i>overhead</i>
+
+section
+  h2 Reliable Data Transfer
+
+  section
+    div style="text-align:left;" <b>Desafío</b>: Proveer transferencia confiable (<i>reliable</i>) sobre un medio no confiable (<i>unreliable</i>)
+
+    div
+      img src='/images/figures/10-rdt.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    div style="text-align:left;" Versión 1.0. Canal de transmisión confiable (supuesto demasiado fuerte, pero simple)
+    div
+      img src='/images/figures/10-rdt-v1.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+    div ¿Y si los paquetes llegan con errores?
+
+  section
+    div style="text-align:left;" Versión 2.0. Protocolo ARQ (Automatic Repeat reQuest)
+    ul
+      li Detección de errores. 
+      li Mensajes de <i>feedback</i>. ACK (<i>acknowledgment</i>) y NAK (<i>negative ACK</i>)
+      li Retransmisiones.
+
+    div
+      img src='/images/figures/10-rdt-v2-send.png' style="background:none; border:none; box-shadow:none;" width="60%"
+      img src='/images/figures/10-rdt-v2-recv.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+
+    div
+      img src='/images/figures/10-rdt-v2-send.png' style="background:none; border:none; box-shadow:none;" width="60%"
+      img src='/images/figures/10-rdt-v2-recv.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div ¿Y si el ACK o el NAK tiene errores? El <i>sender</i> no sabe si el <i>receiver</i> recibió correctamente o no.
+    ul 
+      li ¿Retransmitir al recibir un ACK o NAK corrupto? Pero pueden llegar duplicados.
+
+
+  section
+    div style="text-align:left;" Versión 2.1. Agregar un <b>sequence number</b>. Basta con 1-bit.
+
+    div
+      img src='/images/figures/10-rdt-v21-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/10-rdt-v21-recv.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+  section
+    div style="text-align:left;" Versión 2.2. Podemos eliminar los NAK. Cada ACK adjunta el <b>sequence number</b>
+
+    div
+      img src='/images/figures/10-rdt-v22-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/10-rdt-v22-recv.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div ¿Y si se pierden paquetes?
+
+  section
+    div style="text-align:left;" Versión 3.0. Implementa <b>timeout</b> para retransmisión en el <i>sender</i>.
+
+    div
+      img src='/images/figures/10-rdt-v3-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+section
+  h2 TCP
+
+
+
+
+
+
