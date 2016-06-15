@@ -17,6 +17,7 @@ section
       li Red: enrutamiento de <b>paquetes</b> de <i>origen</i> a <i>destino</i>
       li Transporte: transmisión de <b>mensajes</b> desde <i>origen</i> a <i>destino</i>
 
+    
   section
     h3 Enlace
     div
@@ -334,9 +335,31 @@ section
   section
     div <b>Establecimiento de conexión TCP</b>
 
+    div TCP Handshake Protocol
+    ul
+      li Paso 1. Cliente envía segmento <code>SYN</code> al servidor
+      ul
+        li Incluye número de secuencia inicial
+      
+      li Paso 2. Servidor recibe <code>SYN</code>, y responde con <code>SYN ACK</code>
+      ul
+        li Servidor asigna buffer
+        li Servidor establece número de secuencia inicial
+      
+      li Paso 3. Cliente recibe <code>SYN ACK</code>, y responde con <code>ACK</code>
+      ul
+        li Este paquete ya puede contener datos
 
+  section
+    div
+      img src='/images/figures/10-tcp-hs1.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/10-tcp-hs2.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
-
+  section
+    div Cliente y servidor
+    div
+      img src='/images/figures/10-tcp-hs3.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/10-tcp-hs4.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
 
 
