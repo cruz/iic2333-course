@@ -1,0 +1,297 @@
+---
+title: Capa de Aplicación
+layout: slide
+---
+
+section
+  h2 Protocolos de Aplicación
+
+  section
+    div style="text-align:left;" <b>Objetivo</b>: Aplicaciones comunicándose a través de mensajes
+
+    ul
+      li Física: transmisión de bits a través de un enlace
+      li Enlace: comunicación a través de un enlace
+      li Red: enrutamiento de <b>paquetes</b> de <i>origen</i> a <i>destino</i>
+      li Transporte: transmisión de <b>mensajes</b> desde <i>origen</i> a <i>destino</i>
+      li Aplicación: uso de <b>mensajes</b> entre procesos
+
+
+    div Aplicaciones se construyen a través de procesos en distintos nodos que intentan comunicarse
+    ul
+      li Reglas de comunicación
+      li Comunicación interprocesos
+      
+  section
+    h3 Enlace
+    div
+      img src='/images/figures/07-linkhops.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 Red y Transporte
+    div
+      img src='/images/figures/09-network.png' style="background:none; border:none; box-shadow:none;" width="35%"
+      img src='/images/figures/10-transporte.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    h3 Aplicación
+    div
+      img src='/images/figures/11-aplicacion.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+  section
+    h3 Algunos protocolos de aplicación
+
+    ul
+      li DNS, Domain Name System
+      li HTTP, Hypertext Transfer Protocol
+      li FTP, File Transfer Protocol
+      li SSH, Secure Shell
+      li TELNET, Remote Shell
+      li SMTP, Simple Mail Transfer Protocol
+      li POP, Post-Office Protocol
+      li IMAP, Internet Message Access Protocol
+      li NTP, Network Time Protocol
+      li IRC, Internet Relay Chat
+      li LDAP, Lightweight Directory Access Protocol
+    
+    div Protocolos utilizan servicio de capa de transporte: sockets vía TCP ó UDP
+
+  section
+    h3 Modelos de comunicación
+
+    div
+      img src='/images/figures/11-models.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    ul
+      li <b>Cliente-Servidor</b>
+      ul
+        li Clásico. Servidor escucha, cliente inicia comunicación. Servidor escucha en  puerto conocido.
+      
+      li <b>Peer-to-Peer</b>
+      ul
+        li No hay roles específicos de servidor. Sistema decentralizado. Conexiones intermitentes.
+
+  section
+    div Aplicaciones tienen distintos requerimientos
+
+    div
+      img src='/images/figures/11-reqs.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+section
+  h2 HTTP
+
+  section
+    h3 HyperText Transfer Protocol
+
+    div Básicamente un sistema de archivos remoto. RFC1945, RFC2616.
+    ul
+      li Modelo cliente-servidor
+      li Cliente HTTP: solicita y recibe archivos
+      ul
+        li Opcionalmente podría parsearlos e interpretarlos localmente
+        
+      li Servidor HTTP: recibe solicitudes y envía archivos
+    
+      div
+        img src='/images/figures/11-http.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    div Acceso a URL. Conexión no-persistente.
+
+    div <code>http://www.ing.puc.cl/siding/index.html</code>
+
+    ol
+      li Cliente HTTP inicia conexión TCP a <code>www.ing.puc.cl</code> en puerto 80. Socket en cliente, y socket en server.
+      li Cliente HTTP envía <i>Request HTTP</i> incluyendo ruta y archivo: <code>siding/index.html</code>
+      li Servidor HTTP recibe <i>Request HTTP</i>, busca el archivo <code>siding/index.html</code>, lo encapsula en <i>Response HTTP</i>, y envía al cliente a través de su <i>socket</i>
+      li Servidor HTTP indica a <i>socket</i> que cierra la conexión TCP.
+      li Cliente HTTP recibe <i>Response HTTP</i> y extrae el archivo. Examines el archivo HTML y encuentra referencias a otros archivos (por ejemplo, imágenes JPG, PNG)
+      li Se re-ejecutan los pasos (1 al 4), para archivo que se necesite.
+
+    div Servidores HTTP actuales usan conexiones persistentes y pipelining.
+
+  section
+    h3 HTTP Request
+
+    div
+      img src='/images/figures/11-http-req.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="text-align:left;" <code>GET /siding/index.html HTTP/1.1</code>
+    div style="text-align:left;" <code>Host: www.ing.puc.cl</code>
+    div style="text-align:left;" <code>Connection: close</code>
+    div style="text-align:left;" <code>User-agent: Mozilla/5.0</code>
+    div style="text-align:left;" <code>Accept-language: es</code>
+
+  section
+    h3 HTTP Response
+
+    div
+      img src='/images/figures/11-http-resp.png' style="background:none; border:none; box-shadow:none;" width="25%"
+
+    div style="text-align:left;" <code>HTTP/1.1 200 OK</code>
+    div style="text-align:left;" <code>Connection: close</code>
+    div style="text-align:left;" <code>Date: Wed Jun 15 01:20:33 CLT 2016</code>
+    div style="text-align:left;" <code>Server: Apache/2.2.3 (CentOS)</code>
+    div style="text-align:left;" <code>Last-Modified: Tue, 09 Aug 2011 15:11:03 GMT</code>
+    div style="text-align:left;" <code>Content-Length: 6821</code>
+    div style="text-align:left;" <code>Content-Type: text/html</code>
+    div style="text-align:left;" <code>&nbsp;</code>
+    div style="text-align:left;" <code>data ... data ... data ...</code>
+
+  section
+
+    div Algunos códigos
+
+    ul
+      li 1xx. Mensaje de información.
+      li 2xx. Mensaje de éxito
+      ul
+        li 200 OK
+        li 206 Partial Content
+      
+      li 3xx. Mensaje de redirección
+      ul
+        li 301 Moved Permanently
+        li 307 Temporary Redirect
+      
+      li 4xx. Mensaje de error del cliente
+      ul
+        li 400 Bad Request
+        li 403 Forbidden
+        li 404 Not Found
+        li 405 Method Not Allowed
+      
+      li 5xx. Mensaje de error del servidor
+      ul
+        li 500 Internal Server Error
+        li 501 Not Implemented
+        li 502 Bad Gateway
+        li 503 Server Not Available
+
+  section
+    div Conexiones HTTP son <i>stateless</i> ... o casi
+
+    div
+      img src='/images/figures/11-http-cookies.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+section
+  h2 FTP
+
+  section
+    h3 File Transfer Protocol
+
+    div
+      img src='/images/figures/11-ftp.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div Comandos
+    ul
+      li <code>USER username</code>
+      li <code>PASS password</code>
+      li <code>LIST</code>
+      li <code>RETR filename</code>
+      li <code>STOR filename</code>
+
+section
+  h2 DNS
+
+  section
+    h3 Domain Name System
+
+    div Antes de iniciar la conexión TCP para el protocolo HTTP a URL:
+    div <code>http://www.ing.puc.cl/index.html</code>
+
+    ol
+      li Cliente ejecuta proceso cliente DNS
+      li Browser extrae <code>www.ing.puc.cl</code> y lo pasa al cliente DNS
+      li Cliente DNS envía <i>query</i> por <code>www.ing.puc.cl</code> a servidor DNS
+      li Cliente DNS recibe respuesta de servidor DNS, que incluye IP de <code>www.ing.puc.cl</code>
+      li Cliente DNS pasa respuesta a browser, y su cliente HTTP inicia conexión TCP a la IP de <code>www.ing.puc.cl</code>
+
+    div DNS utiliza una estructura jerárquica de dominos y servidores
+
+  section
+    h3 Domain Name System
+
+    div Base de datos distribuida y jerárquica
+
+    div
+      img src='/images/figures/11-dns-hier.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+
+  section
+    h3 Domain Name System
+
+    div Servidores almacenan <i>mapping</i>s 
+    ul
+      li Si un servidor no conoce un <i>mapping</i>, lo consulta a un servidor superior en la jerarquía
+      li Eventualmente puede llegar a un servidor raíz
+      li Servidor raíz conocen ubicación de servidores TLD
+      ul
+        li gTLD: General Top-Level Domain. <code>.com</code>, <code>.org</code>, <code>.edu</code> 
+        li ccTLD: Country-Code Top-Level Domain. <code>.cl</code>, <code>.nl</code>, <code>.es</code>, <code>.au</code>
+      
+      li 13 servidores raíz en el mundo: A,B,C,D,E,F,G,H,I,J,K,L,M
+      ul
+        li Con múltiples instancias de cada uno (dos de ellos replicados en Chile)
+        li <code>http://www.root-servers.org</code>
+      
+      li Servidores que administran el mapping son <i>servidores autoritativos</i>
+      ul
+        li Servidores autoritativos administran el mapping (al nivel de institución)
+        li Servidores no-autoritativos mantienen temporalmente el mapping
+
+  section
+
+    div
+      img src='/images/figures/11-dns-map.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+
+  section
+    div Consultas <i>iterativas</i> (1,2) y <i>recursivas</i> (4,6)
+    div
+      img src='/images/figures/11-dns-inter1.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+  section
+
+    div Al resolver un mapping, éste es almacenado en los servidores
+    ul
+      li Caching de respuestas permite reducir el tráfico
+      li Respuestas <i>cached</i> posee un <i>timeout</i>
+      li Servidores TLD suelen estar en cache de servidores locales
+      li Servidores raíz no son tan visitados
+    
+  section
+
+    div
+      img src='/images/figures/11-dns-format.png' style="background:none; border:none; box-shadow:none;" width="50%"
+
+    div <code>(nombre, valor, tipo, ttl)</code>
+  
+    ul
+      li Tipo A: <code>nombre</code> es nombre del host; <code>valor</code> es dirección IP
+      li Tipo NS: <code>nombre</code> es dominio; <code>valor</code> es IP de host autoritativo
+      li Tipo CNAME: alias, <code>nombre</code> es alias; <code>valor</code> es nombre real
+      li Tipo MX: <code>valor</code> es el nombre de un <i>mail server</i>
+
+
+  section
+
+    div <code>(nombre, valor, tipo, ttl)</code>
+  
+    ul
+      li Tipo A: <code>nombre</code> es nombre del host; <code>valor</code> es dirección IP
+      ul
+        li <code>(relay1.bar.foo.com, 145.37.93.126, A)</code>
+
+      li Tipo NS: <code>nombre</code> es dominio; <code>valor</code> es IP de host autoritativo
+      ul
+        li <code>(foo.com, dns.foo.com, NS)</code>
+
+      li Tipo CNAME: alias, <code>nombre</code> es alias; <code>valor</code> es nombre real
+      ul
+        li <code>(foo.com, relay1.bar.foo.com, CNAME)</code>
+
+      li Tipo MX: <code>valor</code> es el nombre de un <i>mail server</i>
+      ul
+        li <code>(foo.com, mail.bar.foo.com, MX)</code>
+
