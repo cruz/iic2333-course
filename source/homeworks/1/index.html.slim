@@ -1,0 +1,77 @@
+---
+title: Tarea 1
+layout: activity
+---
+
+article
+	section.top
+		p En esta tarea van a crear un clon de <a>GNU Parallel</a> en C para ejecutar programas en paralelo.
+		p Dado un stream de comandos, deberán ejecutarlos aprovechando los múltiples cores disponibles.
+		ul
+			li  Paralelismo
+			ul
+				li  El código para detectar o configurar la cantidad de cores está dado.
+				li  Deberán usar <code>exec</code>, <code>fork</code> y <code>wait</code> para ejecutar las tareas con el paralelismo deseado.
+			li  Ejecución de programas
+			ul
+				li  Deberán parsear el comando y construir una tabla de argumentos para <code>execvp</code>.
+				li  Parsing
+				ul
+					li  <code>strtok</code> permite hacer el split necesario.
+				li  <code>execvp</code>
+				ul
+					li  La tabla de argumentos es dinámica, por lo que es necesario usar <code>malloc</code> o <code>calloc</code> y luego devolver los recursos con <code>free</code>.
+					li  Como <code>exec</code> reemplaza al proceso actual, deberán usar <code>fork</code> para conseguir procesos nuevos.
+
+		br
+		p Un template para la tarea ya está disponible en git, su sección más importante es esta:
+		pre
+			code.hljs.c
+				| void runProgram(char* command) {
+				    // TODO: check if input is valid, fix newline
+				    printf("Command: '%s'\n", command);
+				    
+				    // TODO: wait (if required)
+				    
+				    // TODO: Set up filename and arguments for execvp
+				    char *fileName, **args;
+				    
+				    printf("Running: '%s' with arguments:\n", fileName);
+				    for(size_t i=0; i<=tokens; i++)  // '<=': Pointer tables must end in NULL!
+				      printf("  - '%s'\n", args[i]);
+				    
+				    // TODO: fork and exec(vp)
+				    // execvp(fileName, args);
+				    
+				    // TODO: free any unused resources
+				  }
+
+	section#hw1
+		h4 Formalidades
+		/  ------------
+		p La tarea será entregada vía <code>git</code>
+		ul
+			li  La entrega es el Martes 30 de Agosto a las 23:59.
+			li  Puede ser realizada en grupos de 2.
+			li  Su repositorio DEBE ser privado, de lo contrario calificará como copia (alguien les podría haber copiado).
+			li  La entrega será automatizada, basta que <a href="https://docs.google.com/forms/d/e/1FAIpQLSdAKPTHetbeOmDFN3lUE3O82jPYAd-WQWPGXEiU8NLaCVwENQ/viewform" target="_blank">registren</a> su grupo y repositorio
+			ul
+				li  Como el repositorio debe ser privado, tendrán que permitir acceso especial al curso, autorizando al servidor de tareas acceder al contenido.
+				ul
+					li  Para esto basta <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html" target="_blank">registrar</a> la <a href="/os-id_rsa.pub">llave pública del curso</a> en las <em>Deployment Keys</em> de su repositorio.
+
+
+		section#hw1-repo
+			h4 Repositorio
+			/  -----
+			p El código de la tarea se encuentra en <a href="https://bitbucket.org/Dietr1ch/iic2333-hw1" target="_blank">git</a> y para trabajar en el deben <a href="https://bitbucket.org/Dietr1ch/iic2333-hw1/fork" target="_blank">hacer un fork</a> PRIVADO!
+			ul
+				li  Lo más cómodo es que usen bitbucket, pero pueden usar github u otro host mientras sea privado.
+
+		h4 Recursos
+		/  --------
+		p La tarea será entregada vía <code>git</code>
+		ul
+			li  <a href="http://www.cprogramming.com/tutorial/c-tutorial.html">Tutorial de C</a>.
+			ul
+				li  La sección "Pointers, Arrays and Strings" es esencial.
