@@ -47,7 +47,9 @@ article
           ul
             li	Si devuelven el control antes, permanecerán en la misma cola, pero no devolverán sus tokens sin uso.
             li	Si agotan su tiempo, pasarán al final de la cola siguiente.
+
           li y los que no
+          ul
             li	Pasarán al principio de la cola siguiente.
 
 
@@ -70,34 +72,58 @@ article
     p En esta tarea van a implementar un <em>Scheduler</em> de tiempo real para #{link_to 'pintos', '/homeworks/pintos/', :target => '_blank'}.
 
 
-    h5#sched Scheduler (70%)
-    /	----------
-    p Deberán implementar Waterfall Scheduling para $N$ colas.
-    p Se evaluará correctitud, por lo que el funcionamiento es esencial.
+    section#sched
+      h5 Scheduler (70%)
+      /	----------
+      p Deberán implementar Waterfall Scheduling para $N$ colas.
+      p Se evaluará correctitud, por lo que el funcionamiento es esencial.
 
 
-  section#stats
-    h5#stats Estadísticas (30%)
-    /	-------------
-    p Deberán calcular algunas estadísticas de los procesos y las colas del sistema.
+    section#stats
+      h5 Estadísticas (30%)
+      /	-------------
+      p Deberán calcular algunas estadísticas de los procesos y las colas del sistema.
 
-    p Para los procesos,
-    ul
-      li Tokens asignados.
-      li Cola en donde termina.
-      li Cantidad de veces que
+      p Para los procesos,
       ul
-        li Ejecutó.
-        li Yields.
-        li Blocks.
+        li Tokens asignados.
+        li Cola en donde termina.
+        li Cantidad de veces que
+        ul
+          li Ejecutó.
+          li Yields.
+          li Blocks.
 
-    p Para los procesos,
-    ul
-      li Tokens utilizados. (incluyendo los de redondeo)
-      li Cantidad de procesos que
+      p Para las colas,
       ul
-        li Ejecutaron.
-        li No ejecutaron (avanzaron antes de hacerlo).
-        li Hicieron yield (quedaron en la misma cola).
-        li Se bloquearon (^)
-        li Terminaron de ejecutar.
+        li Tokens utilizados. (incluyendo los de redondeo)
+        li Cantidad de procesos que
+        ul
+          li Ejecutaron.
+          li No ejecutaron (avanzaron antes de hacerlo).
+          li Hicieron yield (quedaron en la misma cola).
+          li Se bloquearon (^)
+          li Terminaron de ejecutar.
+
+
+    section
+      h5 Formalidades
+      /  ------------
+
+      p La tarea será entregada vía <code>git</code>
+      ul
+        li  La entrega es el Miércoles 12 de Octubre a las 23:59.
+        li  Puede ser realizada en grupos de 2.
+        li  Su repositorio DEBE ser privado, de lo contrario calificará como copia (alguien les podría haber copiado).
+        li  La entrega será automatizada, basta que <a href="https://docs.google.com/forms/d/e/1FAIpQLSdAKPTHetbeOmDFN3lUE3O82jPYAd-WQWPGXEiU8NLaCVwENQ/viewform" target="_blank">registren</a> su grupo y repositorio
+        ul
+          li  Como el repositorio debe ser privado, tendrán que permitir acceso especial al curso, autorizando al servidor de tareas acceder al contenido.
+          ul
+            li  Para esto basta <a href="https://confluence.atlassian.com/bitbucket/use-deployment-keys-294486051.html" target="_blank">registrar</a> la <a href="/os-id_rsa.pub">llave pública del curso</a> en las <em>Deployment Keys</em> de su repositorio.
+
+
+      h5 Repositorio
+      /  -----------
+      p El código de la tarea se encuentra en <a href="https://bitbucket.org/Dietr1ch/pintos/" target="_blank">git</a> en el branch <tt>os16-2</tt>. Para trabajar en el deben <a href="https://bitbucket.org/Dietr1ch/pintos/fork" target="_blank">hacer un fork</a> PRIVADO!
+      ul
+        li  Lo más cómodo es que usen bitbucket, pero pueden usar otro host mientras sea privado (y puedan registrar la Deployment Key).
