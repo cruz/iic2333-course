@@ -1,0 +1,139 @@
+---
+title: Pintos
+layout: activity
+---
+
+article
+  section.top#intro
+    p <em>Pintos</em> es un sistema operativo de x86 diseñado para aprender, por lo que es muy simple con respecto a otros, tiene pocas funcionalidades, pero es "pequeño".
+
+
+    p La <a href="http://web.stanford.edu/class/cs140/projects/pintos/pintos.html">Documentación Oficial</a> en general es de gran ayuda, aunque hay que leerla recordando que las tareas oficiales difieren de las nuestras.
+
+
+
+    section#overview
+      h4 Overview
+      /	---------
+      p En el curso usamos un fork del proyecto original, con algunos cambios para simplificar el build-system.
+
+      h4 Código
+      /	-------
+      p El código fuente se encuentra en <tt>src/</tt>. Tiene varios directorios.
+
+      section#structure1
+        p Los más relevantes para las tareas son,
+        dl
+          dt
+            tt threads/
+          dd  Código de threading. Aquí se implementa es Scheduling y manejo de procesos.
+
+          dt
+            tt userprog/
+          dd  Acá está el <em>Program Loader</em> y el código para soportar programas de usuario, como excepciones y <em>syscalls</em>.
+
+          dt
+            tt examples/
+          dd  Programas de usuario para agregar al disco duro.
+
+          dt
+            tt vm/
+          dd  Acá es donde estaría el manejo de Memoria Virtual (si tubiera uno).
+
+          dt
+            tt filesys/
+          dd  Código del Sistema de Archivos. Es la sección encargada de poder montar y usar discos duros. Funciona, pero de manera muy primitiva.
+
+          dt
+            tt tests/
+          dd  Tests para las tareas estandar de Pintos.  Muchas veces se pueden adaptar para probar otras cosas.
+
+
+      section#structure2
+        p Estos son más internos, pero no por eso menos relevantes.
+        dl
+          dt
+            tt devices/
+          dd  Código para manejar dispositivos externos (I/O), como el teclado, disco duro y el timer.
+
+          dt
+            tt lib/
+          dd
+            p Un subconjunto de libc, la librería estándar de C. Los programas de usuario usarán esta implementación, no la usual (que todos creen que es casi parte del compilador).
+            p Los headers de aquí se pueden importar tanto en el kernel como en los programas de usuario con <code>#include &lt;<small>...</small>&gt;</code>.  You should have little need to modify this code.
+
+          dt
+            tt lib/kernel/
+          dd  Un subconjunto de libc que sólo usa el Kernel. Lo más importante son algunas estructuras de datos (listas, y tablas de hash), y algunos algoritmos (sort).
+
+          dt
+            tt lib/user/
+          dd  Un subconjunto de libc que sólo usan los programas de usuario.
+
+
+      section#navigation
+        h5 Navegación
+        /	-----------
+        p Aunque pintos intente ser minimal, de todas maneras tiene bastante código, por lo que es bueno poder navegar dentro de el con algo de ayuda del editor en vez de tener que leer todo.
+
+        dl
+          dt Tags
+          dd  Pueden crear índices de los símbolos con <tt>ctags</tt>, <tt>etags</tt>, o <tt>cscope</tt>.
+              Luego, con la mayoría de los editores podrán ir a las definiciones (y volver) fácilmente.
+
+          dt clang_complete
+          dd  Si tienen clang y sus herramientas, podrán autocompletar si tienen plugins adecuados.
+
+
+        section#textEditors
+          h6 Editores de Texto
+          /	------------------
+          p En general, usar un IDE para pintos es más complicado, ya que los IDEs asumen que se va a compilar contra la librería estándar de c/c++, por lo que configurarlos bien se vuelve casi más complicado que configurar un editor de texto.
+
+          p Los editores de texto que les pueden funcionar bien son,
+          dl
+            dt  Emacs
+            dd  Se recomienda usar <a href="spacemacs.org">spacemacs</a> como configuración inicial. Basta agregar el <em>layer</em> <tt>c-c++</tt>.
+            dt  Vim / Neovim
+            dd  Pueden comenzar desde 0, o usando <a href="http://vim.spf13.com/">vim-spf13</a> o la configuración de <a href="https://github.com/amix/vimrc">amix</a>.
+
+            dt  Atom
+            dd  Si instalan los plugins de <a href="https://atom.io/packages/language-c">c</a> y <a href="https://atom.io/packages/autocomplete-clang">clang</a> debería funcionarles bastante bien.
+
+            dt  Sublime
+            dd  Prácticamente ya no está en desarrollo, pero todavía les puede ser útil.
+
+          p Tanto Emacs, como vim/neovim son editores muy flexibles, pero su curva de aprendizaje es alta. Atom parece ser el editor <em>noob-friendly</em> más flexible.
+
+
+      section#navigation
+        h5 Build
+        /	------
+        p Originalmente existe un <tt>Makefile</tt> por cada directorio de <tt>src/</tt>.
+          Pero en el fork del curso se agregó uno en <tt>/</tt> que compila en orden los directorios necesarios para usar <tt>threads/</tt> y <tt>userprog/</tt>. El makefile es bastante sencillo, así que si quieren saber algo de él, leanlo.
+
+        p Luego de compilar y moverse al directorio adecuado dentro de <tt>src/</tt>, pueden ejecutar pintos con comandos de esta forma,
+        pre
+          code.hljs.bash
+            | ../utils/pintos $FlagsScript -- $FlagsKernel
+
+        p Es importante que separen los flags de los del kernel con "<code> -- </code>", tal como aparece allí!
+
+        p Por ejemplo
+        pre
+          code.hljs.bash
+            | ../utils/pintos -- -q run "testName"
+              ../utils/pintos -s --no-vga -T15 -- -q run "priority-preempt"
+
+        p Flags
+        ul
+          li Script
+          ul
+            li <tt>-s</tt> Mostrar el output en la consola (default)
+            li <tt>--no-vga</tt> No mostrar la ventana del emulador
+            li <tt>-Tk</tt> Matar al emulador si tarda más de k segundos en terminar.
+
+          li Kernel
+          ul
+            li <tt>-q</tt> Apagar el SO luego de ejecutar.
+            li <tt>run testName</tt> Ejecutar el test luego de bootear.

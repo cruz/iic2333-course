@@ -9,7 +9,6 @@ set :site_title, "IIC2333 - SO y Redes"
 # ============
 set :relative_links, true
 activate :relative_assets
-set :relative_links, true
 
 
 # Assets
