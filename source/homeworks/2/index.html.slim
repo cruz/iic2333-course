@@ -77,6 +77,43 @@ article
       /	----------
       p Deberán implementar Waterfall Scheduling para $N$ colas.
       p Se evaluará correctitud, por lo que el funcionamiento es esencial.
+      p Funciones importantes
+      ul
+        li: tt src/threads/thread.h
+        ul
+          li: tt enum thread_status
+          li: tt enum scheduling_algorithm
+          li: tt struct thread
+          li: tt int queueCount
+          li: tt PRI_MIN, PRI_MAX, PRI_DEFAULT
+
+        br
+        li: tt src/threads/thread.c
+        ul
+          li: tt thread_init
+          p Inicializa el sistema de Threading. Es el "Constructor estático" (de la "clase") Thread.
+
+          li Thread
+          ul
+            li: tt thread_start
+            li: tt thread_tick
+            li: tt thread_yield
+            li: tt thread_block
+            li: tt thread_unblock
+            li: tt thread_exit
+            li: tt thread_print_stats
+
+          li Elección
+          ul
+            li: tt next_thread_to_run
+            p Revisa la lista $ready$ que ya tiene pintos.
+            p Si está vacía retorna <tt>idle_thread</tt>, si no, llama a la función apuntada por <small>:o</small> <tt>next_thread_to_run_function</tt>.
+            p Si cambian la lista, deben arreglar esta decisión!
+
+            li: tt next_thread_to_run_waterfall
+            p Es seleccionada con $N$ colas usando el KernelFlag <tt>-wfN</tt>.
+            p Actualmente implementa FIFO usando la lista $ready$ que ya tiene pintos.
+
 
 
     section#stats
