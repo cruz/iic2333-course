@@ -123,7 +123,7 @@ article
         pre
           code.hljs.bash
             | ../utils/pintos -- -q run "testName"
-              ../utils/pintos -s --no-vga -T15 -- -q run "priority-preempt"
+              ../utils/pintos -s --no-vga -T15 -- -q -wf=6 run "priority-preempt"
 
         p Flags
         ul
@@ -136,4 +136,5 @@ article
           li Kernel
           ul
             li <tt>-q</tt> Apagar el SO luego de ejecutar.
+            li <tt>-wf=6</tt> Usar Waterfall scheduling con 6 colas.
             li <tt>run testName</tt> Ejecutar el test luego de bootear.
