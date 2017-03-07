@@ -409,7 +409,8 @@ section
 		p.fragment <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">(¿Megas? ¿Kilos? ¿Gigas?)</a>
 		ul
 			li.fragment Windows 7: \( \sim 40\times 10^6 \) líneas de código
-			li.fragment Linux: \( \sim 15 \times 10^6 \) líneas de código
+			li.fragment Windows 8: \( \sim 50\times 10^6 \) líneas de código
+			li.fragment <a href="https://www.linuxcounter.net/statistics/kernel">Linux</a>: \( \sim 15 \times 10^6 \) líneas de código
 		
 
 	section
@@ -434,20 +435,20 @@ section
 section
 	h2 Tareas del Sistema Operativo
 
-	blockquote.fragment style="background: #F4C7C3;" <b>Administración de procesos</b>
-	ul.fragment
+	blockquote style="background: #F4C7C3;" <b>Administración de procesos</b>
+	ul
 		li Proceso
 		li Tablas (árbol) de proceso
 		li Comunicación entre procesos
 
-	blockquote.fragment style="background: #F4C7C3;" <b>Administración de memoria</b>
-	ul.fragment
+	blockquote style="background: #F4C7C3;" <b>Administración de memoria</b>
+	ul
 		li Espacios de direcciones
 		li Memoria Virtual
 
 
-	blockquote.fragment style="background: #F4C7C3;" <b>Administración de almacenamiento</b>
-	ul.fragment
+	blockquote style="background: #F4C7C3;" <b>Administración de almacenamiento</b>
+	ul
 		li Archivos
 		li Directorios
 		li Rutas absolutas y relativas
@@ -467,9 +468,9 @@ section
 		
 		li Sistema Operativo debe controlar que: 
 		ul
-			li Procesos pueden acceder a datos
-			li Procesos no pueden monopolizar la CPU
-			li Procesos no pueden modificar (intencionalmente o no) el funcionamiento de otro proceso
+			li Procesos puedan acceder a datos
+			li Procesos no puedan monopolizar la CPU
+			li Procesos no puedan modificar (intencionalmente o no) el funcionamiento de otro proceso
 
 		li Solo el Sistema Operativo debe ser capaz de administrar el <i>hardware</i>, y no los procesos.
 
@@ -500,62 +501,83 @@ section
 
 section
 	h2 Llamadas al sistema
-	/  -------------------
 
 	section
 		h4 System Calls
-		p Programas utilizan llamadas al sistemas frecuentemente
+		p Programas utilizan llamadas al sistema frecuentemente
+
+		div ¿Qué debe hacer el Sistema Operativo antes este comando?
+
 		p <code>copy source.txt dest.txt</code>
 
-		div ¿Qué debe hacer el Sistema Operativo?
-
-
 		ul
-			div.fragment
-				li Abrir <code>source.txt</code>
-				ul
-					li ¿Existe? ¿Tiene permisos?
-
-			div.fragment
-				li Abrir <code>dest.txt</code>
-				ul
-					li ¿Existe? ¿se reemplaza? ¿Se puede escribir?
-
+			li.fragment Abrir <code>source.txt</code> (¿posición en disco?, ¿existe?, ¿tiene permisos?,...)
+			li.fragment Abrir <code>dest.txt</code> (¿existe?, ¿se reemplaza?, ¿se puede escribir?,...)
+			li.fragment Leer <code>source.txt</code> (¿hacia qué parte de la memoria?)
+			li.fragment Escribir <code>dest.txt</code> (¿desde qué posición de memoria?, ¿en qué posición del disco?,...)
 			li.fragment Lectura/escritura en disco requiere llamadas al sistema
 			li.fragment Terminar el programa en caso de error, requiere llamadas al sistema
-
-		/p.fragment ...pero el programador no quiere programar todas las llamadas
 
 
 	section
 		h4 API: Application Programming Interface
 
 		p Sistemas Operativos proveen una API para el programador.
-		ul
-			li.fragment Windows API
-			li.fragment POSIX API (UNIX, Linux, MacOS X), a través de <span style="font-family:'Lucida Console', monospace">libc</span>
-			li.fragment Java API (para la JVM)
+		ul.fragment
+			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
+			li POSIX API (UNIX, Linux, MacOS X), a través de <code>libc</code>
+			li Java API (para la JVM)
 
-		br
-		p.fragment ¿Cómo usarla?
-		div.fragment
-			p eg:
+		div 
+			img src="/images/figures/00-LinuxAPI.png" width="35%" style="background:none; border:none; box-shadow:none;"
+			img src="/images/figures/00-WinArch.png" width="35%" style="background:none; border:none; box-shadow:none;"
+
+		/div.fragment
+		/	pre style="width:50%;"
+		/		code.hljs
+		/			| count = read(fd, buffer, nbytes);
+
+	section
+
+		img src="/images/figures/00-2_06.pdf.png" width="60%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+
+	section
+
+		div
 			pre style="width:50%;"
 				code.hljs
 					| count = read(fd, buffer, nbytes);
 
-	section
-		= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+		img src="/images/figures/00-syscall-read.png" width="50%" style="background:none; border:none; box-shadow:none;"
 
-	section
-		= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
+		/= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
 
 
 	section
-		= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX. 
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
 
 	section
-		= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			div Equivalencias entre <i>syscalls</i> Win32 y POSIX
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix-win32.png" width="70%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
 
 
 section
@@ -568,7 +590,6 @@ section
 		= image_tag '/images/figures/00-2_01.pdf.png', :width => "80%"
 
 
-
 section
 	h2 Interfaces de Usuario (UI)
 	/  --------------------------
@@ -576,15 +597,18 @@ section
 	section
 		p Varias alternativas...
 		ul
-			li.fragment <em>Command-Line Inteface (CLI):</em> Comandos se ingresan por teclado
-			li.fragment <em>Batch interface:</em> Comandos se ingresan en archivos
-			li.fragment <em>Graphical User Interface (GUI):</em> Sistema de ventanas + <em>pointing-device</em>
+			li <b>Command-Line Inteface (CLI):</b> Comandos se ingresan por teclado
+			li <b>Batch interface:</b> Comandos se ingresan en archivos
+			li <b>Graphical User Interface (GUI):</b> Sistema de ventanas + <em>pointing-device</em>
 
 	section
-		h4 Command-Line (línea de comandos) <span class="fragment">(<strong>shells</strong>)</span>
+		h4 Command-Line
 
-		p.fragment Para UNIX
-		div.fragment
+		div A.K.A. Línea de comandos, shell (menos preciso: terminal, consola, xterm, prompt). Para UNIX:
+
+		/p Para UNIX
+
+		div
 			ul
 				li <em>Bourne shell</em>: Stephen Bourne, 1977, UNIX, <code>sh</code>
 				li <em>C shell</em>: Bill Joy, 1978, BSD UNIX, <code>csh</code>
@@ -593,12 +617,28 @@ section
 				li <em>Bourne-Again shell</em>: Brian Fox, 1989, <code>bash</code>
 				li <em>Z shell</em>: Paul Fastad, 1990, <code>zsh</code>
 
-		p.fragment En windows
-		div.fragment
+		div 
+			img src="/images/figures/00-bash.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
+			img src="/images/figures/00-zsh.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+		h4 Command-Line
+
+		p Para Windows
+
+		div
 			ul
-				li <em>MS-DOS prompt</em>: MS-DOS, Win95/98/Me, <code>COMMAND.COM</code>
-				li <em>Command Prompt</em>: <code>cmd.exe</code>
-				li <em>PowerShell</em>
+				li <b>MS-DOS prompt</b>: MS-DOS, Win95/98/Me, <code>COMMAND.COM</code>
+				li <b>Command Prompt</b>: <code>cmd.exe</code>
+				li <b>PowerShell</b>
+
+		div 
+			img src="/images/figures/00-commandcom.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
+			img src="/images/figures/00-powershell.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 	section
@@ -607,13 +647,13 @@ section
 		p Uso común:
 		ul
 			li Solicitar comando/instrucción al usuario y ejecutarlo
-			li Formato: <code>prompt comando [parametros]</code>
+			li <code>prompt comando [parametros]</code>
 
-		div.fragment
+		div
 			p <em>Command Prompt</em> (símbolo del sistema)
-			ul
-				li.fragment Indica que el sistema está lista para recibir un comando
-				li.fragment Usualmente un texto terminado en <code>$, %, #, :, ></code>
+			ul.fragment
+				li Indica que el sistema está lista para recibir un comando
+				li Usualmente un texto terminado en <code>$, %, #, :, ></code>
 
 		div.fragment
 			pre
@@ -638,10 +678,11 @@ section
 				li Métaforas: escritorio, íconos, carpetas, menúes
 				li Más allá de <em>pointing-device</em>: gestos y acciones visuales
 
-		p.fragment Vienen de los \(\sim\) 1970's
+		p.fragment Vienen de 1968 (Douglas Engelbart), <a href="https://www.youtube.com/watch?v=yJDv-zdhzMY" target="_blank">Mother of All Demos</a>
+
 		div.fragment
 			ul
-				li Investigación de Xerox Palo Alto Research Center (PARC)
+				li Investigación en Xerox Palo Alto Research Center (PARC)
 				li Primera interfaz gráfica: 1973
 				li Popularizados en 1980s: Apple Macintosh (Mac OS)
 				li Windows 1.0 agregó GUI a MS-DOS
@@ -653,10 +694,10 @@ section
 		p Tradicionalmente UNIX/Linux han sido manejados por CLI,
 		p.fragment pero se han desarrollado muchas GUIs
 
-		ul
-			li.fragment CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
-			li.fragment X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
-			li.fragment <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
+		ul.fragment
+			li CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
+			li X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
+			li <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
 
 		= image_tag "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
 
@@ -688,90 +729,91 @@ section
 
 
 section
-	h2 Estructura: MS-DOS
-	/  ------------------
+	h2 Arquitectura
 
 	section
 		p ¿Sistemas <strong>monolíticos</strong> o sistemas <strong>modulares</strong>?
 		p.fragment Algunos ni siquiera tienen estructura
-		ul
-			li.fragment MS-DOS: sistema monolítico simple
-			li.fragment Nadie pensó que sería tan popular
-			li.fragment Intel 8088 no tenía protección de <em>dual mode</em>
-			li.fragment ¿Problemas? <span class="fragment">Seguridad</span>
+		ul.fragment
+			li MS-DOS: sistema monolítico simple
+			li Nadie pensó que sería tan popular
+			li Intel 8088 no tenía protección de <em>dual mode</em>
+			li ¿Problemas? <span class="fragment">Seguridad</span>
 
 		br
-		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right;", :height=>"25%", :width=>"25%"
-
-
-
-section
-	h2 Estructura: UNIX
-	/  ----------------
+		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right; border:none;", :height=>"25%", :width=>"25%"
 
 	section
+
 		p UNIX: Estructura monolítica diseñada de acuerdo al <em>hardware</em>
 
-		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%'
+		p Todo el sistema se diseña como un único programa.
 
-		p.fragment ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
+		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%', :style=>"border:none;"
+
+		p ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
 
 
-
-section
-	h2 Estructura: diseño por capas
-	/  ----------------------------
 
 	section
-		p Capas se diseñan por niveles más <em>abstractos</em> de funcionalidad
+	
+		p Diseño por capas se diseñan por niveles más <em>abstractos</em> de funcionalidad
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
 
 		ul
-			li          Capa \(M\) invoca llamadas sobre capa \(M-1\)
-			li.fragment Ventaja: Facilidad de <em>debugging</em>
-			li.fragment Desventaja: dificultad de definición de capas, eficiencia
+			li Capa \(M\) invoca llamadas sobre capa \(M-1\)
+			li Ventaja: Facilidad de <em>debugging</em>
+			li Desventaja: dificultad de definición de capas, eficiencia
 
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
 
-		= image_tag "/images/figures/00-2_13.pdf.png", :width => '25%'
+		
+			= image_tag "/images/figures/00-2_13.pdf.png", :width => '65%', :style=>"border:none;"
 
+		br
 
-		p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
+			p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
 
-section
-	h2 Estructura: <em>microkernels</em>
-	/  ---------------------------------
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+			
+			= image_tag "/images/figures/00-THE.png", :width => '70%', :style=>"border:none;"
+
 
 	section
+
+		h4 Microkernels
+
 		p <b>Mach</b>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
 
-		ul
-			li.fragment Set de funcionalidades mínimas
-			li.fragment Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
-			li.fragment Ventaja: Sistemas pequeño y fácil de portar
-			li.fragment Desventaja: Mucha más interacción a través de <em>syscalls</em>!
-			li.fragment <b>Darwin</b> (MacOS X kernel) basado parcialmente en modelo Mach
-			li.fragment <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
-			li.fragment <b>GNU/Hurd</b> es más lento que Linux.
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-		= image_tag "/images/figures/00-2_14.pdf.png", :width=>'50%'
+			ul.fragment
+				li Set de funcionalidades mínimas
+				li Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
+				li Ventaja: Sistemas pequeño y fácil de portar
+				li Desventaja: ¡Mucha más interacción a través de <em>syscalls</em>!
+				li <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
+				li <b>GNU/Hurd</b> es más lento que Linux.
 
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-section
-	h2 Estructura: <i>Monolíticos</i> vs <i>microkernels</i>
-	/  ---------------------------------
+			= image_tag "/images/figures/00-2_14.pdf.png", :width=>'80%', :style=>"border:none;"
 
 	section
+	
+		h4 Monolíticos vs Microkernels
 
-		= image_tag "/images/figures/00-mono-micro.png", :width=>'100%'
+
+		= image_tag "/images/figures/00-mono-micro.png", :width=>'90%', :style=>"border:none;"
 
 
-
-section
-	h2 Estructura: <em>módulos</em>
-	/  ----------------------------
 
 	section
-		p Lo más común: <strong>loadable kernel modules</strong>
+	
+		p Monolíticos con extensiones: <strong>Loadable kernel modules</strong>
 
 		ul
 			li Kernel tiene un conjunto de componentes principales (<em>core</em>)
@@ -780,22 +822,26 @@ section
 			li Solaris, Linux, MacOS X, Windows
 			li Ej: kernel con soporte de manejo de archivo + módulos por cada <em>filesystem</em>
 
-		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%'
+		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%', :style=>"border:none;"
 
 
-
-section
-	h2 Al final: Estructuras híbridas
-	/  ------------------------------
 
 	section
+		h4 Híbridos
+
 		p En la práctica, pocos sistemas pueden ser encasillados
 
-		ul
-			li Linux, Solaris, Windows tienen características monolíticas (performance!)
-			li Pero algunas funcionalidades siguen el diseño de <em>microkernel</em>
-			li ¡Y además permiten cargar módulos dinámicamente!
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
+			ul
+				li Algunos tienen características monolíticas (performance!)
+				li Pero algunas funcionalidades siguen el diseño de <em>microkernel</em>
+				li ¡Y además permiten cargar módulos dinámicamente!
+				li Windows NT, XNU (el kernel de Darwin) son monolíticos
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			= image_tag "/images/figures/00-Win2000.svg", :width=>'50%', :style=>"border:none;"
 
 
 
