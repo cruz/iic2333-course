@@ -17,15 +17,15 @@ section
 	section
 		p.fragment Un programa en ejecución
 
-		blockquote.fragment
-			| Proceso = Código + Recursos
+		blockquote.fragment style="background:#B7E1CD;" 
+			| Proceso = Código (programa) + Recursos
 
-		ul
-			li.fragment El código del programa
-			li.fragment Los recursos de la ejecución
-			ul
-				li.fragment Memoria, archivos
-				li.fragment Sockets, Dispositivos, Librerías (...)
+		ul.fragment
+			li El código del programa
+			li Los recursos de la ejecución
+			ul.fragment
+				li Memoria, archivos
+				li Sockets, Dispositivos, Librerías (...)
 
 
 
@@ -34,22 +34,21 @@ section
 	/  -----------------------------
 
 	section
-		p ¿Qué hay en un Proceso?
-		ul
-			li.fragment Código (<em>.text</em>, información estática)
-			li.fragment Program Counter (PC) + Registros
-			li.fragment Stack (de funciones)
-			p.fragment Cada item del stack representa una función, por lo que tiene:
-			ul
-				li.fragment Parámetros
-				li.fragment Variables locales
-				li.fragment Lugar de retorno (donde estaba la ejecución anterior, PC)
-			li.fragment Datos (<em>.data</em>)
-			ul
-				li.fragment Variables globales
-			li.fragment Heap
-			p.fragment Memoria asignada dinámicamente (durante la ejecución)
-		== image_tag '/images/figures/01-3_01.pdf.png'
+		/div ¿Qué hay en un Proceso?
+
+		div style="border:none; width:70%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <b>Código</b> (<em>.text</em>, información estática)
+				li <b>Datos</b> (<em>.data</em>): variables globales
+				li <b>Stack</b>. Cada item del stack representa una función, y contiene:
+				ul
+					li Parámetros
+					li Variables locales
+					li Lugar de retorno (donde estaba la ejecución anterior, PC)
+				li <b>Heap</b>. Memoria asignada dinámicamente (durante la ejecución)
+
+		img src='/images/figures/01-3_01.pdf.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -59,50 +58,63 @@ section#states
 
 
 	section#states-inside
-		p Un proceso en ejecución puede cambiar de estado
+		div Un proceso en ejecución puede cambiar de estado
 
 		ul
-			li.fragment <b>[New]       </b>: En creación
-			li.fragment <b>[Running]   </b>: En ejecución
-			li.fragment <b>[Waiting]   </b>: Esperando (I/O, signal)
-			li.fragment <b>[Ready]     </b>: Listo para ejecutar. Esperando asignación de CPU
-			li.fragment <b>[Terminated]</b>: Ejecución terminada
+			li <b>New       </b>: En creación
+			li <b>Running   </b>: En ejecución
+			li <b>Waiting   </b>: Esperando (I/O, signal)
+			li <b>Ready     </b>: Listo para ejecutar. Esperando asignación de CPU
+			li <b>Terminated</b>: Ejecución terminada
 
-
-	section#states-automata
-		== image_tag '/images/figures/01-3_02.pdf.png'
-		p.fragment ¡Un autómata!
+		img src='/images/figures/01-3_02.pdf.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section#states-status
 		p ¿Cómo averiguo el estado de un proceso?
 
-		.fragment
-			p Desde un terminal
-			pre
-				code.hljs.lang-bash
-					| $ htop || top || ps aux
-		.fragment
-			p En C
-			pre
-				code.hljs.lang-c
-					| #include "sys/types.h"
-					  #include "sys/wait.h"
-					  /* ... */
-					  int status;
-					  pid_t return_pid = waitpid(process_id, /*out*/ &status, WNOHANG);
-					  
-					  switch(return_pid) {
-					    case 0:
-					      /* Still running */
-					    case process_id:
-					      /* Child terminated. Exit status in 'status' */
-					    case -1:
-					    default:
-					      /* Error */
-					  }
-		.fragment
-			p O con un Administrador de Procesos
+		p Desde un terminal
+		pre
+			code.hljs.lang-bash
+				| $ htop
+				  $ top
+				  $ ps aux
+		
+		p Con un Administrador de Procesos
+
+		img src='/images/figures/01-taskman-linux.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="display:inline-block;" &nbsp; &nbsp; &nbsp; &nbsp; 
+		img src='/images/figures/01-taskman-win.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	/section#states-status
+	/	p ¿Cómo averiguo el estado de un proceso?
+
+	/	.fragment
+	/		p Desde un terminal
+	/		pre
+	/			code.hljs.lang-bash
+	/				| $ htop || top || ps aux
+	/	.fragment
+	/		p En C
+	/		pre
+	/			code.hljs.lang-c
+	/				| #include "sys/types.h"
+	/				  #include "sys/wait.h"
+	/				  /* ... */
+	/				  int status;
+	/				  pid_t return_pid = waitpid(process_id, /*out*/ &status, WNOHANG);
+	/				  
+	/				  switch(return_pid) {
+	/				    case 0:
+	/				      /* Still running */
+	/				    case process_id:
+	/				      /* Child terminated. Exit status in 'status' */
+	/				    case -1:
+	/				    default:
+	/				      /* Error */
+	/				  }
+	/	.fragment
+	/		p O con un Administrador de Procesos
 
 
 section#repr
@@ -110,26 +122,30 @@ section#repr
 	/  --------------------------
 
 	section#repr-PCB
-		p ¿Cómo represento un proceso?
+		div ¿Cómo represento un proceso?
 
-		p.fragment Process Control Block (PCB)
-		ul
-			li.fragment Estado
-			li.fragment Identificador (PID)
-			li.fragment Program Counter (PC)
-			li.fragment Registros de CPU: <em>estado de ejecución</em>
-			li.fragment Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
-			li.fragment Información de memoria: límites, tabla de páginas/segmentos, &hellip;
-			li.fragment Contabilidad (<em>accounting</em>)
-			li.fragment Información de I/O: archivos y dispositivos abiertos, &hellip;
+		blockquote.fragment style="background:#F4C7C3;"<b>Process Control Block (PCB)</b>
 
-		== image_tag '/images/figures/01-3_03.pdf.png'
-		/p.fragment Miremos en <code>include/linux/sched.h</code>
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li Estado
+				li Identificador (PID, <i>Process ID</i>)
+				li Program Counter (PC)
+				li Registros de CPU: <em>estado de ejecución</em>
+				li Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
+				li Información de memoria: límites, tabla de páginas/segmentos, &hellip;
+				li Contabilidad (<em>accounting</em>)
+				li Información de I/O: archivos y dispositivos abiertos, &hellip;
+
+		img src='/images/figures/01-3_03.pdf.png' width="15%" style="background:none; box-shadow:none; vertical-align:middle;"
+
+		p.fragment Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
 
 
 	section#repr-contextSwitch
 		p El cambio de procesos se conoce como <strong>Context Switch</strong>
-		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%"
+		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%", :style=>"border:none;"
 
 
 
@@ -144,12 +160,12 @@ section#creation
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso</span>
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso&hellip;</span>
 
-		p.fragment Existe un proceso llamado 'init' que es construido durante la inicialización del kernel. Usualmente tienen asignado el ProcessID 1.
+		p.fragment Existe un proceso llamado <code>init</code>, construido durante la inicialización del kernel. PID=1.
 		/! Salvo Windows por supuesto, que usa el 4.
-		ul
-			li.fragment Linux: systemd, initV, upstart
-			li.fragment MacOS X: launchd
-			li.fragment Windows: InitialSystemProcess, System
+		ul.fragment
+			li Linux: systemd, init, upstart
+			li MacOS X: launchd
+			li Windows: InitialSystemProcess, System
 
 	section#creation-tree
 		p Como todos los procesos tienen un padre, forman un árbol de procesos
@@ -170,37 +186,37 @@ section#creation
 
 
 	section#creation-init
-		p Si un proceso crea a un proceso (hijo).
+		p Un proceso (padre) crea a un proceso (hijo).
 		ul
-			li.fragment ¿Quién sigue ejecutando? (modos de ejecución)
+			li.fragment ¿Quién sigue ejecutando? 
 			ul
 				li.fragment Padre e hijo continúan ejecutando concurrentemente
 				li.fragment Padre espera que algunos o todos sus hijos terminen
-			li.fragment ¿Qué personalidad tiene el hijo? (modos de espacio de direcciones)
+			li.fragment ¿Qué personalidad tiene el hijo? (espacio de direcciones)
 			ul
-				li.fragment El hijo es un duplicado <a href="http://linux.die.net/man/2/fork">casi</a> exacto del padre (secciones <strong>.text</strong>, <strong>.data</strong> y el stack son copiados)
+				li.fragment El hijo es un duplicado <a href="http://linux.die.net/man/2/fork" target="_blank">casi</a> exacto del padre
 				li.fragment El hijo es un nuevo programa
 
 
 	section#creation-syscalls
-		p Syscalls
-		dl
-			.fragment
-				dt Fork
-				dd
-					p.fragment Crea un nuevo proceso como <strong>copia</strong> del padre.
-					p.fragment Ambos continúan ejecutando desde la instrucción posterior a <code>fork</code>
-					p.fragment La llamada retorna* el <code>PID</code> del hijo al padre y <code>0</code> al hijo
-			.fragment
-				dt Exec
-				dd
-					p.fragment Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
-					p.fragment Básicamente otro programa se <em>roba</em> el proceso
+		
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		ul.fragment
+			li Crea un nuevo proceso como <strong>copia</strong> del padre.
+			li Ambos continúan ejecutando desde la instrucción posterior a <code>fork()</code>
+			li La llamada retorna el <code>PID</code> del hijo al padre y <code>0</code> al hijo
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+		
+		ul.fragment
+			li Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
+			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
 
 
 
 	section#creation-fork-l-q
-		p ¿Qué imprimen los programas?
+		p ¿Qué imprime este programa?
 
 		pre
 			code.hljs.lang-c
@@ -211,7 +227,7 @@ section#creation
 				    a++;
 				    printf("CHILD: a is : %d\n", a); /* ??? */
 				  }
-				  else if(child_pid > 0) { /* parent gets the new pid ('random' number) */
+				  else if(child_pid > 0) { /* parent gets the new pid */
 				    printf("PARENT: child_pid is %d\n", child_pid);
 				    printf("PARENT: a is %d\n", a); /* ??? */
 				  }
@@ -245,28 +261,34 @@ section#creation
 
 
 	section#creation-wait
-		p Usualmente, después del <code>fork()</code>, uno de los dos (el hijo) ejecuta un <code>exec()</code>.
-		ul
-			li.fragment El padre conoce el <strong>pid</strong> del hijo
-			li.fragment El padre podría seguir ejecutando y crear más hijos
-			li.fragment &hellip; o bien esperar que el hijo termine (o muera)
-		== image_tag '/images/figures/01-3_10.pdf.png'
+		p Después del <code>fork()</code>, uno de los procesos (el hijo) podría ejecutar un <code>exec()</code>.
+		ul.fragment
+			li El padre conoce el <strong>pid</strong> del hijo
+			li El padre podría seguir ejecutando y crear más hijos
+			li &hellip; o bien esperar que el hijo termine (o muera)
+		== image_tag '/images/figures/01-3_10.pdf.png', :style=>"border:none;"
 
 
 	section#creation-wait-def
-		p Syscalls
 
-		dl
-			dt Fork
-			dd
-				p Clona el proceso.
-			dt Exec
-			dd
-				p Reemplaza el proceso por otro
-			.fragment
-				dt Wait
-				dd
-					p.fragment Espera a un proceso hijo termine de ejecutar.
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		div Clona el procesos (<b>copia</b> del padre)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+
+		div Reemplaza el proceso por otro (sobreescribe)
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
+
+		div.fragment Espere el término de un proceso hijo
+
+	section#creation-shell
+
+		div Código simplificado de una <i>shell</i>:
+
+		img src='/images/figures/01-shell.png' width="75%" style="background:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -276,84 +298,71 @@ section#termination
 
 	section#termination-0
 		p.fragment Todo proceso, al terminar su ejecución, ejecuta <code>exit()</code>
-		ul
-			li.fragment Entrega un <em>código de retorno</em> (¿para qué?)
-			li.fragment El SO recupera todos los recursos asignados
+		ul.fragment
+			li Entrega un <em>código de retorno</em> (¿para qué?)
+			li El Sistema Operativo recupera todos los recursos asignados
 
-	section#termination-retCode
-		p El código de retorno se utiliza para avisar cómo resultó la ejecución
-		ul
-			li.fragment Generalmente es <code>0</code> cuando no hubo problemas
-			li.fragment Y un número distinto de <code>0</code> para indicar un problema
-			ul
-				li.fragment La documentación del programa debería relacionar errores a códigos de retorno.
-			li.fragment Por su uso, también es conocido por <em>código de error</em>.
+		p.fragment El código de retorno se utiliza para avisar cómo resultó la ejecución
+		ul.fragment
+			li Generalmente es <code>0</code> cuando no hubo problemas
+			li Y un número distinto de <code>0</code> para indicar un problema
+			li La documentación del programa debería relacionar errores a códigos de retorno.
+			li También se le llama <em>código de error</em>.
 
 	section#termination-syscalls
-		p Syscalls
 
-		dl
-			dt Fork
-			dd
-				p Clona el proceso.
-			dt Exec
-			dd
-				p Reemplaza el proceso por otro
-			dt Wait
-			dd
-				p Espera a un proceso hijo termine de ejecutar.
-			.fragment
-				dt Exit
-				dd
-					p.fragment Termina el proceso con un código de retorno dado.
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		div Clona el procesos (<b>copia</b> del padre)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+
+		div Reemplaza el proceso por otro (sobreescribe)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
+
+		div Espere el término de un proceso hijo
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/exit" target="_blank"><code>exit()</code></a>
+
+		div.fragment Termina el proceso con un código de retorno dado, y lo entrega al padre
 
 
 	section#termination-signals
-		dl
-			dt kill / TerminateProcess
-			dd
-				p Envía una <strong>señal</strong> a otro proceso (típicamente <em>SIGTERM</em>)
-				p Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
-		/ p <small>Mama, just killed a process</small>
+
+		div Un proceso puede enviar <i>señales</i> (<a href="http://www.comptechdoc.org/os/linux/programming/linux_pgsignals.html" target="_blank"><b>signal</b></a>s) a otros procesos
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/kill" target="_blank"><code>kill()</code></a>
+		
+		ul.fragment
+			li Envía una <strong>señal</strong> (<code>kill -l</code> muestra una lista)a otro proceso (típicamente <em>SIGTERM</em>)
+			li Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
+
+		img.fragment src='/images/figures/01-signals.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 	section#termination-q
 		p Si el padre muere, ¿deben morir los hijos?
 
-		ul
-			li.fragment Usualmente el SO no permite que un hijo exista si el padre ha terminado.
-			li.fragment Sistema Operativo ejecuta una <strong>terminación en cascada</strong>
+		ul.fragment
+			li Sistema Operativo podría permitir (o no) que un hijo exista si el padre ha terminado.
+			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a>.
 
-	section#termination-getReturnCode
-		p Huérfanos y zombies: the walking process
+		blockquote.fragment style="background:#B7E1CD;" Procesos <b>huérfanos</b>
 
-		p.fragment Proceso terminado no se borra inmediatamente de la tabla de procesos.
-		ul
-			li.fragment ¿Por qué? <span class="fragment">Para que el padre recupere su estado de salida con <code>wait()</code></span>
-			li.fragment Cuando el padre hace <code>wait()</code> la entrada del hijo se borra de la tabla
+		ul.fragment
+			li Linux: Cuando un padre termina (<code>exit</code>) o muere (<code>kill</code>), sus hijos quedan <b>huérfanos</b> y pasan a ser hijos de <code>init</code>
+			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a> (las condiciones pueden ser complicadas).
+			li <code>init</code> hace <code>wait()</code> periódicamente por sus hijos.
 
-		p.fragment ¿Cómo se hace en Linux?
-		pre.fragment
-			code.hljs.lang-c
-				| /* Un proceso (hijo) termina... */
-				  exit(1);
-		pre.fragment
-			code.hljs.lang-c
-				| /* El padre consulta el estado */
-				  int status;
-				  pid_t pid = wait(/*out*/ &status); /* Ahora 'status' tiene el código de retorno */
-				  /* Ahora el SO puede terminar de eliminar el proceso hijo */
-		p.fragment Si el padre tenía varios hijos, ¿a cuál esperamos recién?
+		blockquote.fragment style="background:#B7E1CD;" Procesos <b>zombies</b>
 
-
-	section#termination-zombies
-		p ¿Y si el padre jamás hace <code>wait()</code>?
-		ul
-			li.fragment Si el padre termina sin ejecutar <code>wait()</code>, el hijo queda <strong>huérfano</strong> (zombie).
-			.fragment
-				li Linux/UNIX: huérfanos pasan a ser hijos de <code>init</code>
-				ul
-					li <code>init</code> llama periódicamente a <code>wait()</code> para deshacerse de los huérfanos (reaps zombies).
+		ul.fragment
+			li Linux: Cuando un proceso termina y su padre no hace <code>wait()</code>.
+			li Proceso terminado no se borra inmediatamente de la tabla de procesos (pero tampoco ejecuta).
+			li Proceso queda en estado <b>zombie</b> hasta que el padre hace <code>wait()</code>.
 
 
 	section#termination-necromancy
