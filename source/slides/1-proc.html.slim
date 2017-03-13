@@ -390,10 +390,10 @@ section#termination
 
 
 
-section#_ipc
+/section#_ipc
 	h2 Comunicación entre procesos (IPC)
 /    =================================
-section#ipc
+/section#ipc
 	h2 Comunicación entre procesos (IPC)
 	/  ---------------------------------
 
@@ -438,7 +438,7 @@ section#ipc
 		== image_tag '/images/figures/01-3_12.pdf.png'
 
 
-section#ipc-_shm
+/section#ipc-_shm
 	h2 Memoria Compartida
 
 	section#ipc-shm
@@ -522,7 +522,7 @@ section#ipc-_shm
 
 
 
-section#ipc-_mp
+/section#ipc-_mp
 	h2 Paso de mensajes
 
 	section#ipc-mp
@@ -654,7 +654,265 @@ section#ipc-_mp
   //         li.fragment  Bonus si funciona para $N$ niveles
   //     li.fragment  Pueden hacerlo en conjuntos de $N$, $1 \leq N \leq 3$.
 
+section#scheduling
+	h2 Scheduling
 
+	section
+		p <i>CPU Scheduling</i> a.k.a. Planificación de CPU
+
+		div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+
+				div Tenemos
+			
+				ul
+					li Procesos en memoria (<i>multiprogramación</i>), ordenado en una tabla de PCBs
+					li Algunos procesos en estado <i>ready</i> (listos para ejecutar)
+					li CPU, que puede atender <b>solo un proceso</b> a la vez
+
+			div.fragment
+
+				div Y queremos:
+
+				ul
+					li <i>Multitasking</i>: asignar tiempo a múltiples procesos
+
+		img src='/images/figures/01-pcbs.gif' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background:#B7E1CD;"Sistema Operativo debe elegir cuál de todos los procesos en estado <b>ready</b> debe ejecutar a continuación: <b>scheduling</b>
+
+	section
+		div Responsable: <b>scheduler</b>, a.k.a.  <i>planificador</i>
+
+		div <em>Scheduling</em> puede ser visto como un sistema de <em>manejo de colas</em>
+
+		== image_tag '/images/figures/01-3_06.pdf.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		div Distintos niveles de <i>scheduling</i> en el sistema operativo:
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <b>Long-term Scheduler</b>:  Admite procesos en la <em>cola ready</em>. Determina el <strong>grado de multiprogramación</strong> (cantidad de procesos en memoria).
+				li <b>Short-term Scheduler</b> (a.k.a. <b>dispatcher</b>): Selecciona un proceso de la cola <em>ready</em> para ejecutar.
+				li <b>Medium-term Scheduler</b>: Modificación temporal del grado de multiprogramación, haciendo <strong>swapping</strong>
+
+		img src='/images/figures/01-schedulers.gif' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#cpuSched-thrsh
+		p ¿Y si estamos siempre haciendo <em>Scheduling</em> en vez de ejecutar programas?
+
+		div.fragment <em>Scheduling</em> es importante para <strong>multiprogramación</strong> y <b>multitasking</b> &hellip; <span class="fragment">pero <em>scheduling</em> y <em>context switch</em> <strong>son sólo <em>overhead</em></span></strong>
+
+		ul
+			li.fragment ¿Qué pasa si el <em>scheduler</em> o el <i>context switch</i> toman más tiempo de lo que toma el proceso?
+			li.fragment ¿Qué pasa si se le asigna poco tiempo a cada proceso?
+			li.fragment ¿Qué pasa si hay muchos procesos <em>ready</em>? (long-term scheduler)
+
+		blockquote.fragment style="background:#B7E1CD;"
+			| Contención de procesos se refleja en <strong>thrashing</strong>
+
+		img.fragment src='/images/figures/01-thrashing.jpg' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#cpuSched-types
+		h3 Modelo de ejecución de un proceso
+
+		div No todos los procesos se comportan igual. Alternan entre dos fases:
+
+		ul.fragment
+			li Uso de CPU (<b>CPU-burst</b>)
+			li Espera por I/O (<b>I/O-burst</b>)		
+
+		div.fragment Procesos suelen estar dominados por una u otra etapa:
+
+		img.fragment src='/images/figures/01-processtypes.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+
+		div El tiempo que gasta un proceso en espera influye en la utilización de CPU.
+
+		blockquote.fragment style="background:#F4C7C3;" Una CPU bajo el 100% está subutilizada.
+
+		div.fragment
+
+			div $p$ es el porcentaje de tiempo en espera por I/O. 
+
+			div $p^n$ probabilidad que $n$ procesos estén esperando por I/O.
+
+			div Utilización de la CPU es $\text{CPU}_u = 1 - p^n$
+
+		img.fragment src='/images/figures/01-utilization.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+section#SchedTypes
+
+	h2 Tipos de Scheduling
+
+	section
+		div Por tipo de interrupción
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Preemptive</b> (expropiativo)
+
+		div.fragment Utiliza interrupciones (ej: de reloj (<i>timer</i>)) para decidir cuando sacar a un proceso de ejecución.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Non-Preemptive</b> (colaborativo o no-expropiativo)
+
+		div.fragment
+			div Permite que un proceso ejecute hasta que:
+
+			ul
+				li El proceso deja voluntariamente la CPU, ó
+				li El proceso se bloquea en I/O, ó
+				li El proceso termina
+
+	section
+		div Por objetivo:
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			blockquote.fragment style="background:#B7E1CD;" Batch Scheduling
+
+			div.fragment
+				div Trabajo por lotes. Sin interacción.
+				ul
+					li Mantener la CPU lo más ocupada posible
+					li Minimizar <i>turnaround time</i>: tiempo desde envío hasta término.
+					li Maximizar <i>throughput</i>: número de trabajos por hora
+
+			blockquote.fragment style="background:#B7E1CD;" Interactive Scheduling
+
+			div.fragment
+				ul
+					li Minimizar tiempo de respuesta
+					li Satisfacer usuarios
+
+			blockquote.fragment style="background:#B7E1CD;" Real time Scheduling
+
+			div.fragment
+				ul 
+					li Alcanzar <i>deadlines</i>
+					li Tiempo de respuesta debe ser predecible
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			blockquote.fragment style="background:#B7E1CD;" Para todos
+
+			div.fragment <b>Fairness</b>. Que todos los procesos tengan un tiempo razonable de ejecución.
+
+section#SchedTypes
+
+	h2 Algoritmo de Scheduling (Batch)
+
+	section
+		h3 First-Come, First-Served (FCFS)
+
+		div Orden de llegada. Cola FIFO.
+
+		div.fragment
+			img src='/images/figures/01-fifo-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-fifo-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div.fragment Turnaround time promedio: $49$
+
+		div.fragment
+			div Si P3 hubiese llegado en $t=1$, y P2 hubiese llegado en $t=2$, turnaround time promedio $\to$ <span class="fragment">$79$
+
+		br
+
+		ul.fragment
+			li Non-Preemptive
+			li &#x1f44d; Simple
+			li &#x1f44e; Poco predecible. <i>Convoy effect</i>
+
+	section
+		h3 Shortest Job First (SJF)
+
+		div El más corto primero
+
+		div.fragment
+			img src='/images/figures/01-sjf-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-sjf-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div.fragment Turnaround time promedio: $49$
+
+		ul.fragment
+			li &#x1f389; <b>Óptimo</b>
+			li &#x1f62d; No sabemos cuánto demora cada <i>CPU-burst</i>
+			li Versión preemptive: <b>Shortest Remaining Time Next</b>. Elige al que le queda menos tiempo.
+			li &#x1f480; Potencial <b>inanición</b> (<i>starvation</i>) de procesos largos.
+
+section#SchedTypes2
+
+	h2 Algoritmo de Scheduling (Interactive)
+
+	section 
+		div Métrica: <b>tiempo de respuesta</b> (<i>response time</i>).
+
+		div Tiempo desde llegada (a la cola) hasta primera ejecución.
+
+		div.fragment
+			img src='/images/figures/01-rr-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-rr-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			ul.fragment 
+				li Turnaround time promedio: $11.56$
+				li Response time promedio: $4.9$
+
+
+	section 
+		h3 Round-Robin (RR)
+
+		div Un turno (<i>quantum</i>, <i>time slice</i>) para cada uno.
+
+		div Ejemplo con $q=1$
+
+		div.fragment
+			img src='/images/figures/01-rr-table2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-rr-chart2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			ul.fragment 
+				li Turnaround time promedio: $12.9$
+				li Response time promedio: $0.9$
+
+		ul.fragment
+			li Con $n$ procesos, cada uno recibe $1/n$ de CPU. <b>Fair!</b> &#x2696;
+			li Ningún proceso espera más de $(n-1)\times q$ para ejecutar
+			li Altamente dependiente de la elección de $q$ (¿qué pasa si $q$ es muy pequeño o muy grande?)
+
+	section 
+		h3 Priority Scheduling
+
+	section
+		h3 Multilevel Queue
+
+	section
+		h3 Multilevel Feedback Queue
+
+	section
+		h3 Others
+
+		ul
+			li Lottery
+			li Fair Share
+			li O(1)
+			li Completely Fair
+
+
+section#SchedTypes3
+	h2 Algoritmos de Scheduling (Real time)
+
+	section
+		h3 Rate monotonic
+
+	section
+		h3 Earliest Deadline First
 
 
 section#threads
