@@ -282,7 +282,7 @@ section#creation
 
 		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
 
-		div.fragment Espere el término de un proceso hijo
+		div.fragment Espera el término de un proceso hijo
 
 	section#creation-shell
 
@@ -366,13 +366,39 @@ section#termination
 
 
 	section#termination-necromancy
-		p Creando zombies
+		p Creando un zombie
 
 		pre
-			code.hljs.lang-c
-				| #include "sys/wait.h"
-				  #include "stdlib.h"
-				  #include "unistd.h"
+			code.hljs.lang-c style="max-height:600px;"
+				| #include &lt;stdlib.h&gt;
+				  #include &lt;sys/types.h&gt;
+				  #include &lt;unistd.h&gt;
+				  int main () {
+				    pid_t child_pid;
+				 
+				    /* Create child*/
+				    child_pid = fork ();
+				    if (child_pid > 0) {
+				      /* Parent process */
+				      sleep (60);
+				    }
+				    else {
+				      /*Child process. Exit immediately. */
+				      exit (0);
+				    }
+				    return 0;
+				  }
+
+
+
+	section#termination-necromancy2
+		p Creando zombies
+
+		pre 
+			code.hljs.lang-c style="max-height:600px;"
+				| #include &lt;sys/wait.h&gt;
+				  #include &lt;stdlib.h&gt;
+				  #include &lt;unistd.h&gt;
 				  
 				  pid_t pids[10];
 				  void main() {
@@ -385,6 +411,7 @@ section#termination
 				    
 				    for (int i=9; i>=0; i--)       /* Only root process reaches */
 				      waitpid(pids[i], NULL, 0);   /* First wait [9] is the longest */
+
 				  }
 
 
@@ -657,7 +684,7 @@ section#termination
 section#scheduling
 	h2 Scheduling
 
-	section
+	section#scheduling-init
 		p <i>CPU Scheduling</i> a.k.a. Planificación de CPU
 
 		div style="width:60%; vertical-align:middle; display:inline-block;" 
@@ -861,8 +888,8 @@ section#SchedTypes2
 			img.fragment src='/images/figures/01-rr-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 			ul.fragment 
-				li Turnaround time promedio: $11.56$
-				li Response time promedio: $4.9$
+				li Turnaround time promedio: $9$
+				li Response time promedio: $4$
 
 
 	section 
@@ -878,7 +905,7 @@ section#SchedTypes2
 			img.fragment src='/images/figures/01-rr-chart2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 			ul.fragment 
-				li Turnaround time promedio: $12.9$
+				li Turnaround time promedio: $13.9$
 				li Response time promedio: $0.9$
 
 		ul.fragment
@@ -889,20 +916,59 @@ section#SchedTypes2
 	section 
 		h3 Priority Scheduling
 
-	section
-		h3 Multilevel Queue
+		div Cada proceso tiene asociada una <strong>prioridad</strong>
+
+		ul.fragment
+			li Se atienden por orden de <strong>prioridad</strong>
+			li Prioridades iguales: FCFS ó RR
+			li SJF es un <em>caso particular</em> de este algoritmo (¿por qué?)
+			li Prioridades pueden ser estáticas o dinámicas
+			li &#x1f480; <b>Starvation</b> de procesos con baja prioridad
+			li &#x1f474; <b>Aging</b>: incrementar prioridad de procesos que llevan más tiempo
+
+		div.fragment <a href="https://linux.die.net/man/2/nice"><code>nice</code></a> permite reducir la prioridad de un proceso (incrementa su <i>niceness</i>)
 
 	section
-		h3 Multilevel Feedback Queue
+		h3 Multilevel Feedback Queue (MLFQ)
+
+		blockquote <a href="https://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3">Fernando J. Corbató</a> (Turing Award 1990) et al. <b>"An Experimental Time-Sharing System"</b>, IFIPS 1962.
+
+		div Usado en CTSS (1962) y Multics (1965)
+
+		blockquote style="background:#B7E1CD;" Scheduler que optimize <i>turnaround time</i> (como SJF), pero minimizando <i>response time</i> (como RR)
+
+		div Múltiples colas con distinta prioridad
+
+		ul.fragment
+			li R1. Si $\text{priority}(A) > \text{priority}(B))$, ejecutar $A$
+			li R2. Si $\text{priority}(A) = \text{priority}(B))$, ejecutar $A$ y $B$ con RR
+			li R3. Procesos entran en la cola con <b>mayor</b> prioridad
+			li R4. Si un proceso usa su $q$ (acumulado en todos sus turnos), su prioridad se reduce
+			li R5. Después de un tiempo $S$, todos los procesos se mueven a la cola con mayor prioridad
 
 	section
-		h3 Others
+		h3 Multilevel Feedback Queue (MLFQ)
+
+		img src='/images/figures/01-mlfq.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Base para schedulers de Windows y MacOSX
 
 		ul
-			li Lottery
-			li Fair Share
-			li O(1)
-			li Completely Fair
+			li R1. Si $\text{priority}(A) > \text{priority}(B))$, ejecutar $A$
+			li R2. Si $\text{priority}(A) = \text{priority}(B))$, ejecutar $A$ y $B$ con RR
+			li R3. Procesos entran en la cola con <b>mayor</b> prioridad
+			li R4. Si un proceso usa su $q$ (acumulado en todos sus turnos), su prioridad se reduce
+			li R5. Después de un tiempo $S$, todos los procesos se mueven a la cola con mayor prioridad
+
+	section
+		h3 Otros ...
+
+		ul
+			li <b>Lottery </b> (1994). Procesos reciben tickets 
+			li <b>Fair Share</b> (1988). Tiempo compartido entre grupos de procesos (usuarios)
+			li <b>O(1)</b>. Dos colas de procesos. Activos y expirados. Linux 2.6, &lt; 2.6.23.
+			li <b>Completely Fair Scheduler (CFS)</b> (2007). Linux &ge; 2.6.23. Procesos ordenados por su <i>virtual runtime</i>, que se calcula a partir de <i>niceness</i>, prioridad y tiempo de ejecución. Utiliza un <i>red-black tree</i> para mantener el orden.
+			li <b>Brain Fuck Scheduler (BFS)</b> (2009). 
 
 
 section#SchedTypes3
