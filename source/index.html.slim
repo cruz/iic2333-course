@@ -30,31 +30,44 @@ article
         li = link_to 'Capa Transporte',     'slides/10-net-tp.html'
         li = link_to 'Capa Aplicación',     'slides/11-net-app.html'
 
+  section#utiles
+    h3 Articulos útiles
+    /  -----------
+    ul
+      li = link_to 'Preparación de una máquina virtual', 'activities/0-init/'
+      li = link_to 'Introducción a C',                   'activities/1-C/'
 
-  section#activities
+
+  /section#activities
     h3 Actividades
     /  -----------
-    /ul
-      li = link_to 'Preparación Entorno', 'activities/0-init/'
-      li = link_to 'C',                   'activities/1-C/'
+    ul
+      li = link_to 'AC01', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+      li = link_to 'AC02', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
+
 
   section#challenges
     h3 Tareas
     /  ------
+    div
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 1', 'homeworks/1/T1.pdf'
+      div style="border:none; display:inline-block;" Deadline: Viernes 31/Mar, 23:59
+    /div
+
+
     /ul
-      li = link_to 'Tarea 1', 'homeworks/1/'
-      li = link_to 'Tarea 2', 'homeworks/2/'
-      li = link_to 'Tarea 3', 'homeworks/T3.pdf'
-      li = link_to 'Tarea 4', 'homeworks/T4.pdf'
-      li = link_to 'Tarea 5', 'homeworks/T5.pdf'
+      /li = link_to 'Tarea 2', 'homeworks/2/'
+      /li = link_to 'Tarea 3', 'homeworks/T3.pdf'
+      /li = link_to 'Tarea 4', 'homeworks/T4.pdf'
+      /li = link_to 'Tarea 5', 'homeworks/T5.pdf'
       /li = link_to 'Tarea 6', 't6.pdf'
     /ul
       li = link_to 'Pintos', 'homeworks/pintos/'
 
-  /section#challenges
-    h3 Desafíos
+  section#challenges
+    h3 EdX
     /  --------
-    = link_to 'Edx', 'edx/'
+    = link_to 'EdX', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/'
 
   section#programa
     h3 Programa
@@ -63,19 +76,29 @@ article
   section#ejemplos
     h3 Ejemplos
 
-    ul
-      li = link_to 'W 15-Mar, fork 1 (fork simple y wait)',   'examples/fork1.c'
-      li = link_to 'W 15-Mar, fork 3 (fork en ciclo)', 'examples/fork3.c'
-      li = link_to 'W 15-Mar, fork 4 (fork, execvp, wait)', 'examples/fork4.c'
-      li = link_to 'W 15-Mar, fork 5 (fork, execlp, wait)', 'examples/fork5.c'
-      li = link_to 'W 15-Mar, one zombie', 'examples/oneZombie.c'
-      
-      /li = link_to 'Ejemplos Clase 08-Agosto', 'examples/iic2333-ejemplos-08-Ago.tar.gz'
-      /li = link_to 'Ejemplos fork',            'examples/ejemplos-fork.tar.gz'
-      /li = link_to 'Ejemplos shmem',           'examples/ejemplos-shmem.tar.gz'
-      /li = link_to 'Ejemplos threads',         'examples/ejemplos-threads.tar.gz'
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork1.c',   'examples/fork1.c'
+      div style="border:none; display:inline-block;" fork() simple y wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork3.c',   'examples/fork3.c'
+      div style="border:none; display:inline-block;" fork() en ciclo
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork4.c',   'examples/fork4.c'
+      div style="border:none; display:inline-block;" fork(), execvp(), wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork5.c',   'examples/fork5.c'
+      div style="border:none; display:inline-block;" fork(), execlp(), wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'oneZombie.c',   'examples/oneZombie.c'
+      div style="border:none; display:inline-block;" Creando un zombie
+
 
 
   section#notas
-    h3 Notas
-    = link_to 'Planillas', '/notas/', :target => '_blank'
+    /h3 Notas
+    /= link_to 'Planillas', '/notas/', :target => '_blank'
