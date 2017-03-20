@@ -3,6 +3,7 @@ title: IIC2333 - Sistemas Operativos y Redes
 layout: activity
 ---
 
+
 article
   section#intro.top
     p Material del curso
@@ -51,9 +52,8 @@ article
     /  ------
     div
       div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 1', 'homeworks/1/T1.pdf'
-      div style="border:none; display:inline-block;" Deadline: Viernes 31/Mar, 23:59
-    /div
-
+      div style="border:none; display:inline-block; width:260px;" Deadline: Viernes 31/Mar, 23:59
+      div style="border:none; display:inline-block;" class="timerT1"
 
     /ul
       /li = link_to 'Tarea 2', 'homeworks/2/'
@@ -64,7 +64,7 @@ article
     /ul
       li = link_to 'Pintos', 'homeworks/pintos/'
 
-  section#challenges
+  section#edx
     h3 EdX
     /  --------
     = link_to 'EdX', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/'
@@ -102,3 +102,13 @@ article
   section#notas
     /h3 Notas
     /= link_to 'Planillas', '/notas/', :target => '_blank'
+
+
+javascript:
+  var countdown = new Countdown({
+    selector: '.timerT1',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Mar 31, 2017 23:59:59')
+  });
