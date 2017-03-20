@@ -648,21 +648,6 @@ section#termination
 /		== image_tag '/images/figures/01-pipes.png'
 
 
-/section#summary
-/	h2 Resumen: Procesos
-	/ \framesubtitle{Algunos puntos clave}
-
-/	section#summary-proc
-/		p Procesos
-/		ul
-/			li.fragment  Programa en ejecución + recursos
-/			li.fragment  Pasan por estados
-/			li.fragment  Representados por PCBs
-/			li.fragment  Proceso que no está en ejecución se mantiene en una cola
-			/ li.fragment  <em>Scheduler</em> decide qué proceso debe ejecutar
-/			li.fragment  Pueden crear otros procesos, estableciendo relación <em>padre-hijo</em>
-/			li.fragment  Pueden comunicarse usando varios métodos
-
 
 
 / Frame
@@ -843,10 +828,10 @@ section#SchedTypes
 
 			img.fragment src='/images/figures/01-fifo-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-			div.fragment Turnaround time promedio: $49$
+			div.fragment Turnaround time promedio: $109$
 
 		div.fragment
-			div Si P3 hubiese llegado en $t=1$, y P2 hubiese llegado en $t=2$, turnaround time promedio $\to$ <span class="fragment">$79$
+			div Si P2 hubiese llegado en $t=0$, y P1 hubiese llegado en $t=1$, entonces <br><i>turnaround time promedio</i> $\to$ <span class="fragment">$79$
 
 		br
 
@@ -975,10 +960,44 @@ section#SchedTypes3
 	h2 Algoritmos de Scheduling (Real time)
 
 	section
-		h3 Rate monotonic
+		h3 Procesos Real Time
+
+		ul
+			li Poseen <i>deadlines</i> y periodos de ejecución
+			li Sistema debe determinar si, dado <i>deadline</i> ($d$), periodo ($p$), y tiempo de ejecución ($t$),es capaz de incorporar el procesos a la ejecución.
+
+		img src='/images/figures/01-rt-sched.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 	section
-		h3 Earliest Deadline First
+		h3 Rate monotonic Scheduling
+
+		img src='/images/figures/01-rt-sched-dead.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Cada proceso recibe prioridad: $\frac{t_i}{p_i}$
+
+		div Con $P_1: \{p_1=50, t_1=20\}$, y $P_2: \{p_2=100, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-rtm.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+		h3 Earliest Deadline First Scheduling (EDF)
+
+		div <i>Rate Monotonic Scheduling</i> es <b>estático</b>. Podría perder <i>deadlines</i>
+
+		div Con $P_1: \{p_1=50, t_1=25\}$, y $P_2: \{p_2=80, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-rtm-dead.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+		h3 Earliest Deadline First Scheduling (EDF)
+
+		div <i>Earliest Deadline First Scheduling</i> es <b>dinámico</b>. Elige siempre el que tiene <i>deadline</i> más cercano.
+
+		div Con $P_1: \{p_1=50, t_1=25\}$, y $P_2: \{p_2=80, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-edf.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 section#threads
