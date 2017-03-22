@@ -1010,140 +1010,204 @@ section#threads
 		p <strong><em>Thread</em></strong>: Como un proceso, pero más liviano.
 
 		p.fragment Unidad básica de uso de CPU
-		.fragment
-			ul
-				li.fragment  <em>Thread ID</em> (<strong>tid</strong>)
-				li.fragment  Program Counter
-				li.fragment  Registros
-				li.fragment  <em>Stack</em>
-		p.fragment ¿y el resto?&hellip; <span class="fragment">compartido con un proceso</span>
+		ul.fragment
+			li  <em>Thread ID</em> (<strong>tid</strong>)
+			li  Program Counter
+			li  Registros
+			li  <em>Stack</em>
+		p.fragment El resto está compartido con otros <i>thread</i>s del mismo proceso.
 
 
 
 	section#threads-mt
 		p <em>Single-threading</em> vs <em>Multi-threading</em>
 
-		p.fragment Procesos pueden tener uno o más <em>threads</em>
-		== image_tag '/images/figures/01-4_01.pdf.png'
+		p Procesos pueden tener uno o más <em>threads</em>
+		== image_tag '/images/figures/01-4_01.pdf.png', :width=>"60%", :style=>"border:none; box-shadow:none;"
 
 
-	section#threads-mt-1
-		p <em>Multi-threading</em>
+	section#threads-why
+		
+		blockquote style="background:#B7E1CD;" ¿Para qué <i>threads</i>?
 
-		ul
-			ul
-			li.fragment  Proceso son unidades <em>pesadas</em>
-			li.fragment  <em>Threads</em> pueden ejecutar parte del código de un proceso
-			ul
-				li.fragment  Concurrencia real en la medida que hayan múltiples <em>core</em>s
-			li.fragment  Un <em>web browser</em> puede:
-			ul
-				li.fragment  Recuperar y desplegar imágenes
-				li.fragment  Hacer <em>parsing</em> de HTML
-				li.fragment  Proponer opciones de autocompletado mientras se escribir
-				li.fragment  Ejecutar corrector ortográfico mientras se escribe
+		div.fragment data-fragment-index="1" Procesos complejos deben atender múltiples tareas
+		ul.fragment data-fragment-index="1"
+			li Programar con <i>thread</i>s puede hacer el código más simple
+			ul.fragment data-fragment-index="2"
+				li <em>Threads</em> pueden ejecutar distintas partes del código de un proceso
+				li Apropiados para programación guiada por eventos
+			li Programar con <i>thread</i>s puede ayudar a paralelizar/distribuir tareas
+			ul.fragment data-fragment-index="3"
+				li Cuidado. <i>Threads</i> no necesariamente ejecutan <b>al mismo tiempo</b>. 
+				li Solo en presencia de múltiples CPU (cores) podría haber real concurrencia
+				li Un programa con mútiples <i>threads</i> <i>podría ser más lento</i>
 
-		p.fragment Si voy a ejecutar parte del mismo código, talvez no necesito crear un proceso nuevo.
-		p.fragment Es como hacer <code>fork()</code> ¿y &hellip; hacer <code>exec()</code>?
+		blockquote.fragment data-fragment-index="4" style="background:#B7E1CD;" Entonces, ¿crear <i>threads</i> o procesos?
+		ul.fragment data-fragment-index="5"
+			li Creación/destrucción de <i>threads</i> es sustancialmente más liviana que un proceso
 
+	section#threads-web-mt
 
+		div <i>Multihreaded webserver</i> 
 
-	section#threads-mt-2
-		p <em>Multi-threading</em>
+		== image_tag '/images/figures/01-webserver-mt.png', :width=>"40%", :style=>"border:none; box-shadow:none;"
 
-		p Otro caso: un <em>web server</em> necesita atender múltiples conexiones
-		ul
-			li.fragment  ¿Espero atender completamente una antes de recibir la siguiente?
-		.fragment
-			== image_tag '/images/figures/01-4_02.pdf.png'
+		br
 
-
-	section#threads-mt-3
-		p <em>Multi-cores</em> y <em>Multi-threading</em>
-
-		p.fragment Con <em>single-core</em> solo un <em>thread</em> de un proceso puede ejecutar al mismo tiempo
-		.fragment
-			p ¿Cómo se provee la ilusión de que múltiples <em>threads</em> ejecutan simultáneamente?
-			p &hellip; ¡pero ahora hay <strong>multi-cores</strong>!
-		ul.fragment
-			li Múltiples <em>threads</em> avanzan: <strong>concurrencia</strong>
-			li Múltiples <em>threads</em> ejecutan simultáneamente: <strong>paralelismo</strong>
+		== image_tag '/images/figures/01-webserver-mt-threads.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
 
 
-section#ll
-	h2 Paralelismo
 
-	section#ll-Amdahl
-		p <em>Multi-cores</em> y <em>Multi-threading</em>
-		p ¿Cuánto gano?
-
-		p.fragment Gene Amdahl propuso una fórmula (1967) para calcular la mejora <em>potencial</em> de un programa
-				que contiene partes paralelizables y partes secuenciales
-
-		p.fragment style="font-size:1.5em;" $$\mathit{speedup} \leq \frac{1}{s + \frac{\bar{s}}{N}}$$
-
-
-	section#ll-Amdahl-d-0
-		p Midiendo paralelismo
-
-		ul
-			li $s$: Fracción de tiempo usado en de código no-paralelizable (secuencial).
-			li $N$: Número de <em>cores</em>
-
-		p El <em>speedup</em> es un valor positivo que indica la mejora de un código paralelo respecto a su versión secuencial
-		p $$\mathit{speedup} = \frac{T_{\mathit{secuencial}}}{T_{\mathit{paralelo}}} = \frac{T_{1}}{T_{N}}$$
-
-		p.fragment Ejemplo: $\mathit{speedup}=2$ signfica que $T_{1}=2T_{N}$, dos veces más rápido
-
-
-	section#ll-Amdahl-d-1
-		p Sea $T_N$ el tiempo de ejecución con $N$ cores, y $s \in (0, 1]$ la fracción de código estrictamente secuencial
-
-		p.fragment El tiempo en $N$ cores se puede definir como:
-		ul
-			li.fragment
-				| $$T_N = T_1 s + \frac{T_1 \bar{s}}{N} = T_1 \left( s + \frac{\bar{s}}{N} \right)$$
-
-		p.fragment Por lo tanto el <em>speedup</em> es:
-		p.fragment
-			| $$\mathit{speedup} = \frac{T_1}{T_N} = \frac{T_1}{T_1 \left( s + \frac{\bar{s}}{N} \right)} = \frac{1}{s + \frac{\bar{s}}{N}}$$
-
-
-section#mt
-	h2 <em>Multi-threading</em>
-
-	section#mt
-		/p <em>Multi-threading</em>
-		/span.fragment.fade-out data-fragment-index="0"
-		/	small ¿Fácil?
-
-		/p.fragment  data-fragment-index="0" Surgen desafíos para poder aprovechar el <em>multithreading</em>
-		/ul.fragment data-fragment-index="1"
-		/	li <em>División de tareas</em>    ¿Qué tareas ejecuto en paralelo? Ideal: que sean independientes
-		/	li <em>Balance de carga</em>      Idealmente: tareas de tamaño similar
-		/	li <em>División de datos</em>     ¿Bajo qué criterio divido los datos entre <em>threads</em>?
-		/	li <em>Dependencias de datos</em> ¿Hay competencia por datos? ¿Necesito sincronizar accesos? ¿Puedo perder concurrencia?
-		/	li <em>Testing + Debugging</em>   ¿Cómo <em>debuggear</em> una aplicación <em>multithreaded</em>?
-
+section#thread-models
+	h2 Modelos de Threads
 
 	section#mt-dataModels
-		p Modelos de <em>multithreading</em>
+		p <i>Threads</i> surgen de separar el concepto de recursos y ejecución
+		ul.fragment
+			li <b>Procesos</b> agrupan recursos (y ejecución)
+			li <b>Threads</b> son solamente unidades de ejecución: <b>lightweight processes</b>
 
-		p Dos tipos de <em>threads</em>
+
+		== image_tag '/images/figures/01-threads-process-os.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		blockquote style="background:#B7E1CD;" <i>Threads</i> comparten
+		ul.fragment
+			li Espacio de memoria
+			li Variables globales (sección <i>data</i>)
+			li Archivos abiertos
+			li Procesos Hijo
+			li Alarmas pendiente
+			li Señales y manejadores de señales
+			li Información de <i>accountability</i>
+
+		blockquote style="background:#B7E1CD;" <i>Threads</i> <b>NO</b> comparten
+		ul.fragment
+			li <i>Stack</i>
+			li <i>Registros</i> (incluyendo PC)
+			li Estado
+
+		div Información privada tiene que ver con <i>ejecución</i>. 
+
+		div Información compartida tiene que ver con <i>recursos</i>
+
+	section
+		div ¿Cómo se mantienen múltiples <i>stacks</i>?
+
+		== image_tag '/images/figures/01-threads-stacks.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		blockquote style="background:#B7E1CD;" Funciones típicas de <i>threads</i>
+
+
 		ul
-			li.fragment  <strong>User threads</strong>
-			ul
-				li.fragment  Manejados por una biblioteca de usuario
-				li.fragment  Sistema Operativo sólo ve procesos
-			li.fragment  <strong>Kernel threads</strong>
-			ul
-				li.fragment  Administrador por el Sistema Operativo (asignables a <em>core</em>s)
-				li.fragment  Soportados en (casi) todos los Sistemas Operativos contemporáneos
+			li <code>thread_create()</code>
+			li <code>thread_exit()</code>
+			li <code>thread_join()</code>
+			li <code>thread_yield()</code>
 
-		p.fragment ¿Cómo se relacionan <em>kernel</em> y <em>user threads</em>?
+	section#posix
+		h3 POSIX Threads
+
+		div Estándar IEEE 1003.1c. Librería <code>pthreads</code>
+
+		== image_tag '/images/figures/01-pthreads.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+		div Ejemplo: <a href="../examples/pthreads1.c" target="_blank">POSIX Threads en acción</a>
+
+		div Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
+
+section#thread-impl
+	h2 Implementación de threads
+
+	section
+
+		div Dos opciones
+
+		ul.fragment
+			li <b>User</b> space
+			li <b>Kernel</b> space
+			li <b>Hybrid</b> (ok, 3 opciones)
 
 
-	section#mt-dataModels-greenThreads
+	section#user
+
+		h3 User space threads
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Implementados y manejados por una biblioteca de usuario
+				div Kernel no ve <i>threads</i>. Solo ve procesos <i>single threaded</i>
+
+			div.fragment
+				ul
+					li &#x1f603; Portable. Implementable en cualquier S.O.
+					li &#x1f603; <i>Context switch</i> y <i>scheduling</i> más rápido.
+					li &#x1f603; Mejor escalabilidad (usa memoria del proceso)
+					li &#x1f61e; Llamadas a <i>syscall</i>s pueden bloquear el proceso
+					li &#x1f61e; Requiere <i>scheduling</i> cooperativo (no hay timers)
+					li Piensen en su uso en <i>multithreaded web server</i>
+					li Implementaciones usan variante no-bloqueantes de algunas <i>syscall</i>s
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-user-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+
+	section#kernel
+
+		h3 Kernel space threads
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Implementados y manejados nativamente por estructuras del kernel
+				div No necesita bibliotecas de usuario
+				div <i>Syscall</i> manejados por el S.O.
+
+			div.fragment
+				ul
+					li &#x1f603; No requiere bibliotecas. Soporte nativo.
+					li &#x1f603; <i>Syscall</i>s no bloquean el proceso.
+					li &#x1f61e; <i>Syscall</i>s más costosas. Requiere llamadas al kernel.
+					li &#x1f61e; Escalabilidad limitada por el S.O.
+					li &#x1f61e; Semántica de <code>fork()</code> no es clara.
+					li &#x1f61e; Semántica de <code>signals</code> no es clara.
+
+			div.fragment Implementaciones evitan crear y destruir <i>threads</i>. Kernel utiliza <i>thread pools</i> y reutiliza estructuras.
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-kernel-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+	section#hybrid
+
+		h3 Hybrid implementations
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Kernel threads <b>multiplexados</b> entre user threads
+				div Kernel solo ve kernel threads
+				div Varios user threads asignados a un kernel thread
+
+			div.fragment
+				ul
+					li &#x1f603; Más livianos de crear
+					li &#x1f603; <i>Syscall</i>s no bloquean el proceso.
+					li &#x1f603; Escalable como los user threads
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-hybrid-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+
+
+	/section#mt-dataModels-greenThreads
 		p <em>Many-to-one</em>
 
 		ul
@@ -1156,7 +1220,7 @@ section#mt
 		p.fragment Solaris: biblioteca <em>green threads</em>
 
 
-	section#mt-dataModels-id
+	/section#mt-dataModels-id
 		p <em>One-to-one</em>
 		ul
 			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
@@ -1167,7 +1231,7 @@ section#mt
 		br
 		p.fragment Linux & Windows
 
-	section#mt-dataModels-m2m
+	/section#mt-dataModels-m2m
 		p <em>Many-to-many</em>
 		ul
 			li.fragment  + Usuario pueden crear número ilimitado de <em>threads</em>
@@ -1180,7 +1244,7 @@ section#mt
     /p.fragment Linux & Windows.
 
 
-	section#mt-threadingLibs
+	/section#mt-threadingLibs
 		p Bibliotecas de <em>threads</em>
 
 		p.fragment Tres principales:
@@ -1190,7 +1254,7 @@ section#mt
 			li Java threads (user)
 
 
-	section#mt-threadingLibs-pthreads
+	/section#mt-threadingLibs-pthreads
 		h5
 			code pthread
 
@@ -1204,7 +1268,7 @@ section#mt
 			li.fragment  <code>pthread_join()</code>, padre espera que hijo(s) termine(n)
 			li.fragment  <code>pthread_exit()</code>, termina el <em>thread</em> actual
 
-	section#mt-threadingLibs-winThreads
+	/section#mt-threadingLibs-winThreads
 		h5 Windows Threads
 
 		p Disponible nativamente en Windows API (kernel <em>thread</em>s)
@@ -1216,7 +1280,7 @@ section#mt
 			li.fragment  <code>CloseHandle()</code>, borra el <em>thread</em> indicado
 
 
-	section#mt-threadingLibs-javaThreads
+	/section#mt-threadingLibs-javaThreads
 		h5 Java Threads
 
 		p Implementado como biblioteca nativa en la JVM
@@ -1232,27 +1296,7 @@ section#mt
 			li.fragment  Esperar que un <em>thread</em> hijo termine: <code>join()</code>
 
 
-	/section#mt-threadingLibs-support
-	/	p Usar eficientemente <em>thread</em>s no es fácil.
-
-	/	p.fragment ¿Y si le dejamos el trabajo al compilador o bibliotecas?
-	/	ul
-	/		li.fragment  <em>Thread-pools</em>: piscinas de <em>threads</em> disponibles
-	/		ul.fragment
-	/			li  Windows API: <code>QueueUserWorkItem( &PoolFunction, &hellip;)</code>
-	/			li  Java: package <code>java.util.concurrent</code>
-	/		li.fragment  <code>OpenMP</code>: directivas para identificar regiones paralelas
-	/		ul.fragment
-	/			li  Popular en C, C++, FORTRAN
-	/			li  Número de <em>threads</em> elegidos dinámicamente (p.ej: $\#$cores)
-	/		li.fragment  <code>Grand Central Dispatch</code>
-	/		ul.fragment
-	/			li  Extensiones para C, C++
-	/			li  Usado en Mac OS X, y en iOS
-	/			li  Bloques de paralelismo: esencialmente funciones anónimas ($\lambda$)
-
-
-section#semantics
+/section#semantics
 	h2 Semántica de <code>fork</code>/<code>exec</code> y señales
 
 	p Aún quedan algunas situaciones "poco claras"
@@ -1274,7 +1318,7 @@ section#semantics
 
 
 
-section#summary-
+/section#summary-
 	h2 Resumen: <em>Threads</em>
 	ul
 		li.fragment  <em>Thread</em>: flujo de control básico dentro de un proceso
