@@ -1122,6 +1122,15 @@ section#thread-impl
 
 	section
 
+		div Algunos aspectos no son obvios al diseñar un sistema de <i>multithreading</i>
+
+		ul.fragment
+			li Semántica de <code>fork()</code>, <code>exec</code>
+			li Señales: ¿quién las recibe?
+			li Bloqueos: ¿quién se bloquea?
+
+	section
+
 		div Dos opciones
 
 		ul.fragment
@@ -1327,4 +1336,215 @@ section#thread-impl
 		li.fragment  <em>Kernel thread</em>s: manejables por el Sistema Operativo, más costosos de crear
 		li.fragment  MacOSX, Windows, Linux, soportan <em>kernel thread</em>s y hacen <em>mapping</em> a <em>user thread</em>s
 		li.fragment  Bibliotecas de <em>thread</em>s más comunes: Pthreads, Windows threads, Java threads
+
+
+
+section#synch-init
+	h2 Sincronización
+
+	section#synch-init-init
+		h2 <em>Sincronización</em>
+
+	section#
+		p <strong><em>Threads</em></strong> como unidad básica de procesamiento
+		ul.fragment
+			li  <i>Threads</i> en un proceso comparten memoria
+			li  <i>Threads</i> son concurrentes (compiten por uso de CPU)
+			li  <i>Threads</i> en un sistema multicore pueden ejecutar en paralelo
+
+		p.fragment Pero deben ser sincronizados... o puede pasar ...
+
+		div.fragment Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
+
+		div.fragment
+			== image_tag '/images/figures/01-2problems.png', :width=>"60%", :style=>"border:none;"
+
+	section
+		h3 ¿Qué ocurre en el programa?
+
+		div Vemos ...
+
+		pre
+			code.hljs.lang-c
+				| counter = counter + 1
+
+		div Pero lo que se ejecuta es... (tip: <code>objdump -d &lt;ejecutable&gt;</code>)
+
+		pre
+			code.hljs.asm
+				|  mov    0x60208c,%eax        
+  				   add    $0x1,%eax
+                   mov    %eax,0x60208c        
+
+	
+		
+	section
+
+		div <i>Thread A</i> ejecuta:
+
+		pre
+			code.hljs.asm
+				|  mov    0x60208c,%eax        
+  				   add    $0x1,%eax
+                   mov    %eax,0x60208c        
+
+		div <i>Thread B</i> ejecuta:
+
+		pre
+			code.hljs.asm
+				|  						  mov    0x60208c,%eax        
+  				   													add    $0x1,%eax
+                   													mov    %eax,0x60208c        
+
+        div En la práctica pueden ocurrir muchos <i>interleaving</i> (entremezclas):
+
+		a href="http://i.imgur.com/MS13CAb.gif"
+			pre
+				code.hljs.asm
+					| mov    0x60208c,%eax ; eax = 10
+					                                    			mov    0x60208c,%eax ; eax = 10
+					                                    			add    $0x1,%eax     ; eax = 11
+					                                    			mov    %eax,0x60208c ; counter = 11, Write lost!!
+					  add    $0x1,%eax     ; eax = 11
+					  mov    %eax,0x60208c ; counter = 11   Dirty write :/
+
+		div.fragment ¿Podemos tener tan mala suerte para que ocurra <a href="https://www.reddit.com/r/Bitcoin/comments/1wtbiu/how_i_stole_roughly_100_btc_from_an_exchange_and">así</a>?
+
+	section
+		div Esta situación ilustra una <b>race condition</b>
+
+		blockquote.fragment style="background:#F4C7C3;" <b>Race Condition</b><br/> Situación en que la salida de una operación depende del orden temporal de sus operaciones internas, el cual no está bajo control del programador.
+
+		p.fragment El resultado depende de la entremezcla (<em>interleaving</em>) de sus <em>threads</em>
+		h5.fragment <strong>Hay que evitarlas</strong>
+
+section
+	h2 El Problema de la Sección Crítica
+	/  ---------------------------------
+
+	section#crS-def
+		div El segmento de código en que el <i>thread</i> accede a recursos compartidos se conoce como <strong>sección crítica</strong>
+
+		blockquote.fragment
+			| Necesitamos un protocolo que <b>no permita</b> que dos o más <i>threads</i> se encuentren en su sección crítica al mismo tiempo
+
+		pre.fragment
+			code.hljs.c
+				| void mess_with_shared_things() {
+				    entry();
+				    /* do stuff with shared resources */
+				    leave();
+				    
+				    /* moar stuff */
+				 }
+
+	section#crS-solReqs
+		p Una solución al problema de la sección crítica (SC) debe cumplir:
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Exclusión Mutua</b>
+
+		div.fragment <b>A lo más un</b> <i>thread</i> está en su SC.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Progreso</b>
+
+		div.fragment <b>Al menos un</b> <i>thread</i> puede entrar a su SC.
+
+		div.fragment Si ningún <i>thread</i> está en su SC, y hay <i>thread</i>s que desean entrar, entonces los que quieren entrar deben decidir quién entra, y decidirlo en un tiempo acotado.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Espera acotada</b> (ausencia de inanición)
+
+		div.fragment Si un proceso quiere entrar a su SC, podrá hacerlo luego de una cantidad <b>finita</b> de tiempo.
+
+	section
+		div Ejecución deseada:
+
+		== image_tag '/images/figures/01-2processes.png', :width=>"80%", :style=>"border:none;"
+
+section
+	h2 Algunas soluciones
+
+	section
+		div Atacar al problema de raíz
+
+		div.fragment <b>Deshabilitar las interrupciones</b>
+
+		ul.fragment 
+			li Problema ocurre cuando un <i>thread</i> es interrumpido
+			li Si no hay interrupciones no hay problema
+			li ¿Es suficiente?
+			li ¿Quién puede hacer esto?
+
+	section
+		div En el mundo del usuario estamos a merced de las interrupciones
+
+		div.fragment <b>Solución con variable compartida <code>lock</code></b>
+
+		div.fragment
+			pre
+				code.hljs.lang-c
+					| int lock = 0;  // 0==free, 1==busy
+
+		div.fragment Código de cada <i>thread</i>:
+
+		div.fragment
+			pre
+				code.hljs.lang-c
+					| while(TRUE) {
+					      while(lock);     // busy waiting (spinlock)
+					      lock = 1;
+					      /* ... SC ... */
+					      lock = 0;
+					      /* ... out of SC ... */
+					  }
+
+		div.fragment ¿Problemas?
+
+	section
+		div <b>Solución con <code>turn</code></b>, para alternar entre dos <i>threads</i>
+
+		div Variable compartida <code>turn</code> determina quién puede entrar.
+
+		pre
+			code.hljs.lang-c
+				| int turn = 1;  // o 0 ... 
+
+		div Código para <i>thread</i> 0 y <i>thread</i> 1:
+		pre
+			code.hljs.lang-c
+				| /* Thread 0 */                            /* Thread 1 */
+				  while(TRUE) {                             while(TRUE) {
+				      while(turn != 0);                         while(turn != 1);
+				      /* ... SC ... */                          /* ... SC ... */
+				      turn = 1;                                 turn = 0;
+				      /* ... out of SC ... */                   /* ... SC ... */
+				  }
+
+		div ¿Cumple todas las condiciones?
+
+	section
+		div <b>Solución de G.L.Peterson, 1981</b> (no la primera, pero la más simple)
+
+		div Variable compartida <code>turn</code> determina quién puede entrar.
+
+		pre
+			code.hljs.lang-c
+				| int turn = 1;                 // o 0 ... 
+				  int flag[2] = {false, false}; // indica t_i está interesado en entrar
+	
+		div Variable local <code>me</code> puede ser 0 ó 1
+		pre
+			code.hljs.c
+				| int me = // ... 0 ó 1;    /* Peterson es para dos threads */
+				  int other = 1-me;
+				  while('o') {
+				      flag[me] = true;  /* wants */
+				      turn = other;
+				      while(flag[other] && turn == other); /* wait */
+				      /* ... SC ... */
+				      flag[me] = false;
+				      /* ... out of SC ... */
+				  }
+
+		div.fragment ¿Cumple los requisitos? ¿Por qué? ¿Se puede demostrar?
+
 
