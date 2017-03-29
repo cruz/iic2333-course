@@ -1542,9 +1542,463 @@ section
 				      while(flag[other] && turn == other); /* wait */
 				      /* ... SC ... */
 				      flag[me] = false;
-				      /* ... out of SC ... */
+				      /* ... out of SC .../ */
 				  }
 
 		div.fragment ¿Cumple los requisitos? ¿Por qué? ¿Se puede demostrar?
+
+
+
+
+
+section
+	h2 Sincronización por <i>hardware</i>
+
+	section 
+		p Soluciones por <em>software</em> dependen de que existan <strong>instrucciones atómicas</strong> provistas por el <em>hardware</em>.
+
+		pre
+			code.hljs.lang-c
+				| int lock = 0;  // 0==free, 1==busy
+
+		pre
+			code.hljs.c
+				| while(TRUE) {
+				      while (lock);
+				      lock = 1;
+				      /* Critical Section */
+				      lock = 0;
+				      /* ... */
+
+		p.fragment Esto no era suficiente. ¿Qué instruccion(es) me gustaría que fuese(n) atómica(s)?
+
+
+	section
+		p <code>test_and_set()</code> (TSL)
+
+		p Algunas arquitecturas proveen instrucciones atómicas del tipo <code>test_and_set</code>
+
+		p La instrucción, que se ejecuta atómicamente, es equivalente a este código:
+			
+		pre
+			code.hljs.c
+				| bool SOFTWARE_test_and_set (bool *target) {
+				      bool old_value = *target;
+				      *target = true;
+				   
+				      return old_value;
+				 }
+
+		p.fragment  ¿Cómo usarlo?
+
+	section
+		div Código equivalente a <code>test_and_set</code>
+		pre
+			code.hljs.c
+				| bool SOFTWARE_test_and_set (bool *target) {
+				      bool old_value = *target;
+				      *target = true;
+				   
+				      return old_value;
+				 }
+
+		div Ahora se puede implementar la versión "ingenua"
+
+		pre
+			code.hljs.lang-c
+				| bool lock = false;  // false==free, true==busy
+
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      while (test_and_set(&lock));
+				      /* ... SC ... */
+				      lock = false;
+				      /* ... Out of SC ... */
+				  }
+
+		div.fragment ¿Cumple las propiedades?
+
+
+	section
+		div Otra instrucción atómica <code>compare_and_swap()</code> (XCHG, CAS)
+		pre
+			code.hljs.c
+				| bool SOFTWARE_compare_and_swap (int *value, int expected, int new_value) {
+				    int previous = *value;
+				    
+				    if(*value == expected)
+				      *value = new_value;
+				    
+				    return previous;
+				  }
+
+		p.fragment  ¿Cómo usarlo?
+
+	section
+		div Código equivalente a <code>compare_and_swap()</code>
+		pre
+			code.hljs.c
+				| int SOFTWARE_compare_and_swap (int *value, int expected, int new_value) {
+				    int previous = *value;
+				    
+				    if(*value == expected)
+				      *value = new_value;
+				    
+				    return previous;
+				  }
+
+		div Otra implementación simple, gracias a una instrucción atómica
+
+		pre
+			code.hljs.lang-c
+				| int lock = 0;  // 0==free, 1==busy
+
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      while (compare_and_swap(&lock, 0, 1));
+				      /* ... SC ... */
+				      lock = 0;
+				      /* ... Out of SC ... */
+				  }
+
+		div.fragment ¿Cumple las propiedades?
+
+
+	section#sync-correctness
+
+		div Sección crítica para <code>N</code> procesos
+
+		pre
+			code.hljs.lang-c
+				| bool lock = false;  // false==free, true==busy
+				  bool waiting[N];    // todos inicializados en false
+
+		div Cada <i>thread</i> <code>i</code> ejecuta:
+
+		pre 
+			code.hljs.lang-c style="max-height:600px;"
+				| while('-') {
+				    /* ... ... ... */
+				    waiting[i] = key = true;          /* I'm waiting and it's locked */
+				    while (waiting[i] && key)
+				      key = test_and_set(&lock);
+				    waiting[i] = false;               /* I'm no longer waiting */
+				    
+				    /* ... ... SC ... ... */
+				    
+				    j = (i+1)%N;                      /* Find waiting proc (clockwise circle) */
+				    while((j != i) && !waiting[j])
+				      j = ++j%N;
+				    if(j == i)                          /* -Nobody was waiting */
+				      lock = false;
+				    else                                /* -proc_j should go (stop waiting) */
+				      waiting[j] = false;
+				    /* ... out of SC ... ... */'
+				 }
+
+		p.fragment ¿Cumplen con las propiedades de solución para sección crítica?
+
+	section
+		div Soluciones anteriores son correctas &hellip;
+
+		div Pero utilizan <b>busy waiting</b> (<i>espera ocupada</i>)
+
+		pre
+			code.hljs.lang-c
+				| lock = true;     // false==free, true==busy
+				  while(lock);     // busy waiting, consume ciclos de CPU "esperando"
+				  /* enter */
+
+		blockquote style="background:#B7E1CD;" Solo cuando se espera un tiempo de bloqueo muy corto, puede justificarse usar <i>busy waiting</i>. En este caso se le llama <b>spinlock</b>
+
+		div <b>Ejemplo:</b>Dos procesos con prioridades $H$ y $L$, $H>L$. 
+		ul
+			li $L$ ejecuta y toma un <i>lock</i> (está en su SC)
+			li $H$ llega y <i>scheduler</i> (preemptive) ejecuta a $H$
+			li $H$ hace <i>busy waiting</i>
+			li Mientras $H$ exista, $L$ no puede ejecutar ni salir de su SC &#x1f613;
+
+
+
+
+
+section#abstractions
+	h2 Abstracciones de Sincronización
+	/  -------------------------------
+
+	section#abstractions-init
+		p En general no se usan directamente soluciones por <em>hardware</em>
+
+		p Se construyen <b>primitivas de <em>software</em></b> sobre ellas.
+
+
+section#Locks-init
+	h2 Mutex Locks
+
+	section
+		div La más simple: <b>MUTual EXclusion locks</b> (<i>mutex locks</i>)
+		ul
+			li <code>Lock::acquire();</code> toma el <i>lock</i>
+			li <code>Lock::release();</code> libera el <i>lock</i> (error si no está tomado)
+
+		pre.fragment
+			code.hljs.c
+				| struct Lock {
+				    bool value = false; // false==free, true==busy
+				  }
+
+		div Implementación sin (mucho) <i>busy waiting</i>
+
+		pre
+			code.hljs.c
+				| void acquire() {     
+				    while(test_and_set(&value))
+				      thread_yield();            // otras implementaciones usan sleep() y colas de espera
+				  }
+				  void release() {
+				    value = false;
+				  }
+	section
+
+		div Solución a Sección Crítica
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      lock.acquire();
+				      /* ... SC ... */
+				      lock.release();
+				      /* ... Out of SC ... */
+				  }
+
+		div Contador con acceso exclusivo
+
+		pre
+			code.hljs.c
+				| struct Lock l; // compartido
+
+		pre
+			code.hljs.c
+				| /* ... ... ... */
+				  for(int i=0; i&lt;max; i++) {
+				  	l.acquire();
+				  	counter = counter + 1;
+				  	l.release();
+				  }
+
+section#producer-consumer
+
+	h2 Problema del productor-consumidor
+
+	section 
+		h3 Ó problema del <i>bounded-buffer</i>
+		ul
+			li Un <i>buffer</i> circular de tamaño limitado $N$
+			li Dos <i>threads</i>: productor (agrega) y consumidor (consume)
+			li Todos los elementos producidos deben ser consumidos en orden
+
+		div style="border:none; width:70%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					| int stock = 0;
+					  T storage[N];
+
+			pre
+				code.hljs.c
+					| int in = 0;
+					  while('p') {
+					      item = produce();
+				  		  while (stock == N);  // Storage full 
+				   		  storage[in] = item;
+						  in = ++in%N;         // rotate index
+				   		  stock++;
+				   	  }
+
+			pre
+				code.hljs.c
+					| int out = 0;
+					  while ('c') {
+				          while(!stock);       // Wait for new items
+				          item = storage[out];
+				          out = ++out%N;       // rotate index
+				          stock--;
+				          consume(item);
+				      } /* ' */
+
+		img src='/images/figures/01-ProdCons.jpg' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+	    div Podemos agregar locks en <i>stock</i>
+
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  while (stock == N);  // Storage full 
+			   		  storage[in] = item;
+					  in = ++in%N;         // rotate index
+					  lock.acquire();
+			   		  stock++;
+			   		  lock.release();
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          while(!stock);       // Wait for new items
+			          item = storage[out];
+			          out = ++out%N;       // rotate index
+			          lock.acquire();
+			          stock--;
+			          lock.release();
+			          consume(item);
+			      } /* ' */
+
+        div ¿Cómo eliminamos busy waiting?
+
+
+	section
+	    ul
+	      li <code>sleep()</code> se bloquea en cola <i>waiting</i>
+	      li <code>wakeup(t)</code> saca a <code>t</code> de la cola <i>waiting</i> (si está)
+
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  while (stock == N) sleep(); // Storage full 
+			   		  storage[in] = item;
+					  in = ++in%N;                // rotate index
+					  lock.acquire();
+			   		  stock++;
+			   		  lock.release();
+			   		  if(stock == 1) wakeup(consumer);
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          while(!stock) sleep();     // Wait for new items
+			          item = storage[out];
+			          out = ++out%N;             // rotate index
+			          lock.acquire();
+			          stock--;
+			          lock.release();
+			          if(stock == N-1) wakeup(producer);
+			          consume(item);
+			      } /* ' */
+
+        div ¿Problema?
+
+section#semaphore
+
+    h2 Semáforos 
+
+	section#sema
+
+        div E.W.Dijkstra (1965) propone una nueva primitiva de sincronización: <b>semáforos</b>, y las introduce en Algol 68.
+
+		p <b>Semáforos</b> permiten un número limitado de <i>thread</i>s en una sección crítica.
+
+		div.fragment
+			dl
+				dt style="background:#B7E1CD;" Semáforo
+				dd
+					p Un semáforo <code>S</code> incluye un contador y dos operaciones:
+					ul
+						li.fragment <em>proberen</em> <code>P()</code> ó <code>wait()</code> ó <code>up()</code>. Intenta decrementar el valor.
+						li.fragment <em>verhogen</em> <code>V()</code> ó <code>signal()</code> ó <code>down()</code>. Incrementa el valor.
+			p.fragment E.W.Dijkstra era holandés, pero si no saben holandés es más fácil recordar <code>Pedir</code>/'<code>Votar</code>'
+
+	section
+
+		div Implementación de semáforos
+
+		pre
+			code.hljs.c
+				| struct semaphore{
+				    int count;
+				    struct Lock l;
+				    struct process* slept = NULL;
+				  }
+
+		pre
+			code.hljs.c
+				| void init(c) {
+				      count = c;
+				  }
+
+				  void P() {      /* wait: put into queue and sleep */
+				    l.acquire();
+				    if(count <= 0) {
+				        // add itself to 'slept' /
+				        l.release();
+				        sleep();
+				        l.acquire();
+				    }
+				    count--;
+				    l.release();
+				  }
+
+				  void V(S) {    /* signal */
+				  	l.acquire();
+				    count++;
+				    if(count > 0) {
+				       wakeup(/* first from 'slept' */);
+				    }
+				    l.release();
+				  }
+
+	section
+	    
+	    div Bounded-buffer con semáforos
+
+		pre
+			code.hljs.c
+				| struct lock l; int stock = 0; T storage[N];
+				  struct semaphore full;  full.init(0);
+				  struct sempahore empty; empty.init(N);
+		
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  empty.P();            // Wait one empty slot. P=='wait'=='down'
+			  		  l.acquire();
+			   		  storage[in] = item;
+					  in = ++in%N;                // rotate index
+			   		  stock++;
+			   		  lock.release();
+			   		  full.V();             // One more full slot. V=='signal'=='up'
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          full.P()             // Wait one more item. P=='wait'=='down'
+			          lock.acquire();
+			          item = storage[out];
+			          out = ++out%N;             // rotate index
+			          stock--;
+			          lock.release();
+			          empty.V();           // One more empty slot. V=='signal'=='up'
+			          consume(item);
+			      } 
+
+
 
 
