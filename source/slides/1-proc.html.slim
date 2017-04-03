@@ -1747,7 +1747,7 @@ section#Locks-init
 			li <code>Lock::acquire();</code> toma el <i>lock</i>
 			li <code>Lock::release();</code> libera el <i>lock</i> (error si no está tomado)
 
-		pre.fragment
+		pre
 			code.hljs.c
 				| struct Lock {
 				    bool value = false; // false==free, true==busy
@@ -1900,7 +1900,7 @@ section#producer-consumer
 			          consume(item);
 			      } /* ' */
 
-        div ¿Problema?
+        div ¿Problema? <span class="fragment">¿Si $C$ es interrumpido antes de dormir?</span>
 
 section#semaphore
 
@@ -1920,7 +1920,7 @@ section#semaphore
 					ul
 						li.fragment <em>proberen</em> <code>P()</code> ó <code>wait()</code> ó <code>up()</code>. Intenta decrementar el valor.
 						li.fragment <em>verhogen</em> <code>V()</code> ó <code>signal()</code> ó <code>down()</code>. Incrementa el valor.
-			p.fragment E.W.Dijkstra era holandés, pero si no saben holandés es más fácil recordar <code>Pedir</code>/'<code>Votar</code>'
+			p.fragment E.W.Dijkstra era holandés, pero si no saben holandés es más fácil recordar <code>Pedir</code>/<code>Votar</code>
 
 	section
 
@@ -1934,32 +1934,41 @@ section#semaphore
 				    struct process* slept = NULL;
 				  }
 
-		pre
-			code.hljs.c
-				| void init(c) {
-				      count = c;
-				  }
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
 
-				  void P() {      /* wait: put into queue and sleep */
-				    l.acquire();
-				    if(count <= 0) {
-				        // add itself to 'slept' /
-				        l.release();
-				        sleep();
-				        l.acquire();
-				    }
-				    count--;
-				    l.release();
-				  }
+			pre
+				code.hljs.c
+					| void init(c) {
+					      count = c;
+					  }
 
-				  void V(S) {    /* signal */
-				  	l.acquire();
-				    count++;
-				    if(count > 0) {
-				       wakeup(/* first from 'slept' */);
-				    }
-				    l.release();
-				  }
+					  void P() {      /* wait: put into queue and sleep */
+					    l.acquire();
+					    while(count <= 0) {
+					        /* code to add itself to 'slept' */ // /
+					        l.release();
+					        sleep();
+					        l.acquire();
+					    }
+					    count--;
+					    l.release();
+					  }
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					|
+					  void V(S) {    /* signal */
+					  	l.acquire();
+					    count++;
+					    wakeup(/* first from 'slept' */); 
+					    // plus, remove from queue
+					    l.release();
+					  }
+
+		div Otras implementaciones usan <i>busy waiting</i> (para multiprocesadores)
+
 
 	section
 	    
@@ -1999,6 +2008,202 @@ section#semaphore
 			          consume(item);
 			      } 
 
+section#conditions
 
+    h2 Variables de Condición (Condition Variables)
+
+	section#cond
+
+        div Semáforos sirven para controlar cantidad de accesos a una región protegida
+
+        div Mecanismo consisten en bloquearse (<code>P()</code>) bajo una condición (contador negativo) y avisar o señalar (<code>V()</code>) que una condición se ha cumplido (contador mayor a 0)
+
+        blockquote.fragment style="background:#B7E1CD;" Variables de condición permitan bloquearse bajo condiciones arbitrarias.
+
+		ul.fragment
+			li  <code>Condition::wait()</code> bloquea <strong>siempre</strong> el <em>thread</em>
+			li  <code>Condition::signal()</code> despierta a un <em>thread</em> bloqueado, si lo hay
+
+
+	section
+	    
+	    div Bounded-buffer con <i>condition variables</i>
+
+		pre
+			code.hljs.c
+				| struct lock l; 
+				  struct condition condCons, condProd;
+				  int stock = 0; T storage[N];
+		
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+				      l.acquire();                        // with mutex
+				      while(stock == N) condProd.wait(l); // wait if full
+			   		  storage[in] = item;  in = ++in%N;   // fill and rotate index
+			   		  stock++;
+			   		  condCons.signal();                  // signal new item for consumer
+			   		  l.release();
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          l.acquire();
+			          while(!stock) condCons.wait(l);     // wait if empty
+			          item = storage[out]; out = ++out%N; // extract and rotate index
+			          stock--;
+			          condProd.signal();                  // signal new slot for producer
+			          l.release();
+			          consume(item);
+			      }
+
+		<i>Condition variables</i> utilizan un <i>lock</i> y lo liberan antes de bloquearse. 
+
+
+section#readers-writers
+
+	h2 Problema de los lectores y escritores
+
+	section 
+		h3 Readers-Writers
+
+		div Planteado por Courtois et al. (1971). Modela acceso a una base datos.
+
+		ul
+			li Permitir acceso de $n$ lectores simultáneos, pero solamente 1 escritor
+
+		pre
+			code.hljs.c
+				| struct semaphore rw; rw.init(1); 
+				  struct semaphore mutex; mutex.init(1); 
+				  int readers = 0;        // leen o quieren leer
+		
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Writers
+
+			pre
+				code.hljs.c
+					| while('w') {
+					      rw.P();
+					      /* ... WRITE ... */
+				   		  rw.V();
+				   	  }
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Readers
+
+			pre
+				code.hljs.c
+					| while ('r') {
+				          mutex.P();
+				          readers += 1;
+				          if(readers == 1)
+				              rw.P();
+				          mutex.V();
+				          /* ... READ ... */
+				          mutex.P();
+				          readers -= 1;
+				          if(readers == 0)
+				              rw.V();
+				          mutex.V();
+				      }
+
+
+section#philosophers
+
+	h2 Problema de los filósofos comensales
+
+	section#block-phi_
+		div 5 filósofos se pasan la vida en dos actividades: <em>comer</em> y <em>pensar</em>
+		div
+			ul
+				li  Para comer deben tomar ambos palillos
+				li  Sólo pueden tomar un palillo a la vez
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Código para filósofo <code>i</code>
+
+			pre
+				code.hljs.c
+					| int left =  i;
+					  int right = (i+1)%N;           // N==5
+					  struct semaphore chopstick[N]; // inicializados en 1
+					  
+					  do {
+					    chopstick[left].P();
+					    chopstick[right].P();
+					    
+					    /* eat */
+					    
+					    chopstick[left].V();
+					    chopstick[right].V();
+					    
+					    /* philosophise */
+					    
+					  } while ('p');
+
+		img src='/images/figures/01-5_13.pdf.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#block-phi-sem
+		h3 Filósofos Comensales con Semáforos
+
+		pre
+			code.hljs.c
+				| int N = 5;
+				  enum {PHILOSOPHISE, HUNGRY, EATING} state[N];   /* free / waiting / using */
+				  struct lock l;
+				  struct semaphore philosopher[N]; // inicializados en 1
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre.stretch
+				code.hljs.c
+					| int left(i)  { return (i+N-1)%N; }
+					  int right(i) { return (i+1)%N; }
+
+	                  void philosoph(int i) {
+	                      while(TRUE) {
+	                          think();
+	                          take_forks();
+	                          eat();
+	                          release_forks();
+	                      }
+	                  }
+
+				      void take_forks(int i) {
+				          l.acquire();
+				          state[i] = HUNGRY;
+				          try_forks(i);
+				          l.release();
+				          philosopher[i].P();
+					  }
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre.stretch
+				code.hljs.c
+					| void release(int i) {
+				          l.acquire();
+				          state[i] = PHILOSOPHISE;
+				          try_forks(left(i));
+				          try_forks(right(i));
+				          l.release();
+				      }
+				    
+				      void try_forks(int i) {
+				          if(state[i] == HUNGRY && state[left(i)] != EATING 
+				          	 && state[right] != EATING) {
+				              state[i] = EATING;
+				              philosopher[i].V();
+				          }
+				      }
 
 
