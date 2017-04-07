@@ -86,35 +86,6 @@ section#states
 		div style="display:inline-block;" &nbsp; &nbsp; &nbsp; &nbsp; 
 		img src='/images/figures/01-taskman-win.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-	/section#states-status
-	/	p ¿Cómo averiguo el estado de un proceso?
-
-	/	.fragment
-	/		p Desde un terminal
-	/		pre
-	/			code.hljs.lang-bash
-	/				| $ htop || top || ps aux
-	/	.fragment
-	/		p En C
-	/		pre
-	/			code.hljs.lang-c
-	/				| #include "sys/types.h"
-	/				  #include "sys/wait.h"
-	/				  /* ... */
-	/				  int status;
-	/				  pid_t return_pid = waitpid(process_id, /*out*/ &status, WNOHANG);
-	/				  
-	/				  switch(return_pid) {
-	/				    case 0:
-	/				      /* Still running */
-	/				    case process_id:
-	/				      /* Child terminated. Exit status in 'status' */
-	/				    case -1:
-	/				    default:
-	/				      /* Error */
-	/				  }
-	/	.fragment
-	/		p O con un Administrador de Procesos
 
 
 section#repr
@@ -2708,4 +2679,3 @@ section
 				li O bien, matar la mínima cantidad que me asegura poder resolver el <i>deadlock</i>
 				li O matar todos los procesos del sistema (¿para qué gastamos tiempo en detectarlo?)
 
-				
