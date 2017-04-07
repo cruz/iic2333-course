@@ -5,66 +5,218 @@ layout: slide
 
 
 section
-  h2 Direccionamiento de Memoria
-
-section
-  h2 Direccionamiento de Memoria
+  h2 Memoria
 
   section#memory0
-    div <b>MEMORIA</b> 
-    ul
-      li Un gran arreglo de <i>bytes</i>
-      li Cada uno con su propia <b>dirección</b>
+    h3 Direcciones de Memoria
 
-    div == image_tag '/images/figures/04-memory1.png', :width=>"50%"
+    div 
 
-    ul.fragment
-      li  PC lee instrucciones desde una dirección de memoria
-      li  Instrucciones pueden requerir leer operandos desde otra dirección de memoria
-      li  Resultados suelen ser almacenados en alguna dirección de memoria
+      ul
+        li Un gran arreglo de <i>bytes</i>
+        li Cada uno con su propia <b>dirección</b>
 
-  section#memory1
-    div <b>Velocidad</b>
-    ul.fragment
-      li Registro: acceso en un ciclo de CPU
-      li Memoria: requiere acceso al <i>bus de memoria</i>
-      li ¿Solución? <span class="fragment">caché</span>
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-  section#memory2
-    div.fragment <b>Protección</b>
-    ul.fragment
-      li Multiprogramación. Procesos no deben acceder a memoria de otro procesos
-      li ¿Si hay dos procesos que hagan referencia a la misma dirección?
+      div Al principio &hellip;
 
-    div == image_tag '/images/figures/04-spaces.png', :width=>"35%"
-    div.fragment Referencias absolutas
+      img src='/images/figures/02-memory-old.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-  section#memory3
-    div Procesos poseen registros <i>base</i> y <i>limit</i>
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_01.pdf.png', :width=>"30%"
+      div Con multiprogramación &hellip;
 
-    ul.fragment
-      li ¿S.O. verifica cada acceso? <span class="fragment">leeeento</span>
-      li.fragment ¿Solución? <span class="fragment">Verificación por <i>hardware</i></span>
+      img src='/images/figures/02-memory-new.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-  section#memory4
-    div Registros <i>base</i> y <i>limit</i> se cargan, y son verificados por <i>hardware</i>.
+  section data-transition="fade-out"
+    h3 Direcciones de Memoria
 
-    div == image_tag '/images/figures/02-8_02.pdf.png', :width=>"70%"
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div ¿Quién hace esto? <span class="fragment">MMU: <i>Memory Manager Unit</i></span>
-    div.fragment Referencias relativas:  <b>JMP 28 + base</b>, en lugar de <b>JMP 28</b>
+      div Con solamente un proceso en memoria &hellip;
 
-  section#memory5
-    div Procesos piden una dirección de memoria ... <span class="fragment"> pero MMU les entrega otra</span>
-    ul.fragment
-      li <b>Dirección lógica o virtual</b>: solicitado por el proceso (JMP 28)
-      li <b>Dirección física</b>: accedida en la memoría física (JMP 16384+28)
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x10000       ; a += 3
+             add %eax, $0x3
+             mov 0x10000, %eax
 
-    div == image_tag '/images/figures/04-twoprocs.png', :width=>"25%"
 
-    div.fragment ¿Cuándo se determina la dirección física? (1) Compilación (2) Ejecución (3) Carga
+      div La vida del compilador es (más) fácil
+
+      ul
+        li Programa siempre se carga en la misma dirección
+        li Cada variable tiene la misma dirección en memoria en cada ejecución
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-old.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
+
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x10001       ; falla si a no está en 0x10000
+             add %eax, $0x3
+             mov 0x10001, %eax
+
+      div Procesos puede cargarse en cualquier parte de la memoria
+
+      div Problema 1:
+      ul
+        li Variables no están siempre en la misma ubicación
+        li Requisito: <b>relocalización de variables</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-new.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
+
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x20001       ; 0x20001 es memoria de C
+             add %eax, $0x3
+             mov 0x20001, %eax
+
+      div Procesos puede cargarse en cualquier parte de la memoria
+
+      div Problema 2:
+      ul
+        li Un proceso, por error, podría leer memoria y modificar memoria de otro proceso
+        li Requisito: <b>protección de memoria</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-new.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Direcciones absolutas no sirven con multiprogramación</b>
+      ul
+        li Caso (a). Un proceso único en memoria, de 16KB, cargado en 0.
+        li Caso (b). Otro proceso único en memoria, de 16KB, cargado en 0.
+        li Caso (c). Dos procesos de 16KB cargados en memoria, de manera contigua.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-spaces.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in"
+    h3 Relocalización y protección
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Direcciones absolutas no sirven con multiprogramación</b>
+      ul
+        li Caso (b). Instrucción <code>JMP 28</code> está OK si el proceso está cargado en 0.
+        li Caso (c). Si el proceso se carga en 0, hay que cambiar <code>JMP 28</code> por <code>JMP 16412</code>.
+        li ¿Cómo conseguirlo?
+        ul.fragment
+          li Compilador podría generar: <code>JMP 28+X</code> 
+          li Al cargar en memoria se determina que <code>X</code> es 16384, y se carga en memoria <code>JMP 16412</code>
+          li Ejecutar esto cada vez que se cargue
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-spaces.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Direcciones de memoria
+
+    div ¿Cómo podemos saber donde se ubica nuestro código?
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  #include &lt;stdio.h&gt;
+             #include &lt;stdlib.h&gt;
+
+             int b = 3;
+
+             int main(int argc, char *argv[]) {
+               int x=3;
+               printf("Location of code   : %p\n", (void *)main);
+               printf("Location of data   : %p\n", (void *)&b);
+               printf("Location of heap   : %p\n", (void *)malloc(1));
+               printf("Location of stack  : %p\n", (void *)&x);
+               return x;
+             }
+
+      div.fragment Atención: estas direcciones son <b>virtuales</b> &#x1f632;
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-sections.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+section
+  h2 Espacios de direcciones
+
+  section
+    div Dos problemas: (1)<b>relocalización</b> y (2)<b>protección</b>
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" Abstracción: <b>espacios de direcciones</b>
+
+    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div CPUs desde CDC6600 hasta Intel 8088 integran dos registros: <code>base</code> y <code>limit</code><br/><br/>
+
+      ul
+        li Al cargar cada procesos se cargan estos registros
+        li Proceso quiere ejecutar <code>JMP 28</code>
+        li Pero <i>hardware</i> ejecuta <code>JMP 28+16384</code>
+        li Si la dirección es mayor que <code>limit</code>, se genera un <i>trap</i>
+        li MMU: <b>Memory Manager Unit</b>
+
+      div.fragment data-fragment-index="3" ¿Resuelto?
+
+    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-twoprocs.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Sobrecarga de memoria
+
+    div ¿Cuántos procesos caben en memoria? ¿Qué pasa si la memoria se llena?
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;"  Operaciones de <b>swapping</b>
+
+    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li <b>Swap-out</b>. Memoria del proceso se copia a disco.
+        li <b>Swap-in</b>. Memoria del proceso se copia de disco a memoria.
+
+      div.fragment data-fragment-index="3" ¿Qué pasa con la relocalización?
+
+    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_05.pdf.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    div Procesos pueden ser cargados y descargados de la memoria
+
+    == image_tag '/images/figures/02-8_05.pdf.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+    div Memoria del sistema queda con huecos
+
+
 
 section#spaces0
   h2 Cargando procesos
@@ -72,7 +224,7 @@ section#spaces0
   section#spaces1
     div Procesos pueden ser cargados y descargados de la memoria
 
-    div == image_tag '/images/figures/02-8_05.pdf.png', :width=>"50%"
+    div 
 
   section#spaces2
     div Espacio libre se modifica en cada carga/<i>swap-in</i> o descarga/<i>swap-out</i>
