@@ -31,56 +31,62 @@ section
   section data-transition="fade-out"
     h3 Direcciones de Memoria
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
       div Con solamente un proceso en memoria &hellip;
 
       pre
         code.hljs.asm
-          |  mov %eax, 0x10000       ; a += 3
+          |  mov %eax, 0x10001       ; a += 3
              add %eax, $0x3
-             mov 0x10000, %eax
+             mov 0x10001, %eax
 
 
       div La vida del compilador es (más) fácil
+
+      br
+      br
 
       ul
         li Programa siempre se carga en la misma dirección
         li Cada variable tiene la misma dirección en memoria en cada ejecución
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-      img src='/images/figures/02-memory-old.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+      img src='/images/figures/02-memory-old.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
   section data-transition="fade-in fade-out"
     h3 Direcciones de Memoria
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
       div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
 
       pre
         code.hljs.asm
-          |  mov %eax, 0x10001       ; falla si a no está en 0x10000
+          |  mov %eax, 0x10001       ; falla si a no está en 0x10001
              add %eax, $0x3
              mov 0x10001, %eax
 
-      div Procesos puede cargarse en cualquier parte de la memoria
+      div Procesos pueden cargarse en cualquier parte de la memoria
+
+      br
+      br
 
       div Problema 1:
       ul
         li Variables no están siempre en la misma ubicación
         li Requisito: <b>relocalización de variables</b>
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-      img src='/images/figures/02-memory-new.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+      img src='/images/figures/02-memory-new.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
   section data-transition="fade-in fade-out"
     h3 Direcciones de Memoria
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
       div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
 
@@ -90,16 +96,19 @@ section
              add %eax, $0x3
              mov 0x20001, %eax
 
-      div Procesos puede cargarse en cualquier parte de la memoria
+      div Procesos pueden cargarse en cualquier parte de la memoria
+
+      br
+      br
 
       div Problema 2:
       ul
         li Un proceso, por error, podría leer memoria y modificar memoria de otro proceso
         li Requisito: <b>protección de memoria</b>
 
-    div style="width:50%; vertical-align:middle; display:inline-block;" 
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-      img src='/images/figures/02-memory-new.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+      img src='/images/figures/02-memory-new.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
   section data-transition="fade-in fade-out"
     h3 Direcciones de Memoria
@@ -155,8 +164,10 @@ section
                printf("Location of data   : %p\n", (void *)&b);
                printf("Location of heap   : %p\n", (void *)malloc(1));
                printf("Location of stack  : %p\n", (void *)&x);
-               return x;
+               return x+b;
              }
+
+      div.fragment Código completo <a href="../examples/mems.c" target="_blank">aquí</a>
 
       div.fragment Atención: estas direcciones son <b>virtuales</b> &#x1f632;
 
@@ -191,6 +202,27 @@ section
       img src='/images/figures/04-twoprocs.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
   section
+    div Proceso mantiene un espacio <b>único</b> y <b>secuencial</b> (lineal) de direcciones.
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Proceso $A$ utiliza 16KB.
+        ul
+          li <code>code</code> en 0-1023
+          li <code>heap</code> empieza en 1024, y crece
+          li <code>stack</code> empieza en 16383, y decrece
+        li Al cargarlo en memoria, el sistema operativo asigna <code>Base: 4096</code>, <code>limit: 16384</code>.
+        ul
+          li Código de $A$ no es modificado
+          li Proceso $A$ pide la dirección <b>virtual</b>: 768
+          li MMU entrega la dirección <b>física</b>: 4864
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-inside.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
     h3 Sobrecarga de memoria
 
     div ¿Cuántos procesos caben en memoria? ¿Qué pasa si la memoria se llena?
@@ -212,154 +244,579 @@ section
   section
     div Procesos pueden ser cargados y descargados de la memoria
 
-    == image_tag '/images/figures/02-8_05.pdf.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+    == image_tag '/images/figures/04-loadprocs.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
 
     div Memoria del sistema queda con huecos
 
+    div.fragment ¿Qué hacer con los huecos?
+
+  section
+    div ¿Qué hacer con los huecos?
+
+    == image_tag '/images/figures/02-compact.png', :width=>"35%", :style=>"border:none; box-shadow:none;"
+
+    br
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Compactación</b>: Fusionar los huecos
+
+      ul.fragment data-fragment-index="2"
+        li Requiere copiar memoria a otras direcciones
+        li Caro. No se hace.
+        li.fragment data-fragment-index="3" <i>Mejor</i>: asignar espacios de manera que no se necesite compactar
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img.fragment data-fragment-index="1" src='/images/figures/02-fusion.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
-section#spaces0
-  h2 Cargando procesos
+  section
+    div ¿Como evitar espacios libres?
 
-  section#spaces1
-    div Procesos pueden ser cargados y descargados de la memoria
-
-    div 
-
-  section#spaces2
-    div Espacio libre se modifica en cada carga/<i>swap-in</i> o descarga/<i>swap-out</i>
-
-    div == image_tag '/images/figures/04-loadprocs.png', :width=>"70%"
-
-  section#spaces3
-    div Direcciones deben ajustarse ante cada carga
-
-    div == image_tag '/images/figures/02-8_06.pdf.png', :width=>"70%"
-
-  section#spaces4
-    div <b>¿Dónde ubicar un proceso nuevo?</b>
-
-    div Estrategias
+    div Estrategias:
     ul
-      li.fragment <strong>First-fit</strong>. En el primer lugar disponible.
-      li.fragment <strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
-      li.fragment <strong>Worst-fit</strong>. En el que deja más (el más grande).
+      li <strong>First-fit</strong>. En el primer lugar disponible.
+      li <strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
+      li <strong>Worst-fit</strong>. En el que deja más espacio libre (el más grande).
 
-    div.framgent ¿Cuál es mejor?
+    div
 
-  section#spaces5
-    div <b>Problema: FRAGMENTACION</b>
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-    div En dos variedades
+        img.fragment data-fragment-index="1" src='/images/figures/02-fits.png' width="24%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    ul
-      li.fragment <b>Fragmentación Externa</b>: Hay espacio para otro proceso, pero no contiguo.
-      li.fragment <b>Fragmentación Interna</b>: Espacio sobre-asignado a un proceso.
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-  section#spaces6
-    div <b>¿Cómo evitar la fragmentación externa?</b>
+        img.fragment data-fragment-index="2" src='/images/figures/02-fits-first.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div.fragment <b>Compactación</b>: fusionar huecos
-    div.fragment == image_tag '/images/figures/02-fusion.png', :width=>"20%"
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-    div.framgment ¿Pero?
-    ul
-      li.fragment Es <b>costoso</b>. No voy esperar que mis 16GB se reacomoden.
-      li.fragment ¿Otras soluciones? <span class="fragment">Técnicas de <i>memoria virtuual</i>: <span class="fragment"><b>segmentación</b>, </span><span class="fragment"><b>paginación</b>
+        img.fragment data-fragment-index="3" src='/images/figures/02-fits-best.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-section#seg
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+        img.fragment data-fragment-index="4" src='/images/figures/02-fits-worst.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Fragmentación
+
+    div Con cualquier estrategia aún pueden quedar espacios libres no contiguos.
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    ul.fragment
+      li Compactar no es una opción práctica
+      li Supuesto: procesos se pueden reubicar en cualquier parte de la memoria 
+      li Supuesto: procesos deben ubicarse en espacios <b>contiguos</b>
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#segmentation
   h2 Segmentación
 
-  section#seg1
-    div Espacio de direcciones se divide en segmentos lógicos
+  section
+    div Problema: un espacio de direcciones muy grande.
+
+    blockquote.fragment data-fragment-index="1" style="background:#F4C7C3;" <b>Segmentación</b>
+
+    div.fragment data-fragment-index="2" Se divide el espacio de direcciones en varios espacios más pequeños
+
+    ul.fragment data-fragment-index="2"
+      li Espacios más pequeños pueden ser asignados más fácilmente
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Segmento:</b> espacio de direcciones contiguo
+      ul
+        li Ejemplo: código, datos, heap, stack, &hellip;
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+    
+      img src='/images/figures/02-basic-segments.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Implementando segmentación
+
+    div Ahora hay varios espacios lineales de direcciones.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div MMU debe ser capaz de hacer la traducción
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      div <b>Tabla de Segmentos</b>
+
+      ul.fragment
+        li Dirección virtual (lógica): $100$
+        ul
+          li Está en segmento <code>code</code>
+          /li <i>Offset</i> dentro de <code>code</code>: $100$
+          li Base + dirección $= 32768 + 100 = 32868$
+        li Dirección física: $32868$
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      br
+      
+      ul.fragment
+        li Dirección virtual (lógica): $4200$
+        ul
+          li Está en segmento <code>heap</code>
+          /li <i>Offset</i> dentro de <code>code</code>: $100$
+          li Base + dirección $= 34816 + 4200 = 39016$
+        li Dirección física: $39016$
+
+      blockquote.fragment  style="background:#F4C7C3;" <code>Segmentation Fault!</code>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      br
+      
+      ul.fragment
+        li Dirección virtual (lógica): $4200$
+        ul
+          li Está en segmento <code>heap</code>
+          li <i>Offset</i> dentro de <code>heap</code>: $4200-\mathbf{4096}=104$
+          li Base + <i>offset</i> $= 34816 + 104 = 34920$
+        li Dirección física: $34920$
+
+      br
+      br
+
+      div.fragment ¿Cómo conozco el segmento? ¿y el offset?
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Implementando segmentación
+
+    div ¿Cómo conocer segmento y <i>offset</i>?
+
     ul
-      li.fragment  Código
-      li.fragment  Variables globales
-      li.fragment  <em>Heap</em> (para asignación dinámica de memoria)
-      li.fragment  <em>Stacks</em> para cada <em>thread</em>
-      li.fragment  Código de la librería estándar de C
+      li Se pueden hacer restas &hellip; 
+      li Pero la lógica de bit es más rápida
 
-    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
+    br
+    div.fragment Ejemplo: ¿cuántos bit necesitamos para identificar 3 segmentos? <span class="fragment">$\rightarrow 2$</span>
+
+    img.fragment src='/images/figures/02-segment-bits.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    br
+
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Dirección virtual: $4200 = 0b01 0000 0110 1000 = 0x1068$
+        ul
+          li Bits de segmento: $0b01 = 1 = 0x1$
+          li Bits de offset: $0b0000 0110 1000 = 104 = 0x068$
+
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  SEG_MASK = 0x3000;
+             OFFSET_MASK = 0xFFF;
+             SEG_SHIFT = 12;
+             virtualAddress = 4200;
+             segment = (virtualAddress & SEG_MASK) >> SEG_SHIFT;
+             offset = virtualAddress & OFFSET_MASK;
+             if(offset >= size[segment])
+               raise(SEG_FAULT);
+             else
+               physicalAddress = base[segment] + offset;
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      div <b>Atención con el <i>stack</i></b>.
+      
+      ul.fragment
+        li Dirección virtual (lógica): $16300$
+        ul
+          li Segmento <code>stack</code> (segmento 3)
+          /li <i>Offset</i> dentro de <code>heap</code>: $4200-\mathbf{4096}=104$
+          li Base + <i>offset</i> $= 28672 + 4012 = 32684$
+        li Dirección física: $32684$ &#x274c;
 
 
-  section#seg2
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div Cada <b>segmento</b> se puede cargar en regiones distintas de memoria.
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div Segmentos poseen: identificador y longitud
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div Una dirección de memoria específica en memoria segmentada está formada por una tupla con dos datos (un par):
-      $\langle$ <code>numeroDeSegmento</code>, <code>offset</code> $\rangle$
 
-  section#seg3
+  section
+    h3 Implementando segmentación
 
-    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div Información de segmentos cargados se almacena en: <b>Tabla de segmentos</b>
+      div Otro campo en la tabla de segmentos
 
-    div == image_tag '/images/figures/02-8_09.pdf.png', :width=>"40%"
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+          td Upwards
+        tr
+          td <code>code</code>
+          td 32768 
+          td 2048 
+          td 1
+        tr
+          td <code>heap</code>
+          td 34816 
+          td 2048 
+          td 1
+        tr
+          td <code>stack</code>
+          td 28672 
+          td 2048 
+          td 0
 
-  section#seg4
+      ul.fragment
+        li Dirección virtual (lógica): $16300$
+        ul
+          li Segmento <code>stack</code> (segmento 3)
+          li <i>Offset</i>: complemento de 3072 (3KB). $3072-4012=-940$
+          li Base + <i>offset</i> $= 28672 - 940 = 27732$
+        li Dirección física: $27732$ &#x2714;
 
-    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
 
-    div MMU usa la <b>Tabla de segmentos</b> para obtener la <b>dirección física</b>
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_08.pdf.png', :width=>"50%"
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Visualizando segmentos
+
+    div Comando <code>pmap</code> permite ver segmentos asignados a un proceso
+
+    pre
+      code.hljs.bash
+        |  pmap -x [PID]
+
+    div Atención: necesita un proceso en ejecución
+
+
+  section
+    h3 Fragmentación
+
+    div Implementamos segmentación para eliminar fragmentación externa
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul.fragment
+        li Menos fragmentación &hellip; pero sigue existiendo
+        li Difícil anticipar los tamaños de los segmentos
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-fragments-ram.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pagination
+  h2 Paginación
+
+  section
+
+    div Problema: un espacio de direcciones muy grande.
+    ul
+      li Idea 1: Dividir el espacio de direcciones en <b>segmentos</b>
+      li.fragment data-fragment-index="1" Idea 2: Que los segmentos sean del mismo tamaño: <b>páginas de memoria</b>
+
+    blockquote.fragment data-fragment-index="2" style="background:#F4C7C3;" <b>Paginación</b>
+
+    div.fragment data-fragment-index="2" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Espacio virtual: <b>páginas</b>
+        li Espacio físico: <i><b>frames</b></i> (marcos)
+        li Páginas y <i>frames</i> del <b>mismo</b> tamaño
+
+      br 
+      br
+
+      div.fragment data-fragment-index="3" Sistema con 128B RAM
+      
+      ul.fragment data-fragment-index="3" 
+        li Espacio virtual (lógico) de 64B.
+        li Espacio físico de 128B.
+        li Páginas (y <i>frames</i>) de 16B.
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-pages-1.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      img src='/images/figures/02-pages-2.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+
+    ul
+      li Sistema necesita llevar registro de páginas asignadas a cada proceso
+      li Sistema necesita información para traducir direcciones virtuales a físicas
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Tabla de Páginas</b>
+
+    div.fragment data-fragment-index="2" style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      div.fragment data-fragment-index="2" Páginas de 16B, espacio virtual 64B, espacio físico 128B.
+
+      ul
+        li.fragment data-fragment-index="3" Direcciones posibles en una página: $16 = 2^4$<span class="fragment" data-fragment-index="4">$\rightarrow 4$ bit.</span>
+        ul.fragment data-fragment-index="5" style='font-size:32px;'
+          li 4 bit indican el <i>offset</i> dentro de una página.
+        li.fragment data-fragment-index="6" Espacio virtual de $64=2^6$ Byte. Requiere $6$ bit.
+        ul.fragment data-fragment-index="7" style='font-size:32px;'
+          /li 4 bit indican el <i>offset</i>
+          li 2 bit indican el número de página (VPN).
+          li Páginas posibles: $2^2=4$ entradas en la tabla de páginas
+        li.fragment data-fragment-index="8" Espacio virtual de $128=2^7$ Byte. Require $7$ bit.
+        ul.fragment data-fragment-index="9" style='font-size:32px;'
+          /li 4 bit indican el <i>offset</i>
+          li 3 bit indican el número de <i>frame</i> (PFN).
+          li <i>Frames</i> en la memoria principal: $2^3=8$ <i>frames</i>
+
+      br
+      br
+
+      div.fragment data-fragment-index="10" Traducción VPN$\to$PFN en la Tabla de Páginas
+
+    div.fragment data-fragment-index="2" style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-page-translation.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Tabla de Páginas
+
+    div Páginas de 16B, espacio virtual 64B, espacio físico 128B.
+
+    div.fragment data-fragment-index="1" style="width:100%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-pages-1.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="display:inline-block;" &nbsp; &nbsp; &nbsp; 
+
+      img src='/images/figures/02-page-translation.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="display:inline-block;" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+      img src='/images/figures/02-pages-2.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div.fragment data-fragment-index="2" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table style='font-size:28px;'
+        tr
+          td Page (VPN)
+          td Frame (PFN)
+        tr
+          td 0 (0b00) 
+          td 3 (0b011)
+        tr
+          td 1 (0b01)
+          td 7 (0b111)
+        tr
+          td 2 (0b10)
+          td 5 (0b101)
+        tr
+          td 3 (0b11)
+          td 2 (0b010)
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Dirección virtual: $21\; (0b010101)$
+      ul.fragment data-fragment-index="4" style='font-size:28px;'
+        li #Página: $1\; (0b01)$
+        li <i>Offset</i>: $5\; (0b0101)$
+        li Tabla: $1 \rightarrow 7$
+      div.fragment data-fragment-index="5" Dirección física: $117\; (0b1110101)$
+
+
+
+
+  section
+    h3 Tabla de Páginas
+
+    div Páginas de 4KB, dirección virtual de 16 bit, dirección física de 15 bit.
+
+    div.fragment data-fragment-index="2" style="width:65%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Dimensiones</b>
+      ul
+        li Tamaño de espacio virtual: <span class="fragment" data-fragment-index="3">$2^{16} \text{B} =65536 \text{B} = 64\text{KB}$</span>
+        li Tamaño de espacio físico: <span class="fragment" data-fragment-index="4">$2^{15} \text{B} =32768 \text{B} = 32\text{KB}$</span>
+        li Tamaño de página: <span class="fragment" data-fragment-index="5">$4\text{KB}=2^2\times2^{10}\text{B}= 2^{12}\text{B}$</span>
+        li Bits para <i>offset</i>: <span class="fragment" data-fragment-index="6">$12$ (rango: $0x000$ a $0xFFF$)</span>
+        li Bits para #página: <span class="fragment" data-fragment-index="7">$4$ (16 páginas)</span>
+        li Bits para #página: <span class="fragment" data-fragment-index="8">$3$ (8 frames)</span>
+
+      div <b>Traducción</b>
+      ul
+        li Dirección lógica: $8196\; (0x2004)$
+        ul.fragment data-fragment-index="9"
+          li #Página: 2
+          li #Frame: 6
+        li Dirección física: <span class="fragment" data-fragment-index="10">$24580\; (0x6004)$</span>
+
+    div.fragment data-fragment-index="1" style="width:35%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-page-translation-big.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+      br
+      div style='font-size:16px;' Ignoramos el "present/absent" bit, &hellip; por ahora
+
+
+
+
+
+
+
 
 section#pag
   h2 Paginación
 
-  section#pag1
-    div style="text-align:left;" Segmentación reduce el problema de la fragmentación externa <span class="fragment"> ... pero no lo soluciona</span>
-
-    div.fragment style="text-align:left;" <b>Paginación</b> divide el espacio virtual de direcciones en regiones de igual tamaño
-    ul
-      li.fragment Espacio virtual (lógico) de direcciones se divide en <b>páginas</b>
-      li.fragment Espacio físico de direcciones se divide en <b>frames</b> (marcos)
-      li.fragment Páginas y <i>frames</i> son del mismo tamaño
-
-
-    div.fragment ¿De qué tamaño son las páginas de su sistema?
-
-  section#pag2
-    div Dirección de memoria paginada está compuesta de<br/>
-        $\langle$ <code>numeroDePagina</code>, <code>offset</code> $\rangle$
-
-    div ==image_tag '/images/figures/02-8_10.pdf.png', :width=>"60%"
-
-  section#pag3
-
-    div ==image_tag '/images/figures/02-8_11.pdf.png', :width=>"45%"
-
-
-  section#pag4
-    div style="text-align:left;" Tamaños posibles de páginas y frames son determinados por <i>hardware</i>
-
-    div style="text-align:left;" Al ser potencias de 2, se evitan sumas.
-
-    ul
-      li.fragment Direcciones lógicas de $m$-bit
-      li.fragment Tamaño de página de $2^n$ bytes
-
-    div 
-      img src='/images/figures/02-in-8_1.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div.fragment Cantidad de páginas posibles: $2^{m-n}$
-
-  section#pag5
-    div style="text-align:left;" Dirección virtual: $m=4$ bit, $n=2$
-    ul 
-      li.fragment $2$-bit: número de página... $2^{m-n} = 4$ páginas
-      li.fragment $2$-bit: <i>offset</i>... Páginas de tamaño $2^{n}=4$ byte.
-      li.fragment Memoria física: 32 byte... $8$ <i>frames</i> de memoria.
-
-    div 
-      img src='/images/figures/02-8_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
-
-    div.fragment Dirección lógica: 1001 <span class="fragment">, ... dirección física: 0101</span>
 
   section#pag6
     div style="text-align:left;" Paginación elimina <b>fragmentación externa</b>...<span class="fragment">pero tenemos <b>fragmentación interna</b></span>
