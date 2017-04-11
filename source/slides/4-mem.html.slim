@@ -806,41 +806,42 @@ section#pagination
       div style='font-size:16px;' Ignoramos el "present/absent" bit, &hellip; por ahora
 
 
-  section
+  section data-transition="fade-out"
     blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
 
-    ul
+    ul.fragment data-fragment-index="1"
       li Arquitectura con espacio de direcciones virtuales de 32 bit
       li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
-      li ¿Cuántas páginas? $2^{20}$
-      li Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
+      li ¿Cuántas páginas? $2^{20}$. Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
 
-    blockquote style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
 
-    div Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
+    div.fragment data-fragment-index="3" Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
 
-    div style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
       img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-    div style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
+    div.fragment data-fragment-index="3" style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
 
-    ul style='font-size:24px;'
-      li <code>P</code>, <b>present bit</b> (o valid bit), indica si la página está en memoria.
+    ul.fragment data-fragment-index="4" style='font-size:24px;'
+      li <code>V</code>, <b>valid bit</b> (no está en la imagen), indica si la página ha sido asignada
+      li <code>P</code>, <b>present bit</b>, indica si la página está en memoria o en disco.
       li <code>RW</code>, <b>read/write bit</b>, indica si se puede escribir
       li <code>U/S</code>, user-supervisor bit, indica si se puede acceder en <i>user-mode</i>
       li <code>PWT</code>, <code>PCD</code>, <code>PAT</code>, <code>G</code>, controlan el <i>caching</i>
       li <code>A</code>, <b>accessed bit</b>, o <b>reference bit</b> indica si la página ha sido leída
       li <code>D</code>, <b>dirty bit</b>, indica si la página ha sido modificada
 
-  section
+  section data-transition="fade-in"
     blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
 
     ul
       li Arquitectura con espacio de direcciones virtuales de 32 bit
       li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
-      li ¿Cuántas páginas? $2^{20}$
-      li Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
+      li ¿Cuántas páginas? $2^{20}$. Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
 
     blockquote style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
+
+    div Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
 
     div style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
       img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
@@ -852,7 +853,7 @@ section#pagination
       li Cada proceso requiere $4\text{MB}$ de memoria principal <b>sólo para su tabla de páginas</b>.
       li Tabla de páginas se almacena en memoria virtual del Sistema Operativo.
 
-    div <b>Problema</b>: tablas de páginas grandes &#x1f61e;
+    div.fragment <b>Problema</b>: tablas de páginas grandes &#x1f61e;
 
   section
     blockquote style="background:#B7E1CD;"  <b>¿Cuántos accesos a memoria?</b>
@@ -908,15 +909,15 @@ section#pag_tlb
 
     div Solución para acelerar acceso a memoria: <i>fully associative caché</i> de direcciones en MMU
 
-    blockquote.fragment style="background:#F4C7C3;" <b>Translation Look-aside Buffer (TLB)</b> /
+    blockquote.fragment data-fragment-index="1" style="background:#F4C7C3;" <b>Translation Look-aside Buffer (TLB)</b> /
 
-    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-      ul style='font-size:24px;'
+      ul.fragment data-fragment-index="2" style='font-size:24px;'
         li Si la dirección está en el caché (<i>TLB hit</i>), se responde directamente
         li Si la dirección no está en el caché (<i>TLB miss</i>), se lee desde la memoria y se actualiza TLB
 
-      pre
+      pre.fragment data-fragment-index="4"
         code.hljs.lang-c style="max-height:600px;"
           |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
              (Success, TLBEntry) = TLB_Lookup(VPN);
@@ -940,7 +941,7 @@ section#pag_tlb
              }
 
 
-    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+    div.fragment data-fragment-index="3" style="width:40%; vertical-align:middle; display:inline-block;" 
 
       img src='/images/figures/02-8_14.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
@@ -954,25 +955,25 @@ section#pag_tlb
       ul
         li 4 bit para <i>offset</i>. 4 bit para #página. 16 páginas.
 
-      pre
+      pre.fragment data-fragment-index="1"
         code.hljs.lang-c
           | int sum = 0;
             for(i=0; i<10; i++)
               sum += a[i];
 
-      ul
+      ul.fragment data-fragment-index="2"
         li Considerando sólo el acceso a <code>a</code>
         li Sin TLB: 10 $\times$ (acceso tabla de páginas, acceso <code>a[i]</code>)
         ul
           li 20 accesos a memoria
-        li Con TLB: miss, hit, hit, miss, hit, hit, hit, miss, hit, hit
-        ul
+        li.fragment data-fragment-index="3" Con TLB: miss, hit, hit, miss, hit, hit, hit, miss, hit, hit
+        ul.fragment data-fragment-index="3"
           li 10 accesos a <code>a[i]</code>, 3 accesos a tabla de páginas (miss)
           li 13 accesos a memoria
 
-      div 7 de 10 accesos ahorrados: $70\%$ TLB <i>Hit Rate</i>
+      div.fragment data-fragment-index="4" 7 de 10 accesos ahorrados: $70\%$ TLB <i>Hit Rate</i>
 
-      div style='font-size:18px;' Con páginas más grandes, el <i>Hit Rate</i> hubiese aumentado
+      div.fragment data-fragment-index="4" style='font-size:18px;' Con páginas más grandes, el <i>Hit Rate</i> hubiese aumentado
 
 
     div style="width:25%; vertical-align:middle; display:inline-block;" 
@@ -998,13 +999,13 @@ section#pag_tlb
         li TLB Hit $\approx 101\text{ns}$
         li TLB Miss $\approx 201\text{ns}$
 
-      ul
+      ul.fragment
         li Sin TLB. 20 acc. a memoria. $2000\text{ns} = 2\times 10^{-6}\text{s}$
         li Con TLB. 13 acc. a memoria, 10 acc. a TLB. $1310\text{ns} = 1.31 \times 10^{-6}\text{s}$
         li Aceleración: $2000/1310 \approx 1.52$ veces más rápido.
         li Tiempo promedio de acceso: $201\text{ns} \times 0.3 + 101\text{ns} \times 0.7 = 131\text{ns}$
 
-      blockquote style="background:#B7E1CD;" TLB Hit Rate reales $\approx 99\%$
+      blockquote.fragment style="background:#B7E1CD;" TLB Hit Rate reales $\approx 99\%$
 
 
     div style="width:25%; vertical-align:middle; display:inline-block;" 
@@ -1028,9 +1029,9 @@ section#pag_tlb
             for(i=0; i<1000; i++)
               sum += a[i];
 
-      div Después de acceder a una dirección <code>x</code>, el programa probablemente accederá a direcciones cercanas a <code>x</code>
+      div.fragment data-fragment-index="1" align="left" Después de acceder a una dirección <code>x</code>, el programa probablemente accederá a direcciones cercanas a <code>x</code>
 
-      ul
+      ul.fragment data-fragment-index="2"
         li Luego de un <i>miss</i>, y guardar un PTE en TLB, vendrán muchos <i>hit</i>
 
 
@@ -1045,12 +1046,12 @@ section#pag_tlb
               for(i=0; i<1000; i++)
                 sum += a[i];
 
-      div Una dirección <code>x</code> que acaba de ser accedida, probablemente será accedida de nuevo dentro de poco tiempo
+      div.fragment data-fragment-index="3" align="left" Una dirección <code>x</code> que acaba de ser accedida, probablemente será accedida de nuevo dentro de poco tiempo
 
-      ul
+      ul.fragment data-fragment-index="4"
         li Una PTE recién guardada, volverá a ser usada pronto
 
-    div <i>El comportamiento real depende del programa, pero la mayor parte del tiempo los programas manifiestan localidad de referencia (espacial o temporal).</i>
+    div.fragment data-fragment-index="5" <i>El comportamiento real depende del programa, pero la mayor parte del tiempo los programas manifiestan localidad de referencia (espacial o temporal).</i>
 
 
   section
@@ -1058,7 +1059,7 @@ section#pag_tlb
 
     div <b>¿Dónde se guardan los datos de un TLB ante un cambio de contexto?</b>
 
-    ul
+    ul.fragment data-fragment-index="1"
       li TLB no se almacena en memoria del S.O. (como la Tabla de Páginas), ni en el PCB
       li PTBR se actualiza en cada cambio de contexto
       li PTEs de un proceso no sirven al siguiente proceso
@@ -1068,7 +1069,7 @@ section#pag_tlb
 
     div style='font-size:18px;' TLB Entry de un MIPS R4000
 
-    ul
+    ul.fragment data-fragment-index="2"
       li <code>V</code> indica si la <b>entrada del TLB</b> es válida
       ul
         li style='font-size:20px;' Atención: no es el mismo valid bit de la PTE
@@ -1099,7 +1100,7 @@ section#pag_tlb
 
     div <b>Problema</b>: tablas de páginas muy grandes &#x1f61e;
 
-    ul
+    ul.fragment data-fragment-index="1"
       li Arquitectura con espacio de direcciones virtuales de 32 bit
       li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
       li Tabla de páginas necesita $2^{20}$ PTEs
@@ -1107,120 +1108,159 @@ section#pag_tlb
       li Tamaño de tabla de páginas: $2^{20} \times 2^2 \text{B} = 4\text{MB}$
       li Con 100 procesos, se gasta $400\text{MB}$ del Sistema Operativo <b>sólo en tablas de páginas</b>.
 
-    blockquote style="background:#B7E1CD;" Solución: <i>páginas más grandes</i>
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;" Solución: <i>páginas más grandes</i>
 
-    ul
-      li Con páginas de $1$MB. $20$ bit para <i>offset</i>, $12$ bit para #página
+    ul.fragment data-fragment-index="3"
+      li Con páginas de $1\text{MB}$. $20$ bit para <i>offset</i>, $12$ bit para #página
       li Tablas de páginas necesita $2^{12}$ PTEs
       li Tamaño de tabla de páginas: $16\text{KB}$ &#x1f389;
 
   section
     h3 Fragmentación Interna
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    div Paginación elimina la fragmentación externa (¿por qué?), pero &hellip;
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Fragmentación Interna</b>. Espacios sobreasignado.
+
+    div.fragment data-fragment-index="2" Si las páginas son de $1\text{MB}$ &hellip;
+
+    ul.fragment data-fragment-index="3" 
+      li Procesos de $x\text{MB}$, con $x$ entero reciben la cantidad exacta de espacio.
+      li Un proceso de $16\text{KB}$ recibe $1\text{MB}$ ($1008\text{KB}$ desperdiciados)
+      li Un proceso de $1025 \text{KB}$ recibe $2\text{MB}$
+
+    div.fragment data-fragment-index="4" Espacio se asigna a los procesos pero no se utiliza
+
+    br
+
+    div.fragment data-fragment-index="4" Paginas más grandes aumentan la fragmentación interna. &#x1f61e;
+
+    br
+
+    div.fragment data-fragment-index="5" ¿De qué tamaño son las páginas de su sistema? (Tip: <code>getconf PAGE_SIZE</code>)
+
+
+
   section
     h3 Segmentos paginados
+
+    div Procesos no suelen ocupar todas sus páginas
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      div Espacio virtual con 16 páginas.
+      ul
+        li Proceso utiliza efectivamente: 4 páginas
+        li 12 entradas vacías ($75\%$) en tabla de páginas
+
+
+      img.fragment data-fragment-index="1" src='/images/figures/02-hybrid-va.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      br
+      div.fragment data-fragment-index="2" <b>Idea</b>: una tabla de páginas por segmento
+      ul.fragment data-fragment-index="3"
+        li Tablas de páginas más pequeña &#x1f603;
+        li <code>base</code> (direcc. de tabla de páginas)
+        li <code>limit</code> (#paginas)
+        li Vuelve la fragmentación externa &#x1f61f;
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-hybrid.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
 
 
   section
     h3 Tablas de páginas multinivel
 
+    div En lugar de segmentar, mejor <b>paginar</b> la tabla de páginas
+
+    div
+      img src='/images/figures/02-multilevel-va.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul.fragment data-fragment-index="2"
+        li Dirección virtual de 14-bit, páginas de $64\text{B}$.
+        li Esquema de 1 nivel: 256 PTEs. 
+        ul style='font-size:24px;'
+          li Memoria: $256 \times 4\text{B} = 2\text{KB}$
+        li Esquema de 2 niveles: 16 PTEs en tabla principal, 16 PTEs en 16 tablas de 2do nivel
+        ul style='font-size:24px;'
+          li Memoria: Al menos tabla principal + 1 tabla secundaria
+          li Memoria: $16 \times 4\text{B} + 16 \times 4\text{B} = 128{B}$
+        
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-multilevel-1.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Tablas de páginas multinivel
+
+    div Esquema se puede extender a más niveles
+
+    div
+      img src='/images/figures/02-multilevel-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li En memoria se necesita la tabla de páginas del primer nivel (completa), y una tabla de cada nivel para poder resolver una dirección física
+        li Cada división puede tener distintos tamaños
+
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-multilevel-3.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
   section
     h3 Tablas de páginas invertidas
 
+    div En lugar de guardar una tabla por proceso, mantener una tabla <b>única para todo el sistema</b>
 
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-
-
-
-
-
-
-
-section#pag
-  h2 Paginación
-
-
-  section#pag6
-    div style="text-align:left;" Paginación elimina <b>fragmentación externa</b>...<span class="fragment">pero tenemos <b>fragmentación interna</b></span>
-
-    div style="text-align:left;" Ejemplo: Páginas de $4$KB, y un proceso solicita $81$KB.
-    ul
-      li.fragment Se asignan 21 páginas de $4$KB... <span class="fragment">$3$KB desperdiciados.</span>
-
-
-  section#pag11
-    div <b>Tablas de páginas jerárquicas</b>
-
-    div
-      img src='/images/figures/02-8_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-
-  section#pag12
-    div <b>Tablas de páginas jerárquicas</b>
-    div Direccionamiento de dos niveles
-
-    div
-      img src='/images/figures/02-8_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
-
-    div
-      img src='/images/figures/02-in-8_2.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-
-
-  section#pag13
-    div <b>Tablas de páginas jerárquicas</b>
-    div Direcciones de 64-bit
-
-    div
-      img src='/images/figures/02-in-8_4.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div Con otro nivel de paginación
-
-    div
-      img src='/images/figures/02-in-8_5.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-
-  section#pag14
-    div <b>Tablas de páginas con <i>hash</i></b>
-
-    div
-      img src='/images/figures/02-8_19.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
-
-  section#pag15
-    div <b>Tablas de páginas invertida</b>
-
-    ul
-      li.fragment  Una entrada por frame (en lugar de página)
-      li.fragment  Sólo una tabla en el sistema (no por proceso)
-  
-    div
-      img src='/images/figures/02-8_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div Usada en 64-bit UltraSPARC, y PowerPC
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Direccionamiento}
-  \framesubtitle{Otros conceptos comunes}
-/
-  \begin{description}
- //   li.fragment [<strong>Carga dinámica</strong>] Cargar sólo parte del proceso. Cuando una rutina se necesita,
-                                se carga la sección necesaria de código.
- //   li.fragment [<strong>Bibliotecas</strong>] Conjunto de rutinas de uso común que se <em>agregan</em> al programa
       ul
-        li.fragment  <strong>Enlace Estático</strong> (<code>.lib</code>, <code>.a</code>). Rutinas se enlazan dentro del binario final.
-            ul
-              li.fragment  +Rápido
-              li.fragment  -Binario de mayor tamaño
-              li.fragment  Modificación requiere re-compilación
-            
-        li.fragment  <strong>Enlace Dinámico</strong> (<code>.dll</code>, <code>.so</code>). Rutinas se enlazan con un <em>stub</em>: 
-                              código representante de la rutina. Rutina se carga al llamarla.
-            ul
-              li.fragment  -Lento, pero sólo al primer acceso
-              li.fragment  +Binario más pequeño
-              li.fragment  Pueden reemplazarse <em>en caliente</em> (con un esquema de versiones)
+        li Indice es el <i>frame</i>. Una PTE por <i>frame</i>.
+        li Clave de búsqueda es $\langle$ pid, #page $\rangle$
+        li Consume menos memoria &#x1f603;
+        li Pero búsqueda es lenta (secuencial) &#x1f61e;
+        li Alternativa: usar <i>hashing</i>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div PowerPC usaba este esquema
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#page_replace
+  h2 Reemplazo de páginas
+
+  section
+    div <b>Supuesto a eliminar</b>: todo el espacio de direcciones cabe en memoria física
+
+    div Procesos pueden tener parte de su memoria no cargada aún (en disco), o en <i>swap</i> (en disco).
+
+    blockquote.fragment style="background:#B7E1CD;" Desafío: usar efectivamente el disco (grande, pero lento) para proveer la ilusión que <b>todo</b> el espacio virtual está en memoria
+
+
 
 
 section#virmem
