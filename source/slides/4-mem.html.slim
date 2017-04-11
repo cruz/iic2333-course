@@ -775,8 +775,6 @@ section#pagination
       div.fragment data-fragment-index="5" Dirección física: $117\; (0b1110101)$
 
 
-
-
   section
     h3 Tabla de Páginas
 
@@ -808,6 +806,330 @@ section#pagination
       div style='font-size:16px;' Ignoramos el "present/absent" bit, &hellip; por ahora
 
 
+  section
+    blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
+
+    ul
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li ¿Cuántas páginas? $2^{20}$
+      li Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
+
+    blockquote style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
+
+    div Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
+
+    div style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
+      img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+    div style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
+
+    ul style='font-size:24px;'
+      li <code>P</code>, <b>present bit</b> (o valid bit), indica si la página está en memoria.
+      li <code>RW</code>, <b>read/write bit</b>, indica si se puede escribir
+      li <code>U/S</code>, user-supervisor bit, indica si se puede acceder en <i>user-mode</i>
+      li <code>PWT</code>, <code>PCD</code>, <code>PAT</code>, <code>G</code>, controlan el <i>caching</i>
+      li <code>A</code>, <b>accessed bit</b>, o <b>reference bit</b> indica si la página ha sido leída
+      li <code>D</code>, <b>dirty bit</b>, indica si la página ha sido modificada
+
+  section
+    blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
+
+    ul
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li ¿Cuántas páginas? $2^{20}$
+      li Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
+
+    blockquote style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
+      img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+    div style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
+
+    ul style='font-size:24px;'
+      li #PTEs: $2^{20}$. Tamaño de cada PTE: $32$ bit $= 4\text{B}$
+      li Tamaño de tabla de páginas: $2^{20} \times 2^2 \text{B} = 4\text{MB}$
+      li Cada proceso requiere $4\text{MB}$ de memoria principal <b>sólo para su tabla de páginas</b>.
+      li Tabla de páginas se almacena en memoria virtual del Sistema Operativo.
+
+    div <b>Problema</b>: tablas de páginas grandes &#x1f61e;
+
+  section
+    blockquote style="background:#B7E1CD;"  <b>¿Cuántos accesos a memoria?</b>
+
+    div Dirección de tabla de páginas se guarda en PCB, como <b>PageTableBaseRegister</b> (PTBR)
+
+    div.fragment data-fragment-index="2" style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+             PTE = ReadMemory(PTEAddress);
+             
+             // está en memoria
+             if(!PTE.valid)
+               raise(SEG_FAULT);
+             // verificación de permisos
+             else if(PTE.protected)       
+               raise(PROTECTION_FAULT);
+             // Acceso OK
+             else {
+               offset = virtualAddress & OFFSET_MASK;
+               physicalAddress = (PTE.PFN << PFN_SHIFT) | offset;
+               register = ReadMemory(physicalAddress);
+
+      div <b>Cada acceso a memoria se convierte en DOS accesos</b>
+
+      div <b>Problema</b>: accesos en el doble de tiempo &#x1f61e;
+
+    div.fragment data-fragment-index="2" style="width:45%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_10.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pag_tlb
+  h2 Paginación con TLB
+
+  section
+
+    div Solución para acelerar acceso a memoria: <i>fully associative caché</i> de direcciones en MMU
+
+    blockquote.fragment style="background:#F4C7C3;" <b>Translation Look-aside Buffer (TLB)</b> /
+
+    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul style='font-size:24px;'
+        li Si la dirección está en el caché (<i>TLB hit</i>), se responde directamente
+        li Si la dirección no está en el caché (<i>TLB miss</i>), se lee desde la memoria y se actualiza TLB
+
+      pre
+        code.hljs.lang-c style="max-height:600px;"
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             (Success, TLBEntry) = TLB_Lookup(VPN);
+             if(Success) {         //TLB Hit: UN acceso a memoria
+               if(!TLBEntry.protected) {
+                 offset = virtualAddress & OFFSET_MASK;
+                 physicalAddress = (TLBEntry.PFN << PFN_SHIFT) | offset;
+                 register = ReadMemory(physicalAddress);
+               }
+               else raise(PROTECTION_FAULT);
+             }
+             else {                //TLB Miss: DOS accesos a memoria
+               PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+               PTE = ReadMemory(PTEAddress);
+               if(!PTE.valid)          raise(SEG_FAULT);
+               else if (PTE.protected) raise(PROTECTION_FAULT);
+               else {
+                 TLB_Insert(VPN, PTE);
+                 Retry();
+               }
+             }
+
+
+    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_14.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div Ejemplo: espacio virtual de 8 bit, con páginas de 16 B, almacenando arreglo de 10 <code>int</code> (4B).
+
+    div style="width:75%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li 4 bit para <i>offset</i>. 4 bit para #página. 16 páginas.
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<10; i++)
+              sum += a[i];
+
+      ul
+        li Considerando sólo el acceso a <code>a</code>
+        li Sin TLB: 10 $\times$ (acceso tabla de páginas, acceso <code>a[i]</code>)
+        ul
+          li 20 accesos a memoria
+        li Con TLB: miss, hit, hit, miss, hit, hit, hit, miss, hit, hit
+        ul
+          li 10 accesos a <code>a[i]</code>, 3 accesos a tabla de páginas (miss)
+          li 13 accesos a memoria
+
+      div 7 de 10 accesos ahorrados: $70\%$ TLB <i>Hit Rate</i>
+
+      div style='font-size:18px;' Con páginas más grandes, el <i>Hit Rate</i> hubiese aumentado
+
+
+    div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-tlb-effect.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div ¿Es bueno $70\%$ de TLB <i>Hit Rate</i>?
+
+    div style="width:75%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<10; i++)
+              sum += a[i];
+
+      ul
+        li Un acceso a memoria física $\approx 100\text{ns} = 10^{-7}\text{s}$
+        li Un acceso a TLB $\approx 1\text{ns} = 10^{-9}\text{s}$
+        li TLB Hit $\approx 101\text{ns}$
+        li TLB Miss $\approx 201\text{ns}$
+
+      ul
+        li Sin TLB. 20 acc. a memoria. $2000\text{ns} = 2\times 10^{-6}\text{s}$
+        li Con TLB. 13 acc. a memoria, 10 acc. a TLB. $1310\text{ns} = 1.31 \times 10^{-6}\text{s}$
+        li Aceleración: $2000/1310 \approx 1.52$ veces más rápido.
+        li Tiempo promedio de acceso: $201\text{ns} \times 0.3 + 101\text{ns} \times 0.7 = 131\text{ns}$
+
+      blockquote style="background:#B7E1CD;" TLB Hit Rate reales $\approx 99\%$
+
+
+    div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-tlb-effect.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div TLB Hit Rate reales $\approx 99\%$
+
+    div <b>¿Por qué funciona?</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Localidad Espacial
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<1000; i++)
+              sum += a[i];
+
+      div Después de acceder a una dirección <code>x</code>, el programa probablemente accederá a direcciones cercanas a <code>x</code>
+
+      ul
+        li Luego de un <i>miss</i>, y guardar un PTE en TLB, vendrán muchos <i>hit</i>
+
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Localidad Temporal
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(k=0; k<10; k++)
+              for(i=0; i<1000; i++)
+                sum += a[i];
+
+      div Una dirección <code>x</code> que acaba de ser accedida, probablemente será accedida de nuevo dentro de poco tiempo
+
+      ul
+        li Una PTE recién guardada, volverá a ser usada pronto
+
+    div <i>El comportamiento real depende del programa, pero la mayor parte del tiempo los programas manifiestan localidad de referencia (espacial o temporal).</i>
+
+
+  section
+    h3 Detalles de TLB
+
+    div <b>¿Dónde se guardan los datos de un TLB ante un cambio de contexto?</b>
+
+    ul
+      li TLB no se almacena en memoria del S.O. (como la Tabla de Páginas), ni en el PCB
+      li PTBR se actualiza en cada cambio de contexto
+      li PTEs de un proceso no sirven al siguiente proceso
+      li Se puede borrar completamente el TLB (<i>flush</i>), marcando todas los <b>valid bit</b> en 0.
+
+    img src='/images/figures/02-tlb-entry.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style='font-size:18px;' TLB Entry de un MIPS R4000
+
+    ul
+      li <code>V</code> indica si la <b>entrada del TLB</b> es válida
+      ul
+        li style='font-size:20px;' Atención: no es el mismo valid bit de la PTE
+      li <code>ASID</code> indica el <b>Address Space Identifier</b>
+      ul
+        li Cada proceso tiene su propio <code>ASID</code> (en su PCB)
+        li Campo <code>ASID</code> permite que coexistan entradas de distintos procesos en el TLB
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pag_tlb
+  h2 Variantes de paginación
+
+  section
+
+    div <b>Problema</b>: tablas de páginas muy grandes &#x1f61e;
+
+    ul
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li Tabla de páginas necesita $2^{20}$ PTEs
+      li Tamaño de cada PTE: $32$ bit $= 4\text{B}$
+      li Tamaño de tabla de páginas: $2^{20} \times 2^2 \text{B} = 4\text{MB}$
+      li Con 100 procesos, se gasta $400\text{MB}$ del Sistema Operativo <b>sólo en tablas de páginas</b>.
+
+    blockquote style="background:#B7E1CD;" Solución: <i>páginas más grandes</i>
+
+    ul
+      li Con páginas de $1$MB. $20$ bit para <i>offset</i>, $12$ bit para #página
+      li Tablas de páginas necesita $2^{12}$ PTEs
+      li Tamaño de tabla de páginas: $16\text{KB}$ &#x1f389;
+
+  section
+    h3 Fragmentación Interna
+  section
+    h3 Segmentos paginados
+
+
+  section
+    h3 Tablas de páginas multinivel
+
+
+  section
+    h3 Tablas de páginas invertidas
+
+
+
+
 
 
 
@@ -825,38 +1147,6 @@ section#pag
     ul
       li.fragment Se asignan 21 páginas de $4$KB... <span class="fragment">$3$KB desperdiciados.</span>
 
-  section#pag7
-    div style="text-align:left;" Ejemplo: Páginas de $8$KB. Direcciones virtuales de $16$-bit.
-
-    ul
-      li.fragment ¿Cuántas páginas?
-      li.fragment ¿Tamaño de la tabla de páginas?
-
-  section#pag8
-    div style="text-align:left;" Ejemplo: Páginas de $4$KB. Direcciones virtuales de $32$-bit.
-
-    ul
-      li.fragment ¿Cuántas páginas? <span class="fragment">$2^{20}$</span>
-      li.fragment ¿Tamaño de la tabla de páginas? <span class="fragment">$\geq 1$MB</span>
-
-    div.fragment Accesos pueden hacerse lentos. ¿Por qué?
-
-  section#pag9
-    div <b>Translation Look-aside Buffer (TLB)</b>
-
-    div style="text-align:left;" Caché en <i>hardware</i> para las entradas de la tabla de páginas (32 a 1024 entradas).
-
-    div.fragment
-      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-  section#pag10
-    div
-      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    ul
-      li.fragment Tiempo de acceso a TLB: $100$ns
-      li.fragment Tiempo de acceso a memoria: $500$ns
-      li.fragment ¿Tiempo promedio de acceso con $80\%$ hit-rate?
 
   section#pag11
     div <b>Tablas de páginas jerárquicas</b>
