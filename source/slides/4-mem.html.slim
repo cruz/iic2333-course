@@ -1250,6 +1250,11 @@ section#pag_tlb
 
 
 
+
+
+
+
+
 section#page_replace
   h2 Reemplazo de páginas
 
@@ -1258,350 +1263,660 @@ section#page_replace
 
     div Procesos pueden tener parte de su memoria no cargada aún (en disco), o en <i>swap</i> (en disco).
 
-    blockquote.fragment style="background:#B7E1CD;" Desafío: usar efectivamente el disco (grande, pero lento) para proveer la ilusión que <b>todo</b> el espacio virtual está en memoria
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" Desafío: usar efectivamente el disco (grande, pero lento) para proveer la ilusión que <b>todo</b> el espacio virtual está en memoria
+
+    br
+
+    div.fragment data-fragment-index="2" Procesos deben seguir creyendo que pueden acceder a todo el rango de direcciones virtuales
+
+    ul.fragment data-fragment-index="2" 
+      li ¿Por qué? Es más fácil para el proceso (separa la <i>ilusión</i> de la realidad)
+      li Sistema Operativo se encarga de cargar las páginas <i>on-demand</i>
+
+    br
+    br
+
+    div.fragment data-fragment-index="3"  Si no caben más páginas en memoria física, alguna debe salir para hacer más espacio
+
+    blockquote.fragment data-fragment-index="3" style="background:#B7E1CD;" ¿Qué página eliminar?, y ¿a dónde moverla?
 
 
 
+  section
+    h3 Swap space
 
-section#virmem
-  h2 Memoria Virtual
+    blockquote style="background:#B7E1CD;" ¿A dónde mover las páginas de memoria?
 
-  section#virmem1
+    div.fragment data-fragment-index="1" Páginas que van a ser borradas de memoria van a <i>espacio de <b>swap</b></i>
 
-    div style="text-align:left;" Segmentación y paginación intentan dar la ilusión que toda la memoria es contínua.
+    ul.fragment data-fragment-index="1"
+      li Representan parte del espacio de memoria de un proceso <b>en ejecución</b>
+      li Tabla de páginas utiliza <b>present bit</b> para saber si la página está en un <i>frame</i> o no
 
-    div.fragment style="text-align:left;" ... pero el programa aún debe estar completamente en memoria
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;" Si la página no está presente, se genera un <b>page fault</b>
 
-    div.fragment style="text-align:left;" Pero no es siempre necesario.
+    div.fragment data-fragment-index="2" <b>Page fault</b> activa el mecanismo de recuperación de una página desde disco a memoria física
+    ul.fragment data-fragment-index="2"
+      li Sistema Operativo atiende el <i>page fault</i>
+      li Cuando el <i>page fault</i> ha sido resuelto, el proceso puede continuar
 
-    div.fragment style="text-align:left;" &nbsp<br/>&nbsp;<br/>
+  section
+    h3 Page Fault
 
-    ul
-      li.fragment Carga dinámica
-      li.fragment ¿Se requiere todo el código en memoria? ¿Librerías (estáticas y dinámicas)?
-      li.fragment ¿Y si un proceso solicita más memoria que la memoria física del sistema?
+    div Ante un <i>page fault</i>, el sistema operativo va a buscar la página
 
-  section#virmem2
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div <i>Frames</i> se cargan de disco a medida que se necesitan.
+      div style='font-size:26px;' Algoritmo para paginación con TLB, y <i>page faults</i>
 
-    div
-      img src='/images/figures/02-9_01.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+      pre
+        code.hljs.lang-c style="max-height:600px;"
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             (Success, TLBEntry) = TLB_Lookup(VPN);
+             if(Success) {         //TLB Hit
+               if(!TLBEntry.protected()) {
+                 offset = virtualAddress & OFFSET_MASK;
+                 physicalAddress = (TLBEntry.PFN << PFN_SHIFT) | offset;
+                 register = ReadMemory(physicalAddress);
+               }
+               else raise(PROTECTION_FAULT);
+             }
+             else {                //TLB Miss
+               PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+               PTE = ReadMemory(PTEAddress);    // lectura tabla de paginas
+               if(!PTE.valid)          raise(SEG_FAULT);
+               else if (PTE.protected) raise(PROTECTION_FAULT);
+               else if (!PTE.present)  raise(PAGE_FAULT);
+               else {                  // pagina en memoria
+                 TLB_Insert(VPN, PTE);
+                 Retry();
+               }
+             }
 
-  section#virmem3
-    div Bibliotecas compartidas se asigna a <em>frames</em> ya cargados
 
-    div
-      img src='/images/figures/02-9_03.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-  section#virmem4
-    div style="text-align:left;" <b>Paginación por demanda</b> <span class="fragment">Primera etapa: mantener registro de páginas cargadas</span>
-    
-    ul.fragment
-      li Bit adicional en tabla de páginas
+      img src='/images/figures/02-9_01.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Page Fault
+
+    div Mecanismo de rutina <i>page-fault handler</i>
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div style='font-size:26px;' Algoritmo para manejar un <i>page fault</i>
+
+      pre
+        code.hljs.lang-c style="max-height:600px;"
+          |  PFN = FindFreePhysicalPage();   // busca frame libre
+             if(PFN == -1)                   '// no había frame libre :'(
+               PFN = ReplacePage();          // rutina de reemplazo de página
+
+             // Copia desde el disco a la memoria. Proceso queda "waiting on I/O"
+             DiskRead(PTE.DiskAddress, PFN);
+
+             // Actualiza tabla de páginas
+             PTE.present = TRUE;
+             PTE.PFN = PFN;
+
+             // Vuelve a ejecutar la instrucción que generó el PAGE_FAULT 
+             Retry(); 
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-9_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+
+    blockquote style="background:#B7E1CD;" ¿Qué página reemplazar?
+
+    div La ocurrencia de un <i>page-fault</i> es algo malo (significa acceder al disco)
+
+    br
+    br
+
+    div Cualquier algoritmo de decisión debe intentar minimizar la ocurrencia de <i>page-faults</i>
+
+    br
+    br
+
+    div Ejemplo: direcciones virtuales de 16 bit, páginas de 4KB
+    ul 
+      li Ocurre un <i>page-fault</i> para acceder a la dirección $0x6300$ (página $6$)
+      li Se escoge la página $9$ y se hace <i>swap</i>
+      li Proceso continúa y solicita dirección $0x9204$
+      li Ocurre otro <i>page-fault</i>
+      li No fue tan buena idea haber sacado la página $9$.
+
+  section
+    h3 MIN: Reemplazo óptimo
+
+    div Planteado por Laszlo A. Belady, 1966
+
+    blockquote style="background:#B7E1CD;" Elegir la que será usada lo más lejos posible en el futuro
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td 0
+        tr
+          td 1
+          td Miss
+          td
+          td 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 2
+        tr
+          td 3
+          td Miss
+          td 2
+          td 0, 1, 3
+        tr
+          td 0
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 3
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 2
+          td Miss
+          td 3
+          td 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 2
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Tasa de hits (<i>Hit Rate</i>)
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+5} = 0.545$
+
+      div style='font-size:32px;' Si ignoramos el primer <i>miss</i> de cada página (<i>cold start</i>)
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+1} = 0.857$
+
+      br
+      br
+
+      div El mejor algoritmo &#x1f603;
+
+      div Pero no podemos conocer el futuro &#x1f61e;
+
+      /br
+
+      /div ¿Qué hacer? &hellip; aproximarlo
+
+  section
+    h3 FIFO: First In First Out
+
+    div Muy simple de implementar 
+
+    blockquote style="background:#B7E1CD;" Elegir la página que lleva más tiempo en memoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td Queue: 0
+        tr
+          td 1
+          td Miss
+          td
+          td Queue: 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 3
+          td Miss
+          td 0
+          td Queue: 1, 2, 3
+        tr
+          td 0
+          td Miss
+          td 1
+          td Queue: 2, 3, 0
+        tr
+          td 3
+          td Hit
+          td
+          td Queue: 2, 3, 0
+        tr
+          td 1
+          td Miss
+          td 2
+          td Queue: 3, 0, 1
+        tr
+          td 2
+          td Miss
+          td 3
+          td Queue: 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td Queue: 0, 1, 2
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' <i>Hit Rate</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{4}{4+7} = 0.364$
+
+      div style='font-size:32px;' Sin <i>cold start</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{4}{4+3} = 0.571$
+
+      br
+      br
+
+      div Más malo que MIN &#x1f61e;
+
+      div Si hay más <i>frames</i> disponibles, se debería comportar mejor (¿o no?)
+
+
+  section
+    h3 RANDOM
+
+    div Simple de implementar 
+
+    blockquote style="background:#B7E1CD;" Elegir una página aleatoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      img src='/images/figures/02-random.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+      div style='font-size:32px;' 10000 ejecuciones
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
       ul
-        li <em>Valid</em>: Página en memoria
-        li <em>Invalid</em>: Página almacenada en disco, pero no en memoria
-      
-      li.fragment  Al detectar un acceso a una página <em>invalid</em>, ésta se carga dinámicamente y marca el bit a <em>valid</em>
-  
-    div
-      img src='/images/figures/02-9_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-  
-  section#virmem5
-    div style="text-align:left;" Segunda etapa: cargar páginas que se necesiten
-  
-    div style="text-align:left;" Proceso de carga se activa ante un <strong><i>page-fault</i></strong>
-  
-    div
-      img src='/images/figures/02-9_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+        li MIN <i>hits</i>: 6
+        li FIFO <i>hits</i>: 4
+
+      br
+      br
+
+      div FIFO y RANDOM no aprovechan la localidad de referencia
+
+      br
+      br
+
+      div Podrían eliminar páginas que van a usarse en el corto plazo.
+
+  section
+    h3 LRU: Least Recently Used
+
+    div Una página que se usó recientemente, probablemente pronto será usada otra vez
+
+    blockquote style="background:#B7E1CD;" Elegir la página que lleva más tiempo sin usarse
+
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td LRU: 0
+        tr
+          td 1
+          td Miss
+          td
+          td LRU: 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td LRU: 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td LRU: 1, 2, 0
+        tr
+          td 1
+          td Hit
+          td
+          td LRU: 2, 0, 1
+        tr
+          td 3
+          td Miss
+          td 2
+          td LRU: 0, 1, 3
+        tr
+          td 0
+          td Hit
+          td 
+          td LRU: 1, 3, 0
+        tr
+          td 3
+          td Hit
+          td
+          td LRU: 1, 0, 3
+        tr
+          td 1
+          td Hit
+          td 
+          td LRU: 0, 3, 1
+        tr
+          td 2
+          td Miss
+          td 0
+          td LRU: 3, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td LRU: 3, 2, 1
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' <i>Hit Rate</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+5} = 0.545$
+
+      div style='font-size:32px;' Sin <i>cold start</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+1} = 0.857$
+
+      br
+      br
+
+      ul 
+        li MIN: 1 <i>miss</i>, Hit Rate $0.857$
+        li FIFO: 3 <i>misses</i>, Hit Rate $0.571$
+        li Similar a MIN &#x1f603;
+        li Implementable &#x1f603;
+        li ¿Eficientemente? &#x1f914;
+
+
+  section
+    h3 Workload sin localidad
+
+    div Algoritmos de reemplazo se comparan ejecutándolos bajo una secuencia de accesos a páginas (<i>workload</i>), y distinta cantidad de <i>frames</i> disponibles.
+
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      div 100 páginas. Secuencia de 10000 accesos sin localidad.
+
+      br
+      br
+
+      ul
+        li Sin localidad todas las políticas que podemos implementar se comportan igual
+        li Con suficientes <i>frames</i> disponibles se llega a <i>Hit Rate</i> 1.
+        li Patrón poco común (pero posible)
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-nolocality.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+  section
+    h3 Workload 80-20
+
+    div 100 páginas. Secuencia con 80% de localidad en 10000 accesos.
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li 80% de los 10000 accesos se hacen a un 20% de páginas (<i>hot pages</i>)
+        li 20% de los 10000 accesos se hacen al 80% de páginas restantes (<i>cold pages</i>)
+      br
+      br
+
+      ul
+        li LRU mejor que FIFO y RANDOM
+        li Patrón más común
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-8020.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+
+  section
+    h3 Workload con loop secuencial
+
+    div 100 páginas. Acceso secuencial a 50 páginas (0, 1, &hellip;, 49). Se repite hasta completar 10000 accesos.
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li FIFO y LRU eliminan las páginas más "antiguas"
+        li RANDOM se comporta mejor
+      br
+      br
+
+      ul
+        li Peor caso para FIFO y LRU
+        li Patrón común en muchas aplicaciones
+        li Tamaño del conjunto de páginas usadas es crítico
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-loop.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+  section
+    h3 Implementando LRU
+
+    div ¿Fácil de implementar?
 
     ul
-      li.fragment  Proceso podría empezar con una única página en memoria: <strong>paginación por demanda pura</strong>
-  
-  section#virmem6
-    div style="text-align:left;" Rendimiento de la paginación por demanda
-    ul
-      li.fragment  $p$, probabilidad de <em>page fault</em>
-      li.fragment  $t_{ma}$, tiempo de acceso a memoria, $\sim 200 \times 10^{-9}s$
-      li.fragment  $t_{pf}$, tiempo generado por <em>page fault</em>
-  
-    div.fragment style="text-align:left;" Tiempo efectivo de acceso a memoria, $t_e$: 
-    div.fragment &nbsp; $t_e = (1-p) \times t_{ma} + p \times t_{pf}$
-  
-    div.fragment style="text-align:left;" Con $t_{pf} = 8 \text{ms}$:
-    div.fragment &nbsp; $t_{e} = 200 + 7999800 p$
+      li Estructura para FIFO se actualiza en cada <i>miss</i>
+      li Estructura para LRU se actualiza en <b>cada acceso</b> &#x1f62e;
 
-    div.fragment style="text-align:left;" Si queremos que la degradación no sea mayor a $10\%$: 
-    div.fragment &nbsp; $220 > 200 + 7999800p \Rightarrow p < 0.0000025$
+    br
+    br
+    div.fragment data-fragment-index="1" <i>Algunas alternativas para implementar LRU</i>
 
-  section#virmem7
-    div style="text-align:left;" Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
-  
-    ul
-      li.fragment  ¿Y si el hijo no escribe en su memoria o hace inmediatamente <code>exec()</code>?
-  
-    div.fragment Estrategia <strong>copy-on-write</strong> mantiene las páginas del padre como <em>región compartida para el hijo</em>
-  
-    div
-      img src='/images/figures/02-9_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    ul.fragment data-fragment-index="2"
+      li Mantener cola ordenada en cada acceso a memoria. Caro.
+      li Agregar <i>timestamp</i> en cada acceso. Puede ser por <i>hardware</i> (más barato).
+      ul
+        li Al momento de reemplazar se elige la que tiene menor <i>timestamp</i>
+        li Requiere comparar <i>todas</i> las páginas candidatas. Caro.
 
-    div
-      img src='/images/figures/02-9_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
-    /  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
-  
+  section
+    h3 Aproximando LRU
+
+    div LRU se puede <i>aproximar</i> con ayuda del <i>hardware</i>
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Algoritmo del reloj (clock)</b>
+
+    div.fragment data-fragment-index="1" style='font-size:18px;' Casi igual que <b>algoritmo de segunda oportunidad</b>
+
+    div.fragment data-fragment-index="2"  Aproximación basada en <b>reference bit</b> (1 si la página ha sido usada)
+
+    div.fragment data-fragment-index="3" style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li Algoritmo apunta a una página (cualquiera)
+        li Al momento de elegir, se mira <b>reference bit</b>
+        ul
+          li Si <b>reference bit</b>$=$1, se cambia a 0 y pasa a la siguiente página
+          li Si <b>reference bit</b>$=$0, se elige esta página
+
+      br
+      br
+
+      div Aproxima LRU bastante bien, y es eficiente
+
+    div.fragment data-fragment-index="3" style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-clock.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Aproximando LRU
+
+    div Enfoque de múltiples <b>reference bit</b>
+
+    blockquote style="background:#B7E1CD;" Algoritmo de <b>aging</b>
+
+    div.fragment data-fragment-index="1" style="width:50%; vertical-align:middle; display:inline-block;"  
+
+      div Contadores por cada página
+      ul
+        li Contadores se actualizan por <i>hardware</i> a intervalos regulares
+        li En cada <i>tick</i>, los <i>reference bit</i> se copian a cada contador (left shift), y se borran
+        li Secuencia de bit sirve como historia
+        li Página con menor contador es la menos usada
+
+    div.fragment data-fragment-index="1" style="width:50%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-aging.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Aproximando LRU
+
+    div Usando los <b>dirty bit</b> (1 si la página ha sido modificada), se pueden priorizar mejor las páginas para el algoritmo del reloj.
+
+    br
+    br
+    table
+      tr
+        td Reference
+        td Dirty
+        td
+      tr
+        td 0
+        td 0
+        td No usada recientemente ni modificada. Buena candidata.
+      tr
+        td 0
+        td 1
+        td No usada recientemente, pero modificada.
+      tr
+        td 1
+        td 0
+        td Usada recientemente, pero no modificada.
+      tr
+        td 1
+        td 1
+        td Usada recientemente y modificada.
+
 
 /---------------------------------------------------------------------
 section#reemp
-  h2 Reemplazo de páginas
+  h2 Working Set y Thrashing
 
-  section#reemp1
-
-    div Cuando no hay espacio en memoria se necesita <i>reemplazar una página </i>
-
-    div
-      img src='/images/figures/02-9_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
-
-  section#reemp2
-
-    div Sistema Operativo ejecuta un algoritmo para elegir una página como <i>víctima</i> a reemplazar.
-
-    div
-      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
-
-  section#reemp3
-
-    div
-      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div Dos transferencias de páginas (pasos 1 y 3)
-
-    ul
-      li.fragment  Páginas que no han sido modificadas no necesitan escribirse a disco
-      li.fragment  <strong>Modify bit</strong> o <strong>Dirty bit</strong> indican si la página ha sido modificada desde la última vez que se cargó
-      li.fragment  Páginas <em>read-only</em> nunca modifican su <strong>dirty bit</strong>
-  
-  section#reemp4
-  
-    div ¿Cuál conviene reemplazar? ... <span class="fragment">una que genere pocos <i>page faults</i></span>
-
-    div Supongamos páginas que almacenan 100 direcciones. Con esta secuencia de acceso:
-
-    div.fragment 0145, 0400, 0102, 0670, 0110, 0672, 0112, 0198, 0153, 0602, 0170
-
-    div.fragment Esto significa que se accede a las siguientes páginas:
-
-    div.fragment 1,4,1,6,1,6,1,6,1
-      
-  section#reemp5
-
-    div
-      img src='/images/figures/02-9_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div La tasa de <i>page faults</i> también depende de la cantidad de <i>frame</i>s disponibles.
-
-  section#reemp6
-
-    h3 Reemplazo FIFO
-
-    div Reemplazar la página que fue cargada hace más tiempo
-
-    div
-      img src='/images/figures/02-9_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-
-    ul.fragment
-      li  +Fácil de implementar
-      li  -Comportamiento impredecible
-  
-  section#reemp7
-
-    div Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
-  
-    ul
-      li.fragment  Ejemplo. Secuencia 1,2,3,4,1,2,5,1,2,3,4,5
-      li.fragment  Con 3 frames genera 9 <em>page faults</em>
-      li.fragment  Con 4 frames genera 10 <em>page faults</em> (¿?)
-  
-    div
-      img src='/images/figures/02-9_13.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-  
-    div Este problema se conoce como <strong>anomalía de Bélády</strong>. Fue planteada por el húngaro László Bélády, 1969.
-
-  section#reemp8
-
-    h3 Reemplaza óptimo
-
-    div Reemplaza la página que no será usada durante el mayor tiempo (en el futuro)
-
-    div
-      img src='/images/figures/02-9_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-
-    li.fragment +Óptimo
-    li.fragment +No sufre la anomalía de Bélády
-    li.fragment -Difícil de implementar, pues requiere conocimiento futuro (como SJF)
-  
-  section#reemp9
-
-    h3 Reemplaza LRU (<i> Least Recently Used</i>)
-
-    div Reemplazar la página que no ha sido usada por más tiempo
-
-    div
-      img src='/images/figures/02-9_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-  
-    div.fragment Compromiso más razonable para el óptimo. ¿Cómo implementarlo?
-    ul
-      li.fragment  Contadores, actualizado con valor de <em>timer</em>
-      li.fragment  <em>Stack</em>, el último acceso avanza al tope del <em>stack</em>
-      li.fragment En cualquier caso se requiere ayuda de <em>hardware</em>
-
-  section#reemp10
-    
-    h3 Aproximación a LRU
-
-    div Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
-  
-    ul
-      li.fragment  <strong>Reference bit</strong> se marca para indicar páginas referenciadas
-      li.fragment  Permite determinar qué páginas se han usado y cuáles no (sin orden)
-  
-    div.fragment Una técnica para incorporar orden:
-
-    ul
-      li.fragment  8-bit reference (<em>reference byte</em>) funcionan como "bit de historia"
-      li.fragment  A intervalo $r$ ($\sim 100$ms) se hace <em>right shift</em> del <em>reference bit</em>
-      li.fragment  Frame con mayor <em>reference byte</em> es el usado más recientemente    
-  
-    div.fragment Valores pueden no ser únicos. Entre ellos se decide de manera FIFO.
-  
-  section#reemp11
-
-    div <b>Algoritmo de segunda oportunidad:</b> Inicialmente, FIFO, ordenado por tiempo de carga. 
-
-    ul
-      li.fragment  Reference bit 0: se reemplaza
-      li.fragment  Reference bit 1: 2da oportunidad. Se cambia a 0, se establece tiempo de carga al tiempo actual, y se pasa a la siguiente página
-      
-    div
-      img src='/images/figures/02-9_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-  
-    div ¿Qué pasa si todos los bit están marcados como 1?
-
-  section#reemp12
-
-    div <b>Segunda oportunidad mejorada</b>
-
-    div Segunda oportunidad, considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
-  
-    ul
-      li.fragment Si es (0,0), no usado recientemente ni modificada
-      ul
-        li.fragment  Buena víctima
-      
-      li.fragment Si es (0,1), no usada recientemente, pero modificada
-      ul
-        li.fragment  Casi buena víctima. Requiere escribirla.
-      
-      li.fragment Si es (1,0), recientemente usada, pero no modificada
-      ul
-        li.fragment  Probablemente será leída pronto
-      
-      li.fragment Si es (1,1), recientemente usada, y modificada
-      ul
-        li.fragment  Probablemente será leída pronto
-      
   section#reemp13
 
-    h3 Otros algoritmos
 
-    div Con contador de accesos (costoso de implementar)
-    ul
-      li.fragment  <strong>Least Frequently Used</strong>. Una página muy accedida debe tener alto contador.
-      ul
-        li.fragment  ¿Y si se usó solo al inicio?
-        li.fragment  Se puede complementar haciendo <em>shift</em> del contador periódicamente
-       
-      li.fragment  <strong>Most Frequently Used</strong>. La página que tiene pocos accesos probablemente fue cargada recientemente y aún no ha sido muy usada
+    div El modelo de <b>working set</b> intenta determinar si un proceso tiene una cantidad apropiada de <i>frames</i>
 
-section#last
-  
-  h2 Asignación de frames
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Working Set</b>, $w_{\Delta}(t)$: conjunto de páginas utilizadas por un proceso en los últimos $\Delta$ acceso a memoria.
 
-  section#last1
-    div ¿Cuántos <em>frames</em> asignar a cada proceso?
-  
-    div <strong>Mínimo</strong>
-    ul
-      li.fragment  Puede ser definido por la arquitectura
-      li.fragment  O bien, depender de la cantidad de direcciones referenciables en una instrucción
-      ul
-        li.fragment  <code>load r1, 0x0160</code>. Dos frames: para la instrucción y para la dirección.
-        li.fragment  Más complejo cuando se permiten indirecciones
-  
-    div <strong>Máximo</strong>
-    ul
-      li.fragment  ¿Cómo dividir $m$ <em>frames</em> entre $n$ procesos?
-  
-
-  section#last2
-    div $m$ <em>frames</em> y $n$ procesos
-    ul
-      li.fragment  <strong>Asignación equitativa</strong>: $\lfloor m/n \rfloor$ a cada uno. 
-      li.fragment  <strong>Asignación proporcional</strong>: sea $s_i$ el tamaño de la memoria virtual del proceso $p_i$, cada proceso recibe $a_i$ <em>frames</em>: 
-          
-          \[ a_i = \frac{s_i}{\sum{s_i}} \times m \]
-          
-    div Proporción también puede estar relacionada a la prioridad del proceso
-          
-  section#last3  
-    
-    h3 Thrashing
-
-    div Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
-  
-    div.fragment Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em> entre disco y memoria
-
-    div
-      img src='/images/figures/02-9_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-
-    ul
-      li.fragment  Baja utilización de CPU
-      li.fragment  <em>Scheduler</em> incrementa nivel de multiprogramación
-      li.fragment  Procesos nuevos requieren <em>frames</em>.
-      li.fragment  S.O. quita <em>frames</em> a procesos en ejecución
-      li.fragment  Procesos en ejecución aumentan su tasa de <em>page fault</em>
-      li.fragment  S.O. gasta más tiempo cargando <em>frames</em>
-      /li.fragment  Baja utilización de CPU
-  
-
-  section#last4
-
-    h3 Modelo de <i>working set</i>
-
-    div Conjunto de páginas usadas en los últimos $\Delta$ accesos
-
-    div
+    div.fragment data-fragment-index="1"
       img src='/images/figures/02-9_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
 
-    div $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
-  
-    div Demanda por páginas: $D=\sum{\text{WSS}_i}$
-  
-    div Si hay $m$ frames, y $D > m$, entonces habrá <em>thrashing</em>
+    ul.fragment data-fragment-index="2"
+      li Medida de la demanda efectiva por <i>frames</i> de un proceso.
+      li Si no se le puede asignar $|w_{\Delta}(t)|$ <i>frames</i> no conviene tenerlo en ejecución
+      li Si la suma de los <i>working set</i> de todos los procesos es mayor a la cantidad de <i>frames</i> en el sistema, habrá <i>thrashing</i>
 
-  section#last5
+    div.fragment data-fragment-index="3" El <i>working set</i> es usado por el <i>medium-term scheduler</i>. /
 
-    h3 Working set
+    ul.fragment data-fragment-index="3"
+      li Se puede implementar usando los <b>reference bit</b>
 
-    div ¿Cómo implementarlo?: aprovechando los <em>reference bit</em>
-  
-    ul
-      li.fragment  Observar <em>reference bit</em> a intervalos regulares, cada $R$ referencias
-      li.fragment  <em>Reference bit</em> se copian y se borran
-      li.fragment  En la siguiente observación se comparan los valores copiados y los nuevos <em>reference bit</em>.
-      li.fragment  Páginas modificadas se mantienen dentro del <em>working set</em>
-  
-    div Permite aproximar el <em>working set</em>, a menor costo que analizar todas las referencias
+
 
 
