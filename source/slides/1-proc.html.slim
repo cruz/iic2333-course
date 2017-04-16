@@ -1445,7 +1445,7 @@ section
 			li ¿Es suficiente?
 			li ¿Quién puede hacer esto?
 
-	section
+	section#sol1
 		div En el mundo del usuario estamos a merced de las interrupciones
 
 		div.fragment <b>Solución con variable compartida <code>lock</code></b>
@@ -1470,7 +1470,7 @@ section
 
 		div.fragment ¿Problemas?
 
-	section
+	section#sol2
 		div <b>Solución con <code>turn</code></b>, para alternar entre dos <i>threads</i>
 
 		div Variable compartida <code>turn</code> determina quién puede entrar.
@@ -1492,7 +1492,7 @@ section
 
 		div ¿Cumple todas las condiciones?
 
-	section
+	section#peterson
 		div <b>Solución de G.L.Peterson, 1981</b> (no la primera, pero la más simple)
 
 		div Variable compartida <code>turn</code> determina quién puede entrar.
