@@ -5,8 +5,24 @@ layout: activity
 
 
 article
-  section#intro.top
-    h2 Participen del Capítulo ACM-DCC. <b>¡Programatones y tarreos!</b> Más info <a href="PresentacionCapitulo.pdf">aquí</a>.
+  section#deadlines
+    h3 Deadlines
+    /  ------
+    div
+      div style="border:none; display:inline-block; width:100px;" = link_to 'AC04', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/4819f8e7ce54488086511e6bf29d3cfd/4601557cbeb04b189185552db75b6709/'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 24/Mar, 08:30
+      div style="border:none; display:inline-block;" class="timerAC04"
+
+    div
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Miércoles 26/Abr, 23:59
+      div style="border:none; display:inline-block;" class="timerT2"
+
+    div
+      div style="border:none; display:inline-block; width:100px;" I1
+      div style="border:none; display:inline-block; width:260px;" Inicio: Viernes 28/Abr, 18:30
+      div style="border:none; display:inline-block;" class="timerI1"
+
 
   section#slides
     h3 Clases
@@ -144,4 +160,22 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Apr 26, 2017 23:59:59')
+  });
+
+
+  var countdownAC04 = new Countdown({
+    selector: '.timerAC04',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Apr 24, 2017 08:30:30')
+  });
+
+
+  var countdownI1 = new Countdown({
+    selector: '.timerI1',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Apr 28, 2017 18:30:00')
   });
