@@ -4,212 +4,335 @@ layout: slide
 ---
 
 section 
+  h2 Dispositivos de I/O
+
+  section
+    h3 Acceso a dispositivos de I/O: drivers
+
+    img src='/images/figures/03-fs-stack.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style='font-size:12px;' <i>Stack</i> de abstracciones para un sistema de archivos 
+
+    br
+
+    ul
+      li <b>Device Driver</b>. Código específico para interacción con un dispositivo
+      li <b>Block Layer</b>. Capa intermedia. Abstracción de bloques de disco
+      li <b>Sistema de archivos</b>. Capa visible al programador mediante API
+
+    br
+    br
+
+    div.fragment 70% código de Linux es para <i>drivers</i> (fuente de <i>bugs</i>)
+
+    div.fragment Abstracciones persiguen un objetivo de diseño: <b>device independence</b>
+
+
+  section
+    h3 Transferencia de datos: <i>buffers</i>
+
+    img src='/images/figures/03-buffers.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    br
+
+    ul
+      li (a) Lectura directa: <i>unbuffered</i>. Lento.
+      li (b) <i>Buffer</i> en <i>user space</i>. Página puede ser <i>swapped out</i>.
+      li (c) <i>Buffer</i> en <i>kernel space</i>. Se transfiere al llenarse.
+      li (d) <i>Double-buffer</i>. Mientras uno se transifere, se escribe en el otro.
+
+
+  section
+    h3 Transferencia de datos: <i>buffers</i>
+
+    img src='/images/figures/03-buffers-2.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    br
+
+    ul
+      li Transmisión de datos pasa por varios <i>buffers</i> intermedios.
+      li <i>Buffers</i> pueden reservarse mientras dura la transmisión.
+      li Múltiples dispositivos conectados (múltiples clientes) $\Rightarrow$ uso de memoria
+
+section 
   h2 Sistemas de Disco
 
   section
-    div <b>Memoria Secundaria</b>
+    h3 Memoria Secundaria
 
     div Almacenamiento de alta capacidad
 
-    ul
-      li.fragment  Memoria secundaria
-      li.fragment  Más lenta que almacenamiento principal
-      li.fragment  Memoria no-volátil
+    br
+    br
+
+    div Más lenta que almacenamiento principal
+    div Memoria no-volátil
 
   section
-    div <b>Discos Magnéticos</b>
+    h3 Dispositivo: discos magnéticos
 
-    ul
-      li.fragment  <b>Brazos</b> (arms) se mueven juntos.
-      li.fragment  <i>Platos</i> divididos en <i>tracks</i> circulares
-      li.fragment  <b>Tracks</b> divididos en <i>sectores</i>
-      li.fragment  Conjunto de <b>sectores</b> entre varios platos forman un <b>cilindro</b>
-      li.fragment  Velocidades de rotación: 5400, 7200, 10000, 15000 RPM (rotaciones por minuto)
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/03-10_01.pdf.png', :width=>"50%"
+      ul
+        li <b>Brazos</b> (<i>arms</i>) se mueven juntos.
+        li <b>Brazos</b> poseen cabezas lectoras (<b>heads</b>)
+        li  <b>Platos</b> (<i>platter</i>) divididos en <b>tracks</b> circulares
+        li  <b>Tracks</b> divididos en <b>sectores</b>: bloques de 512 byte
+        li  Conjunto de <b>tracks</b> entre varios platos forman un <b>cilindro</b>
+        li  Velocidades de rotación: 5400, 7200, 10000, 15000 RPM (rotaciones por minuto)
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-10_01.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
   section
+    h3 Geometría de discos magnéticos
 
-    div style="text-align:left;" Para un disco magnéticos, importa la <i>tasa de transferencia</i> de datos entre disco y memoria principal. (MB/sec)
+    img src='/images/figures/03-geometry.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style='font-size:20px;' Geometría física &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Geometría virtual
+
+    div Cada sector está representado por $\langle$cilindro, head, sector $\rangle$: <b>CHS addressing</b>
+
+    div Sistemas modernos asignan número secuencial a los sectores: <b>LBA</b>, <b>Logical Based Addressing</b>
+
+    div <i>Driver</i> de disco traduce la dirección solicitada a una posición física
+
+
+  section
+    h3 Transferencia de datos
+
+    img src='/images/figures/03-times.png' width="45%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
     div style="text-align:left;" <b>Tiempo de posicionamiento</b> depende de:
     ul
-      li.fragment  <b> Seek time</b>, tiempo de búsqueda, para mover el brazo hasta el cilindro buscado
-      li.fragment  <b> Latencia rotacional</b>, tiempo necesario para que el sector buscado quede debajo del brazo
-      li.fragment  Ambos del orden de <i>msec</i>
+      li  <b> Latencia rotacional</b>. Búsqueda en un <i>track</i>. Tiempo para que el sector quede debajo del brazo.
+      li  <b> Seek time</b>. Cambio de <i>track</i>. Tiempo para mover el brazo hasta el cilindro buscado.
 
-    div style="text-align:left;" Componentes:
+    div style="text-align:left;" Al <b>tiempo de posicionamiento</b> se debe sumar el <b>tiempo de transferencia</b>
     ul
-      li.fragment  <b>Host controller</b> es parte del sistema computacional
-      li.fragment  <b>Disk controller</b> es parte del disco
-      li.fragment  S.O. hace solicitudes al <i>host controller</i>, el cual envía comandos al <i>disk controller</i>
+      li Leer sector consecutivos es más rápido
+      li <i>Tip</i>: es bueno leer sectores contiguos de disco
+    
 
   section
 
     div == image_tag '/images/figures/03-disks.png', :width=>"80%"
 
   section
-    div Discos de estado sólido
-    ul
-      li.fragment  Sin <i>seek time</i> ni <i>latencia rotacional</i>
-      li.fragment  Más rápidos
-      li.fragment  Más costoso por MB
-      li.fragment  Menor consumo eléctrico
+    h3 Discos de estado sólido
+
+    div <b>Solid-State Drive</b> (SSD)
+
+    ul.fragment
+      li  Sin <i>seek time</i> ni <i>latencia rotacional</i>
+      li  Más rápidos
+      li  Más costoso por MB
+      li  Menor consumo eléctrico
+      li Celdas poseen cantidad limitada de reescrituras
+
 
   section
-    div Discos se organizan como arreglos de <i>bloques lógicos</i>
+    h3 Formateo de disco
 
-    ul
-      li.fragment  Bloques lógicos típicamente de 512 bytes
-      li.fragment  Bloques lógicos se mapean a sectores
-      li.fragment  Sector 0 es el primer sector del primer <i>track</i> del cilindro más externo
+    blockquote.fragment style="background:#B7E1CD;" <b>Formateo de bajo nivel</b> o <b>formateo físico</b>
 
-    div Conociendo número de platos, <i>tracks</i> (cilindros $\sim m \times 10^4$) y <i>sectores</i> ($\sim n \times 10^2$) es posible traducir bloque lógico a $\langle \mathit{plato}, \mathit{track}, \mathit{sector} \rangle$.
+    ul.fragment
+      li Crea estructura de sectores: header + data + trailer (incluyendo ECC)
+      li Ejecutado en fábrica
+      li <i>Low-level Formatting</i> equivale a regresar a valores de fábrica
 
-    ul
-      li.fragment Aún hay que considerar densidad de sectores
-      li.fragment Sectores de cilindros externos <i>pueden</i> tener más densidad que en sectores internos
+    blockquote.fragment style="background:#B7E1CD;" <b>Particionamiento</b>      
 
-  section
-    div Discos pueden ser formateados en distintos niveles
-    ul
-      li.fragment <b>Formateo de bajo nivel</b> o <b>formateo físico</b>: crea estructura de sectores
-      ul
-        li.fragment  Sector: header + data + trailer (incluyendo ECC)
-        li.fragment  ECC: Error-Correcting Code, calculado a partir de <i>data</i>
-      li.fragment <b>Particionamiento</b>: agrupación de cilindros que son tratados como discos separados
-      ul
-        li.fragment  Tabla de particiones accesible desde un <b>Master Boot Record</b> en el primer sector
-        li.fragment  Típicamente: 4 particiones primarias, o 3 primarias + 1 extendida
-        li.fragment  Particiones contienen tipos de sistema de archivo
-      li.fragment <b>Formateo lógico</b>: estructuras para <i>sistema de archivos</i>
+    ul.fragment
+      li Agrupación de sectores que son tratados como discos separados
+      li Tabla de particiones accesible en <b>Master Boot Record</b> (MBR).
+      li MBR: 32-bit para direccionar bloques de 512 byte.
+      li Sistemas modernos usan GPT: <b>GUID Partition Table</b>
+    blockquote.fragment style="background:#B7E1CD;" <b>Formateo lógico</b>
+    ul.fragment 
+      li Estructuras para <i>sistema de archivos</i> en una partición.
 
 section
   h2 Scheduling de accesos
 
   section
-    div style="text-align:left;" S.O. efectúa solicitud indicando:
-    ul
-      li.fragment  Lectura o escritura
-      li.fragment  Dirección de disco
-      li.fragment  Dirección de memoria (física)
-      li.fragment  Número de sectores a transferir
+    div Sistema Operativo solica un datos del disco especificando:
+    ul.fragment
+      li  Lectura o escritura
+      li  Dirección de disco (CHS ó LBA)
+      li  Dirección de memoria física (<i>buffer</i>)
+      li  Número de sectores a transferir
   
-    div Solicitudes son encoladas. 
-    ul
-      li.fragment  El orden en que son atendidas determina la latencia efectiva del controlador de disco
+    br
+    br
+
+    div.fragment Sistema Operativo puede encolar y ordenar solicitudes
+
+    blockquote.fragment style="background:#B7E1CD;" El orden de atención determina el <b>seek time</b> de la transferencia
 
   section 
-    div <b>Scheduling FCFS</b>
+    h3 Scheduling FCFS
     
     div Justo, pero no necesariamente el de mejor servicio
 
     div 
-      img src='/images/figures/03-10_04.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/03-10_04.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
     div Medida de latencia: desplazamiento que debe hacer el brazo $=640$
   
 
   section 
-    div <b>Scheduling SSTF</b>
+    h3 Scheduling SSTF
 
-    div <i>Shortest Seek Time First</i>
+    div <b>Shortest Seek Time First</b>
 
     div Busca el que esté más cerca de la posición actual
 
     div 
-      img src='/images/figures/03-10_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/03-10_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
     div Desplazamiento $=208$
     
-    div No es óptimo, (¿por qué?)
+    div No es óptimo ¿por qué?
+
+    div Posible inanición de sectores alejados
+
 
 
   section 
-    div <b>Scheduling SCAN</b>
+    h3 Scheduling SCAN
 
-    div <i>(a.k.a. el elevador)</i>
+    div <i>El elevador</i>
 
     div Brazo se mueve de un extremo a otro y sirve todo lo que encuentre en el camino ...
     
     div 
-      img src='/images/figures/03-10_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/03-10_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
-    /div Desplazamiento \onslide<3->{$=$}
-
-
-  section 
-    div <b>Scheduling C-SCAN</b>
-
-    div <i>(a.k.a. el elevador)</i>
-
-    div Las solicitudes que llegan justo después que el brazo ha pasado "llevan más tiempo esperando"
-    
-    div Brazo llega a un extremo y se mueve completamente al extremo opuesto, para continuar en el mismo sentido
-
-    div 
-      img src='/images/figures/03-10_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
-
-    div Objetivo es disminuir el tiempo de espera de cada solicitud
-    
-    /%Desplazamiento \onslide<3->{$=$}
 
 
   section 
-    div <b>Scheduling LOOK y C-LOOK</b>
+
+    blockquote style="background:#B7E1CD;" C-SCAN. Elevador circular. 
+
+    div Las solicitudes que llegan justo después que el brazo ha pasado, <i>llevan más tiempo esperando</i>
+    ul
+      li Llega a un extremo y se mueve completamente al extremo opuesto. Continúa en el mismo sentido
+
+    img src='/images/figures/03-10_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
+
+    blockquote.fragment style="background:#B7E1CD;" F-SCAN. Elevador congelado. 
+
+    div.fragment No atiende solicitudes nuevas hasta haber acabado con la cola.
+
+
+  section 
+    h3 Scheduling LOOK y C-LOOK
 
     div Similares a SCAN y C-SCAN, pero no se mueven hasta los extremos si no es necesario
 
     div 
-      img src='/images/figures/03-10_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      img src='/images/figures/03-10_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
   
 section
   h2 RAID
 
   section 
-    div <i>Redundant Array of Independent Disks</i>
+
+    blockquote style="background:#F4C7C3;" <b>RAID</b>: <i>Redundant Array of Independent Disks</i>
     
     div Discos tienen <i>tasas de falla</i>
     
-    ul
-      li.fragment Disco que falla una vez cada $100000$ accesos
-      li.fragment En un grupo de 100 discos falla uno cada $1000$ horas
+    ul.fragment
+      li Un disco falla una vez cada $100000$ horas (11.4 años)
+      li En un grupo de 100 discos, falla uno cada $1000$ horas (41.6 días)
 
-    div Una manera simple de protegerse ante falla es la <b>redundancia</b>
-    ul
-      li.fragment Estrategia básica de redundancia: <b>mirroring</b>
+    br
+    br
 
-
-  section
-    
-    ul
-      li.fragment  <b>RAID 0</b>: Stripping
-      li.fragment  <b>RAID 1</b>: Mirroring
-      li.fragment  <b>RAID 2</b>: $N$ discos y $N-1$ parity bits
-      li.fragment  <b>RAID 3</b>: $N$ discos $+ 1$ disco de paridad
-      li.fragment  <b>RAID 4</b>: Paridad por bloques
-      li.fragment  <b>RAID 5</b>: Paridad por bloques y distribuida
-      li.fragment  <b>RAID 6</b>: RAID 5 + información adicional para soportar fallas de dos discos
-
-    div 
-      img src='/images/figures/03-10_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="15%"
+    div.fragment Una manera simple de protegerse ante falla es la <b>redundancia</b>
+    ul.fragment
+      li Estrategia básica de redundancia: <b>mirroring</b> (<i>replicación</i>)
 
 
   section
+    h3 Tipos de RAID
 
-    ul
-      li.fragment  <b>RAID 0+1</b>: Stripe con mirroring
-      ul
-        li.fragment  Performance de RAID 0
-        li.fragment  Confiabilidad de RAID 1
-        li.fragment  Si falla un disco se pierde un <i>stripe</i>
-    ul
-      li.fragment  <b>RAID 1+0</b>: Mirror de pares de discos
-      ul
-       li.fragment  Si falla un disco se pierde solo un disco
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div 
-      img src='/images/figures/03-10_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+      ul
+        li <b>JBOD</b>: Just a Bunch Of Disks (no RAID)
+        li <b>RAID 0</b>: <i>Striping</i>
+        ul style='font-size:28px;' 
+          li Capacidad: $N \times B$ ($N$ discos, capacidad $B$)
+          li Fallas toleradas: $0$ discos
+
+        li  <b>RAID 1</b>: <i>Mirroring</i>
+        ul style='font-size:28px;' 
+          li Capacidad: $N/2 \times B$
+          li Fallas toleradas: $1$ hasta $N/2$ (depende de cuáles)
+
+        li  <b>RAID 2</b>: Byte distribuido en $N$ discos, más discos de códigos <i>hamming</i> para corrección de errores por cada byte.
+        ul style='font-size:28px;' 
+          li Complejo y no usado en la práctica
+          li Requiere discos sincronizados
+
+        li  <b>RAID 3</b>: Byte distribuido en $N$ discos $+ 1$ disco de paridad 
+        ul style='font-size:28px;' 
+          li Complejo y no usado en la práctica
+          li Requiere discos sincronizados
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/03-raids-1.png' style="background:none; border:none; box-shadow:none;" width="90%"
+
+
+  section
+    h3 Tipos de RAID
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  <b>RAID 4</b>: Paridad por bloques de <i>stripes</i>
+        ul style='font-size:28px;' 
+          li XOR de stripes. Permite reconstruir datos.
+          li Cuello de botella en disco de paridad
+
+        li  <b>RAID 5</b>: Paridad por bloques y distribuida
+        ul style='font-size:28px;' 
+          li Elimina cuello de botella en paridad
+
+
+        li  <b>RAID 6</b>: RAID 5 + paridad replicada
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/03-raids-2.png' style="background:none; border:none; box-shadow:none;" width="90%"
+
+
+
+  section
+    h3 Tipos de RAID
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  <b>RAID 0+1</b>: Stripe con mirroring
+        ul
+          li  Performance de RAID 0
+          li  Confiabilidad de RAID 1
+          li  Si falla un disco se pierde un <i>stripe</i>
+        li  <b>RAID 1+0</b>: Mirror de pares de discos
+        ul
+         li  Si falla un disco se pierde solo un disco
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/03-10_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Comparación de RAID
+
+    img src='/images/figures/03-raids-comp.png' style="background:none; border:none; box-shadow:none;" width="70%"
 
 section
   h2 Sistemas de Archivos
