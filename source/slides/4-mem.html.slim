@@ -133,7 +133,7 @@ section
       div <b>Direcciones absolutas no sirven con multiprogramación</b>
       ul
         li Caso (b). Instrucción <code>JMP 28</code> está OK si el proceso está cargado en 0.
-        li Caso (c). Si el proceso se carga en 0, hay que cambiar <code>JMP 28</code> por <code>JMP 16412</code>.
+        li Caso (c). Si el proceso se carga en <code>16384</code., hay que cambiar <code>JMP 28</code> por <code>JMP 16412</code>.
         li ¿Cómo conseguirlo?
         ul.fragment
           li Compilador podría generar: <code>JMP 28+X</code> 
@@ -596,9 +596,9 @@ section#segmentation
         li Dirección virtual (lógica): $16300$
         ul
           li Segmento <code>stack</code> (segmento 3)
-          li <i>Offset</i>: complemento de 3072 (3KB). $3072-4012=-940$
-          li Base + <i>offset</i> $= 28672 - 940 = 27732$
-        li Dirección física: $27732$ &#x2714;
+          li <i>Offset</i>: complemento de 4096 (4KB, máximo offset). $4012-4096=-84$
+          li Base + <i>offset</i> $= 28672 - 84 = 28588$
+        li Dirección física: $28588$ &#x2714;
 
 
     div style="width:50%; vertical-align:middle; display:inline-block;" 
