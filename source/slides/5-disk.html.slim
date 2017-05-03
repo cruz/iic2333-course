@@ -426,6 +426,8 @@ section
         li Lectura: <code>opendir</code>, <code>readdir</code>, <code>closedir</code>
         li Eliminación: <code>rmdir</code>
 
+    blockquote.fragment style="background:#B7E1CD;" Try yourself: <code>strace <i>command</i></code>
+
 
   /section 
     div <b>Archivos abiertos</b>
@@ -498,16 +500,20 @@ section
   section
     div <b>Montando sistemas de archivos</b>
 
-    div style="text-align:left;" Para acceder a sistemas de archivos se necesita un <i>punto de acceso</i>, que asigna una posición de directorio a bloques de disco (por ejemplo, particiones)
-    
+    div style="text-align:left;" Sistema puede manejar múltiples <b>sistema de archivos</b> en <b>discos</b> (dispositivos de bloques)
+
+    div style="text-align:left;" Para acceder a sistemas de archivos se necesita un <i>punto de acceso</i>, o <i>mountpoint</i>. Sistema operativo <i>integra</i> el sistema de archivos a la jerarquía actual usando <code>mount</code>
+
     ul
-      li.fragment  Operación <code>mount</code> hace que un sistema de archivos sea accesible desde un lugar conocido, como <b>mount point</b>
-      li.fragment  Ejecución: <code>mount /users /device/disk2</code>
+      li.fragment  <code>mount -t ext3 /dev/sda1 /home/users </code>
 
     div 
-      img src='/images/figures/03-11_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-      img src='/images/figures/03-11_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
+      img src='/images/figures/03-11_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+      img src='/images/figures/03-11_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="15%"
 
+    div Eivtar tener múltiples sistemas de archivos separados
+
+    blockquote.fragment style="background:#B7E1CD;" Try yourself: <code>mount</code>
 
 section
   h2 Implementación de sistemas de archivos
