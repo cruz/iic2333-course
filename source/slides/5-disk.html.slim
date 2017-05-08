@@ -402,6 +402,36 @@ section
       img src='/images/figures/03-directory-tree.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
+    h3 Directorios
+
+    div Archivos se organizan en una estructura de <b>directorios</b> (otra abstracción)
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Nombre (low-level name): <i>inode number</i>
+        li Contiene lista de pares: (<i>readable name</i>, <i>low-level name</i>)
+        li Puede contener otros directorios: <b>jerarquía</b> o <b>árbol de directorios</b>
+        ul
+          li Jerarquía empieza en una raíz: <b>root</b>, o <code>/</code>
+          li Usa un separador: <code>/</code>
+          li Unidades son <b>subdirectorios</b>
+        li Nombres con subdirectorios: <b>pathname</b> o <b>ruta</b>
+        ul
+          li Ruta absoluta: <b>Absolute path</b>
+          ul
+            li style='font-size:18px;' <code>/foo</code>, <code>/bar/bar</code>, <code>/bar/foo/bar.txt</code>
+          li Ruta relativa: <b>Relative path</b>
+          ul
+            li style='font-size:18px;' <code>foo</code>, <code>foo/bar.txt</code>, <code>foo/bar.txt</code>
+        ul Ruta absoluta no puede repetirse
+
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/03-dirunix.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
     h3 API de Sistema de Archivos
 
     div style="width:50%; vertical-align:middle; display:inline-block;" 
@@ -504,14 +534,15 @@ section
 
     div style="text-align:left;" Para acceder a sistemas de archivos se necesita un <i>punto de acceso</i>, o <i>mountpoint</i>. Sistema operativo <i>integra</i> el sistema de archivos a la jerarquía actual usando <code>mount</code>
 
-    ul
-      li.fragment  <code>mount -t ext3 /dev/sda1 /home/users </code>
+    div  <code>mount /dev/sda1 /home/users </code>
 
-    div 
-      img src='/images/figures/03-11_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
-      img src='/images/figures/03-11_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="15%"
+    div
+      img src='/images/figures/03-mounts.png' style="background:none; border:none; box-shadow:none;" width="60%"
+ 
+      /img src='/images/figures/03-11_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+      /img src='/images/figures/03-11_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="15%"
 
-    div Eivtar tener múltiples sistemas de archivos separados
+    /div Eivtar tener múltiples sistemas de archivos separados
 
     blockquote.fragment style="background:#B7E1CD;" Try yourself: <code>mount</code>
 
@@ -522,43 +553,78 @@ section
     div El <b>sistema de archivos</b> permite obtener una dirección de disco (un <i>bloque</i>) a partir de un conjunto de datos simbólicos: nombre de archivo, directorio, rutas, links, ...
   
     ul
-      li.fragment  ISO9660 (CD-ROMs)
-      li.fragment  UFS: Unix File System, basado Berkeley Fast File System (FFS)
-      li.fragment  FAT, FAT32, NTFS: Windows
-      li.fragment  ext3, ext4: Linux
-      li.fragment  GFS, FUSE
+      li  ISO9660 (CD-ROMs)
+      li  UFS: Unix File System, basado Berkeley Fast File System (FFS)
+      li  FAT, FAT32, NTFS: Windows
+      li  ext3, ext4: Linux
+      li  HFS+: MacOS X
+      li  VFS, FUSE
 
   section
 
-    ul
-      li.fragment <b>Boot Control Block</b>. Uno por volumen. Permite utilizar el sistema de archivo para arranque.
+    div <b>Master Boot Record (MBR)</b>. Sector 0. Indica <i>Partition Table</i>
+
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+
       ul
-        li.fragment Unix: Boot block
-        li.fragment Windows: Partition Boot Sector
+        li <b>Boot Control Block</b>. Uno por cada partición. Permite cargar el sistema operativo.
+        ul.fragment
+          li Unix: Boot block
+          li Windows: Partition Boot Sector
 
-      li.fragment <b>Volume Control Block</b>. Contiene datos de formato de la partición.
+        li <b>Volume Control Block</b>. Datos de formato del sistema de archivos.
+        ul
+          li Tipo de sistema de archivos, número de bloques, &hellip;
+        ul.fragment
+          li Unix: Superblock
+          li Windows: Master File Table
+
+        li Estructura de directorio. Archivos.
+        /li.fragment  <b>File Control Block</b>. Uno por archivo. Contiene atributos de archivo.
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-oneFS.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Virtual File System (VFS)
+
+    div Interfaz común para distintos sistemas de archivos
+
+    img src='/images/figures/03-vfs1.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+    div Cualquier sistema de archivos que implementa la interfaz VFS puede ser incorporado al sistema
+
+  section
+    h3 Virtual File System (VFS)
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
       ul
-        li.fragment  Unix: Superblock
-        li.fragment  Windows: Master File Table
+        li <b>Tabla de archivo abiertos</b> mantiene <i>file descriptors</i>. Estructuras en memoria con información de archivo
+        li <b>v-node</b> representa el punto de acceso al archivo. Cada <b>v-node</b> apunta a funciones del sistema de archivos que ejecutan las llamadas concretas
 
-      li.fragment  Estructura de directorio. Ubicaciones de archivos.
-      li.fragment  <b>File Control Block</b>. Uno por archivo. Contiene atributos de archivo.
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-    div 
-      img src='/images/figures/03-12_02.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+      img src='/images/figures/03-vfs2.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div Facilita la incorporación de distintos sistemas de archivos
 
   section
     div Estructuras en memoria principal
     ul
-      li.fragment  <b>Mount table</b>. Tabla de sistema de archivos montados.
-      li.fragment  Directorios recientes
-      li.fragment  Tabla de archivos abiertos en el sistema
-      li.fragment  Tabla de archivos abiertos por proceso
-      li.fragment  Buffers de bloques de disco
+      li  <b>Mount table</b>. Tabla de sistema de archivos montados.
+      li  Directorios recientes
+      li  Tabla de archivos abiertos en el sistema
+      li  Tabla de archivos abiertos por proceso
+      li  Buffers de bloques de disco
 
   
     div 
       img src='/images/figures/03-12_03.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
 
   section 
     h3 Asignación de bloques
@@ -566,72 +632,91 @@ section
     div Cada archivo requiere utilizar bloques de disco
   
     ul
-      li.fragment  Bloques deben ser asignados de manera eficiente
-      li.fragment  Mala asignación provocará demoras en tiempos de acceso
-      li.fragment  Estrategias de asignación de bloques
+      li  Bloques deben ser asignados de manera eficiente
+      li  Mala asignación provocará demoras en tiempos de acceso
+      li  Estrategias de asignación de bloques
 
   section
     h3 Asignación contigua
 
-    ul
-      li.fragment  Archivo de $n$ bloques: $b, b+1, \ldots b+n-1$
-      li.fragment  Fácil de acceder a siguiente bloque
-      li.fragment  -Problema: fragmentación externa
-      li.fragment  Require operaciones de <b>compactación</b> (defragmentación)
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-    div 
-      img src='/images/figures/03-12_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+      ul
+        li  Archivo de $n$ bloques: $b, b+1, \ldots b+n-1$
+        li  Fácil de acceder a siguiente bloque
+        li  -Problema: fragmentación externa
+        li  Require operaciones de <b>compactación</b> (defragmentación)
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Asignación enlazada (<i>linked</i>)
 
-    ul
-      li.fragment  Almacena punteros a bloque siguiente
-      li.fragment  Ej: bloque de 512 bytes, solo puede guardar 508 bytes. Se pierde espacion.
-      li.fragment  No requiere tamaño inicial de archivo. Puede crecer.
-      li.fragment  -Acceso solo secuencial.
-      li.fragment  Alternativa: almacenar <i>clusters</i> de bloques en lugar de bloques individuales (frag. interna)
-      li.fragment  -Vulnerable a falla de un bloque
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-    div 
-      img src='/images/figures/03-12_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
+      ul
+        li  Almacena punteros a bloque siguiente
+        li  Ej: bloque de 512 bytes, solo puede guardar 508 bytes. Se pierde espacion.
+        li  No requiere tamaño inicial de archivo. Puede crecer.
+        li  -Acceso solo secuencial.
+        li  Alternativa: almacenar <i>clusters</i> de bloques en lugar de bloques individuales (frag. interna)
+        li  -Vulnerable a falla de un bloque
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
   
   section
     h3 Asignación enlazada (<i>linked</i>): FAT
 
-    ul
-      li.fragment  FAT: <b>File Allocation Table</b>
-      li.fragment  Tabla al inicio del disco con una entrada por archivo
-      li.fragment  Último cluster almacena EOF (<i>end-of-file</i>)
-      li.fragment  +Mejor acceso aleatorio
-      li.fragment  -Limitado por tamaño de tabla (para FAT32, 4GB por archivo)
-    div 
-      img src='/images/figures/03-12_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  FAT: <b>File Allocation Table</b>
+        li  Tabla al inicio del disco con una entrada por archivo
+        li  Último cluster almacena EOF (<i>end-of-file</i>)
+        li  +Mejor acceso aleatorio
+        li  -Limitado por tamaño de tabla (para FAT32, 4GB por archivo)
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
   
   section
     h3 Asignación indexada
-    ul
-      li.fragment  Archivos contienen <i>index block</i>
-      li.fragment  <i>Index Block</i> contiene bloques del archivo
-      li.fragment  Último cluster almacena EOF (<i>end-of-file</i>)
-      li.fragment  +Acceso aleatorio sin frag. externa
-      li.fragment  Se pierde espacio por tamaño de <i>index block</i>
-    div 
-      img src='/images/figures/03-12_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  Archivos contienen <i>index block</i>
+        li  <i>Index Block</i> contiene bloques del archivo
+        li  Último cluster almacena EOF (<i>end-of-file</i>)
+        li  +Acceso aleatorio sin frag. externa
+        li  Se pierde espacio por tamaño de <i>index block</i>
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Asignación indexada: tamaño del <i>index block</i>
 
-    ul
-      li.fragment  <b>Esquema enlazado</b>: última entrada de <i>index block</i> apunta a otro <i>index block</i>
-      li.fragment  <b>Índice multinivel</b>: similar a tablas de página multinivel
-      ul
-        li.fragment  Ej: blocks de 4KB, permiten 1024 punteros (de 32-bit)
-        li.fragment  Dos niveles permiten direccionar $1048576$ bloques $\to 4$GB
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-      li.fragment  <b>Esquema combinado</b>: primeros $p$ punteros son bloques directos, los siguientes apuntan a bloque de índice simple, los siguientes a bloque de índice doble, etc
-    div 
-      img src='/images/figures/03-12_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
+      ul
+        li  <b>Esquema enlazado</b>: última entrada de <i>index block</i> apunta a otro <i>index block</i>
+        li  <b>Índice multinivel</b>: similar a tablas de página multinivel
+        ul
+          li  Ej: blocks de 4KB, permiten 1024 punteros (de 32-bit)
+          li  Dos niveles permiten direccionar $1048576$ bloques $\to 4$GB
+
+        li  <b>Esquema combinado</b>: primeros $p$ punteros son bloques directos, los siguientes apuntan a bloque de índice simple, los siguientes a bloque de índice doble, etc
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Espacio libre
@@ -641,24 +726,29 @@ section
     div <b>Bit vector</b> ó <b>bitmap</b> de bloques libres
   
     ul
-      li.fragment  +Sencillo, eficiente, e implementable en <i>hardware</i>
-      li.fragment  -No escala tan bien
+      li  +Sencillo, eficiente, e implementable en <i>hardware</i>
+      li  -No escala tan bien
       ul
-        li.fragment  Disco de 1.3GB, con bloques de 512 byte $\to 332$KB
-        li.fragment  Disco de 1TB, con bloques de 4KB $\to 256$MB 
+        li  Disco de 1.3GB, con bloques de 512 byte $\to 332$KB
+        li  Disco de 1TB, con bloques de 4KB $\to 256$MB 
 
   section
     h3 Espacio libre
 
     div <b>Lista enlazada</b>
-    ul
-      li.fragment  Punteros a bloques libres
-      li.fragment  Bloques nuevos se agregan a la lista
-      li.fragment  -Poco eficiente
-      li.fragment  Mejora: agrupar espacios contiguos
-      li.fragment  Mantener punteros a espacios libres + número de espacios contiguos
-    div 
-      img src='/images/figures/03-12_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="20%"
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  Punteros a bloques libres
+        li  Bloques nuevos se agregan a la lista
+        li  -Poco eficiente
+        li  Mejora: agrupar espacios contiguos
+        li  Mantener punteros a espacios libres + número de espacios contiguos
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 
 
