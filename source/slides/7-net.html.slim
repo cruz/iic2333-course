@@ -11,63 +11,463 @@ section
 
   section
 
-    div <b>OBJETIVO</b>: Permitir que un proceso se <b>comunique</b> con otro
+    blockquote.fragment style="background:#B7E1CD;" Permitir que un proceso se <b>comunique</b> con otro
   
     ul
       li.fragment ¿Dónde se encuentra el otro proceso?
-      ul
-        li.fragment Si se encuentra en la misma máquina: <i>pipe</i>, <i>shared memory</i>
-        li.fragment Si no, S.O. debe utilizar el sistema de Entrada/Salida
+      ul.fragment style='font-size:24px;'
+        li Si se encuentra en la misma máquina: <i>pipe</i>, <i>shared memory</i>
+        li Si no, S.O. debe utilizar el sistema de Entrada/Salida
 
       li.fragment ¿Qué medio utilizar para el envío? (Cable, aire, ...)
-      ul
-        li.fragment ¿Cómo expresar un mensaje en ese medio? Problema Físico
+      ul.fragment style='font-size:24px;'
+        li ¿Cómo expresar un mensaje en ese medio? Problema Físico
         
       li.fragment ¿Cómo se envía información por un medio de red?
-      ul
-        li.fragment ¿Cómo se transmite el mensaje? ¿Se manda completo?
+      ul.fragment style='font-size:24px;'
+        li ¿Cómo se transmite el mensaje? ¿Se manda completo?
         
       li.fragment ¿A quién se le transmite el mensaje?
-      ul
-        li.fragment ¿Hay sólo un receptor? ¿lo estoy "gritando" a todos?
+      ul.fragment style='font-size:24px;'
+        li ¿Hay sólo un receptor? ¿lo estoy "gritando" a todos?
         
       li.fragment ¿Cómo se encuentra el destinatario?
-      ul
-        li.fragment Destinatario debe tener una dirección "única"
-        li.fragment ¿Cómo "encaminar" el mensaje?
+      ul.fragment style='font-size:24px;'
+        li Destinatario debe tener una dirección "única"
+        li ¿Cómo "encaminar" el mensaje?
         
       li.fragment El destinatario, ¿está dispuesto a recibir el mensaje?
-      ul
-        li.fragment Comunicación debe seguir un orden: <i>protocolo</i>
+      ul.fragment style='font-size:24px;'
+        li Comunicación debe seguir un orden: <i>protocolo</i>
       
-  section
+  section data-transition="fade-out"
 
-    div ¿Para qué establecer comunicación entre dos procesos?
 
-    div Comunicación de procesos <i>remotos</i> para compartir recursos
-  
-    ul
-      li.fragment Recursos: impresoras, discos, archivos, ciclos de CPU
-      li.fragment Acceso a recursos <i>escasos</i> que no se encuentran <i>geográficamente</i> cerca
-      li.fragment Modelo <b>cliente-servidor</b> o <b>peer-to-peer</b>
-      
-    div
-      img src='/images/figures/05-clientserver.png' style="background:none; border:none; box-shadow:none;" width="30%"
-      img src='/images/figures/05-peertopeer.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Red de computadores</b> como infraestructura de conexión
+
+      blockquote style="background:#B7E1CD;" Una gran red: <b>internet</b>
     
-    ul
-      li.fragment Acceso a recursos <i>descentralizados</i>
-      li.fragment Mensajería, <i>streaming</i>, distribución de contenido
+      ul
+        li Red como <i>interconexión de redes</i>
+        li Dispositivos de origen/destino: <b>hosts</b> (nodos)
+        li Enlaces: transmiten <i>unidades de información</i>
+        li Dispositivos de intercambio: <b>router</b>s, <b>switch</b>es
+        li Puntos de acceso: <b>modem</b>, <b>access point</b>, <b>cell tower</b>
+        li Proveedores de acceso: <b>ISP</b>, <i>Internet Service Provider</i>
+      
+      img src='/images/figures/07-keyinternet.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
-section 
-  h2 Conceptos de Hardware
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-biginternet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+    
+
+  section data-transition="fade-in fade-out"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Red de computadores</b> como infraestructura de conexión
+
+      blockquote style="background:#B7E1CD;" Una gran red: <b>internet</b>
+    
+      ul
+        li Unidades de información: <b>paquetes</b>
+        li Reglas para intercambiar paquetes: <b>protocolos</b>
+        li Dos protocolos críticos:
+        ul style='font-size:24px;'
+          li <b>TCP</b>, <i>Transport Control Protocol</i>
+          li <b>IP</b>, <i>Internet Protocol</i>
+        li ¿Cómo asegurar que todos sigan el mismo protocolo?
+        ul style='font-size:24px;'
+          li Se deben acordar <i>estándares</i> (no implementaciones)
+          li <b>IETF</b>, <i>Internet Engineering Task Force</i>
+          li Estándares especificado en <b>RFC</b>, <i>Request For Comments</i>
+      
+      img src='/images/figures/07-keyinternet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-biginternet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section data-transition="fade-in"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Red de computadores</b> como infraestructura de servicios
+
+      blockquote style="background:#B7E1CD;" Una gran red: <b>internet</b>
+    
+      ul
+        li Plataforma para <i>aplicaciones distribuidas</i>
+        li Procesos que <i>interactúan</i> a través de la red
+        li Procesos utilizan una <b>API</b>, <i>Application Programming Interface</i>
+        li <i>API de Internet</i>, permite que el proceso interactúe con la infraestructura
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-biginternet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    blockquote style="background:#B7E1CD;" <b>Protocolo</b>: conjunto de reglas
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      div ¿Quién inicia la comunicación?
+      div ¿Cuándo se inicia la comunicación?
+
+      ul
+        li <i>Orden</i> de mensajes
+        li <i>Formato</i> de mensajes
+        li <i>Acciones</i> ante cada mensaje
+
+
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-protocol.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+section
+  h2 Hardware de red
 
   section
 
-    div Hardware de redes
+    div style="width:65%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Comunicación <b>end-to-end</b>/
+
+      div Comunicación entre <b>hosts</b>: dispositivos que <i>ejecutan programas</i>
+      ul
+        li Algunos <i>hosts</i> actúan como <b>clientes</b>
+        li Algunos <i>hosts</i> actúan como <b>servidores</b>
+
+      br
+      br
+      div Cliente o servidor es un <b>rol</b> que toma un programa
+
+      blockquote style="background:#B7E1CD;" <b>Clientes</b>
+      ul
+        li En dispositivos livianos que solicitan servicios.
+        li Suelen estar en control del usuario.
+      blockquote style="background:#B7E1CD;" <b>Servidores</b>
+      ul
+        li En dispositivos poderosos que proveen servicios
+        li Suelen vivir en <b>data center</b>s
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-end2end.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Hosts</b> pueden acceder a la red de distintas maneras
+      br
+      br
+      div Infraestructura para permitir <b>acceder</b> a la red
+      
+      ul
+        li DSL
+        li Cable
+        li FTTH
+        li Dial-Up
+        li Satellite
+        li Ethernet
+        li Wi-Fi
+        li 3G, LTE
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-net-access.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 DSL: Digital Subscriber Line
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li DSL Módem utiliza línea telefónica tradicional
+        li DSL Módem convierte señal digital a análoga
+        li DSLAM: DSL Access Multiplexer
+        li DSLAM reconvierte señal análoga a digital
+        li DSL Módem puede usar diferentes frecuencias de transmisión
+        ul
+          li style='font-size:24px;' High-speed downstream, 50kHz - 1MHz
+          li style='font-size:24px;' Medium-speed upstream, 4kHz - 50kHz
+          li style='font-size:24px;' Línea telefónica tradicional, 0Hz - 4kHz
+
+      div Enlace multiplexa 3 enlaces en uno
+
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-dsl.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 DSL: Digital Subscriber Line
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Estándares ITU (International Communication Union)
+      ul
+        li style='font-size:24px;' Enlaces son asimétricos: <b>ADSL</b>
+        li style='font-size:24px;' ADSL. ITU-T G.992.1: 12Mbps <i>downstream</i>, 1.8Mbps <i>upstream</i>
+        li style='font-size:24px;' ADSL2. ITU-T G.992.5: 24Mbps <i>downstream</i>, 2.5Mbps <i>upstream</i>
+        li style='font-size:24px;' VDSL. ITU-T G.993.1: 52Mbps <i>downstream</i>, 16Mbps <i>upstream</i>
+        li style='font-size:24px;' VDSL2. ITU-T G.993.2: 200Mbps sumando <i>downstream</i> y <i>upstream</i>
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-dsl.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Cable
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Utiliza infraestructura de TV por cable
+      ul
+        li Mezcla enlaces de fibra y coaxial: HFC (Hybrid Fiber Coaxial)
+        li Utiliza <b>cable modem</b>
+        li Estándares (asimétricos): 42.8Mbps <i>downstream</i>, 30.7Mbps <i>upstream</i>
+      
+      br
+      br
+      div Medio <i>broadcast</i> <b>compartido</b> (DSL es privado)
+      ul
+        li style='font-size:24px;' ¿Qué pasa si múltiples usuarios bajan un video al mismo tiempo?
+        li style='font-size:24px;' ¿Qué pasa si múltiples usuarios están navegando en Internet?
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-cable.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Fiber: FTTH
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>FTTH</b>, <i>Fiber-to-the-Home</i>
+      br
+      br
+      ul
+        li ONT: Optical Network Terminator
+        li OLT: Optical Line Terminator.
+        li Conversión de señal óptica-eléctrica
+        li Estándares desde 1Mbps a 1Gbps
+      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-fiber.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Dial-Up, Satellite
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Dial-Up</b>. Enlace a través de línea telefónica.
+      ul
+        li Velocidades de 2.4kbps a 56kbps
+      br
+      br
+      div Enlace satelital para zonas rurales
+      ul
+        li 1Mbps
+      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-fiber.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Ethernet
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Estándar de conexión por pares trenzados de cobre
+      ul
+        li IEEE 802.3
+        li Velocidades de 10Mbps, 100Mbps, 1Gbps, 10Gbps
+        li Implementan <b>LAN</b>, <i>Local Area Network</i>
+      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-ethernet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Wi-Fi
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Estándar de conexión inalámbrico de corto alcance
+      ul
+        li IEEE 802.11
+        li Velocidades de 54Mbps, 150Mbps, &hellip;
+        li Implementan <b>WLAN</b>, <i>Wireless LAN</i>
+      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-wifi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Wide area: 3G, 4G, LTE
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Estándar de conexión inalámbrico de corto alcance
+      ul
+        li IEEE 802.11
+        li Velocidades de 54Mbps, 150Mbps, &hellip;
+        li Implementan <b>WLAN</b>, <i>Wireless LAN</i>
+      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-wifi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+section
+  h2 Medio físico
+
+  section
+    blockquote style="background:#B7E1CD;" Permitir que un proceso se <b>comunique</b> con otro
+
+    div Procesos deben <b>transmitir</b> información
+    ul
+      li Información se codifica como <b>bit</b>
+      li <b>Bit</b>s deben <i>viajar</i> a través de un medio
+      li <b>Bit</b>s se transmiten como <i>ondas</i>
+      ul
+        li Medios guiados: sólidos, pares trenzados de cobre, cable coaxial, fibra óptica multimodo
+        li Medios no guiados: inalámbricos, enlace satelital
+
+  section
+    h3 Par trenzado de cobre
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>UTP</b>, <i>unshieldad twisted pair</i>
+      br
+      br
+      ul
+        li Cables trenzados se comportan como una antena
+        li Categorías según cuan trenzados están: 3, 5, 5b, 6, 6a
+        li Recorren varios kilómetros ($\sim 5$km) sin atenuarse
+        li 10Mbps a 10Gbps
+        li Uso para telefonía, ethernet, implementación de LANs
+  
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/06-trenzados.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Cable coaxial de cobre
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Par concéntrico (no trenzado)
+      br
+      br
+      ul
+        li Alta resistencia al ruido externo
+        li Ancho de banda depende de la distancia
+        li Fácil de modificar para insertar nodos nuevos
+        li Medio compartido
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/06-coaxial.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 Fibra óptica
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Transmisión de pulsos de uz
+      br
+      br
+      ul
+        li Inmune a interferencia electromagnética
+        li Cables hechos de fibra de vidrio
+        li Alta velocidad de transferencia 
+        li Baja atenuación con la distancia (más de 100kms)
+        li Monomodo: un haz de luz
+        li Multimodo: múltiples haces a distintos ángulos
+  
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/06-fibra1.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 Medios inalámbricos terrestres
+
+    ul
+      li Señal se debilita en el aire al propagarse
+      li Interferencia con otras señales: asignación de frecuencias
+      li Propagación multicamino: señales llegan por distintos caminos
 
     div
-      img src='/images/figures/05-definiciones.png' style="background:none; border:none; box-shadow:none;" width="70%"
+      img src='/images/figures/06-multipath.jpg' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 Estándares inalámbricos
+  
+    div
+      img src='/images/figures/06-wireless.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+  section
+    h3 IEEE 802.11, Wireless LAN
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Estación base: <i>Access Point</i> (AP)
+        li BSS: Basic Service Set
+        li Modos de operación: <i>infrastructure</i> y <i>ad-hoc</i>
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/06-802.11.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  
+  section
+    h3 IEEE 802.11, Wireless LAN
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      div Canales. Espectro 2.4GHz $\sim$ 2.485GHz dividido en 11 canales
+    
+      ul
+        li Administrador de AP elige el canal
+        li <i>Host</i> escucha canales y detecta <i>beacons</i> enviados por AP
+        li <i>Beacons</i> contienen SSID (nombre de AP) y MAC Address de AP
+    
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/06-channels.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    div Mobile standards
+
+    div
+      img src='/images/figures/06-mobilestds.jpg' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    div Mobile standards
+
+    div
+      img src='/images/figures/06-mobilestds2.jpg' style="background:none; border:none; box-shadow:none;" width="60%"
+
+  section
+    h3 Internet
+
+    div
+      img src='/images/figures/05-internet.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    a src='http://www.submarinecablemap.com/' http://www.submarinecablemap.com/
+
+
+
+/section 
+  h2 Conceptos de Hardware
 
   section
 
@@ -279,7 +679,7 @@ section
     div
       img src='/images/figures/05-topologias.png' style="background:none; border:none; box-shadow:none;" width="50%"
   
-section
+/section
   h2 Conceptos de Software
 
   section 
@@ -364,7 +764,7 @@ section
     div
       img src='/images/figures/05-ejemploprotocolo.png' style="background:none; border:none; box-shadow:none;" width="70%"
 
-section
+/section
   h2 Modelos de referencia
 
   section
@@ -495,7 +895,7 @@ section
     div
       img src='/images/figures/05-header80211.png' style="background:none; border:none; box-shadow:none;" width="50%"
   
-section
+/section
   h2 Redes
   
   section
