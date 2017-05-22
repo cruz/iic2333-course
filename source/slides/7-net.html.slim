@@ -453,6 +453,93 @@ section
     div
       img src='/images/figures/06-mobilestds2.jpg' style="background:none; border:none; box-shadow:none;" width="60%"
 
+section
+  h2 Funcionamiento de red
+
+  section
+    div
+      img src='/images/figures/07-net-core.png' style="background:none; border:none; box-shadow:none;" width="30%"
+
+    div Interconexión de <i>hardware</i> para transmisión de datos
+
+    div Transmisión en un enlace: $L$ bits sobre un enlace de $R$ bits/sec, demora $L/R$
+
+  section
+    h3 Packet Switching
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Dispositivos de red intercambian <b>paquetes</b>
+
+      blockquote style="background:#B7E1CD;" Store-and-forward packet switching
+
+      ul
+        li Dispositivo (<i>router</i>) almacena paquetes (<i>store</i>)
+        li <i>Router</i> examina paquetes y determina punto de reenvío (<i>forward</i>)
+        li <i>Router</i> usa tablas de reenvío (<i>forwarding tables</i>)
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-net-packet.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Packet Switching
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Tasa de transmisión determinada por el enlace más lento
+
+      ul
+        li <i>Router</i> puede sufrir <b>congestión</b>
+        li Si hay $N$ enlaces iguales en la ruta, el tiempo de transmisión de origen a destino (<i>end-to-end delay</i>) es: $d_{\mathit{end-to-end}}=N \times \frac{L}{R}$
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-net-packets.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Circuit Switching
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Establecimiento previo de conexión entre origen-destino
+
+      blockquote style="background:#B7E1CD;" Ancho de banda garantizado durante comunicación
+
+      ul
+        li Enfoque usado por comunicación <b>telefónica</b>
+        li Sensible a saturación ante conexiones simultáneas
+        li Enlace de 1Mbps, con 4 conexiones simultáneas, cada una recibe hasta 250kbps
+        li Si hay $N$ enlaces iguales en la ruta, el tiempo de transmisión de origen a destino (<i>end-to-end delay</i>) es: $d_{\mathit{end-to-end}}=N \times \frac{L}{R}$
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-net-circuits.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Multiplexión en circuit switching
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Al usar un medio compartido se deben mantener separadas las comunicaciones
+      br
+      br
+      div <b>FDM</b>: <i>Frequency-Division Multiplexing</i>
+      ul
+        li Banda de frecuencia (ancho de banda) para cada transmisión
+
+      div <b>TDM</b>: <i>Time-Division Multiplexing</i>
+      ul
+        li División por tiempo entre emisores
+        li Cada emisor tiene un turno para transmitir en todo el ancho de banda
+        
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/07-net-multipl.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
   section
     h3 Internet
 
@@ -460,6 +547,8 @@ section
       img src='/images/figures/05-internet.png' style="background:none; border:none; box-shadow:none;" width="70%"
 
     a src='http://www.submarinecablemap.com/' http://www.submarinecablemap.com/
+    br
+    a src='http://www.internetexchangemap.com/' http://www.internetexchangemap.com/
 
   section
     h3 Internet
@@ -468,6 +557,8 @@ section
       img src='/images/figures/07-internetbook.png' style="background:none; border:none; box-shadow:none;" width="70%"
 
     a src='http://www.submarinecablemap.com/' http://www.submarinecablemap.com/
+    br
+    a src='http://www.internetexchangemap.com/' http://www.internetexchangemap.com/
 
 
 
@@ -721,24 +812,42 @@ section
       li Redes se organizan en base a un modelo de capas
       li Capas se comunican usando <b>protocolos</b>
 
-    blockquote.fragment style="background:#B7E1CD;" <b>Protocolo</b> Contrato de comunicación entre distintas partes acerca de la manera en que se producirá la comunicación
+    blockquote.fragment style="background:#B7E1CD;" <b>Protocolo</b>: Contrato de comunicación entre distintas partes acerca de la manera en que se producirá la comunicación
+
+    div Separación de responsabilidades permite modelar e implementar sistemas complejos
+
 
   section
 
+    h3 Modelo de capas
+
     div
-      img src='/images/figures/05-layers.png' style="background:none; border:none; box-shadow:none;" width="50%"
+      img src='/images/figures/05-layers.png' style="background:none; border:none; box-shadow:none;" width="45%"
 
     div Una instanciación de este modelo define un <i>stack de protocolos</i>
 
   section
 
-    div
-      img src='/images/figures/05-translations.png' style="background:none; border:none; box-shadow:none;" width="50%"
+    h3 Modelo de capas
 
-    div Mensajes pueden ser modificados en cada capa, agregando <i>headers</i> o modificando todo el mensaje.
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      div Mensajes pueden ser modificados en cada capa, agregando <i>headers</i> o modificando todo el mensaje.
+      br
+      br
+      div Servicios
+      ul
+        li Capa 3: Mensaje entre personas
+        li Capa 2: Mensaje entre traductores
+        li Capa 1: Envío físico (fax)
+
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-translations.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 
   section
+
+    h3 Modelo de capas
 
     div
       img src='/images/figures/07-layers-plane.png' style="background:none; border:none; box-shadow:none;" width="80%"
@@ -747,16 +856,215 @@ section
 
   section
 
-    div <b>¿Servicios o protocolos?</b>
+    h3 Servicios, protocolos, capas
 
-    div style="text-align:left;" <b>Servicio</b>: conjunto de primitivas que provee una funcionalidad
+    blockquote.fragment style="background:#B7E1CD;" <b>Servicio</b>: conjunto de primitivas que provee una funcionalidad
   
-    div style="text-align:left;" <b>Protocolo</b>: conjunto de reglas para intercambio de paquetes y comunicación
+    blockquote.fragment style="background:#B7E1CD;" <b>Capas</b> proveen servicios a otras capas
   
     div
       img src='/images/figures/05-servicioprotocolo.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
     div Protocolo puede ser cambiado sin afectar al servicio  
+
+
+  section
+    h3 Modelo OSI
+
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      div Modelo ISO <b>OSI</b> (<i>Open Systems Interface</i>)
+      ul
+        li Propuesto en 1983 por Day y Zimmerman, revisado en 1995
+        li <b>Modelo de referencia</b>
+        ul
+          li Define responsabilidades para cada capa
+          li No define estándares, ni protocolos, ni implementaciones
+      
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+    
+  section
+    h3 Modelo Internet
+
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      div Originado como <i>stack</i> de protocolos para ARPANET, proyecto de investigación del DoD
+      ul
+        li Propuesto por Vinton Cerf y Robert E. Kahn, 1974
+        li Estandarizado en 1989
+        li También llamado <i>stack TCP/IP</i>
+      
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-layers-osi-inet.png' style="background:none; border:none; box-shadow:none;" width="75%"
+      img src='/images/figures/07-osi-cats.jpg' style="background:none; border:none; box-shadow:none; vertical-align:top" width="25%"
+
+
+  section
+    h3 Capa de Aplicación
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Comunicación entre procesos (aplicaciones)
+
+      div Aplicaciones intercambian <b>mensajes</b>
+
+      ul
+        li HTTP (<i>HyperText Transfer Protocol</i>)
+        li SMTP (<i>Simple Mail Transfer Protocol</i>)
+        li FTP (<i>File Transfer Protocol</i>)
+        li DNS (<i>Domain Name Service</i>)
+        li IMAP (<i>Internet Message Access Protocol</i>)
+        li SSH, DHCP, POP, Telnet, XMPP, &hellip;
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Capas de Presentación y Sesión
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Sólo presentes en modelo OSI
+
+      blockquote style="background:#B7E1CD;" Presentación
+
+      div Codificación, encriptación, serialización
+
+      blockquote style="background:#B7E1CD;" Sesión
+
+      div Establecimiento de sesión entre aplicaciones.
+
+      div <i>Authorization</i>, <i>authentication</i>.
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div En la práctica estas tareas se implementan, de ser necesarias, en la aplicación
+
+
+  section
+    h3 Capa de Transporte
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Transporte de mensajes entre <b>origen</b> y <b>destino</b>
+
+      div Mensaje de capa de aplicación se transmite en <b>segmentos</b>
+
+      ul
+        li TCP (<i>Transport Control Protocol</i>)
+        ul
+          li style='font-size:24px;' Servicio <i>connection-oriented</i>/
+          li style='font-size:24px;' Garantías de entrega (<i>reliable</i>)
+          li style='font-size:24px;' Control de flujo
+          li style='font-size:24px;' Control de congestión
+
+        li UDP (<i>User Datagram Protocol</i>)
+        ul
+          li style='font-size:24px;' Servicio <i>connection-less</i>/
+          li style='font-size:24px;' Sin garantías de entrega
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Capa de Red
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Transporte de segmentos entre par de <b>hosts</b>
+
+      div <b>Segmentos</b> se transmiten en forma <b>datagramas</b> (<b>paquetes</b>)
+
+      ul
+        li Servicio de entrega desde origen a destino
+        li Búsqueda de destino en la red
+        li Encaminamiento (<i>routing</i>) de segmento
+        li IP (<i>Internet Protocol</i>)
+        ul
+          li style='font-size:24px;' Implementado en origen, destino, y nodos intermedios
+          li style='font-size:24px;' Hardware: <i>router</i>
+          li style='font-size:24px;' IPv4, IPv6
+        li ICMP (<i>Internet Control Message Protocol</i>)
+        ul
+          li style='font-size:24px;' Mensaje de control (ping, trace, echo)
+        li IGMP, OSPF
+        ul
+          li style='font-size:24px;' Protocolos entre <i>routers</i>
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Capa de Enlace (<i>link</i>)
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Transmisión de paquetes en cada <b>enlace</b>
+
+      div <b>Paquetes</b> se transmiten en cada par de <b>hosts</b> de acuerdo a las características del enlace
+
+      div <b>Paquetes</b> de capa de enlace se conoce como <b>frames</b>
+
+      ul
+        li Pueden proveer transmisión confiable (<i>reliability</i>)
+        li Pueden proveer control de errores
+        li Control de acceso al medio, <i>Medium Access Control</i> (MAC)
+        li Ethernet, IEEE 802.3
+        li Wi-Fi, IEEE 802.11
+        li Hardware: <i>switch</i>, <i>hub</i>
+
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Capa Física
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Transmisión de frames en cada <b>enlace</b>
+
+      div Transmisión de <b>bit</b>s a través de un medio
+
+      div Protocolos para cada medio de transmisión
+
+      ul
+        li UTP (par trenzado de cobre)
+        li Cable coaxial
+        li Fibra óptica
+        li Medio inalámbrico
+      
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    h3 Encapsulamiento
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/07-encapsulation.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div Funcionamiento del modelo de capas se basa en <b>encapsulamiento</b> de mensajes
+    ul
+      li Capas agregan y remueven <b>encabezados</b> (<i>headers</i>)
+
+
+
+
+
+
+
+
+
+
+
+
 
   /section
 
@@ -802,148 +1110,10 @@ section
     div
       img src='/images/figures/05-ejemploprotocolo.png' style="background:none; border:none; box-shadow:none;" width="70%"
 
-  /section
-    /h2 Modelos de referencia
-
-  section
-    div Modelo ISO <b>OSI</b> (<b>Open Systems Interface</b>)
-
-    ul
-      li Propuesto en 1983 por Day y Zimmerman, revisado en 1995
-      li <b>Modelo de referencia</b>
-      ul
-        li Define responsabilidades para cada capa
-        li No define estándares, ni protocolos, ni implementaciones
-      
-    div
-      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="30%"
-    
-  section
-
-    div
-      img src='/images/figures/05-osi.png' style="background:none; border:none; box-shadow:none;" width="50%"
-  
-  section
-    h3 ¿Qué hace cada nivel?
-
-    ul
-      li <b>Capa Física</b>. Transmisión de <b>bits</b> en canal de comunicación.
-      ul
-        li Tiempo de transmisión, frecuencia de transmisición, codificación
-      
-      li <b>Capa de Enlace</b> (<i>data link</i>). Transmisión secuencial de grupos de bits: <i>frames</i> de manera que lleguen sin errores.
-      ul
-        li Control de velocidad de transmisión.
-        li Control de acceso al medio (MAC)
-      
-      li <b>Capa de Red</b> (<i>network</i>). Transmisión de paquetes de datos entre nodos de la red.
-      ul
-        li ¿Cómo encontrar al destinatario? Direccionamiento
-        li ¿Qué ruta deben seguir los paquetes para llegar?
-      
-  section
-    h3 ¿Qué hace cada nivel?
-
-    ul
-      li <b>Capa de Transporte</b>. Transmisión del mensajes solicitados desde la fuentel espacio al destinatario
-      ul
-        li Orden y velocidad de transmisión de paquetes (control de flujo)
-        li ¿Cómo asegurar que todos los paquetes hayan llegado?
-        li Connection-oriented vs connection-less
-      
-      li <b>Capa de Sesión</b>. Mantenimiento de sesiones, turnos de transmisión, sincronización
-      li <b>Capa de Presentación</b>. Definición de sintaxis y semántica de datos a transmitir.
-      li <b>Capa de Aplicación</b>. Protocolos de comunicación entre procesos para objetivos específicos
-      ul
-        li HTTP, FTP, SSH, SMTP, IMAP, XMPP, DNS, TELNET, DHCP, \ldots
-      
-  section
-    h3 Modelo TCP/IP 
-
-    div Originado como <i>stack</i> de protocolos para ARPANET, proyecto de investigación del DoD
-    ul
-      li Propuesto por Vinton Cerf y Robert E. Kahn, 1974
-      li Estandarizado en 1989
-    
-    div
-      img src='/images/figures/05-tcpip.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-
-  section
-    h3 Modelo TCP/IP 
-
-    ul
-      li <b>Link layer</b>. Incluye funciones de capas OSI 1 y 2.
-      ul
-        li Inyección de paquetes de capa superior a algún medio de transmisión .
-        li También llamado <i>ost-to-network</i>. Poco especificada.
-      
-      li <b>Internet layer</b> (interred). Transmisión de paquetes entre redes.
-      ul
-        li Protocolo IP. Internet Protocol.
-        li Protocolo ICMP. Internet Control Message Protocol.
-      
-      li <b>Transport layer</b>. Transmisión de mensajes entre fuente y destinatario.
-      ul
-        li TCP. Transmission Control Protocol. Connection-oriented.
-        li UDP. User Datagram Protocol. Connectionless.
-      
-      li <b>Application Layer</b>. Equivalente a capas 5,6 y 7 de OSI.
-      ul
-        li Protocolos de aplicaciones visibles para el usuario.
-        li Conexiones a través de <i>sockets</i>.
-        li Servicios estandarizados en <i>well-known</i> ports por <b>IANA</b> (Internet Assigned Numbers Authority)
-        
-
-  section
-    h3 Modelo TCP/IP 
-
-    div
-      img src='/images/figures/05-tcpip-osi.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-  section
-    h3 Modelo TCP/IP 
-
-    div
-      img src='/images/figures/05-tcpip-resumen.jpg' style="background:none; border:none; box-shadow:none;" width="65%"
-
-  section
-    h3 Modelo de capas 
-
-    div Mensajes van adquiriendo <i>header</i>s en cada capa
-  
-    div
-      img src='/images/figures/05-mensajes.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-  section
-    h3 <i>Header</i> TCP
-
-    div
-      img src='/images/figures/05-headertcp.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-  section
-    h3 <i>Header</i> IP
-
-    div
-      img src='/images/figures/05-headerip.png' style="background:none; border:none; box-shadow:none;" width="50%"
-  
-  section
-    h3 Paquete 802.11
-
-    div
-      img src='/images/figures/05-header80211.png' style="background:none; border:none; box-shadow:none;" width="50%"
   
 /section
   h2 Redes
   
-  section
-    h3 Internet
-
-    div
-      img src='/images/figures/05-internet.png' style="background:none; border:none; box-shadow:none;" width="70%"
-
-    a src='http://www.submarinecablemap.com/' http://www.submarinecablemap.com/
-
   section
 
     h3 Comunicación Móvil
