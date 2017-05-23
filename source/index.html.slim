@@ -16,14 +16,15 @@ article
       div style="border:none; display:inline-block;" class="timerAC05"
 
     div
-      div style="border:none; display:inline-block; width:80px;" = link_to 'T3', 'homeworks/3/T3.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Domingo 21/May, 23:59
-      div style="border:none; display:inline-block;" class="timerT3"
-
-    div
       div style="border:none; display:inline-block; width:80px;" I2
       div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 29/May, 18:30
       div style="border:none; display:inline-block;" class="timerI2"
+
+    div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T4', 'homeworks/4/T4.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Martes 6/Jun, 23:59
+      div style="border:none; display:inline-block;" class="timerT4"
+
 
 
   section#slides
@@ -89,10 +90,11 @@ article
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
       div style="border:none; display:inline-block; width:260px;" Deadline: Domingo 21/Abr, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
-      /div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'https://docs.google.com/presentation/d/10fU1Akv2uQ5YljCgxFHXInIuVVpmP96HRVPX0cCDkBU/edit?usp=sharing'
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'data.bin', 'homeworks/2/data.bin'
-      /div style="border:none; display:inline-block; width:100px;" = link_to 'mmap-example.c', 'homeworks/2/mmap-example.c'
-      /div style="border:none; display:inline-block; width:100px;" = link_to 'shm-example.c', 'homeworks/2/shm-example.c'
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 4', 'homeworks/4/T4.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Martes 06/Jun, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
 
     /ul
       /li = link_to 'Tarea 2', 'homeworks/2/'
@@ -197,7 +199,14 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('May 21, 2017 23:59:59')
+    dateEnd: new Date('May 22, 2017 23:59:59')
+  });
+  var countdownT3 = new Countdown({
+    selector: '.timerT4',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 06, 2017 23:59:59')
   });
 
 
@@ -227,7 +236,7 @@ javascript:
 
   var countdownI2 = new Countdown({
     selector: '.timerI2',
-    msgAfter: "Se acabó.",
+    msgAfter: "Empezó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 29, 2017 18:30:00')
