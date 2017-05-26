@@ -95,6 +95,9 @@ article
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 4', 'homeworks/4/T4.pdf'
       div style="border:none; display:inline-block; width:260px;" Deadline: Martes 06/Jun, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
+      div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
+      
+
 
     /ul
       /li = link_to 'Tarea 2', 'homeworks/2/'
@@ -176,7 +179,7 @@ article
 
   section#notas
     h3 Notas
-    = link_to 'Todas las notas', 'https://docs.google.com/spreadsheets/d/15yXs4YGkPhBbRGeTjO04RQxcqrYjazRVPMusLzLcLa4', :target => '_blank'
+    = link_to 'Todas las tareas', 'https://docs.google.com/spreadsheets/d/15yXs4YGkPhBbRGeTjO04RQxcqrYjazRVPMusLzLcLa4', :target => '_blank'
 
 
 javascript:
@@ -201,10 +204,10 @@ javascript:
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 22, 2017 23:59:59')
   });
-  var countdownT3 = new Countdown({
+  var countdownT4 = new Countdown({
     selector: '.timerT4',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Jun 06, 2017 23:59:59')
   });
