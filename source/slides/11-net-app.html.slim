@@ -285,102 +285,174 @@ section
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 section
   h2 HTTP
 
   section
     h3 HyperText Transfer Protocol
 
-    div Básicamente un sistema de archivos remoto. RFC1945, RFC2616.
-    ul
-      li Modelo cliente-servidor
-      li Cliente HTTP: solicita y recibe archivos
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Un servicio de archivos remoto. RFC1945, RFC2616.
       ul
-        li Opcionalmente podría parsearlos e interpretarlos localmente
-        
-      li Servidor HTTP: recibe solicitudes y envía archivos
+        li Modelo cliente-servidor
+        li Cliente HTTP: solicita y recibe archivos
+        ul style='font-size:24px;'
+          li Opcionalmente podría parsearlos e interpretarlos localmente
+          
+        li Servidor HTTP: recibe solicitudes y envía archivos
     
-      div
-        img src='/images/figures/11-http.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      br
+      br
+      div HTTP define el formato de los mensajes
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-http.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     div Acceso a URL. Conexión no-persistente.
 
-    div <code>http://www.ing.puc.cl/siding/index.html</code>
+    div <code>http://iic2333.ing.puc.cl/slides/5-disk.html</code>
 
-    ol
-      li Cliente HTTP inicia conexión TCP a <code>www.ing.puc.cl</code> en puerto 80. Socket en cliente, y socket en server.
-      li Cliente HTTP envía <i>Request HTTP</i> incluyendo ruta y archivo: <code>siding/index.html</code>
-      li Servidor HTTP recibe <i>Request HTTP</i>, busca el archivo <code>siding/index.html</code>, lo encapsula en <i>Response HTTP</i>, y envía al cliente a través de su <i>socket</i>
-      li Servidor HTTP indica a <i>socket</i> que cierra la conexión TCP.
-      li Cliente HTTP recibe <i>Response HTTP</i> y extrae el archivo. Examines el archivo HTML y encuentra referencias a otros archivos (por ejemplo, imágenes JPG, PNG)
-      li Se re-ejecutan los pasos (1 al 4), para archivo que se necesite.
+    br
 
-    div Servidores HTTP actuales usan conexiones persistentes y pipelining.
+    ol style='font-size:32px;'
+      li Cliente HTTP inicia conexión TCP a <code>iic2333.ing.puc.cl</code> en puerto 80. Socket en cliente, y socket en server.
+      li Cliente HTTP envía <i>Request HTTP</i> incluyendo ruta y archivo: <code>slides/5-disk.html</code>
+      li Servidor HTTP recibe <i>Request HTTP</i>, busca el archivo <code>slides/5-disk.html</code>, lo encapsula en <i>Response HTTP</i>, y envía al cliente a través de su <i>socket</i>
+      li Servidor HTTP indica a <i>socket</i> que cierre la conexión TCP.
+      li Cliente HTTP recibe <i>Response HTTP</i> y extrae el archivo. Examina el archivo HTML y encuentra referencias a otros archivos (por ejemplo, imágenes JPG, PNG)
+      li Cliente puede re-ejecutar los pasos 1 al 4, para cada archivo que necesite.
+
+    br
+    br
+
+    div Servidores HTTP actuales usan conexiones persistentes y <i>pipelining</i>.
 
   section
     h3 HTTP Request
 
-    div
-      img src='/images/figures/11-http-req.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div style="text-align:left;" <code>GET /siding/index.html HTTP/1.1</code>
-    div style="text-align:left;" <code>Host: www.ing.puc.cl</code>
-    div style="text-align:left;" <code>Connection: close</code>
-    div style="text-align:left;" <code>User-agent: Mozilla/5.0</code>
-    div style="text-align:left;" <code>Accept-language: es</code>
+      div style="text-align:left;" <code>GET /slides/5-disk.html HTTP/1.1</code>
+      div style="text-align:left;" <code>Host: iic2333.ing.puc.cl</code>
+      div style="text-align:left;" <code>Connection: close</code>
+      div style="text-align:left;" <code>User-agent: Mozilla/5.0</code>
+      div style="text-align:left;" <code>Accept-language: es</code>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-http-req.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
 
   section
     h3 HTTP Response
 
-    div
-      img src='/images/figures/11-http-resp.png' style="background:none; border:none; box-shadow:none;" width="25%"
+    div style="width:65%; vertical-align:middle; display:inline-block;" 
 
-    div style="text-align:left;" <code>HTTP/1.1 200 OK</code>
-    div style="text-align:left;" <code>Connection: close</code>
-    div style="text-align:left;" <code>Date: Wed Jun 15 01:20:33 CLT 2016</code>
-    div style="text-align:left;" <code>Server: Apache/2.2.3 (CentOS)</code>
-    div style="text-align:left;" <code>Last-Modified: Tue, 09 Aug 2011 15:11:03 GMT</code>
-    div style="text-align:left;" <code>Content-Length: 6821</code>
-    div style="text-align:left;" <code>Content-Type: text/html</code>
-    div style="text-align:left;" <code>&nbsp;</code>
-    div style="text-align:left;" <code>data ... data ... data ...</code>
+      div style="text-align:left;" <code>HTTP/1.1 200 OK</code>
+      div style="text-align:left;" <code>Connection: close</code>
+      div style="text-align:left;" <code>Date: Wed Jun 15 01:20:33 CLT 2016</code>
+      div style="text-align:left;" <code>Server: Apache/2.2.3 (CentOS)</code>
+      div style="text-align:left;" <code>Last-Modified: Tue, 09 Aug 2011 15:11:03 GMT</code>
+      div style="text-align:left;" <code>Content-Length: 6821</code>
+      div style="text-align:left;" <code>Content-Type: text/html</code>
+      div style="text-align:left;" <code>&nbsp;</code>
+      div style="text-align:left;" <code>data ... data ... data ...</code>
+
+    div style="width:35%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-http-resp.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
 
     div Algunos códigos
 
-    ul
-      li 1xx. Mensaje de información.
-      li 2xx. Mensaje de éxito
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
       ul
-        li 200 OK
-        li 206 Partial Content
+        li 1xx. Mensaje de información.
+        li 2xx. Mensaje de éxito
+        ul style='font-size:28px;'
+          li 200 OK
+          li 206 Partial Content
+        
+        li 3xx. Mensaje de redirección
+        ul style='font-size:28px;'
+          li 301 Moved Permanently
+          li 307 Temporary Redirect
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
       
-      li 3xx. Mensaje de redirección
-      ul
-        li 301 Moved Permanently
-        li 307 Temporary Redirect
-      
-      li 4xx. Mensaje de error del cliente
-      ul
-        li 400 Bad Request
-        li 403 Forbidden
-        li 404 Not Found
-        li 405 Method Not Allowed
-      
-      li 5xx. Mensaje de error del servidor
-      ul
-        li 500 Internal Server Error
-        li 501 Not Implemented
-        li 502 Bad Gateway
-        li 503 Server Not Available
+      ul 
+        li 4xx. Mensaje de error del cliente
+        ul style='font-size:28px;'
+          li 400 Bad Request
+          li 403 Forbidden
+          li 404 Not Found
+          li 405 Method Not Allowed
+        
+        li 5xx. Mensaje de error del servidor
+        ul style='font-size:28px;'
+          li 500 Internal Server Error
+          li 501 Not Implemented
+          li 502 Bad Gateway
+          li 503 Server Not Available
 
   section
     div Conexiones HTTP son <i>stateless</i> ... o casi
 
-    div
-      img src='/images/figures/11-http-cookies.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <i>Cookies</i> se almacenan <b>en el cliente</b>
+      br
+      div <i>Cookies</i> se envían en conexiones posteriores.
+      br
+      div Servidor utiliza <i>cookies</i> para <b>recordar</b> estado del cliente.
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-http-cookies.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    div Web Caching
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Contenido que no cambia (estático) puede ser almacenado en servidores intermedio: <b>web proxy</b>
+
+      br
+      br
+
+      div <b>CDN</b>: Content Delivery Network. Usan esta idea a nivel de redes de rápido acceso, cercanas al cliente.
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-http-proxy.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 section
   h2 FTP
@@ -388,16 +460,97 @@ section
   section
     h3 File Transfer Protocol
 
-    div
-      img src='/images/figures/11-ftp.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div Transferencia de archivos entre sistema local y remoto
 
-    div Comandos
-    ul
-      li <code>USER username</code>
-      li <code>PASS password</code>
-      li <code>LIST</code>
-      li <code>RETR filename</code>
-      li <code>STOR filename</code>
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      br      
+      div Comandos
+      ul
+        li <code>USER username</code>
+        li <code>PASS password</code>
+        li <code>LIST</code>
+        li <code>RETR filename</code>
+        li <code>STOR filename</code>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/11-ftp.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+section
+  h2 Correo Electrónico
+
+  section
+    h3 SMTP, POP, IMAP
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      div Protocolo de envío: SMTP (RFC5321)
+      ul style='font-size:28px;'
+        li Simple Mail Transfer Protocol
+        li Puerto 25
+      br
+      br
+      div Protocolo de lectura: POP3 (RFC1939)
+      ul style='font-size:28px;'
+        li Post Office Protocol
+        li Puerto 110
+        li No mantiene estado
+      br
+      br
+      div Protocolo de lectura: IMAP (RFC3501)
+      ul style='font-size:28px;'
+        li Internet Mail Access Protocol
+        li Permite creación de directorios en servidor
+        li Mantiene estado del lector
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-smtp.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 SMTP, POP, IMAP
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      div Protocolo de envío: SMTP (RFC5321)
+      ul style='font-size:28px;'
+        li Simple Mail Transfer Protocol
+        li Puerto 25
+      br
+      br
+      div Protocolo de lectura: POP3 (RFC1939)
+      ul style='font-size:28px;'
+        li Post Office Protocol
+        li Puerto 110
+        li No mantiene estado
+      br
+      br
+      div Protocolo de lectura: IMAP (RFC3501)
+      ul style='font-size:28px;'
+        li Internet Mail Access Protocol
+        li Permite creación de directorios en servidor
+        li Mantiene estado del lector
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-smtptext.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+      div Ejemplo SMTP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 section
   h2 DNS
@@ -406,15 +559,19 @@ section
     h3 Domain Name System
 
     div Antes de iniciar la conexión TCP para el protocolo HTTP a URL:
-    div <code>http://www.ing.puc.cl/index.html</code>
+    div <code>http://iic2333.ing.puc.cl/slides/5-disk.html</code>
+    br
 
-    ol
+    ol style='font-size:32px;'
       li Cliente ejecuta proceso cliente DNS
-      li Browser extrae <code>www.ing.puc.cl</code> y lo pasa al cliente DNS
-      li Cliente DNS envía <i>query</i> por <code>www.ing.puc.cl</code> a servidor DNS
-      li Cliente DNS recibe respuesta de servidor DNS, que incluye IP de <code>www.ing.puc.cl</code>
-      li Cliente DNS pasa respuesta a browser, y su cliente HTTP inicia conexión TCP a la IP de <code>www.ing.puc.cl</code>
+      li Browser extrae <code>iic2333.ing.puc.cl</code> y lo pasa al cliente DNS
+      li Cliente DNS envía <i>query</i> por <code>iic2333.ing.puc.cl</code> a servidor DNS
+      li Cliente DNS recibe respuesta de servidor DNS, que incluye IP de <code>iic2333.ing.puc.cl</code>
+      li Cliente DNS pasa respuesta a browser
+      li Cliente HTTP inicia conexión TCP a la IP de <code>iic2333.ing.puc.cl</code>
 
+    br
+    br
     div DNS utiliza una estructura jerárquica de dominos y servidores
 
   section
@@ -427,37 +584,55 @@ section
 
 
   section
-    h3 Domain Name System
 
     div Servidores almacenan <i>mapping</i>s 
-    ul
-      li Si un servidor no conoce un <i>mapping</i>, lo consulta a un servidor superior en la jerarquía
-      li Eventualmente puede llegar a un servidor raíz
-      li Servidor raíz conocen ubicación de servidores TLD
-      ul
-        li gTLD: General Top-Level Domain. <code>.com</code>, <code>.org</code>, <code>.edu</code> 
-        li ccTLD: Country-Code Top-Level Domain. <code>.cl</code>, <code>.nl</code>, <code>.es</code>, <code>.au</code>
-      
-      li 13 servidores raíz en el mundo: A,B,C,D,E,F,G,H,I,J,K,L,M
-      ul
-        li Con múltiples instancias de cada uno (dos de ellos replicados en Chile)
-        li <code>http://www.root-servers.org</code>
-      
-      li Servidores que administran el mapping son <i>servidores autoritativos</i>
-      ul
-        li Servidores autoritativos administran el mapping (al nivel de institución)
-        li Servidores no-autoritativos mantienen temporalmente el mapping
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      ul style='font-size:32px;'
+        li Si no conoce un <i>mapping</i>, lo consulta a un servidor superior en la jerarquía
+        li Eventualmente puede llegar a servidor raíz
+        li Servidores raíz conocen ubicación de servidores TLD
+        ul style='font-size:24px;'
+          li gTLD: General Top-Level Domain. <code>.com</code>, <code>.org</code>, <code>.edu</code> 
+          li ccTLD: Country-Code Top-Level Domain. <code>.cl</code>, <code>.nl</code>, <code>.es</code>, <code>.au</code>
+        
+        li 13 servidores raíz en el mundo: A,B,C,D,E,F,G,H,I,J,K,L,M
+        ul style='font-size:24px;'
+          li Con múltiples instancias de cada uno (cuatro de ellos replicados en Chile)
+          li <code>http://www.root-servers.org</code>
+        
+        li Servidores que administran el mapping son <i>servidores autoritativos</i>
+        ul style='font-size:24px;'
+          li Servidores autoritativos administran el mapping (al nivel de institución)
+          li Servidores no-autoritativos mantienen temporalmente el mapping
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-dns-map.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
+    div Consultas <i>iterativas</i> y <i>recursivas</i>
 
-    div
-      img src='/images/figures/11-dns-map.png' style="background:none; border:none; box-shadow:none;" width="60%"
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+      div Consultas iterativas (1,2) envían respuesta (completa o parcial) al origen
+      br
+      br
+      div Consultas recursivas (4,6) reenvían la consulta
 
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-dns-inter1.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
-    div Consultas <i>iterativas</i> (1,2) y <i>recursivas</i> (4,6)
-    div
-      img src='/images/figures/11-dns-inter1.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    div Consultas <i>iterativas</i> y <i>recursivas</i>
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+      div Consulta recursiva
+      br
+      br
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-dns-inter2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
 
@@ -485,21 +660,55 @@ section
   section
 
     div <code>(nombre, valor, tipo, ttl)</code>
-  
+    br
     ul
       li Tipo A: <code>nombre</code> es nombre del host; <code>valor</code> es dirección IP
       ul
         li <code>(relay1.bar.foo.com, 145.37.93.126, A)</code>
-
+      br
       li Tipo NS: <code>nombre</code> es dominio; <code>valor</code> es IP de host autoritativo
       ul
         li <code>(foo.com, dns.foo.com, NS)</code>
-
+      br
       li Tipo CNAME: alias, <code>nombre</code> es alias; <code>valor</code> es nombre real
       ul
         li <code>(foo.com, relay1.bar.foo.com, CNAME)</code>
-
+      br
       li Tipo MX: <code>valor</code> es el nombre de un <i>mail server</i>
       ul
         li <code>(foo.com, mail.bar.foo.com, MX)</code>
+
+
+section
+  h2 Redes P2P
+
+  section
+    h3 Peer-to-Peer
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      div Redes entre pares
+      br
+      div No dependen de un servidor
+      ul style='font-size:24px;'
+        li Mejor escalabilidad
+        li Deben maneja pertenencia y abandono de miembros      
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-p2p-torrent.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Distributed Hash Table
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      div Método de direccionamiento para redes P2P <b>estructuradas</b>
+      br
+      div Cada miembro posee una identificación única
+      ul style='font-size:24px;'
+        li Se construye una <i>overlay network</i> entre miembros
+        li Miembros se encarga de enrutar mensajes
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/11-p2p-dht.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
 
