@@ -7,60 +7,75 @@ section
   h2 Protocolos de Transporte
 
   section
-    div style="text-align:left;" <b>Objetivo</b>: Conseguir que un mensaje llegue desde <i>emisor</i> a <i>receptor</i>
+    blockquote style="background:#B7E1CD;" <b>Objetivo</b>: Conseguir que un mensaje llegue desde <i>emisor</i> a <i>receptor</i>
 
-    div style="text-align:left;" Entonces, ¿qué hacían las otras capas?
+    div
+      img src='/images/figures/10-transporte.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
-    ul
+    /div style="text-align:left;" Entonces, ¿qué hacían las otras capas?
+
+    /ul
       li Física: transmisión de bits a través de un enlace
       li Enlace: comunicación a través de un enlace
       li Red: enrutamiento de <b>paquetes</b> de <i>origen</i> a <i>destino</i>
       li Transporte: transmisión de <b>mensajes</b> desde <i>origen</i> a <i>destino</i>
 
     
-  section
+  /section
     h3 Enlace
     div
       img src='/images/figures/07-linkhops.png' style="background:none; border:none; box-shadow:none;" width="80%"
 
-  section
+  /section
     h3 Red
     div
       img src='/images/figures/09-network.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
-  section
+  /section
     h3 Transporte
     div
       img src='/images/figures/10-transporte.png' style="background:none; border:none; box-shadow:none;" width="35%"
 
   section
-    div style="text-align:left;" Protocolos de transporte transmiten información de un proceso en <i>emisor</i> a un proceso en <i>host</i> receptor
+    /div style="text-align:left;" Protocolos de transporte transmiten información de un proceso en <i>emisor</i> a un proceso en <i>host</i> receptor
     ul
-      li <b>Emisor</b>: recibe un mensaje de capa de aplicación, lo divide en segmentos, y solicita a la capa de red que envíe los segmentos al receptor. Routers no examinan <i>headers</i> de transporte.
-      li <b>Receptor</b>: recibe segmentos, los ensambla para formar el mensaje, y lo entrega a la capa de aplicación.
+      li <b>Emisor</b>. Recibe un mensaje de capa de aplicación, lo divide en segmentos, y solicita a la capa de red que envíe los segmentos al receptor. Routers no examinan <i>headers</i> de transporte.
+      li <b>Receptor</b>. Recibe segmentos, los ensambla para formar el mensaje, y lo entrega a la capa de aplicación.
   
+    br
+    br
+
     div style="text-align:left;" Dos protocolos representativos de medios de transporte:
     ul
       li <b>TCP</b>: Entrega confiable y ordenada. Control de flujo. Establecimiento de conexión.
       li <b>UDP</b>: Entrega no confiable y desordenada. Mejor esfuerzo.
 
   section
-    div <b>Segmentos</b>
+    h3 Segmentos
 
-    div Mensaje se divide en segmentos. Segmentos se transmiten en paquetes IP.
+    div style="width:65%; vertical-align:middle; display:inline-block;" 
+
+      div Mensaje se divide en segmentos.
+    
+      br
+      div Segmentos se transmiten en paquetes IP.
+
+      br
+
+      div ¿Cómo identificar mensajes a distintos procesos?
+      ul
+        li <b>Puerto</b> permite identificar procesos dentro del nodo emisor o del nodo receptor.
+        li <b>Puerto</b> permite <b>multiplexar</b> mensajes
   
-    div ¿Cómo identificar mensajes a distintos procesos?
-    ul
-      li Se utiliza un <b>puerto</b> para establecer diferencias entre procesos de origen y destino dentro de un mismo emisor o receptor.
-      li <b>Multiplexión</b> de mensajes
-  
-    div
-      img src='/images/figures/10-segmento.png' style="background:none; border:none; box-shadow:none;" width="20%"
+    div style="width:35%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-segmento.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
-    h3 Multiplexión y Demultiplexión
+    h3 Multiplexión
 
-    div tyle="text-align:left;" Cada aplicación (proceso) envía mensajes a través de un objeto intermediario del Sistema Operativo: <b>socket</b>
+    div tyle="text-align:left;" Proceso envían mensajes a través de <b>sockets</b> del Sistema Operativo
+
+    br
 
     ul
       li Cada <b>socket</b> se crea con un número de puerto específico
@@ -69,7 +84,7 @@ section
     div
       img src='/images/figures/10-sockets.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
-  section
+  /section
     h3 Multiplexión y Demultiplexión
 
     div style="text-align:left;" Algunos puertos están reservados
@@ -108,7 +123,7 @@ section
     div
       img src='/images/figures/10-tcpports.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
-  section
+  /section
     h3 TCP versus UDP
 
     div
@@ -121,22 +136,52 @@ section
   section 
     h3 User Datagram Protocol
 
-    ul
-      li Servicio de "mejor esfuerzo" (best-effort). Segmentos pueden perderse.
-      li Segmentos pueden llegar y entregarse a capa de aplicación en distinto orden
-    
-    div Servicio <b>no orientado a conexión</b> (<i>connection-less</i>)
-    ul
-      li No se establece conexión previa
-      li Cada segmento UDP se gestiona de manera independiente
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Servicio de "mejor esfuerzo" (best-effort). 
+        li Segmentos pueden perderse.
+        li Segmentos pueden llegar en distinto orden.
+      
+      br
+      br
+
+      div Servicio <b>no orientado a conexión</b> (<i>connection-less</i>)
+      ul
+        li No se establece conexión previa
+        li No mantiene estado de conexión
+        li Cada segmento se gestiona de manera independiente
+
+      br
+      br
+
+      div Segmento UDP solo tiene 8 byte de <i>overhead</i>
   
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-udpsegment.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
   section
     h3 UDP Segment
 
-    div
-      img src='/images/figures/10-udpsegment.png' style="background:none; border:none; box-shadow:none;" width="30%"
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-    div Segmento UDP solo tiene 8 byte de <i>overhead</i>
+      div ¿Por qué mejor UDP?
+      ul
+        li Aplicación puede controlar directamente el envío
+        li No hay demora en establecer conexión
+        ul style='font-size:24px;'
+          li Menor <i>overhead</i> de tiempo
+
+        li No se reservan recursos
+        li Menor <i>overhead</i> de espacio: 8 byte
+        ul style='font-size:24px;'
+          li TCP tiene 20 byte
+
+  
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-udp-joke.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
 section
   h2 Reliable Data Transfer
@@ -148,65 +193,75 @@ section
       img src='/images/figures/10-rdt.png' style="background:none; border:none; box-shadow:none;" width="60%"
 
   section
-    div style="text-align:left;" Versión 1.0. Canal de transmisión confiable (supuesto demasiado fuerte, pero simple)
-    div
-      img src='/images/figures/10-rdt-v1.png' style="background:none; border:none; box-shadow:none;" width="35%"
+    div <b>Versión 1.0</b>. Canal de transmisión confiable.
 
-    div ¿Y si los paquetes llegan con errores?
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      div Supuesto  fuerte, pero simple.
+      br
+      div <b>Sender</b>
+      ul style='font-size:28px;'
+        li Al recibir solicitud de envío, crea un paquete y envía
+
+      br
+      div <b>Receiver</b>
+      ul style='font-size:28px;'
+        li Al recibir paquete, extrae mensaje y lo pasa a aplicación
+
+      br
+      br
+      div.fragment <b>Problema</b>: Los paquetes pueden llegar con errores
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-rdt-v1.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
-    div style="text-align:left;" Versión 2.0. Protocolo ARQ (Automatic Repeat reQuest)
-    ul
-      li Detección de errores. 
-      li Mensajes de <i>feedback</i>. ACK (<i>acknowledgment</i>) y NAK (<i>negative ACK</i>)
+    div <b>Versión 2.0</b>. Protocolo ARQ (Automatic Repeat reQuest)
+    ul style='font-size:28px;'
+      li Detección de errores. Envía <i>checksums</i>. 
+      li Paquetes de <i>feedback</i>. ACK (<i>acknowledgment</i>) y NAK (<i>negative ACK</i>)
       li Retransmisiones.
 
     div
       img src='/images/figures/10-rdt-v2-send.png' style="background:none; border:none; box-shadow:none;" width="60%"
       img src='/images/figures/10-rdt-v2-recv.png' style="background:none; border:none; box-shadow:none;" width="40%"
 
-  section
-
-    div
-      img src='/images/figures/10-rdt-v2-send.png' style="background:none; border:none; box-shadow:none;" width="60%"
-      img src='/images/figures/10-rdt-v2-recv.png' style="background:none; border:none; box-shadow:none;" width="40%"
-
-    div ¿Y si el ACK o el NAK tiene errores? El <i>sender</i> no sabe si el <i>receiver</i> recibió correctamente o no.
-    ul 
-      li ¿Retransmitir al recibir un ACK o NAK corrupto? Pero pueden llegar duplicados.
+    div.fragment ¿ACK o NAK con errores? El <i>sender</i> no sabe si el <i>receiver</i> recibió correctamente o no.
+    ul style='font-size:28px;'
+      li ¿Retransmitir al recibir un ACK o NAK corrupto? Pueden llegar duplicados.
 
 
   section
-    div style="text-align:left;" Versión 2.1. Agregar un <b>sequence number</b>. Basta con 1-bit.
+    div <b>Versión 2.1</b>. Agregar un <b>sequence number</b>. Por ahora, 1-bit.
 
     div
       img src='/images/figures/10-rdt-v21-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
       img src='/images/figures/10-rdt-v21-recv.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
   section
-    div style="text-align:left;" Versión 2.2. Podemos eliminar los NAK. Cada ACK adjunta el <b>sequence number</b>
+    div <b>Versión 2.2</b>. Podemos eliminar los NAK. Cada ACK adjunta el <b>sequence number</b>
 
     div
       img src='/images/figures/10-rdt-v22-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
       img src='/images/figures/10-rdt-v22-recv.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
-    div ¿Y si se pierden paquetes?
+    div.fragment ¿Y si se pierden paquetes?
 
   section
-    div style="text-align:left;" Versión 3.0. Implementa <b>timeout</b> para retransmisión en el <i>sender</i>.
+    div <b>Versión 3.0</b>. <b>Timeout</b> para retransmisión en el <i>sender</i>.
 
     div
       img src='/images/figures/10-rdt-v3-send.png' style="background:none; border:none; box-shadow:none;" width="50%"
 
   section
-    div Funcionamiento sin pérdida (a), y con un paquete perdido (b)
+    div (a) Funcionamiento sin pérdida. (b) Con un paquete perdido
 
     div
       img src='/images/figures/10-rdt-sequence-a.png' style="background:none; border:none; box-shadow:none;" width="60%"
 
 
   section
-    div Funcionamiento con ACK perdido (c), y con un <i>timeout</i> prematuro (d)
+    div (c) Funcionamiento con ACK perdido. (d) Con un <i>timeout</i> prematuro
 
     div
       img src='/images/figures/10-rdt-sequence-b.png' style="background:none; border:none; box-shadow:none;" width="60%"
@@ -224,46 +279,45 @@ section
       li Dos enfoques para manejar paquetes: <b>Go-Back-N</b>, <b>Selective Repeat</b>
 
   section
-    div <b>Go-back-N</b>
+    h3 Go-back-N
 
-    div
-      img src='/images/figures/10-rdt-gbn.png' style="background:none; border:none; box-shadow:none;" width="60%"
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-    ul
-      li Emisor puede mantener hasta $N$ paquetes sin ACK
-      li Receptor envía ACK por el último paquete recibido correctamente
-      li Emisor usa <i>timer</i> para paquete más antiguo sin ACK
+      div
+        img src='/images/figures/10-rdt-gbn.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
       ul
-        li Si el <i>timer</i> expira, se retransmite todo el grupo de paquetes sin ACK
-        li <code>base</code> es el paquete más antiguo que aún no tiene ACK
-        li <code>nextseqnum</code> es el próximo número de secuencia a usar
-        li <code>N</code> es un <i>window size</i>. También se conoce como <i>sliding window protocol</i>
+        li Emisor puede mantener hasta $N$ paquetes sin ACK
+        li Receptor envía ACK por el último paquete recibido correctamente
+        li Emisor usa <i>timer</i> para paquete más antiguo sin ACK
+        ul style='font-size:28px;'
+          li Si el <i>timer</i> expira, se retransmite todo el grupo de paquetes sin ACK
+          li <code>base</code> es el paquete más antiguo que aún no tiene ACK
+          li <code>nextseqnum</code> es el próximo número de secuencia a usar
+          li <code>N</code> es un <i>window size</i>. También se conoce como <i>sliding window protocol</i>
+        li Ejemplo con <code>N=4</code>
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-rdt-gbn-2.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Selective Repeat
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div
+        img src='/images/figures/10-rdt-sr.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+
+      ul style='font-size:28px;'
+        li Emisor puede mantener hasta $N$ paquetes sin ACK
+        li Receptor envía ACK para cada paquete individual
+        li Emisor usa <i>timer</i> para paquete más antiguo sin ACK
+        ul style='font-size:24px;'
+          li Si el <i>timer</i> expira, se retransmite <b>solo</b> paquetes sin ACK
       
-  section
-    div <b>Go-back-N</b>
-
-    div
-      img src='/images/figures/10-rdt-gbn-2.png' style="background:none; border:none; box-shadow:none;" width="30%"
-
-  section
-    div <b>Selective Repeat</b>
-
-    div
-      img src='/images/figures/10-rdt-sr.png' style="background:none; border:none; box-shadow:none;" width="48%"
-
-
-    ul
-      li Emisor puede mantener hasta $N$ paquetes sin ACK
-      li Receptor envía ACK para cada paquete individual
-      li Emisor usa <i>timer</i> para paquete más antiguo sin ACK
-      ul
-        li Si el <i>timer</i> expira, se retransmite todo el grupo de paquetes
-      
-  section
-    div <b>Selective Repeat</b>
-
-    div
-      img src='/images/figures/10-rdt-sr-2.png' style="background:none; border:none; box-shadow:none;" width="45%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-rdt-sr-2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 section
   h2 TCP
