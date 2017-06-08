@@ -325,83 +325,153 @@ section
   section
     h3 Transport Control Protocol
 
-    ul
-      li Protocolo de transmisión fiable
-      li Transmisión encadenanada <i>chained</i>
-      li Gestiona control de flujo a través del tamaño de la ventana
-      li Buffer en emisor y en receptor
-      li Orientado a conexión
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
       ul
-        li Protocolo de establecimiento de conexión antes de enviar paquetes de datos
+        li Protocolo de transmisión fiable
+        li Transmisión encadenanada <i>chained</i>
+        li Control de flujo a través del tamaño de la ventana
+        li Buffer en emisor y en receptor
+        li Orientado a conexión
+        ul style='font-size:24px;'
+          li Protocolo de establecimiento de conexión (<i>handshake</i>) antes de enviar paquetes de datos
       
-  section
-    div <b>Header TCP</b>
-
-    div
-      img src='/images/figures/10-tcp-segment.png' style="background:none; border:none; box-shadow:none;" width="45%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-tcp-segment.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
-    ul
-      li Números de secuencia se refieren a bytes en la secuencia
-      li ACK se refieren al <i>sequence number</i> del siguiente byte que se espera. <b>Cumulative ACKs.</b>
-      li Mensaje de respuesta funciona también como ACK. <b>Piggybacked ACK</b>
 
-    div
-      img src='/images/figures/10-tcp-seq.png' style="background:none; border:none; box-shadow:none;" width="35%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div Ejemplo: TELNET
+      img src='/images/figures/10-tcp-segment-div.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+      ul
+        li Tamaño máximo de segmento: <b>MSS</b>, <i>Maximum Segment Size</i>
+        li Números de secuencia además cuentan bytes en la secuencia
+        li ACK contienen el <i>sequence number</i> del siguiente byte que se espera. <b>Cumulative ACKs.</b>
+        li Mensaje de respuesta funciona también como ACK. <b>Piggybacked ACK</b>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-tcp-seq.png' style="background:none; border:none; box-shadow:none;" width="100%"
+      div Ejemplo: TELNET
 
   section
     div Algoritmo de transmisión fiable de TCP
 
-    div
-      img src='/images/figures/10-tcp-alg.png' style="background:none; border:none; box-shadow:none;" width="45%"
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/10-tcp-sr-a.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+      ul
+        li <code>SendBase</code> es la base de la ventana
+        li <code>NextSeqNum</code> se actualiza al crear un segmento nuevo para enviar
+        li Al expirar el <i>timer</i> se retransmite el segmento con menor <i>sequence number</i>.
+        ul style='font-size:24px;'
+          li El paquete enviado, o el ACK pueden haberse perdido
+        li Si llega un ACK con valor mayor a <code>SendBase</code>, se actualiza <code>SendBase</code>
+        ul style='font-size:24px;'
+          li Esto significa que ya se han recibido los paquetes con valor menor a <code>SendBase</code>
+          li Puede haberse perdido el ACK de los paquetes anteriores
+          li Este es el funcionamiento del <b>cumulative ACK</b>
+
+
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-tcp-alg.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     div Caso: ACK perdido y retransmisión
 
-    div
-      img src='/images/figures/10-tcp-caso1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;"
+
+      div Si el ACK se pierde, se produce <i>timeout</i>
+      ul style='font-size:24px;'
+        li <i>A</i> reenvía el paquete más antiguo sin ACK (Seq=92)
+        li <i>A</i> reinicia el <i>timer</i>
+        li <i>B</i> recibe Seq=92 duplicado. Lo descarta, pero reenvía ACK
+
+      br
+      br
+
+      img src='/images/figures/10-tcp-alg-case2.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/10-tcp-caso1.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
-    div Caso: Segmento no retransmitido
+    div Caso: <i>Timeout</i> prematuro
 
-    div
-      img src='/images/figures/10-tcp-caso2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;"
+
+      div <i>Timeout</i> ocurre antes que llegue el ACK
+      ul style='font-size:24px;'
+        li <i>A</i> reenvía el paquete más antiguo sin ACK (Seq=92), y reinicia <i>timer</i> (Seq=92)
+        li <i>A</i> recibe ACK y reinicia <i>timer</i>, por Seq=100
+        li <i>A</i> NO reenvía Seq=100, ya que su ACK llega antes del <i>timeout</i>
+        li <i>B</i> recibe Seq=92 duplicado. Lo descarta, pero envía (cumulative) ACK
+
+      br
+
+      img src='/images/figures/10-tcp-alg-case1-2-3.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"
+      img src='/images/figures/10-tcp-caso2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     div Caso: Cumulative ACK evita retransmisión
 
-    div
-      img src='/images/figures/10-tcp-caso3.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;"
+
+      div ACK por Seq=92 se pierde
+      ul style='font-size:24px;'
+        li El ACK=120 (ACK de Seq=100) llega antes del <i>timeout</i> de Seq=92
+        li Cumulative ACK (ACK=120) indica que se ha recibido el Seq=92 y el Seq=100
+        li <i>A</i> NO reenvía Seq=92
+        li <i>A</i> incrementa <code>SendBase</code>
+
+      br
+
+      img src='/images/figures/10-tcp-alg-case3.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+ 
+    div style="width:40%; vertical-align:middle; display:inline-block;"
+      img src='/images/figures/10-tcp-caso3.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 
   section
-    div <b>Retransmisión rápida</b>
+    h3 Retransmisión rápida
 
-    ul
-      li <i>Timeout</i>s pueden tomar mucho tiempo
-      li Retransmisión rápida envía proactivamente segmentos probablemente perdidos, antes que ocurra un timeout
+    div style="width:65%; vertical-align:middle; display:inline-block;"
 
-    div
-      img src='/images/figures/10-tcp-fr.png' style="background:none; border:none; box-shadow:none;" width="30%"
+      ul
+        li <i>Timeout</i>s pueden tomar mucho tiempo
+        li Retransmisión rápida envía proactivamente segmentos probablemente perdidos, antes que ocurra un timeout
+
+
+      img src='/images/figures/10-tcp-alg-case4.png' style="background:none; border:none; box-shadow:none;" width="70%"
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"
+      img src='/images/figures/10-tcp-fr.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
+    h3 TCP Handshake Protocol
+    
     div <b>Establecimiento de conexión TCP</b>
 
-    div TCP Handshake Protocol
+    br
+
     ul
       li Paso 1. Cliente envía segmento <code>SYN</code> al servidor
-      ul
-        li Incluye número de secuencia inicial
+      ul style='font-size:28px;'
+        li Incluye número de secuencia inicial (de cliente)
       
       li Paso 2. Servidor recibe <code>SYN</code>, y responde con <code>SYN ACK</code>
-      ul
+      ul style='font-size:28px;'
         li Servidor asigna buffer
-        li Servidor establece número de secuencia inicial
+        li Servidor establece número de secuencia inicial (de servidor)
       
       li Paso 3. Cliente recibe <code>SYN ACK</code>, y responde con <code>ACK</code>
-      ul
+      ul style='font-size:28px;'
         li Este paquete ya puede contener datos
 
   section
@@ -414,6 +484,11 @@ section
     div
       img src='/images/figures/10-tcp-hs3.png' style="background:none; border:none; box-shadow:none;" width="50%"
       img src='/images/figures/10-tcp-hs4.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+  section
+    h3 TCP Joke
+
+    img src='/images/figures/10-tcp-joke.png' style="background:none; border:none; box-shadow:none;" width="60%"
 
 
 
