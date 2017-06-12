@@ -20,11 +20,15 @@ article
       div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 29/May, 18:30
       div style="border:none; display:inline-block;" class="timerI2"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:80px;" = link_to 'T4', 'homeworks/4/T4.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 7/Jun, 23:59
       div style="border:none; display:inline-block;" class="timerT4"
 
+    div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 19/Jun, 23:59
+      div style="border:none; display:inline-block;" class="timerT5"
 
 
   section#slides
@@ -97,6 +101,11 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
       div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
       
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 19/Jun, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
+      /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
 
 
     /ul
@@ -210,6 +219,13 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Jun 07, 2017 23:59:59')
+  });
+  var countdownT5 = new Countdown({
+    selector: '.timerT5',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 19, 2017 23:59:59')
   });
 
 
