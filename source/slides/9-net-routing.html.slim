@@ -7,49 +7,89 @@ section
   h2 Capa de Red
 
   section
-    div style="text-align:left;" <b>Objetivo</b>: Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
+    blockquote style="background:#B7E1CD;" <b>Objetivo</b>: Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
 
-    div style="text-align:left;" <b>Unidad de transmisión</b>: <i>paquete</i> o <i>datagrama</i>
+    div style="width:65%; vertical-align:middle; display:inline-block;" 
 
-    div style="text-align:left;" <b>Servicios</b>:
-    ul
-      li <b>Desafío:</b> conseguir que los datagrams lleguen desde el nodo origen al nodo destino
-      li Determinar la ubicación del nodo destino en la red.
-      li Determina un esquema de <i>direccionamiento</i>.
-      li Utiliza una red de <i>enrutadores</i> (<i>routers</i>)
-      li Utiliza algoritmos para determinar <i>rutas</i>. Algoritmos de enrutamiento (<i>routing</i>)
+      div style="text-align:left;" <b>Unidad de transmisión</b>: <i>paquete</i> o <i>datagrama</i>
+
+      div style="text-align:left;" Dos problema principales:
+      ul
+        li <b>Direccionamiento</b>. Determinar la ubicación del nodo destino en la red.
+        ul style='font-size:24px;'
+          li Cada miembro (host) debe poseer una dirección única
+          li La información del paquete debe ser suficiente para encontrar al destino
+        li <b>Enrutamiento</b>. Coordinar <i>routers</i> para que el paquete llegue al destino.
+        ul style='font-size:24px;'
+          li Algoritmos para determinar <i>rutas</i>: algoritmos de enrutamiento (<i>routing</i>)
+          li <i>Routing</i> debe ser eficiente
+
+    div style="width:35%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-net-layer.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
-    div Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
-    
-    img src='/images/figures/09-network.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    blockquote style="background:#B7E1CD;" <b>Objetivo</b>: Transmisión de paquetes desde <b>emisor</b> a <b>receptor</b>
 
-  section
-    div style="text-align:left;" <b>Forwarding</b>: Decisión local. Reenvía paquete por puerta apropiada. <i>Forwarding Table</i>.
+    div style="width:65%; vertical-align:middle; display:inline-block;" 
 
-    div style="text-align:left;" <b>Routing</b>: Decisión distribuida. Permite que el paquete llegue de origen a destino. Algoritmo de <i>routing</i> permite armar las <i>forwarding tables</i>.
+      div style="text-align:left;" <i>Routers</i> son dispositivos de <i>almacenamiento y reenvío</i>: <b>store-and-forward</b>/
 
-    img src='/images/figures/09-forward.png' style="background:none; border:none; box-shadow:none;" width="35%"
+      br
+
+      ul
+        li <b>Forwarding</b>. Decisión local de un <i>router</i>
+        ul style='font-size:28px;'
+          li Cada <i>router</i> determina el próximo camino (salida) de un paquete mirando su <i>dirección de destino</i>
+          li <i>Router</i> usa <i>forwarding tables</i>
+        li <b>Enrutamiento (<i>routing</i>)</b>. Decisión distribuida entre <i>routers</i>
+        ul style='font-size:28px;'
+          li <i>Routers</i> ejecuta un <i>algoritmo de routing</i>.
+          li <i>Algoritmo de routing</i> permite llenar las <i>forwarding tables</i>
+        
+    div style="width:35%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-forward.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
 section
   h2 Modos de Conexión
 
   section 
-    div Conexión entre nodos
+    h3 Virtual Circuit Network
 
-    div style="text-align:left;" <b>Virtual Circuit network</b>: camino único entre origen-destino. Redes ATM, <i>frame relay </i>
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
 
-    div style="text-align:left;" <b>Datagram network</b>: servicio <i>connectionless</i>. Decisión de retransmisión
-      se toma en cada <i>router</i>. Internet.
+      div Esquema de red telefónica
+      ul style='font-size:28px;'
+        li Setup del VC. Permite reserva ancho de banda.
+        li Data transfer.
+        li Destrucción del VC.
+        li <i>Router</i> mantiene <i>estado de la conexión</i>: <b>Connection-oriented</b>
 
-  section
+      br
+
+      div Garantiza ancho de banda durante la conexión
+      ul style='font-size:28px;'
+        li Ancho de banda desperdiciado mientras no se transmiten datos
+        li Poco flexible a congestiones
+        li Limita la cantidad de VC simultáneos
+
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/09-vc3.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+      /img src='/images/figures/09-vc2.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+      /div Posible tabla para R1
+
+  /section
     h3 Virtual Circuit
 
     ul
       li Camino (path). Ejemplo: A-R1-R2-B.
       li VC ID. Número para cada <i>enlace</i>. Cada paquetes lleva un VC ID.
       li Entrada en <i>forwarding table</i>.
-      li <i>Router</i> mantiene <b>estado de la conexión.</b>
+      li <i>Router</i> mantiene <b>estado de la conexión.</b>.
 
     div
       img src='/images/figures/09-vc1.png' style="background:none; border:none; box-shadow:none;" width="40%"
@@ -57,7 +97,7 @@ section
 
     div Posible tabla para R1
 
-  section
+  /section
     h3 Virtual Circuit
 
     ul
@@ -71,26 +111,26 @@ section
   section
     h3 Datagram network
 
-    ul
-      li Cada paquete lleva la dirección de destino.
-      li <i>Routers</i> reenvían de acuerdo a su <i>forwarding table</i>
-      li Paquetes podrían tener distintos caminos.
-      li <i>Routers</i> no saben de caminos ni estado. <b>Connectionless</b>.
+    div style="width:55%; vertical-align:middle; display:inline-block;" 
 
-    div
-      img src='/images/figures/09-dg1.png' style="background:none; border:none; box-shadow:none;" width="70%"
+      div Esquema de Internet
+      ul style='font-size:28px;'
+        li Cada paquete lleva la dirección de destino.
+        li <i>Routers</i> reenvían de acuerdo a su <i>forwarding table</i>
+        li Paquetes podrían tener distintos caminos.
+        li <i>Routers</i> no saben de caminos ni estado. <b>Connectionless</b>.
 
-  section
+      br
 
-    ul
-      li Destinos para cada dirección posible. Usualmente <i>forwarding table</i> contiene <b>prefijos</b>
-    div
-      img src='/images/figures/09-dg2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      div No garantiza ancho de banda
+      ul style='font-size:28px;'
+        li Flexible ante congestión
+        li Permite ocupar de mejor manera el ancho de banda
 
-    div Ejemplo con direcciones de 32 bit (!)
 
-    div
-      img src='/images/figures/09-dg3.png' style="background:none; border:none; box-shadow:none;" width="35%"
+    div style="width:45%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-dg1.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
 
 
@@ -98,83 +138,168 @@ section
   h2 Direccionamiento de Red
 
   section
-    div ¿Cómo un mensaje encuentra su destinatario? Gracias al <b>datagrama (paquete) IP</b>
+    h3 ¿Qué hay en <i>forwarding table</i>?
+
+    div <i>Router</i> debe tener respuesta para cada dirección posible
+    ul style='font-size:28px;'
+      li Destinos para cada dirección posible. Usualmente <i>forwarding table</i> contiene <b>prefijos</b>
+    div Ejemplo con rangos de direcciones de 32-bit
 
 
-    div
-      img src='/images/figures/09-ip.png' style="background:none; border:none; box-shadow:none;" width="35%"
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    ul
-      li Longitud típica < 1500 byte.
-      li TTL: Time-to-live. Cantidad máxima de saltos (<i>hop</i>s).
-      li Si no hay <i>options</i>, header es de 20 byte.
+      img src='/images/figures/09-dg3.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      
+      img src='/images/figures/09-dg2.png' style="background:none; border:none; box-shadow:none;" width="80%"
+
+  section
+    h3 ¿Cómo un mensaje encuentra su destinatario?
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Gracias al <b>datagrama (paquete) IP</b>
+      ul
+        li Longitud típica < 1500 byte.
+        li TTL: Time-to-live. Cantidad máxima de saltos (<i>hop</i>s).
+        li Si no hay <i>options</i>, header es de 20 byte.
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-ip.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
     h3 Fragmentación
 
-    div Cada enlace puede tener distintas MTU
+    div Cada enlace puede tener distintas MTU (<i>Máximum Transfer Unit</i>)
 
-    div
-      img src='/images/figures/09-fragmentation.png' style="background:none; border:none; box-shadow:none;" width="40%"
-      img src='/images/figures/09-fragmentation2.png' style="background:none; border:none; box-shadow:none;" width="60%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-fragmentation.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Al encontrar enlace con menor MTU:
+      ul style='font-size:28px;'
+        li <i>Router</i> fragmenta el datagrama.
+        li <i>Router</i> envía fragmentos con mismo identificador
+        li <i>Router</i> en el otro extremo del enlace lo reensambla.
+
+      img src='/images/figures/09-fragmentation2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Dirección IP
 
-    div Direcciones de $32$ bit $= 4$ byte (IPv4). $2^{32} = 4294967296$ direcciones.
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div <b>Dotted-decimal notation</b>. Grupo de $8$ bit. ($0$ a $255$).
+    div Direcciones de $32$ bit $= 4$ byte (IPv4). 
+    ul style='font-size:32px;'
+      li $2^{32} = 4294967296$ direcciones.
+      li <b>Dotted-decimal notation</b>. Grupo de $8$ bit. ($0$ a $255$).
+      li $146.155.13.45$ es $10010010.10011011.00001101.00101101$
+      li Dirección <b>única globalmente</b> (casi)
 
-    div $146.155.13.45$ es $10010010.10011011.00001101.00101101$
-
-    div Dirección <b>única globalmente</b> (casi)
-
-    div
-      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Subredes
 
     div Conjunto de nodos conectados a un <i>router</i>
 
-    div style="text-align:left;" <code>a.b.c.d/x</code>. <b>CIDR: Classless Interdomain Routing .</b> (RFC4632). Ejemplo: <code>223.1.1.0/24</code>. 
-    ul 
-      li Primeros $x$ bit definen la <b>subred</b>. Ejemplo: 223.1.1.0. Máscara <code>/24</code>, o <code>255.255.255.0</code>
-      li Ultimos $32-x$ bit definen el <b>host</b> dentro de la subred. Ejemplo: <code>233.1.1.40</code>
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div
-      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      div style="text-align:left;" Notación <b>CIDR: Classless Interdomain Routing</b> (RFC4632)
+
+      div <code>a.b.c.d/x</code>
+      ul style='font-size:32px;'
+        li Ejemplo: <code>223.1.1.0/24</code>.
+      br
+      br
+      div style="text-align:left;" Primeros $x$ bit definen la <b>subred</b>.
+      ul style='font-size:32px;' 
+        li Ejemplo: <code>223.1.1.0/24</code>
+        li Máscara <code>/24</code>, ó <code>255.255.255.0</code>
+        li IP <code>&</code> máscara $\to$ <i>subred</i>
+      br
+      br
+      div style="text-align:left;"  Últimos $32-x$ bit definen el <b>host</b> dentro de la subred/
+      ul style='font-size:32px;' 
+        li Ejemplo: <code>223.1.1.40/24</code>
+        li Máscara es: 255.255.255.0
+        li Subred es: 223.1.1.0
+        li Host es: 223.1.1.40
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-subnets.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
 
   section
 
-    div
-      img src='/images/figures/09-subnets2.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Subred: <code>146.155.13.0/24</code>
+
+      br
+
+      ul
+        li 24 bits para subred. 8 bit para host. 
+        li Tamaño de subred: $2^8 = 256 - 2 = 254$ hosts máximo.
+        li Nombre de subred: Bits de <i>host</i> en 0. 
+        ul
+          li <code>146.155.13.0</code>
+        li Dirección broadcast: Bits de <i>host</i> en 1.
+        ul
+          li <code>146.155.13.255</code>
+        li Máscara (mask): $x$ bit en 1, $32-x$ bit en 0.
+        ul
+          li <code>255.255.255.0</code>
+
+      br
+      br
+
+      div Google: <a href="http://jodies.de/ipcalc">IP calculator</a>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-cidrexample.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
 
-    div Subred: <code>146.155.13.0/24</code>
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    ul
-      li Subred: Bits de <i>host</i> en 0. Ejemplo <code>146.155.13.0</code>
-      li Broadcast subred: Bits de <i>host</i> en 1. Ejemplo  <code>146.155.13.255</code>
-      li Máscara (mask): $x$ bit en 1, $32-x$ bit en 0. Ejemplo <code>255.255.255.0</code>
+      div Cada <i>router</i> posee una dirección IP en cada salida
+      ul style='font-size:24px;' 
+        li <i>Switches</i>, por otro lado, <b>NO</b> poseen dirección IP
+        li <i>Switches</i> son dispositivos de capa 2 (enlace)
+      br
+      br
+      div Cada grupo de <i>hosts</i> conectados a un <i>router</i> forma una subred
+      br
+      br
+      div Ejemplo muestra 6 subredes
 
-    div
-      img src='/images/figures/09-cidrexample.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-subnets2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
   section
     h3 Subredes y direcciones especiales
 
-    div Direcciones reservadas
-    ul
-      li 0.0.0.0. Dirección de host actual (sólo sirve como origen). "Todas las IPs locales".
-      li 127.0.0.1. Dirección <i>loopback</i> (localhost)
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      div <b>Direcciones reservadas</b>
+      ul
+        li <code>0.0.0.0</code>. Dirección de host actual (sólo sirve como origen). "Todas las IPs locales".
+        li <code>127.0.0.1</code>. Dirección <i>loopback</i> (localhost)
 
-    div Subredes reservadas
-    ul
-      li Red local: 0.0.0.0/8
-      li Red loopback: 127.0.0.0/8
-      li Redes privadas (RFC1918): 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      div <b>Subredes reservadas</b>
+      ul
+        li Red local: <code>0.0.0.0/8</code>
+        li Red loopback: <code>127.0.0.0/8</code>
+        li Redes privadas (RFC1918):
+        ul
+          li <code>10.0.0.0/8</code>
+          li <code>172.16.0.0/12</code>
+          li <code>192.168.0.0/16</code>
 
   section
     h3 Classful routing
@@ -188,7 +313,7 @@ section
   section
     h3 Asignación de direcciones
 
-    div style="text-align:left;" ISPs asignan bloques de direcciones a organizaciones, y publicitan sus bloques. 
+    div style="text-align:left;" ISPs asignan bloques de direcciones a organizaciones, y publican sus bloques. 
 
     div style="text-align:left;" Organizaciones pueden crear nuevas subredes dentro de su bloque
 
@@ -200,7 +325,7 @@ section
 
     div ¿Quién administra direcciones? ¿Cómo las obtiene el ISP?
 
-    div ICANN: Internet Corportation for Assigned Names and Numbers
+    div ICANN: Internet Corporation for Assigned Names and Numbers
 
     div ICANN asigna direcciones a "regional Internet registries"
 
@@ -221,17 +346,17 @@ section
   section
     h3 Dynamic Host Configuration Protocol
 
-    div Protocolo cliente-servidor de 4 etapas
-    ul
-      li DHCP Server Discovery. Cliente envía <b>DHCP discover message</b>. Destino 255.255.255.255.
-      li DHCP Server Offer(s). Server envía <b>DHCP offer message</b>. Destino 255.255.255.255.
-      li DHCP Request. Cliente envía <b>DHCP request message</b>.
-      li DHCP ACK. Server envía <b>DHCP ACK messag</b>.
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
 
-  section
+      div Protocolo cliente-servidor de 4 etapas
+      ul
+        li DHCP Server Discovery. Cliente envía <b>DHCP discover message</b>. Destino 255.255.255.255.
+        li DHCP Server Offer(s). Server envía <b>DHCP offer message</b>. Destino 255.255.255.255.
+        li DHCP Request. Cliente envía <b>DHCP request message</b>.
+        li DHCP ACK. Server envía <b>DHCP ACK message</b>.
 
-    div
-      img src='/images/figures/09-dhcp2.png' style="background:none; border:none; box-shadow:none;" width="33%"
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/09-dhcp2.png' style="background:none; border:none; box-shadow:none;" width="100%"
 
 section
   h2 NAT: Network Address Translation
@@ -250,7 +375,7 @@ section
 
     div Protocolo UPnp (Universal Plug and Play) permite establecer <i>mappings</i> dinámicos
 
-    div Mapeo (privateIP, privatePort) $\to$ (publicIP, publicPort)
+    div Mapping: (privateIP, privatePort) $\to$ (publicIP, publicPort)
 
     div
       img src='/images/figures/07-nat-3.png' style="background:none; border:none; box-shadow:none;" width="40%"
