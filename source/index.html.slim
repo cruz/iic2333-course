@@ -30,6 +30,11 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 19/Jun, 23:59
       div style="border:none; display:inline-block;" class="timerT5"
 
+    div
+      div style="border:none; display:inline-block; width:80px;" Examen
+      div style="border:none; display:inline-block; width:380px;" Inicio: Miércoles 21/Jun, 23:59
+      div style="border:none; display:inline-block;" class="timerEX"
+
 
   section#slides
     h3 Clases
@@ -259,4 +264,12 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 29, 2017 18:30:00')
+  });
+
+  var countdownEX = new Countdown({
+    selector: '.timerEX',
+    msgAfter: "Empezó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 21, 2017 09:00:00')
   });
