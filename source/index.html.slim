@@ -25,12 +25,17 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 7/Jun, 23:59
       div style="border:none; display:inline-block;" class="timerT4"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:80px;" = link_to 'T5', 'homeworks/5/T5.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 21/Jun, 23:59
       div style="border:none; display:inline-block;" class="timerT5"
 
     div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 03/Jul, 23:59
+      div style="border:none; display:inline-block;" class="timerT6"
+
+    /div
       div style="border:none; display:inline-block; width:80px;" Examen
       div style="border:none; display:inline-block; width:380px;" Inicio: Miércoles 21/Jun, 09:00
       div style="border:none; display:inline-block;" class="timerEX"
@@ -111,6 +116,11 @@ article
       div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 19/Jun, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
       /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 03/Jul, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT6"
 
 
     /ul
@@ -229,6 +239,7 @@ javascript:
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Jun 07, 2017 23:59:59')
   });
+
   var countdownT5 = new Countdown({
     selector: '.timerT5',
     msgAfter: "Se acabó.",
@@ -237,6 +248,13 @@ javascript:
     dateEnd: new Date('Jun 21, 2017 23:59:59')
   });
 
+  var countdownT6 = new Countdown({
+    selector: '.timerT6',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jul 03, 2017 23:59:59')
+  });
 
   var countdownAC04 = new Countdown({
     selector: '.timerAC04',
