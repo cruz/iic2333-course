@@ -1,22 +1,57 @@
 ---
-title: IIC2333
+title: IIC2333 - Sistemas Operativos y Redes
 layout: activity
 ---
 
+
 article
-  section#intro.top
-    p Material del curso
+  section#deadlines
+    h3 Deadlines
+    /  ------
+
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'AC05', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/832ca5043a1747e2a75ab1f61db5ba09/bcd7c050c426413d883bce13f64e442c/'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 05/May, 08:30
+      div style="border:none; display:inline-block;" class="timerAC05"
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" I2
+      div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 29/May, 18:30
+      div style="border:none; display:inline-block;" class="timerI2"
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T4', 'homeworks/4/T4.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 7/Jun, 23:59
+      div style="border:none; display:inline-block;" class="timerT4"
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 21/Jun, 23:59
+      div style="border:none; display:inline-block;" class="timerT5"
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" = link_to 'T6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 03/Jul, 23:59
+      div style="border:none; display:inline-block;" class="timerT6"
+
+    /div
+      div style="border:none; display:inline-block; width:80px;" Examen
+      div style="border:none; display:inline-block; width:380px;" Inicio: Miércoles 21/Jun, 09:00
+      div style="border:none; display:inline-block;" class="timerEX"
+
 
   section#slides
     h3 Clases
     /  ------
     ul
-      li  SO
+      li  Sistemas Operativos
       ul
         li = link_to 'Sistemas Operativos',  'slides/0-os.html'
         li = link_to 'Procesos',             'slides/1-proc.html'
-        li = link_to 'Scheduling',           'slides/2-scheduling.html'
-        li = link_to 'Sincronización',       'slides/3-synch.html'
+        li = link_to 'Scheduling',           'slides/1-proc.html#/scheduling-init'
+        li = link_to 'Threads',              'slides/1-proc.html#/threads-_init'
+        li = link_to 'Sincronización',       'slides/1-proc.html#/synch-init-init'
         li = link_to 'Memoria',              'slides/4-mem.html'
         li = link_to 'Archivos',             'slides/5-disk.html'
         /li = link_to 'Protección',           'slides/6-sec.html'
@@ -24,51 +59,242 @@ article
       li  Redes
       ul
         li = link_to 'Redes',                'slides/7-net.html'
-        li = link_to 'Capa Física',          'slides/8-net-phy.html'
-        li = link_to 'Capa Enlace',          'slides/8.5-net-link.html'
-        li = link_to 'Capa Red',             'slides/9-net-routing.html'
-        li = link_to 'Capa Transporte',     'slides/10-net-tp.html'
         li = link_to 'Capa Aplicación',     'slides/11-net-app.html'
+        li = link_to 'Capa Transporte',     'slides/10-net-tp.html'
+        li = link_to 'Capa Red',             'slides/9-net-routing.html'
+        li = link_to 'Capa Enlace',          'slides/8.5-net-link.html'
+        /li = link_to 'Capa Física',          'slides/8-net-phy.html'
+
+  section#utiles
+    h3 Articulos útiles
+    /  -----------
+    ul
+      li = link_to 'Preparación de una máquina virtual', 'activities/0-init/'
+      li = link_to 'Introducción a C',                   'activities/1-C/'
 
 
-  section#activities
+  /section#activities
     h3 Actividades
     /  -----------
     ul
-      li = link_to 'Preparación Entorno', 'activities/0-init/'
-      li = link_to 'C',                   'activities/1-C/'
+      li = link_to 'AC01', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+      li = link_to 'AC02', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
+
 
   section#challenges
     h3 Tareas
     /  ------
-    ul
-      li = link_to 'Tarea 1', 'homeworks/1/'
-      li = link_to 'Tarea 2', 'homeworks/2/'
-      li = link_to 'Tarea 3', 'homeworks/T3.pdf'
-      li = link_to 'Tarea 4', 'homeworks/T4.pdf'
-      li = link_to 'Tarea 5', 'homeworks/T5.pdf'
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 1', 'homeworks/1/T1.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: <del>Viernes 31/Mar</del><br/>Sábado 01/Abr, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
+      div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'https://docs.google.com/presentation/d/1V_Eol_6VXAsq1WL6l5VIkL05pJnvapE9vO5sY0uveVU/edit?usp=sharing'
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'ejemplo.txt', 'homeworks/1/ejemplo.txt'
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: <del>Miércoles 26/Abr</del> Domingo 30/Abr, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
+      div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'https://docs.google.com/presentation/d/10fU1Akv2uQ5YljCgxFHXInIuVVpmP96HRVPX0cCDkBU/edit?usp=sharing'
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'data.bin', 'homeworks/2/data.bin'
+      div style="border:none; display:inline-block; width:100px;" = link_to 'mmap-example.c', 'homeworks/2/mmap-example.c'
+      div style="border:none; display:inline-block; width:100px;" = link_to 'shm-example.c', 'homeworks/2/shm-example.c'
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Domingo 21/Abr, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 4', 'homeworks/4/T4.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Martes 06/Jun, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
+      div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
+      
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 19/Jun, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
+      /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 03/Jul, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT6"
+
+
+    /ul
+      /li = link_to 'Tarea 2', 'homeworks/2/'
+      /li = link_to 'Tarea 3', 'homeworks/T3.pdf'
+      /li = link_to 'Tarea 4', 'homeworks/T4.pdf'
+      /li = link_to 'Tarea 5', 'homeworks/T5.pdf'
       /li = link_to 'Tarea 6', 't6.pdf'
-    ul
+    /ul
       li = link_to 'Pintos', 'homeworks/pintos/'
 
-  /section#challenges
-    h3 Desafíos
+  section#edx
+    h3 EdX
     /  --------
-    = link_to 'Edx', 'edx/'
+    = link_to 'EdX', 'http://edx.ing.puc.cl/courses/PUC/IIC2333_2017/2017_S1/'
 
   section#programa
     h3 Programa
-    = link_to 'Programa del curso', 'programa.pdf'
+    = link_to 'Programa del curso 2017-1', 'programa.pdf'
+
+  section#programa
+    h3 Interrogaciones
+
+    div
+      div style="border:none; display:inline-block; width:200px;" I1 - V 28/Abr
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Enunciado',   'evals/i1.pdf'
+      div style="border:none; display:inline-block;" = link_to 'Solución', 'evals/i1-sol.pdf'
+
+    div
+      div style="border:none; display:inline-block; width:200px;" I2 - L 29/May
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Enunciado',   'evals/i2.pdf'
+      div style="border:none; display:inline-block;" = link_to 'Solución', 'evals/i2-sol.pdf'
+
+    div
+      div style="border:none; display:inline-block; width:200px;" Examen - W 21/Jun (9:00)
+      div style="border:none; display:inline-block; width:100px;" Enunciado
+      div style="border:none; display:inline-block;" Solución
 
   section#ejemplos
     h3 Ejemplos
-    ul
-      li = link_to 'Ejemplos Clase 08-Agosto', 'examples/iic2333-ejemplos-08-Ago.tar.gz'
-      li = link_to 'Ejemplos fork',            'examples/ejemplos-fork.tar.gz'
-      li = link_to 'Ejemplos shmem',           'examples/ejemplos-shmem.tar.gz'
-      li = link_to 'Ejemplos threads',         'examples/ejemplos-threads.tar.gz'
+
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork1.c',   'examples/fork1.c'
+      div style="border:none; display:inline-block;" fork() simple y wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork3.c',   'examples/fork3.c'
+      div style="border:none; display:inline-block;" fork() en ciclo
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork4.c',   'examples/fork4.c'
+      div style="border:none; display:inline-block;" fork(), execvp(), wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'fork5.c',   'examples/fork5.c'
+      div style="border:none; display:inline-block;" fork(), execlp(), wait()
+    div
+      div style="border:none; display:inline-block; width:75px;" W 15-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'oneZombie.c',   'examples/oneZombie.c'
+      div style="border:none; display:inline-block;" Creando un zombie
+    div
+      div style="border:none; display:inline-block; width:75px;" W 22-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'pthreads1.c',   'examples/pthreads1.c'
+      div style="border:none; display:inline-block;" Creando POSIX Threads
+    div
+      div style="border:none; display:inline-block; width:75px;" W 22-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'pthreads2.c',   'examples/pthreads2.c'
+      div style="border:none; display:inline-block;" Dos pthreads concurrentes
+    div
+      div style="border:none; display:inline-block; width:75px;" V 24-Mar
+      div style="border:none; display:inline-block; width:100px;" = link_to 'sigint.c',   'examples/sigint.c'
+      div style="border:none; display:inline-block;" Ejemplo de cómo manejar signals del sistema
+    div
+      div style="border:none; display:inline-block; width:75px;" L 10-Abr
+      div style="border:none; display:inline-block; width:100px;" = link_to 'mems.c',   'examples/mems.c'
+      div style="border:none; display:inline-block;" Ejemplo de direcciones virtuales de un proceso
+
 
 
   section#notas
+    
+    h3 Actividades
+    = link_to 'Notas Actividades',   'Actividades-20170705.pdf'
+
+    h3 Examen
+    = link_to 'Examen',   'Examen-20170706.pdf'
+
     h3 Notas
-    = link_to 'Planillas', '/notas/', :target => '_blank'
+    = link_to 'Tareas e Interrogaciones', 'https://docs.google.com/spreadsheets/d/15yXs4YGkPhBbRGeTjO04RQxcqrYjazRVPMusLzLcLa4', :target => '_blank'
+
+
+javascript:
+  var countdown1 = new Countdown({
+    selector: '.timerT1',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Mar 31, 2017 23:59:59')
+  });
+  var countdown2 = new Countdown({
+    selector: '.timerT2',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Apr 30, 2017 23:59:59')
+  });
+  var countdownT3 = new Countdown({
+    selector: '.timerT3',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('May 22, 2017 23:59:59')
+  });
+  var countdownT4 = new Countdown({
+    selector: '.timerT4',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 07, 2017 23:59:59')
+  });
+
+  var countdownT5 = new Countdown({
+    selector: '.timerT5',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 21, 2017 23:59:59')
+  });
+
+  var countdownT6 = new Countdown({
+    selector: '.timerT6',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jul 03, 2017 23:59:59')
+  });
+
+  var countdownAC04 = new Countdown({
+    selector: '.timerAC04',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Apr 27, 2017 08:30:30')
+  });
+
+  var countdownAC05 = new Countdown({
+    selector: '.timerAC05',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('May 05, 2017 08:30:30')
+  });
+
+  var countdownI1 = new Countdown({
+    selector: '.timerI1',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Apr 28, 2017 18:30:00')
+  });
+
+  var countdownI2 = new Countdown({
+    selector: '.timerI2',
+    msgAfter: "Empezó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('May 29, 2017 18:30:00')
+  });
+
+  var countdownEX = new Countdown({
+    selector: '.timerEX',
+    msgAfter: "Empezó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jun 21, 2017 09:00:00')
+  });

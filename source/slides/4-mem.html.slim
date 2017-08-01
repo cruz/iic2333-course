@@ -5,664 +5,1918 @@ layout: slide
 
 
 section
-  h2 Direccionamiento de Memoria
-
-section
-  h2 Direccionamiento de Memoria
+  h2 Memoria
 
   section#memory0
-    div <b>MEMORIA</b> 
-    ul
-      li Un gran arreglo de <i>bytes</i>
-      li Cada uno con su propia <b>dirección</b>
+    h3 Direcciones de Memoria
 
-    div == image_tag '/images/figures/04-memory1.png', :width=>"50%"
+    div 
 
-    ul.fragment
-      li  PC lee instrucciones desde una dirección de memoria
-      li  Instrucciones pueden requerir leer operandos desde otra dirección de memoria
-      li  Resultados suelen ser almacenados en alguna dirección de memoria
+      ul
+        li Un gran arreglo de <i>bytes</i>
+        li Cada uno con su propia <b>dirección</b>
 
-  section#memory1
-    div <b>Velocidad</b>
-    ul.fragment
-      li Registro: acceso en un ciclo de CPU
-      li Memoria: requiere acceso al <i>bus de memoria</i>
-      li ¿Solución? <span class="fragment">caché</span>
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-  section#memory2
-    div.fragment <b>Protección</b>
-    ul.fragment
-      li Multiprogramación. Procesos no deben acceder a memoria de otro procesos
-      li ¿Si hay dos procesos que hagan referencia a la misma dirección?
+      div Al principio &hellip;
 
-    div == image_tag '/images/figures/04-spaces.png', :width=>"35%"
-    div.fragment Referencias absolutas
+      img src='/images/figures/02-memory-old.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-  section#memory3
-    div Procesos poseen registros <i>base</i> y <i>limit</i>
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_01.pdf.png', :width=>"30%"
+      div Con multiprogramación &hellip;
 
-    ul.fragment
-      li ¿S.O. verifica cada acceso? <span class="fragment">leeeento</span>
-      li.fragment ¿Solución? <span class="fragment">Verificación por <i>hardware</i></span>
+      img src='/images/figures/02-memory-new.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-  section#memory4
-    div Registros <i>base</i> y <i>limit</i> se cargan, y son verificados por <i>hardware</i>.
+  section data-transition="fade-out"
+    h3 Direcciones de Memoria
 
-    div == image_tag '/images/figures/02-8_02.pdf.png', :width=>"70%"
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
 
-    div ¿Quién hace esto? <span class="fragment">MMU: <i>Memory Manager Unit</i></span>
-    div.fragment Referencias relativas:  <b>JMP 28 + base</b>, en lugar de <b>JMP 28</b>
+      div Con solamente un proceso en memoria &hellip;
 
-  section#memory5
-    div Procesos piden una dirección de memoria ... <span class="fragment"> pero MMU les entrega otra</span>
-    ul.fragment
-      li <b>Dirección lógica o virtual</b>: solicitado por el proceso (JMP 28)
-      li <b>Dirección física</b>: accedida en la memoría física (JMP 16384+28)
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x10001       ; a += 3
+             add %eax, $0x3
+             mov 0x10001, %eax
 
-    div == image_tag '/images/figures/04-twoprocs.png', :width=>"25%"
 
-    div.fragment ¿Cuándo se determina la dirección física? (1) Compilación (2) Ejecución (3) Carga
+      div La vida del compilador es (más) fácil
 
-section#spaces0
-  h2 Cargando procesos
+      br
+      br
 
-  section#spaces1
+      ul
+        li Programa siempre se carga en la misma dirección
+        li Cada variable tiene la misma dirección en memoria en cada ejecución
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-old.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
+
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x10001       ; falla si a no está en 0x10001
+             add %eax, $0x3
+             mov 0x10001, %eax
+
+      div Procesos pueden cargarse en cualquier parte de la memoria
+
+      br
+      br
+
+      div Problema 1:
+      ul
+        li Variables no están siempre en la misma ubicación
+        li Requisito: <b>relocalización de variables</b>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-new.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div Con múltiples procesos en memoria (<i>multiprogramación</i>) &hellip;
+
+      pre
+        code.hljs.asm
+          |  mov %eax, 0x20001       ; 0x20001 es memoria de C
+             add %eax, $0x3
+             mov 0x20001, %eax
+
+      div Procesos pueden cargarse en cualquier parte de la memoria
+
+      br
+      br
+
+      div Problema 2:
+      ul
+        li Un proceso, por error, podría leer memoria y modificar memoria de otro proceso
+        li Requisito: <b>protección de memoria</b>
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-new.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in fade-out"
+    h3 Direcciones de Memoria
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Direcciones absolutas no sirven con multiprogramación</b>
+      ul
+        li Caso (a). Un proceso único en memoria, de 16KB, cargado en 0.
+        li Caso (b). Otro proceso único en memoria, de 16KB, cargado en 0.
+        li Caso (c). Dos procesos de 16KB cargados en memoria, de manera contigua.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-spaces.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section data-transition="fade-in"
+    h3 Relocalización y protección
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Direcciones absolutas no sirven con multiprogramación</b>
+      ul
+        li Caso (b). Instrucción <code>JMP 28</code> está OK si el proceso está cargado en 0.
+        li Caso (c). Si el proceso se carga en <code>16384</code., hay que cambiar <code>JMP 28</code> por <code>JMP 16412</code>.
+        li ¿Cómo conseguirlo?
+        ul.fragment
+          li Compilador podría generar: <code>JMP 28+X</code> 
+          li Al cargar en memoria se determina que <code>X</code> es 16384, y se carga en memoria <code>JMP 16412</code>
+          li Ejecutar esto cada vez que se cargue
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-spaces.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Direcciones de memoria
+
+    div ¿Cómo podemos saber donde se ubica nuestro código?
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  #include &lt;stdio.h&gt;
+             #include &lt;stdlib.h&gt;
+
+             int b = 3;
+
+             int main(int argc, char *argv[]) {
+               int x=3;
+               printf("Location of code   : %p\n", (void *)main);
+               printf("Location of data   : %p\n", (void *)&b);
+               printf("Location of heap   : %p\n", (void *)malloc(1));
+               printf("Location of stack  : %p\n", (void *)&x);
+               return x+b;
+             }
+
+      div.fragment Código completo <a href="../examples/mems.c" target="_blank">aquí</a>
+
+      div.fragment Atención: estas direcciones son <b>virtuales</b> &#x1f632;
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-sections.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+section
+  h2 Espacios de direcciones
+
+  section
+    div Dos problemas: (1)<b>relocalización</b> y (2)<b>protección</b>
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" Abstracción: <b>espacios de direcciones</b>
+
+    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div CPUs desde CDC6600 hasta Intel 8088 integran dos registros: <code>base</code> y <code>limit</code><br/><br/>
+
+      ul
+        li Al cargar cada procesos se cargan estos registros
+        li Proceso quiere ejecutar <code>JMP 28</code>
+        li Pero <i>hardware</i> ejecuta <code>JMP 28+16384</code>
+        li Si la dirección es mayor que <code>limit</code>, se genera un <i>trap</i>
+        li MMU: <b>Memory Manager Unit</b>
+
+      div.fragment data-fragment-index="3" ¿Resuelto?
+
+    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/04-twoprocs.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    div Proceso mantiene un espacio <b>único</b> y <b>secuencial</b> (lineal) de direcciones.
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Proceso $A$ utiliza 16KB.
+        ul
+          li <code>code</code> en 0-1023
+          li <code>heap</code> empieza en 1024, y crece
+          li <code>stack</code> empieza en 16383, y decrece
+        li Al cargarlo en memoria, el sistema operativo asigna <code>Base: 4096</code>, <code>limit: 16384</code>.
+        ul
+          li Código de $A$ no es modificado
+          li Proceso $A$ pide la dirección <b>virtual</b>: 768
+          li MMU entrega la dirección <b>física</b>: 4864
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-memory-inside.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Sobrecarga de memoria
+
+    div ¿Cuántos procesos caben en memoria? ¿Qué pasa si la memoria se llena?
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;"  Operaciones de <b>swapping</b>
+
+    div.fragment data-fragment-index="2" style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li <b>Swap-out</b>. Memoria del proceso se copia a disco.
+        li <b>Swap-in</b>. Memoria del proceso se copia de disco a memoria.
+
+      div.fragment data-fragment-index="3" ¿Qué pasa con la relocalización?
+
+    div.fragment data-fragment-index="2" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_05.pdf.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
     div Procesos pueden ser cargados y descargados de la memoria
 
-    div == image_tag '/images/figures/02-8_05.pdf.png', :width=>"50%"
+    == image_tag '/images/figures/04-loadprocs.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
 
-  section#spaces2
-    div Espacio libre se modifica en cada carga/<i>swap-in</i> o descarga/<i>swap-out</i>
+    div Memoria del sistema queda con huecos
 
-    div == image_tag '/images/figures/04-loadprocs.png', :width=>"70%"
+    div.fragment ¿Qué hacer con los huecos?
 
-  section#spaces3
-    div Direcciones deben ajustarse ante cada carga
+  section
+    div ¿Qué hacer con los huecos?
 
-    div == image_tag '/images/figures/02-8_06.pdf.png', :width=>"70%"
+    == image_tag '/images/figures/02-compact.png', :width=>"35%", :style=>"border:none; box-shadow:none;"
 
-  section#spaces4
-    div <b>¿Dónde ubicar un proceso nuevo?</b>
+    br
 
-    div Estrategias
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Compactación</b>: Fusionar los huecos
+
+      ul.fragment data-fragment-index="2"
+        li Requiere copiar memoria a otras direcciones
+        li Caro. No se hace.
+        li.fragment data-fragment-index="3" <i>Mejor</i>: asignar espacios de manera que no se necesite compactar
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img.fragment data-fragment-index="1" src='/images/figures/02-fusion.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    div ¿Como evitar espacios libres?
+
+    div Estrategias:
     ul
-      li.fragment <strong>First-fit</strong>. En el primer lugar disponible.
-      li.fragment <strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
-      li.fragment <strong>Worst-fit</strong>. En el que deja más (el más grande).
+      li <strong>First-fit</strong>. En el primer lugar disponible.
+      li <strong>Best-fit</strong>. En el que deja menos espacio libre (el más pequeño posible).
+      li <strong>Worst-fit</strong>. En el que deja más espacio libre (el más grande).
 
-    div.framgent ¿Cuál es mejor?
+    div
 
-  section#spaces5
-    div <b>Problema: FRAGMENTACION</b>
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-    div En dos variedades
+        img.fragment data-fragment-index="1" src='/images/figures/02-fits.png' width="24%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    ul
-      li.fragment <b>Fragmentación Externa</b>: Hay espacio para otro proceso, pero no contiguo.
-      li.fragment <b>Fragmentación Interna</b>: Espacio sobre-asignado a un proceso.
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-  section#spaces6
-    div <b>¿Cómo evitar la fragmentación externa?</b>
+        img.fragment data-fragment-index="2" src='/images/figures/02-fits-first.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div.fragment <b>Compactación</b>: fusionar huecos
-    div.fragment == image_tag '/images/figures/02-fusion.png', :width=>"20%"
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
 
-    div.framgment ¿Pero?
-    ul
-      li.fragment Es <b>costoso</b>. No voy esperar que mis 16GB se reacomoden.
-      li.fragment ¿Otras soluciones? <span class="fragment">Técnicas de <i>memoria virtuual</i>: <span class="fragment"><b>segmentación</b>, </span><span class="fragment"><b>paginación</b>
+        img.fragment data-fragment-index="3" src='/images/figures/02-fits-best.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-section#seg
+      div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+        img.fragment data-fragment-index="4" src='/images/figures/02-fits-worst.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Fragmentación
+
+    div Con cualquier estrategia aún pueden quedar espacios libres no contiguos.
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    ul.fragment
+      li Compactar no es una opción práctica
+      li Supuesto: procesos se pueden reubicar en cualquier parte de la memoria 
+      li Supuesto: procesos deben ubicarse en espacios <b>contiguos</b>
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#segmentation
   h2 Segmentación
 
-  section#seg1
-    div Espacio de direcciones se divide en segmentos lógicos
+  section
+    div Problema: un espacio de direcciones muy grande.
+
+    blockquote.fragment data-fragment-index="1" style="background:#F4C7C3;" <b>Segmentación</b>
+
+    div.fragment data-fragment-index="2" Se divide el espacio de direcciones en varios espacios más pequeños
+
+    ul.fragment data-fragment-index="2"
+      li Espacios más pequeños pueden ser asignados más fácilmente
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Segmento:</b> espacio de direcciones contiguo
+      ul
+        li Ejemplo: código, datos, heap, stack, &hellip;
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+    
+      img src='/images/figures/02-basic-segments.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Implementando segmentación
+
+    div Ahora hay varios espacios lineales de direcciones.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div MMU debe ser capaz de hacer la traducción
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      div <b>Tabla de Segmentos</b>
+
+      ul.fragment
+        li Dirección virtual (lógica): $100$
+        ul
+          li Está en segmento <code>code</code>
+          /li <i>Offset</i> dentro de <code>code</code>: $100$
+          li Base + dirección $= 32768 + 100 = 32868$
+        li Dirección física: $32868$
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      br
+      
+      ul.fragment
+        li Dirección virtual (lógica): $4200$
+        ul
+          li Está en segmento <code>heap</code>
+          /li <i>Offset</i> dentro de <code>code</code>: $100$
+          li Base + dirección $= 34816 + 4200 = 39016$
+        li Dirección física: $39016$
+
+      blockquote.fragment  style="background:#F4C7C3;" <code>Segmentation Fault!</code>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      br
+      
+      ul.fragment
+        li Dirección virtual (lógica): $4200$
+        ul
+          li Está en segmento <code>heap</code>
+          li <i>Offset</i> dentro de <code>heap</code>: $4200-\mathbf{4096}=104$
+          li Base + <i>offset</i> $= 34816 + 104 = 34920$
+        li Dirección física: $34920$
+
+      br
+      br
+
+      div.fragment ¿Cómo conozco el segmento? ¿y el offset?
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Implementando segmentación
+
+    div ¿Cómo conocer segmento y <i>offset</i>?
+
     ul
-      li.fragment  Código
-      li.fragment  Variables globales
-      li.fragment  <em>Heap</em> (para asignación dinámica de memoria)
-      li.fragment  <em>Stacks</em> para cada <em>thread</em>
-      li.fragment  Código de la librería estándar de C
+      li Se pueden hacer restas &hellip; 
+      li Pero la lógica de bit es más rápida
 
-    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
+    br
+    div.fragment Ejemplo: ¿cuántos bit necesitamos para identificar 3 segmentos? <span class="fragment">$\rightarrow 2$</span>
+
+    img.fragment src='/images/figures/02-segment-bits.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    br
+
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Dirección virtual: $4200 = 0b01 0000 0110 1000 = 0x1068$
+        ul
+          li Bits de segmento: $0b01 = 1 = 0x1$
+          li Bits de offset: $0b0000 0110 1000 = 104 = 0x068$
+
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  SEG_MASK = 0x3000;
+             OFFSET_MASK = 0xFFF;
+             SEG_SHIFT = 12;
+             virtualAddress = 4200;
+             segment = (virtualAddress & SEG_MASK) >> SEG_SHIFT;
+             offset = virtualAddress & OFFSET_MASK;
+             if(offset >= size[segment])
+               raise(SEG_FAULT);
+             else
+               physicalAddress = base[segment] + offset;
+
+  section
+    h3 Implementando segmentación
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+        tr
+          td <code>code</code>
+          td 32768 (32KB)
+          td 2048 (2KB)
+        tr
+          td <code>heap</code>
+          td 34816 (34KB)
+          td 2048 (2KB)
+        tr
+          td <code>stack</code>
+          td 28672 (28KB)
+          td 2048 (2KB)
+
+      div <b>Atención con el <i>stack</i></b>.
+      
+      ul.fragment
+        li Dirección virtual (lógica): $16300$
+        ul
+          li Segmento <code>stack</code> (segmento 3)
+          /li <i>Offset</i> dentro de <code>heap</code>: $4200-\mathbf{4096}=104$
+          li Base + <i>offset</i> $= 28672 + 4012 = 32684$
+        li Dirección física: $32684$ &#x274c;
 
 
-  section#seg2
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div Cada <b>segmento</b> se puede cargar en regiones distintas de memoria.
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div Segmentos poseen: identificador y longitud
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_07.pdf.png', :width=>"20%"
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-    div Una dirección de memoria específica en memoria segmentada está formada por una tupla con dos datos (un par):
-      $\langle$ <code>numeroDeSegmento</code>, <code>offset</code> $\rangle$
 
-  section#seg3
+  section
+    h3 Implementando segmentación
 
-    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div Información de segmentos cargados se almacena en: <b>Tabla de segmentos</b>
+      div Otro campo en la tabla de segmentos
 
-    div == image_tag '/images/figures/02-8_09.pdf.png', :width=>"40%"
+      table
+        tr
+          td Segment
+          td Base
+          td Size 
+          td Upwards
+        tr
+          td <code>code</code>
+          td 32768 
+          td 2048 
+          td 1
+        tr
+          td <code>heap</code>
+          td 34816 
+          td 2048 
+          td 1
+        tr
+          td <code>stack</code>
+          td 28672 
+          td 2048 
+          td 0
 
-  section#seg4
+      ul.fragment
+        li Dirección virtual (lógica): $16300$
+        ul
+          li Segmento <code>stack</code> (segmento 3)
+          li <i>Offset</i>: complemento de 4096 (4KB, máximo offset). $4012-4096=-84$
+          li Base + <i>offset</i> $= 28672 - 84 = 28588$
+        li Dirección física: $28588$ &#x2714;
 
-    div Una dirección lógica es: $\langle$ <code>segmento</code>, <code>offset</code> $\rangle$
 
-    div MMU usa la <b>Tabla de segmentos</b> para obtener la <b>dirección física</b>
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-    div == image_tag '/images/figures/02-8_08.pdf.png', :width=>"50%"
+      img src='/images/figures/02-segments-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-section#pag
+      div style="width:10%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-segments-1.png' width="23%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Visualizando segmentos
+
+    div Comando <code>pmap</code> permite ver segmentos asignados a un proceso
+
+    pre
+      code.hljs.bash
+        |  pmap -x [PID]
+
+    div Atención: necesita un proceso en ejecución
+
+
+  section
+    h3 Fragmentación
+
+    div Implementamos segmentación para eliminar fragmentación externa
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul.fragment
+        li Menos fragmentación &hellip; pero sigue existiendo
+        li Difícil anticipar los tamaños de los segmentos
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-fragments-ram.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pagination
   h2 Paginación
 
-  section#pag1
-    div style="text-align:left;" Segmentación reduce el problema de la fragmentación externa <span class="fragment"> ... pero no lo soluciona</span>
+  section
 
-    div.fragment style="text-align:left;" <b>Paginación</b> divide el espacio virtual de direcciones en regiones de igual tamaño
+    div Problema: un espacio de direcciones muy grande.
     ul
-      li.fragment Espacio virtual (lógico) de direcciones se divide en <b>páginas</b>
-      li.fragment Espacio físico de direcciones se divide en <b>frames</b> (marcos)
-      li.fragment Páginas y <i>frames</i> son del mismo tamaño
+      li Idea 1: Dividir el espacio de direcciones en <b>segmentos</b>
+      li.fragment data-fragment-index="1" Idea 2: Que los segmentos sean del mismo tamaño: <b>páginas de memoria</b>
 
+    blockquote.fragment data-fragment-index="2" style="background:#F4C7C3;" <b>Paginación</b>
 
-    div.fragment ¿De qué tamaño son las páginas de su sistema?
+    div.fragment data-fragment-index="2" style="width:50%; vertical-align:middle; display:inline-block;" 
 
-  section#pag2
-    div Dirección de memoria paginada está compuesta de<br/>
-        $\langle$ <code>numeroDePagina</code>, <code>offset</code> $\rangle$
-
-    div ==image_tag '/images/figures/02-8_10.pdf.png', :width=>"60%"
-
-  section#pag3
-
-    div ==image_tag '/images/figures/02-8_11.pdf.png', :width=>"45%"
-
-
-  section#pag4
-    div style="text-align:left;" Tamaños posibles de páginas y frames son determinados por <i>hardware</i>
-
-    div style="text-align:left;" Al ser potencias de 2, se evitan sumas.
-
-    ul
-      li.fragment Direcciones lógicas de $m$-bit
-      li.fragment Tamaño de página de $2^n$ bytes
-
-    div 
-      img src='/images/figures/02-in-8_1.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div.fragment Cantidad de páginas posibles: $2^{m-n}$
-
-  section#pag5
-    div style="text-align:left;" Dirección virtual: $m=4$ bit, $n=2$
-    ul 
-      li.fragment $2$-bit: número de página... $2^{m-n} = 4$ páginas
-      li.fragment $2$-bit: <i>offset</i>... Páginas de tamaño $2^{n}=4$ byte.
-      li.fragment Memoria física: 32 byte... $8$ <i>frames</i> de memoria.
-
-    div 
-      img src='/images/figures/02-8_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="25%"
-
-    div.fragment Dirección lógica: 1001 <span class="fragment">, ... dirección física: 0101</span>
-
-  section#pag6
-    div style="text-align:left;" Paginación elimina <b>fragmentación externa</b>...<span class="fragment">pero tenemos <b>fragmentación interna</b></span>
-
-    div style="text-align:left;" Ejemplo: Páginas de $4$KB, y un proceso solicita $81$KB.
-    ul
-      li.fragment Se asignan 21 páginas de $4$KB... <span class="fragment">$3$KB desperdiciados.</span>
-
-  section#pag7
-    div style="text-align:left;" Ejemplo: Páginas de $8$KB. Direcciones virtuales de $16$-bit.
-
-    ul
-      li.fragment ¿Cuántas páginas?
-      li.fragment ¿Tamaño de la tabla de páginas?
-
-  section#pag8
-    div style="text-align:left;" Ejemplo: Páginas de $4$KB. Direcciones virtuales de $32$-bit.
-
-    ul
-      li.fragment ¿Cuántas páginas? <span class="fragment">$2^{20}$</span>
-      li.fragment ¿Tamaño de la tabla de páginas? <span class="fragment">$\geq 1$MB</span>
-
-    div.fragment Accesos pueden hacerse lentos. ¿Por qué?
-
-  section#pag9
-    div <b>Translation Look-aside Buffer (TLB)</b>
-
-    div style="text-align:left;" Caché en <i>hardware</i> para las entradas de la tabla de páginas (32 a 1024 entradas).
-
-    div.fragment
-      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-  section#pag10
-    div
-      img src='/images/figures/02-8_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    ul
-      li.fragment Tiempo de acceso a TLB: $100$ns
-      li.fragment Tiempo de acceso a memoria: $500$ns
-      li.fragment ¿Tiempo promedio de acceso con $80\%$ hit-rate?
-
-  section#pag11
-    div <b>Tablas de páginas jerárquicas</b>
-
-    div
-      img src='/images/figures/02-8_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-
-  section#pag12
-    div <b>Tablas de páginas jerárquicas</b>
-    div Direccionamiento de dos niveles
-
-    div
-      img src='/images/figures/02-8_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
-
-    div
-      img src='/images/figures/02-in-8_2.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-
-
-  section#pag13
-    div <b>Tablas de páginas jerárquicas</b>
-    div Direcciones de 64-bit
-
-    div
-      img src='/images/figures/02-in-8_4.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div Con otro nivel de paginación
-
-    div
-      img src='/images/figures/02-in-8_5.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-
-  section#pag14
-    div <b>Tablas de páginas con <i>hash</i></b>
-
-    div
-      img src='/images/figures/02-8_19.pdf.png' style="background:none; border:none; box-shadow:none;" width="50%"
-
-    div Apropiadas para espacios de direcciones <em>sparse</em> (ralos)
-
-  section#pag15
-    div <b>Tablas de páginas invertida</b>
-
-    ul
-      li.fragment  Una entrada por frame (en lugar de página)
-      li.fragment  Sólo una tabla en el sistema (no por proceso)
-  
-    div
-      img src='/images/figures/02-8_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div Usada en 64-bit UltraSPARC, y PowerPC
-
-
-/---------------------------------------------------------------------
-/ Frame
-  \frametitle{Direccionamiento}
-  \framesubtitle{Otros conceptos comunes}
-/
-  \begin{description}
- //   li.fragment [<strong>Carga dinámica</strong>] Cargar sólo parte del proceso. Cuando una rutina se necesita,
-                                se carga la sección necesaria de código.
- //   li.fragment [<strong>Bibliotecas</strong>] Conjunto de rutinas de uso común que se <em>agregan</em> al programa
       ul
-        li.fragment  <strong>Enlace Estático</strong> (<code>.lib</code>, <code>.a</code>). Rutinas se enlazan dentro del binario final.
-            ul
-              li.fragment  +Rápido
-              li.fragment  -Binario de mayor tamaño
-              li.fragment  Modificación requiere re-compilación
-            
-        li.fragment  <strong>Enlace Dinámico</strong> (<code>.dll</code>, <code>.so</code>). Rutinas se enlazan con un <em>stub</em>: 
-                              código representante de la rutina. Rutina se carga al llamarla.
-            ul
-              li.fragment  -Lento, pero sólo al primer acceso
-              li.fragment  +Binario más pequeño
-              li.fragment  Pueden reemplazarse <em>en caliente</em> (con un esquema de versiones)
+        li Espacio virtual: <b>páginas</b>
+        li Espacio físico: <i><b>frames</b></i> (marcos)
+        li Páginas y <i>frames</i> del <b>mismo</b> tamaño
 
+      br 
+      br
 
-section#virmem
-  h2 Memoria Virtual
-
-  section#virmem1
-
-    div style="text-align:left;" Segmentación y paginación intentan dar la ilusión que toda la memoria es contínua.
-
-    div.fragment style="text-align:left;" ... pero el programa aún debe estar completamente en memoria
-
-    div.fragment style="text-align:left;" Pero no es siempre necesario.
-
-    div.fragment style="text-align:left;" &nbsp<br/>&nbsp;<br/>
-
-    ul
-      li.fragment Carga dinámica
-      li.fragment ¿Se requiere todo el código en memoria? ¿Librerías (estáticas y dinámicas)?
-      li.fragment ¿Y si un proceso solicita más memoria que la memoria física del sistema?
-
-  section#virmem2
-
-    div <i>Frames</i> se cargan de disco a medida que se necesitan.
-
-    div
-      img src='/images/figures/02-9_01.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-  section#virmem3
-    div Bibliotecas compartidas se asigna a <em>frames</em> ya cargados
-
-    div
-      img src='/images/figures/02-9_03.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-  section#virmem4
-    div style="text-align:left;" <b>Paginación por demanda</b> <span class="fragment">Primera etapa: mantener registro de páginas cargadas</span>
-    
-    ul.fragment
-      li Bit adicional en tabla de páginas
-      ul
-        li <em>Valid</em>: Página en memoria
-        li <em>Invalid</em>: Página almacenada en disco, pero no en memoria
+      div.fragment data-fragment-index="3" Sistema con 128B RAM
       
-      li.fragment  Al detectar un acceso a una página <em>invalid</em>, ésta se carga dinámicamente y marca el bit a <em>valid</em>
-  
-    div
-      img src='/images/figures/02-9_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-  
-  section#virmem5
-    div style="text-align:left;" Segunda etapa: cargar páginas que se necesiten
-  
-    div style="text-align:left;" Proceso de carga se activa ante un <strong><i>page-fault</i></strong>
-  
-    div
-      img src='/images/figures/02-9_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      ul.fragment data-fragment-index="3" 
+        li Espacio virtual (lógico) de 64B.
+        li Espacio físico de 128B.
+        li Páginas (y <i>frames</i>) de 16B.
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-pages-1.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      img src='/images/figures/02-pages-2.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
 
     ul
-      li.fragment  Proceso podría empezar con una única página en memoria: <strong>paginación por demanda pura</strong>
-  
-  section#virmem6
-    div style="text-align:left;" Rendimiento de la paginación por demanda
+      li Sistema necesita llevar registro de páginas asignadas a cada proceso
+      li Sistema necesita información para traducir direcciones virtuales a físicas
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Tabla de Páginas</b>
+
+    div.fragment data-fragment-index="2" style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      div.fragment data-fragment-index="2" Páginas de 16B, espacio virtual 64B, espacio físico 128B.
+
+      ul
+        li.fragment data-fragment-index="3" Direcciones posibles en una página: $16 = 2^4$<span class="fragment" data-fragment-index="4">$\rightarrow 4$ bit.</span>
+        ul.fragment data-fragment-index="5" style='font-size:32px;'
+          li 4 bit indican el <i>offset</i> dentro de una página.
+        li.fragment data-fragment-index="6" Espacio virtual de $64=2^6$ Byte. Requiere $6$ bit.
+        ul.fragment data-fragment-index="7" style='font-size:32px;'
+          /li 4 bit indican el <i>offset</i>
+          li 2 bit indican el número de página (VPN).
+          li Páginas posibles: $2^2=4$ entradas en la tabla de páginas
+        li.fragment data-fragment-index="8" Espacio virtual de $128=2^7$ Byte. Require $7$ bit.
+        ul.fragment data-fragment-index="9" style='font-size:32px;'
+          /li 4 bit indican el <i>offset</i>
+          li 3 bit indican el número de <i>frame</i> (PFN).
+          li <i>Frames</i> en la memoria principal: $2^3=8$ <i>frames</i>
+
+      br
+      br
+
+      div.fragment data-fragment-index="10" Traducción VPN$\to$PFN en la Tabla de Páginas
+
+    div.fragment data-fragment-index="2" style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-page-translation.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Tabla de Páginas
+
+    div Páginas de 16B, espacio virtual 64B, espacio físico 128B.
+
+    div.fragment data-fragment-index="1" style="width:100%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-pages-1.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="display:inline-block;" &nbsp; &nbsp; &nbsp; 
+
+      img src='/images/figures/02-page-translation.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      div style="display:inline-block;" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+      img src='/images/figures/02-pages-2.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div.fragment data-fragment-index="2" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      table style='font-size:28px;'
+        tr
+          td Page (VPN)
+          td Frame (PFN)
+        tr
+          td 0 (0b00) 
+          td 3 (0b011)
+        tr
+          td 1 (0b01)
+          td 7 (0b111)
+        tr
+          td 2 (0b10)
+          td 5 (0b101)
+        tr
+          td 3 (0b11)
+          td 2 (0b010)
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Dirección virtual: $21\; (0b010101)$
+      ul.fragment data-fragment-index="4" style='font-size:28px;'
+        li #Página: $1\; (0b01)$
+        li <i>Offset</i>: $5\; (0b0101)$
+        li Tabla: $1 \rightarrow 7$
+      div.fragment data-fragment-index="5" Dirección física: $117\; (0b1110101)$
+
+
+  section
+    h3 Tabla de Páginas
+
+    div Páginas de 4KB, dirección virtual de 16 bit, dirección física de 15 bit.
+
+    div.fragment data-fragment-index="2" style="width:65%; vertical-align:middle; display:inline-block;" 
+
+      div <b>Dimensiones</b>
+      ul
+        li Tamaño de espacio virtual: <span class="fragment" data-fragment-index="3">$2^{16} \text{B} =65536 \text{B} = 64\text{KB}$</span>
+        li Tamaño de espacio físico: <span class="fragment" data-fragment-index="4">$2^{15} \text{B} =32768 \text{B} = 32\text{KB}$</span>
+        li Tamaño de página: <span class="fragment" data-fragment-index="5">$4\text{KB}=2^2\times2^{10}\text{B}= 2^{12}\text{B}$</span>
+        li Bits para <i>offset</i>: <span class="fragment" data-fragment-index="6">$12$ (rango: $0x000$ a $0xFFF$)</span>
+        li Bits para #página: <span class="fragment" data-fragment-index="7">$4$ (16 páginas)</span>
+        li Bits para #frame: <span class="fragment" data-fragment-index="8">$3$ (8 frames)</span>
+
+      div <b>Traducción</b>
+      ul
+        li Dirección lógica: $8196\; (0x2004)$
+        ul.fragment data-fragment-index="9"
+          li #Página: 2
+          li #Frame: 6
+        li Dirección física: <span class="fragment" data-fragment-index="10">$24580\; (0x6004)$</span>
+
+    div.fragment data-fragment-index="1" style="width:35%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-page-translation-big.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+      br
+      div style='font-size:16px;' Ignoramos el "present/absent" bit, &hellip; por ahora
+
+
+  section data-transition="fade-out"
+    blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
+
+    ul.fragment data-fragment-index="1"
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li ¿Cuántas páginas? $2^{20}$. Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
+
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
+
+    div.fragment data-fragment-index="3" Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
+      img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+    div.fragment data-fragment-index="3" style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
+
+    ul.fragment data-fragment-index="4" style='font-size:24px;'
+      li <code>V</code>, <b>valid bit</b> (no está en la imagen), indica si la página ha sido asignada
+      li <code>P</code>, <b>present bit</b>, indica si la página está en memoria o en disco.
+      li <code>RW</code>, <b>read/write bit</b>, indica si se puede escribir
+      li <code>U/S</code>, user-supervisor bit, indica si se puede acceder en <i>user-mode</i>
+      li <code>PWT</code>, <code>PCD</code>, <code>PAT</code>, <code>G</code>, controlan el <i>caching</i>
+      li <code>A</code>, <b>accessed bit</b>, o <b>reference bit</b> indica si la página ha sido leída
+      li <code>D</code>, <b>dirty bit</b>, indica si la página ha sido modificada
+
+  section data-transition="fade-in"
+    blockquote style="background:#B7E1CD;" <b>¿De qué tamaño es una tabla de páginas?</b>
+
     ul
-      li.fragment  $p$, probabilidad de <em>page fault</em>
-      li.fragment  $t_{ma}$, tiempo de acceso a memoria, $\sim 200 \times 10^{-9}s$
-      li.fragment  $t_{pf}$, tiempo generado por <em>page fault</em>
-  
-    div.fragment style="text-align:left;" Tiempo efectivo de acceso a memoria, $t_e$: 
-    div.fragment &nbsp; $t_e = (1-p) \times t_{ma} + p \times t_{pf}$
-  
-    div.fragment style="text-align:left;" Con $t_{pf} = 8 \text{ms}$:
-    div.fragment &nbsp; $t_{e} = 200 + 7999800 p$
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li ¿Cuántas páginas? $2^{20}$. Tabla de páginas necesita $2^{20}$ entradas (filas, o PTE, <i>Page Table Entry</i>)
 
-    div.fragment style="text-align:left;" Si queremos que la degradación no sea mayor a $10\%$: 
-    div.fragment &nbsp; $220 > 200 + 7999800p \Rightarrow p < 0.0000025$
+    blockquote style="background:#B7E1CD;"  <b>¿De qué tamaño es una entrada en la tabla de páginas?</b>
 
-  section#virmem7
-    div style="text-align:left;" Al hacer un <code>fork()</code> se <em>copia</em> la memoria del padre al hijo.
-  
+    div Al menos necesita los bit para el #<i>frame</i>. Si el espacio físico es de 32 bit, necesita $20$ bit.
+
+    div style="width:50%; vertical-align:middle; display:inline-block; font-size:16px;"
+      img src='/images/figures/02-pte.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+    div style="width:10%; vertical-align:middle; display:inline-block; font-size:16px;" PTE en x86
+
+    ul style='font-size:24px;'
+      li #PTEs: $2^{20}$. Tamaño de cada PTE: $32$ bit $= 4\text{B}$
+      li Tamaño de tabla de páginas: $2^{20} \times 2^2 \text{B} = 4\text{MB}$
+      li Cada proceso requiere $4\text{MB}$ de memoria principal <b>sólo para su tabla de páginas</b>.
+      li Tabla de páginas se almacena en memoria virtual del Sistema Operativo.
+
+    div.fragment <b>Problema</b>: tablas de páginas grandes &#x1f61e;
+
+  section
+    blockquote style="background:#B7E1CD;"  <b>¿Cuántos accesos a memoria?</b>
+
+    div Dirección de tabla de páginas se guarda en PCB, como <b>PageTableBaseRegister</b> (PTBR)
+
+    div.fragment data-fragment-index="2" style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+             PTE = ReadMemory(PTEAddress);
+             
+             // está en memoria
+             if(!PTE.valid)
+               raise(SEG_FAULT);
+             // verificación de permisos
+             else if(PTE.protected)       
+               raise(PROTECTION_FAULT);
+             // Acceso OK
+             else {
+               offset = virtualAddress & OFFSET_MASK;
+               physicalAddress = (PTE.PFN << PFN_SHIFT) | offset;
+               register = ReadMemory(physicalAddress);
+
+      div <b>Cada acceso a memoria se convierte en DOS accesos</b>
+
+      div <b>Problema</b>: accesos en el doble de tiempo &#x1f61e;
+
+    div.fragment data-fragment-index="2" style="width:45%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_10.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pag_tlb
+  h2 Paginación con TLB
+
+  section
+
+    div Solución para acelerar acceso a memoria: <i>fully associative caché</i> de direcciones en MMU
+
+    blockquote.fragment data-fragment-index="1" style="background:#F4C7C3;" <b>Translation Look-aside Buffer (TLB)</b> /
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul.fragment data-fragment-index="2" style='font-size:24px;'
+        li Si la dirección está en el caché (<i>TLB hit</i>), se responde directamente
+        li Si la dirección no está en el caché (<i>TLB miss</i>), se lee desde la memoria y se actualiza TLB
+
+      pre.fragment data-fragment-index="4"
+        code.hljs.lang-c style="max-height:600px;"
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             (Success, TLBEntry) = TLB_Lookup(VPN);
+             if(Success) {         //TLB Hit: UN acceso a memoria
+               if(!TLBEntry.protected) {
+                 offset = virtualAddress & OFFSET_MASK;
+                 physicalAddress = (TLBEntry.PFN << PFN_SHIFT) | offset;
+                 register = ReadMemory(physicalAddress);
+               }
+               else raise(PROTECTION_FAULT);
+             }
+             else {                //TLB Miss: DOS accesos a memoria
+               PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+               PTE = ReadMemory(PTEAddress);
+               if(!PTE.valid)          raise(SEG_FAULT);
+               else if (PTE.protected) raise(PROTECTION_FAULT);
+               else {
+                 TLB_Insert(VPN, PTE);
+                 Retry();
+               }
+             }
+
+
+    div.fragment data-fragment-index="3" style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_14.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div Ejemplo: espacio virtual de 8 bit, con páginas de 16 B, almacenando arreglo de 10 <code>int</code> (4B).
+
+    div style="width:75%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li 4 bit para <i>offset</i>. 4 bit para #página. 16 páginas.
+
+      pre.fragment data-fragment-index="1"
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<10; i++)
+              sum += a[i];
+
+      ul.fragment data-fragment-index="2"
+        li Considerando sólo el acceso a <code>a</code>
+        li Sin TLB: 10 $\times$ (acceso tabla de páginas, acceso <code>a[i]</code>)
+        ul
+          li 20 accesos a memoria
+        li.fragment data-fragment-index="3" Con TLB: miss, hit, hit, miss, hit, hit, hit, miss, hit, hit
+        ul.fragment data-fragment-index="3"
+          li 10 accesos a <code>a[i]</code>, 3 accesos a tabla de páginas (miss)
+          li 13 accesos a memoria
+
+      div.fragment data-fragment-index="4" 7 de 10 accesos ahorrados: $70\%$ TLB <i>Hit Rate</i>
+
+      div.fragment data-fragment-index="4" style='font-size:18px;' Con páginas más grandes, el <i>Hit Rate</i> hubiese aumentado
+
+
+    div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-tlb-effect.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div ¿Es bueno $70\%$ de TLB <i>Hit Rate</i>?
+
+    div style="width:75%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<10; i++)
+              sum += a[i];
+
+      ul
+        li Un acceso a memoria física $\approx 100\text{ns} = 10^{-7}\text{s}$
+        li Un acceso a TLB $\approx 1\text{ns} = 10^{-9}\text{s}$
+        li TLB Hit $\approx 101\text{ns}$
+        li TLB Miss $\approx 201\text{ns}$
+
+      ul.fragment
+        li Sin TLB. 20 acc. a memoria. $2000\text{ns} = 2\times 10^{-6}\text{s}$
+        li Con TLB. 13 acc. a memoria, 10 acc. a TLB. $1310\text{ns} = 1.31 \times 10^{-6}\text{s}$
+        li Aceleración: $2000/1310 \approx 1.52$ veces más rápido.
+        li Tiempo promedio de acceso: $201\text{ns} \times 0.3 + 101\text{ns} \times 0.7 = 131\text{ns}$
+
+      blockquote.fragment style="background:#B7E1CD;" TLB Hit Rate reales $\approx 99\%$
+
+
+    div style="width:25%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-tlb-effect.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Efectividad de TLB
+
+    div TLB Hit Rate reales $\approx 99\%$
+
+    div <b>¿Por qué funciona?</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Localidad Espacial
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(i=0; i<1000; i++)
+              sum += a[i];
+
+      div.fragment data-fragment-index="1" align="left" Después de acceder a una dirección <code>x</code>, el programa probablemente accederá a direcciones cercanas a <code>x</code>
+
+      ul.fragment data-fragment-index="2"
+        li Luego de un <i>miss</i>, y guardar un PTE en TLB, vendrán muchos <i>hit</i>
+
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Localidad Temporal
+
+      pre
+        code.hljs.lang-c
+          | int sum = 0;
+            for(k=0; k<10; k++)
+              for(i=0; i<1000; i++)
+                sum += a[i];
+
+      div.fragment data-fragment-index="3" align="left" Una dirección <code>x</code> que acaba de ser accedida, probablemente será accedida de nuevo dentro de poco tiempo
+
+      ul.fragment data-fragment-index="4"
+        li Una PTE recién guardada, volverá a ser usada pronto
+
+    div.fragment data-fragment-index="5" <i>El comportamiento real depende del programa, pero la mayor parte del tiempo los programas manifiestan localidad de referencia (espacial o temporal).</i>
+
+
+  section
+    h3 Detalles de TLB
+
+    div <b>¿Dónde se guardan los datos de un TLB ante un cambio de contexto?</b>
+
+    ul.fragment data-fragment-index="1"
+      li TLB no se almacena en memoria del S.O. (como la Tabla de Páginas), ni en el PCB
+      li PTBR se actualiza en cada cambio de contexto
+      li PTEs de un proceso no sirven al siguiente proceso
+      li Se puede borrar completamente el TLB (<i>flush</i>), marcando todas los <b>valid bit</b> en 0.
+
+    img src='/images/figures/02-tlb-entry.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style='font-size:18px;' TLB Entry de un MIPS R4000
+
+    ul.fragment data-fragment-index="2"
+      li <code>V</code> indica si la <b>entrada del TLB</b> es válida
+      ul
+        li style='font-size:20px;' Atención: no es el mismo valid bit de la PTE
+      li <code>ASID</code> indica el <b>Address Space Identifier</b>
+      ul
+        li Cada proceso tiene su propio <code>ASID</code> (en su PCB)
+        li Campo <code>ASID</code> permite que coexistan entradas de distintos procesos en el TLB
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#pag_tlb
+  h2 Variantes de paginación
+
+  section
+
+    div <b>Problema</b>: tablas de páginas muy grandes &#x1f61e;
+
+    ul.fragment data-fragment-index="1"
+      li Arquitectura con espacio de direcciones virtuales de 32 bit
+      li Páginas de $4$KB. $20$ bit para #página, $12$ bit para <i>offset</i>
+      li Tabla de páginas necesita $2^{20}$ PTEs
+      li Tamaño de cada PTE: $32$ bit $= 4\text{B}$
+      li Tamaño de tabla de páginas: $2^{20} \times 2^2 \text{B} = 4\text{MB}$
+      li Con 100 procesos, se gasta $400\text{MB}$ del Sistema Operativo <b>sólo en tablas de páginas</b>.
+
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;" Solución: <i>páginas más grandes</i>
+
+    ul.fragment data-fragment-index="3"
+      li Con páginas de $1\text{MB}$. $20$ bit para <i>offset</i>, $12$ bit para #página
+      li Tablas de páginas necesita $2^{12}$ PTEs
+      li Tamaño de tabla de páginas: $16\text{KB}$ &#x1f389;
+
+  section
+    h3 Fragmentación Interna
+
+    blockquote style="background:#B7E1CD;" <b>Fragmentación Externa</b>. Espacios libres no contiguos.
+
+    div Paginación elimina la fragmentación externa (¿por qué?), pero &hellip;
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Fragmentación Interna</b>. Espacios sobreasignado.
+
+    div.fragment data-fragment-index="2" Si las páginas son de $1\text{MB}$ &hellip;
+
+    ul.fragment data-fragment-index="3" 
+      li Procesos de $x\text{MB}$, con $x$ entero reciben la cantidad exacta de espacio.
+      li Un proceso de $16\text{KB}$ recibe $1\text{MB}$ ($1008\text{KB}$ desperdiciados)
+      li Un proceso de $1025 \text{KB}$ recibe $2\text{MB}$
+
+    div.fragment data-fragment-index="4" Espacio se asigna a los procesos pero no se utiliza
+
+    br
+
+    div.fragment data-fragment-index="4" Paginas más grandes aumentan la fragmentación interna. &#x1f61e;
+
+    br
+
+    div.fragment data-fragment-index="5" ¿De qué tamaño son las páginas de su sistema? (Tip: <code>getconf PAGE_SIZE</code>)
+
+
+
+  section
+    h3 Segmentos paginados
+
+    div Procesos no suelen ocupar todas sus páginas
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      div Espacio virtual con 16 páginas.
+      ul
+        li Proceso utiliza efectivamente: 4 páginas
+        li 12 entradas vacías ($75\%$) en tabla de páginas
+
+
+      img.fragment data-fragment-index="1" src='/images/figures/02-hybrid-va.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      br
+      div.fragment data-fragment-index="2" <b>Idea</b>: una tabla de páginas por segmento
+      ul.fragment data-fragment-index="3"
+        li Tablas de páginas más pequeña &#x1f603;
+        li <code>base</code> (direcc. de tabla de páginas)
+        li <code>limit</code> (#paginas)
+        li Vuelve la fragmentación externa &#x1f61f;
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-hybrid.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+  section
+    h3 Tablas de páginas multinivel
+
+    div En lugar de segmentar, mejor <b>paginar</b> la tabla de páginas
+
+    div
+      img src='/images/figures/02-multilevel-va.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      ul.fragment data-fragment-index="2"
+        li Dirección virtual de 14-bit, páginas de $64\text{B}$.
+        li Esquema de 1 nivel: 256 PTEs. 
+        ul style='font-size:24px;'
+          li Memoria: $256 \times 4\text{B} = 2\text{KB}$
+        li Esquema de 2 niveles: 16 PTEs en tabla principal, 16 PTEs en 16 tablas de 2do nivel
+        ul style='font-size:24px;'
+          li Memoria: Al menos tabla principal + 1 tabla secundaria
+          li Memoria: $16 \times 4\text{B} + 16 \times 4\text{B} = 128{B}$
+        
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-multilevel-1.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Tablas de páginas multinivel
+
+    div Esquema se puede extender a más niveles
+
+    div
+      img src='/images/figures/02-multilevel-2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li En memoria se necesita la tabla de páginas del primer nivel (completa), y una tabla de cada nivel para poder resolver una dirección física
+        li Cada división puede tener distintos tamaños
+
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-multilevel-3.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Tablas de páginas invertidas
+
+    div En lugar de guardar una tabla por proceso, mantener una tabla <b>única para todo el sistema</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Indice es el <i>frame</i>. Una PTE por <i>frame</i>.
+        li Clave de búsqueda es $\langle$ pid, #page $\rangle$
+        li Consume menos memoria &#x1f603;
+        li Pero búsqueda es lenta (secuencial) &#x1f61e;
+        li Alternativa: usar <i>hashing</i>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+    div PowerPC usaba este esquema
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section#page_replace
+  h2 Reemplazo de páginas
+
+  section
+    div <b>Supuesto a eliminar</b>: todo el espacio de direcciones cabe en memoria física
+
+    div Procesos pueden tener parte de su memoria no cargada aún (en disco), o en <i>swap</i> (en disco).
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" Desafío: usar efectivamente el disco (grande, pero lento) para proveer la ilusión que <b>todo</b> el espacio virtual está en memoria
+
+    br
+
+    div.fragment data-fragment-index="2" Procesos deben seguir creyendo que pueden acceder a todo el rango de direcciones virtuales
+
+    ul.fragment data-fragment-index="2" 
+      li ¿Por qué? Es más fácil para el proceso (separa la <i>ilusión</i> de la realidad)
+      li Sistema Operativo se encarga de cargar las páginas <i>on-demand</i>
+
+    br
+    br
+
+    div.fragment data-fragment-index="3"  Si no caben más páginas en memoria física, alguna debe salir para hacer más espacio
+
+    blockquote.fragment data-fragment-index="3" style="background:#B7E1CD;" ¿Qué página eliminar?, y ¿a dónde moverla?
+
+
+
+  section
+    h3 Swap space
+
+    blockquote style="background:#B7E1CD;" ¿A dónde mover las páginas de memoria?
+
+    div.fragment data-fragment-index="1" Páginas que van a ser borradas de memoria van a <i>espacio de <b>swap</b></i>
+
+    ul.fragment data-fragment-index="1"
+      li Representan parte del espacio de memoria de un proceso <b>en ejecución</b>
+      li Tabla de páginas utiliza <b>present bit</b> para saber si la página está en un <i>frame</i> o no
+
+    blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;" Si la página no está presente, se genera un <b>page fault</b>
+
+    div.fragment data-fragment-index="2" <b>Page fault</b> activa el mecanismo de recuperación de una página desde disco a memoria física
+    ul.fragment data-fragment-index="2"
+      li Sistema Operativo atiende el <i>page fault</i>
+      li Cuando el <i>page fault</i> ha sido resuelto, el proceso puede continuar
+
+  section
+    h3 Page Fault
+
+    div Ante un <i>page fault</i>, el sistema operativo va a buscar la página
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div style='font-size:26px;' Algoritmo para paginación con TLB, y <i>page faults</i>
+
+      pre
+        code.hljs.lang-c style="max-height:600px;"
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             (Success, TLBEntry) = TLB_Lookup(VPN);
+             if(Success) {         //TLB Hit
+               if(!TLBEntry.protected()) {
+                 offset = virtualAddress & OFFSET_MASK;
+                 physicalAddress = (TLBEntry.PFN << PFN_SHIFT) | offset;
+                 register = ReadMemory(physicalAddress);
+               }
+               else raise(PROTECTION_FAULT);
+             }
+             else {                //TLB Miss
+               PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+               PTE = ReadMemory(PTEAddress);    // lectura tabla de paginas
+               if(!PTE.valid)          raise(SEG_FAULT);
+               else if (PTE.protected) raise(PROTECTION_FAULT);
+               else if (!PTE.present)  raise(PAGE_FAULT);
+               else {                  // pagina en memoria
+                 TLB_Insert(VPN, PTE);
+                 Retry();
+               }
+             }
+
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-9_01.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Page Fault
+
+    div Mecanismo de rutina <i>page-fault handler</i>
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      div style='font-size:26px;' Algoritmo para manejar un <i>page fault</i>
+
+      pre
+        code.hljs.lang-c style="max-height:600px;"
+          |  PFN = FindFreePhysicalPage();   // busca frame libre
+             if(PFN == -1)                   '// no había frame libre :'(
+               PFN = ReplacePage();          // rutina de reemplazo de página
+
+             // Copia desde el disco a la memoria. Proceso queda "waiting on I/O"
+             DiskRead(PTE.DiskAddress, PFN);
+
+             // Actualiza tabla de páginas
+             PTE.present = TRUE;
+             PTE.PFN = PFN;
+
+             // Vuelve a ejecutar la instrucción que generó el PAGE_FAULT 
+             Retry(); 
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-9_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+
+    blockquote style="background:#B7E1CD;" ¿Qué página reemplazar?
+
+    div La ocurrencia de un <i>page-fault</i> es algo malo (significa acceder al disco)
+
+    br
+    br
+
+    div Cualquier algoritmo de decisión debe intentar minimizar la ocurrencia de <i>page-faults</i>
+
+    br
+    br
+
+    div Ejemplo: direcciones virtuales de 16 bit, páginas de 4KB
+    ul 
+      li Ocurre un <i>page-fault</i> para acceder a la dirección $0x6300$ (página $6$)
+      li Se escoge la página $9$ y se hace <i>swap</i>
+      li Proceso continúa y solicita dirección $0x9204$
+      li Ocurre otro <i>page-fault</i>
+      li No fue tan buena idea haber sacado la página $9$.
+
+  section
+    h3 MIN: Reemplazo óptimo
+
+    div Planteado por Laszlo A. Belady, 1966
+
+    blockquote style="background:#B7E1CD;" Elegir la que será usada lo más lejos posible en el futuro
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td 0
+        tr
+          td 1
+          td Miss
+          td
+          td 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 2
+        tr
+          td 3
+          td Miss
+          td 2
+          td 0, 1, 3
+        tr
+          td 0
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 3
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 3
+        tr
+          td 2
+          td Miss
+          td 3
+          td 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td 0, 1, 2
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Tasa de hits (<i>Hit Rate</i>)
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+5} = 0.545$
+
+      div style='font-size:32px;' Si ignoramos el primer <i>miss</i> de cada página (<i>cold start</i>)
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+1} = 0.857$
+
+      br
+      br
+
+      div El mejor algoritmo &#x1f603;
+
+      div Pero no podemos conocer el futuro &#x1f61e;
+
+      /br
+
+      /div ¿Qué hacer? &hellip; aproximarlo
+
+  section
+    h3 FIFO: First In First Out
+
+    div Muy simple de implementar 
+
+    blockquote style="background:#B7E1CD;" Elegir la página que lleva más tiempo en memoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td Queue: 0
+        tr
+          td 1
+          td Miss
+          td
+          td Queue: 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td Queue: 0, 1, 2
+        tr
+          td 3
+          td Miss
+          td 0
+          td Queue: 1, 2, 3
+        tr
+          td 0
+          td Miss
+          td 1
+          td Queue: 2, 3, 0
+        tr
+          td 3
+          td Hit
+          td
+          td Queue: 2, 3, 0
+        tr
+          td 1
+          td Miss
+          td 2
+          td Queue: 3, 0, 1
+        tr
+          td 2
+          td Miss
+          td 3
+          td Queue: 0, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td Queue: 0, 1, 2
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' <i>Hit Rate</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{4}{4+7} = 0.364$
+
+      div style='font-size:32px;' Sin <i>cold start</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{4}{4+3} = 0.571$
+
+      br
+      br
+
+      div Más malo que MIN &#x1f61e;
+
+      div Si hay más <i>frames</i> disponibles, se debería comportar mejor (¿o no?)
+
+
+  section
+    h3 RANDOM
+
+    div Simple de implementar 
+
+    blockquote style="background:#B7E1CD;" Elegir una página aleatoria
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      img src='/images/figures/02-random.png' style="background:none; border:none; box-shadow:none;" width="60%"
+
+      div style='font-size:32px;' 10000 ejecuciones
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li MIN <i>hits</i>: 6
+        li FIFO <i>hits</i>: 4
+
+      br
+      br
+
+      div FIFO y RANDOM no aprovechan la localidad de referencia
+
+      br
+      br
+
+      div Podrían eliminar páginas que van a usarse en el corto plazo.
+
+  section
+    h3 LRU: Least Recently Used
+
+    div Una página que se usó recientemente, probablemente pronto será usada otra vez
+
+    blockquote style="background:#B7E1CD;" Elegir la página que lleva más tiempo sin usarse
+
+
+    div style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' Ejemplo: Sistema con 3 <i>frames</i> como máximo para un proceso
+
+      div style='font-size:32px;' Secuencia de accesos a páginas: 0, 1, 2, 0, 1, 3, 0, 3, 1, 2, 1
+
+      table style='font-size:20px;'
+        tr
+          td Página
+          td Hit/Miss
+          td Reemplazar
+          td Páginas en mem.
+        tr
+          td 0
+          td Miss
+          td
+          td LRU: 0
+        tr
+          td 1
+          td Miss
+          td
+          td LRU: 0, 1
+        tr
+          td 2
+          td Miss
+          td
+          td LRU: 0, 1, 2
+        tr
+          td 0
+          td Hit
+          td
+          td LRU: 1, 2, 0
+        tr
+          td 1
+          td Hit
+          td
+          td LRU: 2, 0, 1
+        tr
+          td 3
+          td Miss
+          td 2
+          td LRU: 0, 1, 3
+        tr
+          td 0
+          td Hit
+          td 
+          td LRU: 1, 3, 0
+        tr
+          td 3
+          td Hit
+          td
+          td LRU: 1, 0, 3
+        tr
+          td 1
+          td Hit
+          td 
+          td LRU: 0, 3, 1
+        tr
+          td 2
+          td Miss
+          td 0
+          td LRU: 3, 1, 2
+        tr
+          td 1
+          td Hit
+          td
+          td LRU: 3, 2, 1
+
+    div style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      div style='font-size:32px;' <i>Hit Rate</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+5} = 0.545$
+
+      div style='font-size:32px;' Sin <i>cold start</i>
+
+      div style='font-size:32px;' $\text{Hit Rate} = \frac{6}{6+1} = 0.857$
+
+      br
+      br
+
+      ul 
+        li MIN: 1 <i>miss</i>, Hit Rate $0.857$
+        li FIFO: 3 <i>misses</i>, Hit Rate $0.571$
+        li Similar a MIN &#x1f603;
+        li Implementable &#x1f603;
+        li ¿Eficientemente? &#x1f914;
+
+
+  section
+    h3 Workload sin localidad
+
+    div Algoritmos de reemplazo se comparan ejecutándolos bajo una secuencia de accesos a páginas (<i>workload</i>), y distinta cantidad de <i>frames</i> disponibles.
+
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      div 100 páginas. Secuencia de 10000 accesos sin localidad.
+
+      br
+      br
+
+      ul
+        li Sin localidad todas las políticas que podemos implementar se comportan igual
+        li Con suficientes <i>frames</i> disponibles se llega a <i>Hit Rate</i> 1.
+        li Patrón poco común (pero posible)
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-nolocality.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+  section
+    h3 Workload 80-20
+
+    div 100 páginas. Secuencia con 80% de localidad en 10000 accesos.
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li 80% de los 10000 accesos se hacen a un 20% de páginas (<i>hot pages</i>)
+        li 20% de los 10000 accesos se hacen al 80% de páginas restantes (<i>cold pages</i>)
+      br
+      br
+
+      ul
+        li LRU mejor que FIFO y RANDOM
+        li Patrón más común
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-8020.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+
+  section
+    h3 Workload con loop secuencial
+
+    div 100 páginas. Acceso secuencial a 50 páginas (0, 1, &hellip;, 49). Se repite hasta completar 10000 accesos.
+
+    div style="width:65%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li FIFO y LRU eliminan las páginas más "antiguas"
+        li RANDOM se comporta mejor
+      br
+      br
+
+      ul
+        li Peor caso para FIFO y LRU
+        li Patrón común en muchas aplicaciones
+        li Tamaño del conjunto de páginas usadas es crítico
+
+
+    div style="width:35%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-replacement-loop.png' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      ul style='font-size:18px;'
+        li La cantidad de <i>frames</i> disponibles es como una cantidad de bloques de caché en memoria física
+        li OPT $\equiv$ MIN
+
+
+  section
+    h3 Implementando LRU
+
+    div ¿Fácil de implementar?
+
     ul
-      li.fragment  ¿Y si el hijo no escribe en su memoria o hace inmediatamente <code>exec()</code>?
-  
-    div.fragment Estrategia <strong>copy-on-write</strong> mantiene las páginas del padre como <em>región compartida para el hijo</em>
-  
-    div
-      img src='/images/figures/02-9_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+      li Estructura para FIFO se actualiza en cada <i>miss</i>
+      li Estructura para LRU se actualiza en <b>cada acceso</b> &#x1f62e;
 
-    div
-      img src='/images/figures/02-9_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="40%"
+    br
+    br
+    div.fragment data-fragment-index="1" <i>Algunas alternativas para implementar LRU</i>
 
-    /  Instrucción <code>vfork()</code> implementa <code>fork</code> sin copia de páginas (ni con <em>copy-on-write</em>)
-  
+    ul.fragment data-fragment-index="2"
+      li Mantener cola ordenada en cada acceso a memoria. Caro.
+      li Agregar <i>timestamp</i> en cada acceso. Puede ser por <i>hardware</i> (más barato).
+      ul
+        li Al momento de reemplazar se elige la que tiene menor <i>timestamp</i>
+        li Requiere comparar <i>todas</i> las páginas candidatas. Caro.
+
+
+  section
+    h3 Aproximando LRU
+
+    div LRU se puede <i>aproximar</i> con ayuda del <i>hardware</i>
+
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Algoritmo del reloj (clock)</b>
+
+    div.fragment data-fragment-index="1" style='font-size:18px;' Casi igual que <b>algoritmo de segunda oportunidad</b>
+
+    div.fragment data-fragment-index="2"  Aproximación basada en <b>reference bit</b> (1 si la página ha sido usada)
+
+    div.fragment data-fragment-index="3" style="width:60%; vertical-align:middle; display:inline-block;"  
+
+      ul
+        li Algoritmo apunta a una página (cualquiera)
+        li Al momento de elegir, se mira <b>reference bit</b>
+        ul
+          li Si <b>reference bit</b>$=$1, se cambia a 0 y pasa a la siguiente página
+          li Si <b>reference bit</b>$=$0, se elige esta página
+
+      br
+      br
+
+      div Aproxima LRU bastante bien, y es eficiente
+
+    div.fragment data-fragment-index="3" style="width:40%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-clock.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    h3 Aproximando LRU
+
+    div Enfoque de múltiples <b>reference bit</b>
+
+    blockquote style="background:#B7E1CD;" Algoritmo de <b>aging</b>
+
+    div.fragment data-fragment-index="1" style="width:50%; vertical-align:middle; display:inline-block;"  
+
+      div Contadores por cada página
+      ul
+        li Contadores se actualizan por <i>hardware</i> a intervalos regulares
+        li En cada <i>tick</i>, los <i>reference bit</i> se copian a cada contador (left shift), y se borran
+        li Secuencia de bit sirve como historia
+        li Página con menor contador es la menos usada
+
+    div.fragment data-fragment-index="1" style="width:50%; vertical-align:middle; display:inline-block;"  
+
+      img src='/images/figures/02-aging.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+  section
+    h3 Aproximando LRU
+
+    div Usando los <b>dirty bit</b> (1 si la página ha sido modificada), se pueden priorizar mejor las páginas para el algoritmo del reloj.
+
+    br
+    br
+    table
+      tr
+        td Reference
+        td Dirty
+        td
+      tr
+        td 0
+        td 0
+        td No usada recientemente ni modificada. Buena candidata.
+      tr
+        td 0
+        td 1
+        td No usada recientemente, pero modificada.
+      tr
+        td 1
+        td 0
+        td Usada recientemente, pero no modificada.
+      tr
+        td 1
+        td 1
+        td Usada recientemente y modificada.
+
 
 /---------------------------------------------------------------------
 section#reemp
-  h2 Reemplazo de páginas
+  h2 Working Set y Thrashing
 
-  section#reemp1
-
-    div Cuando no hay espacio en memoria se necesita <i>reemplazar una página </i>
-
-    div
-      img src='/images/figures/02-9_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
-
-  section#reemp2
-
-    div Sistema Operativo ejecuta un algoritmo para elegir una página como <i>víctima</i> a reemplazar.
-
-    div
-      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="55%"
-
-  section#reemp3
-
-    div
-      img src='/images/figures/02-9_10.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div Dos transferencias de páginas (pasos 1 y 3)
-
-    ul
-      li.fragment  Páginas que no han sido modificadas no necesitan escribirse a disco
-      li.fragment  <strong>Modify bit</strong> o <strong>Dirty bit</strong> indican si la página ha sido modificada desde la última vez que se cargó
-      li.fragment  Páginas <em>read-only</em> nunca modifican su <strong>dirty bit</strong>
-  
-  section#reemp4
-  
-    div ¿Cuál conviene reemplazar? ... <span class="fragment">una que genere pocos <i>page faults</i></span>
-
-    div Supongamos páginas que almacenan 100 direcciones. Con esta secuencia de acceso:
-
-    div.fragment 0145, 0400, 0102, 0670, 0110, 0672, 0112, 0198, 0153, 0602, 0170
-
-    div.fragment Esto significa que se accede a las siguientes páginas:
-
-    div.fragment 1,4,1,6,1,6,1,6,1
-      
-  section#reemp5
-
-    div
-      img src='/images/figures/02-9_11.pdf.png' style="background:none; border:none; box-shadow:none;" width="45%"
-
-    div La tasa de <i>page faults</i> también depende de la cantidad de <i>frame</i>s disponibles.
-
-  section#reemp6
-
-    h3 Reemplazo FIFO
-
-    div Reemplazar la página que fue cargada hace más tiempo
-
-    div
-      img src='/images/figures/02-9_12.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-
-    ul.fragment
-      li  +Fácil de implementar
-      li  -Comportamiento impredecible
-  
-  section#reemp7
-
-    div Aumentar la cantidad de <em>frames</em> debe disminuir la cantidad de <em>page faults</em>
-  
-    ul
-      li.fragment  Ejemplo. Secuencia 1,2,3,4,1,2,5,1,2,3,4,5
-      li.fragment  Con 3 frames genera 9 <em>page faults</em>
-      li.fragment  Con 4 frames genera 10 <em>page faults</em> (¿?)
-  
-    div
-      img src='/images/figures/02-9_13.pdf.png' style="background:none; border:none; box-shadow:none;" width="35%"
-  
-    div Este problema se conoce como <strong>anomalía de Bélády</strong>. Fue planteada por el húngaro László Bélády, 1969.
-
-  section#reemp8
-
-    h3 Reemplaza óptimo
-
-    div Reemplaza la página que no será usada durante el mayor tiempo (en el futuro)
-
-    div
-      img src='/images/figures/02-9_14.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-
-    li.fragment +Óptimo
-    li.fragment +No sufre la anomalía de Bélády
-    li.fragment -Difícil de implementar, pues requiere conocimiento futuro (como SJF)
-  
-  section#reemp9
-
-    h3 Reemplaza LRU (<i> Least Recently Used</i>)
-
-    div Reemplazar la página que no ha sido usada por más tiempo
-
-    div
-      img src='/images/figures/02-9_15.pdf.png' style="background:none; border:none; box-shadow:none;" width="65%"
-  
-    div.fragment Compromiso más razonable para el óptimo. ¿Cómo implementarlo?
-    ul
-      li.fragment  Contadores, actualizado con valor de <em>timer</em>
-      li.fragment  <em>Stack</em>, el último acceso avanza al tope del <em>stack</em>
-      li.fragment En cualquier caso se requiere ayuda de <em>hardware</em>
-
-  section#reemp10
-    
-    h3 Aproximación a LRU
-
-    div Si no hay soporte de <em>hardware</em>, se puede aproximar el comportamiento de LRU
-  
-    ul
-      li.fragment  <strong>Reference bit</strong> se marca para indicar páginas referenciadas
-      li.fragment  Permite determinar qué páginas se han usado y cuáles no (sin orden)
-  
-    div.fragment Una técnica para incorporar orden:
-
-    ul
-      li.fragment  8-bit reference (<em>reference byte</em>) funcionan como "bit de historia"
-      li.fragment  A intervalo $r$ ($\sim 100$ms) se hace <em>right shift</em> del <em>reference bit</em>
-      li.fragment  Frame con mayor <em>reference byte</em> es el usado más recientemente    
-  
-    div.fragment Valores pueden no ser únicos. Entre ellos se decide de manera FIFO.
-  
-  section#reemp11
-
-    div <b>Algoritmo de segunda oportunidad:</b> Inicialmente, FIFO, ordenado por tiempo de carga. 
-
-    ul
-      li.fragment  Reference bit 0: se reemplaza
-      li.fragment  Reference bit 1: 2da oportunidad. Se cambia a 0, se establece tiempo de carga al tiempo actual, y se pasa a la siguiente página
-      
-    div
-      img src='/images/figures/02-9_17.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-  
-    div ¿Qué pasa si todos los bit están marcados como 1?
-
-  section#reemp12
-
-    div <b>Segunda oportunidad mejorada</b>
-
-    div Segunda oportunidad, considerando el par (<em>reference bit</em>, <em>dirty bit</em>)
-  
-    ul
-      li.fragment Si es (0,0), no usado recientemente ni modificada
-      ul
-        li.fragment  Buena víctima
-      
-      li.fragment Si es (0,1), no usada recientemente, pero modificada
-      ul
-        li.fragment  Casi buena víctima. Requiere escribirla.
-      
-      li.fragment Si es (1,0), recientemente usada, pero no modificada
-      ul
-        li.fragment  Probablemente será leída pronto
-      
-      li.fragment Si es (1,1), recientemente usada, y modificada
-      ul
-        li.fragment  Probablemente será leída pronto
-      
   section#reemp13
 
-    h3 Otros algoritmos
 
-    div Con contador de accesos (costoso de implementar)
-    ul
-      li.fragment  <strong>Least Frequently Used</strong>. Una página muy accedida debe tener alto contador.
-      ul
-        li.fragment  ¿Y si se usó solo al inicio?
-        li.fragment  Se puede complementar haciendo <em>shift</em> del contador periódicamente
-       
-      li.fragment  <strong>Most Frequently Used</strong>. La página que tiene pocos accesos probablemente fue cargada recientemente y aún no ha sido muy usada
+    div El modelo de <b>working set</b> intenta determinar si un proceso tiene una cantidad apropiada de <i>frames</i>
 
-section#last
-  
-  h2 Asignación de frames
+    blockquote.fragment data-fragment-index="1" style="background:#B7E1CD;" <b>Working Set</b>, $w_{\Delta}(t)$: conjunto de páginas utilizadas por un proceso en los últimos $\Delta$ acceso a memoria.
 
-  section#last1
-    div ¿Cuántos <em>frames</em> asignar a cada proceso?
-  
-    div <strong>Mínimo</strong>
-    ul
-      li.fragment  Puede ser definido por la arquitectura
-      li.fragment  O bien, depender de la cantidad de direcciones referenciables en una instrucción
-      ul
-        li.fragment  <code>load r1, 0x0160</code>. Dos frames: para la instrucción y para la dirección.
-        li.fragment  Más complejo cuando se permiten indirecciones
-  
-    div <strong>Máximo</strong>
-    ul
-      li.fragment  ¿Cómo dividir $m$ <em>frames</em> entre $n$ procesos?
-  
-
-  section#last2
-    div $m$ <em>frames</em> y $n$ procesos
-    ul
-      li.fragment  <strong>Asignación equitativa</strong>: $\lfloor m/n \rfloor$ a cada uno. 
-      li.fragment  <strong>Asignación proporcional</strong>: sea $s_i$ el tamaño de la memoria virtual del proceso $p_i$, cada proceso recibe $a_i$ <em>frames</em>: 
-          
-          \[ a_i = \frac{s_i}{\sum{s_i}} \times m \]
-          
-    div Proporción también puede estar relacionada a la prioridad del proceso
-          
-  section#last3  
-    
-    h3 Thrashing
-
-    div Cada <em>page fault</em> genera tráfico entre disco y memoria de <em>al menos</em> una página.
-  
-    div.fragment Con alta tasa de <em>page fault</em> el sistema gasta más tiempo copiando <em>frames</em> entre disco y memoria
-
-    div
-      img src='/images/figures/02-9_18.pdf.png' style="background:none; border:none; box-shadow:none;" width="30%"
-
-    ul
-      li.fragment  Baja utilización de CPU
-      li.fragment  <em>Scheduler</em> incrementa nivel de multiprogramación
-      li.fragment  Procesos nuevos requieren <em>frames</em>.
-      li.fragment  S.O. quita <em>frames</em> a procesos en ejecución
-      li.fragment  Procesos en ejecución aumentan su tasa de <em>page fault</em>
-      li.fragment  S.O. gasta más tiempo cargando <em>frames</em>
-      /li.fragment  Baja utilización de CPU
-  
-
-  section#last4
-
-    h3 Modelo de <i>working set</i>
-
-    div Conjunto de páginas usadas en los últimos $\Delta$ accesos
-
-    div
+    div.fragment data-fragment-index="1"
       img src='/images/figures/02-9_20.pdf.png' style="background:none; border:none; box-shadow:none;" width="60%"
 
-    div $\Delta$ determina el tamaño del <em>working set</em> del proceso $i$: $\text{WSS}_i$
-  
-    div Demanda por páginas: $D=\sum{\text{WSS}_i}$
-  
-    div Si hay $m$ frames, y $D > m$, entonces habrá <em>thrashing</em>
+    ul.fragment data-fragment-index="2"
+      li Medida de la demanda efectiva por <i>frames</i> de un proceso.
+      li Si no se le puede asignar $|w_{\Delta}(t)|$ <i>frames</i> no conviene tenerlo en ejecución
+      li Si la suma de los <i>working set</i> de todos los procesos es mayor a la cantidad de <i>frames</i> en el sistema, habrá <i>thrashing</i>
 
-  section#last5
+    div.fragment data-fragment-index="3" El <i>working set</i> es usado por el <i>medium-term scheduler</i>. /
 
-    h3 Working set
+    ul.fragment data-fragment-index="3"
+      li Se puede implementar usando los <b>reference bit</b>
 
-    div ¿Cómo implementarlo?: aprovechando los <em>reference bit</em>
-  
-    ul
-      li.fragment  Observar <em>reference bit</em> a intervalos regulares, cada $R$ referencias
-      li.fragment  <em>Reference bit</em> se copian y se borran
-      li.fragment  En la siguiente observación se comparan los valores copiados y los nuevos <em>reference bit</em>.
-      li.fragment  Páginas modificadas se mantienen dentro del <em>working set</em>
-  
-    div Permite aproximar el <em>working set</em>, a menor costo que analizar todas las referencias
+
 
 

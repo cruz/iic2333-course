@@ -17,15 +17,15 @@ section
 	section
 		p.fragment Un programa en ejecución
 
-		blockquote.fragment
-			| Proceso = Código + Recursos
+		blockquote.fragment style="background:#B7E1CD;" 
+			| Proceso = Código (programa) + Recursos
 
-		ul
-			li.fragment El código del programa
-			li.fragment Los recursos de la ejecución
-			ul
-				li.fragment Memoria, archivos
-				li.fragment Sockets, Dispositivos, Librerías (...)
+		ul.fragment
+			li El código del programa
+			li Los recursos de la ejecución
+			ul.fragment
+				li Memoria, archivos
+				li Sockets, Dispositivos, Librerías (...)
 
 
 
@@ -34,22 +34,21 @@ section
 	/  -----------------------------
 
 	section
-		p ¿Qué hay en un Proceso?
-		ul
-			li.fragment Código (<em>.text</em>, información estática)
-			li.fragment Program Counter (PC) + Registros
-			li.fragment Stack (de funciones)
-			p.fragment Cada item del stack representa una función, por lo que tiene:
-			ul
-				li.fragment Parámetros
-				li.fragment Variables locales
-				li.fragment Lugar de retorno (donde estaba la ejecución anterior, PC)
-			li.fragment Datos (<em>.data</em>)
-			ul
-				li.fragment Variables globales
-			li.fragment Heap
-			p.fragment Memoria asignada dinámicamente (durante la ejecución)
-		== image_tag '/images/figures/01-3_01.pdf.png'
+		/div ¿Qué hay en un Proceso?
+
+		div style="border:none; width:70%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <b>Código</b> (<em>.text</em>, información estática)
+				li <b>Datos</b> (<em>.data</em>): variables globales
+				li <b>Stack</b>. Cada item del stack representa una función, y contiene:
+				ul
+					li Parámetros
+					li Variables locales
+					li Lugar de retorno (donde estaba la ejecución anterior, PC)
+				li <b>Heap</b>. Memoria asignada dinámicamente (durante la ejecución)
+
+		img src='/images/figures/01-3_01.pdf.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -59,50 +58,34 @@ section#states
 
 
 	section#states-inside
-		p Un proceso en ejecución puede cambiar de estado
+		div Un proceso en ejecución puede cambiar de estado
 
 		ul
-			li.fragment <b>[New]       </b>: En creación
-			li.fragment <b>[Running]   </b>: En ejecución
-			li.fragment <b>[Waiting]   </b>: Esperando (I/O, signal)
-			li.fragment <b>[Ready]     </b>: Listo para ejecutar. Esperando asignación de CPU
-			li.fragment <b>[Terminated]</b>: Ejecución terminada
+			li <b>New       </b>: En creación
+			li <b>Running   </b>: En ejecución
+			li <b>Waiting   </b>: Esperando (I/O, signal)
+			li <b>Ready     </b>: Listo para ejecutar. Esperando asignación de CPU
+			li <b>Terminated</b>: Ejecución terminada
 
-
-	section#states-automata
-		== image_tag '/images/figures/01-3_02.pdf.png'
-		p.fragment ¡Un autómata!
+		img src='/images/figures/01-3_02.pdf.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section#states-status
 		p ¿Cómo averiguo el estado de un proceso?
 
-		.fragment
-			p Desde un terminal
-			pre
-				code.hljs.lang-bash
-					| $ htop || top || ps aux
-		.fragment
-			p En C
-			pre
-				code.hljs.lang-c
-					| #include "sys/types.h"
-					  #include "sys/wait.h"
-					  /* ... */
-					  int status;
-					  pid_t return_pid = waitpid(process_id, /*out*/ &status, WNOHANG);
-					  
-					  switch(return_pid) {
-					    case 0:
-					      /* Still running */
-					    case process_id:
-					      /* Child terminated. Exit status in 'status' */
-					    case -1:
-					    default:
-					      /* Error */
-					  }
-		.fragment
-			p O con un Administrador de Procesos
+		p Desde un terminal
+		pre
+			code.hljs.lang-bash
+				| $ htop
+				  $ top
+				  $ ps aux
+		
+		p Con un Administrador de Procesos
+
+		img src='/images/figures/01-taskman-linux.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="display:inline-block;" &nbsp; &nbsp; &nbsp; &nbsp; 
+		img src='/images/figures/01-taskman-win.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 section#repr
@@ -110,26 +93,30 @@ section#repr
 	/  --------------------------
 
 	section#repr-PCB
-		p ¿Cómo represento un proceso?
+		div ¿Cómo represento un proceso?
 
-		p.fragment Process Control Block (PCB)
-		ul
-			li.fragment Estado
-			li.fragment Identificador (PID)
-			li.fragment Program Counter (PC)
-			li.fragment Registros de CPU: <em>estado de ejecución</em>
-			li.fragment Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
-			li.fragment Información de memoria: límites, tabla de páginas/segmentos, &hellip;
-			li.fragment Contabilidad (<em>accounting</em>)
-			li.fragment Información de I/O: archivos y dispositivos abiertos, &hellip;
+		blockquote.fragment style="background:#F4C7C3;"<b>Process Control Block (PCB)</b>
 
-		== image_tag '/images/figures/01-3_03.pdf.png'
-		/p.fragment Miremos en <code>include/linux/sched.h</code>
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li Estado
+				li Identificador (PID, <i>Process ID</i>)
+				li Program Counter (PC)
+				li Registros de CPU: <em>estado de ejecución</em>
+				li Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
+				li Información de memoria: límites, tabla de páginas/segmentos, &hellip;
+				li Contabilidad (<em>accounting</em>)
+				li Información de I/O: archivos y dispositivos abiertos, &hellip;
+
+		img src='/images/figures/01-3_03.pdf.png' width="15%" style="background:none; box-shadow:none; vertical-align:middle;"
+
+		p.fragment Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
 
 
 	section#repr-contextSwitch
 		p El cambio de procesos se conoce como <strong>Context Switch</strong>
-		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%"
+		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%", :style=>"border:none;"
 
 
 
@@ -144,12 +131,12 @@ section#creation
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso</span>
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso&hellip;</span>
 
-		p.fragment Existe un proceso llamado 'init' que es construido durante la inicialización del kernel. Usualmente tienen asignado el ProcessID 1.
+		p.fragment Existe un proceso llamado <code>init</code>, construido durante la inicialización del kernel. PID=1.
 		/! Salvo Windows por supuesto, que usa el 4.
-		ul
-			li.fragment Linux: systemd, initV, upstart
-			li.fragment MacOS X: launchd
-			li.fragment Windows: InitialSystemProcess, System
+		ul.fragment
+			li Linux: systemd, init, upstart
+			li MacOS X: launchd
+			li Windows: InitialSystemProcess, System
 
 	section#creation-tree
 		p Como todos los procesos tienen un padre, forman un árbol de procesos
@@ -170,37 +157,37 @@ section#creation
 
 
 	section#creation-init
-		p Si un proceso crea a un proceso (hijo).
+		p Un proceso (padre) crea a un proceso (hijo).
 		ul
-			li.fragment ¿Quién sigue ejecutando? (modos de ejecución)
+			li.fragment ¿Quién sigue ejecutando? 
 			ul
 				li.fragment Padre e hijo continúan ejecutando concurrentemente
 				li.fragment Padre espera que algunos o todos sus hijos terminen
-			li.fragment ¿Qué personalidad tiene el hijo? (modos de espacio de direcciones)
+			li.fragment ¿Qué personalidad tiene el hijo? (espacio de direcciones)
 			ul
-				li.fragment El hijo es un duplicado <a href="http://linux.die.net/man/2/fork">casi</a> exacto del padre (secciones <strong>.text</strong>, <strong>.data</strong> y el stack son copiados)
+				li.fragment El hijo es un duplicado <a href="http://linux.die.net/man/2/fork" target="_blank">casi</a> exacto del padre
 				li.fragment El hijo es un nuevo programa
 
 
 	section#creation-syscalls
-		p Syscalls
-		dl
-			.fragment
-				dt Fork
-				dd
-					p.fragment Crea un nuevo proceso como <strong>copia</strong> del padre.
-					p.fragment Ambos continúan ejecutando desde la instrucción posterior a <code>fork</code>
-					p.fragment La llamada retorna* el <code>PID</code> del hijo al padre y <code>0</code> al hijo
-			.fragment
-				dt Exec
-				dd
-					p.fragment Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
-					p.fragment Básicamente otro programa se <em>roba</em> el proceso
+		
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		ul.fragment
+			li Crea un nuevo proceso como <strong>copia</strong> del padre.
+			li Ambos continúan ejecutando desde la instrucción posterior a <code>fork()</code>
+			li La llamada retorna el <code>PID</code> del hijo al padre y <code>0</code> al hijo
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+		
+		ul.fragment
+			li Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
+			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
 
 
 
 	section#creation-fork-l-q
-		p ¿Qué imprimen los programas?
+		p ¿Qué imprime este programa?
 
 		pre
 			code.hljs.lang-c
@@ -211,7 +198,7 @@ section#creation
 				    a++;
 				    printf("CHILD: a is : %d\n", a); /* ??? */
 				  }
-				  else if(child_pid > 0) { /* parent gets the new pid ('random' number) */
+				  else if(child_pid > 0) { /* parent gets the new pid */
 				    printf("PARENT: child_pid is %d\n", child_pid);
 				    printf("PARENT: a is %d\n", a); /* ??? */
 				  }
@@ -245,28 +232,34 @@ section#creation
 
 
 	section#creation-wait
-		p Usualmente, después del <code>fork()</code>, uno de los dos (el hijo) ejecuta un <code>exec()</code>.
-		ul
-			li.fragment El padre conoce el <strong>pid</strong> del hijo
-			li.fragment El padre podría seguir ejecutando y crear más hijos
-			li.fragment &hellip; o bien esperar que el hijo termine (o muera)
-		== image_tag '/images/figures/01-3_10.pdf.png'
+		p Después del <code>fork()</code>, uno de los procesos (el hijo) podría ejecutar un <code>exec()</code>.
+		ul.fragment
+			li El padre conoce el <strong>pid</strong> del hijo
+			li El padre podría seguir ejecutando y crear más hijos
+			li &hellip; o bien esperar que el hijo termine (o muera)
+		== image_tag '/images/figures/01-3_10.pdf.png', :style=>"border:none;"
 
 
 	section#creation-wait-def
-		p Syscalls
 
-		dl
-			dt Fork
-			dd
-				p Clona el proceso.
-			dt Exec
-			dd
-				p Reemplaza el proceso por otro
-			.fragment
-				dt Wait
-				dd
-					p.fragment Espera a un proceso hijo termine de ejecutar.
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		div Clona el procesos (<b>copia</b> del padre)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+
+		div Reemplaza el proceso por otro (sobreescribe)
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
+
+		div.fragment Espera el término de un proceso hijo
+
+	section#creation-shell
+
+		div Código simplificado de una <i>shell</i>:
+
+		img src='/images/figures/01-shell.png' width="75%" style="background:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -276,94 +269,107 @@ section#termination
 
 	section#termination-0
 		p.fragment Todo proceso, al terminar su ejecución, ejecuta <code>exit()</code>
-		ul
-			li.fragment Entrega un <em>código de retorno</em> (¿para qué?)
-			li.fragment El SO recupera todos los recursos asignados
+		ul.fragment
+			li Entrega un <em>código de retorno</em> (¿para qué?)
+			li El Sistema Operativo recupera todos los recursos asignados
 
-	section#termination-retCode
-		p El código de retorno se utiliza para avisar cómo resultó la ejecución
-		ul
-			li.fragment Generalmente es <code>0</code> cuando no hubo problemas
-			li.fragment Y un número distinto de <code>0</code> para indicar un problema
-			ul
-				li.fragment La documentación del programa debería relacionar errores a códigos de retorno.
-			li.fragment Por su uso, también es conocido por <em>código de error</em>.
+		p.fragment El código de retorno se utiliza para avisar cómo resultó la ejecución
+		ul.fragment
+			li Generalmente es <code>0</code> cuando no hubo problemas
+			li Y un número distinto de <code>0</code> para indicar un problema
+			li La documentación del programa debería relacionar errores a códigos de retorno.
+			li También se le llama <em>código de error</em>.
 
 	section#termination-syscalls
-		p Syscalls
 
-		dl
-			dt Fork
-			dd
-				p Clona el proceso.
-			dt Exec
-			dd
-				p Reemplaza el proceso por otro
-			dt Wait
-			dd
-				p Espera a un proceso hijo termine de ejecutar.
-			.fragment
-				dt Exit
-				dd
-					p.fragment Termina el proceso con un código de retorno dado.
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		div Clona el procesos (<b>copia</b> del padre)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+
+		div Reemplaza el proceso por otro (sobreescribe)
+
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
+
+		div Espere el término de un proceso hijo
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/exit" target="_blank"><code>exit()</code></a>
+
+		div.fragment Termina el proceso con un código de retorno dado, y lo entrega al padre
 
 
 	section#termination-signals
-		dl
-			dt kill / TerminateProcess
-			dd
-				p Envía una <strong>señal</strong> a otro proceso (típicamente <em>SIGTERM</em>)
-				p Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
-		/ p <small>Mama, just killed a process</small>
+
+		div Un proceso puede enviar <i>señales</i> (<a href="http://www.comptechdoc.org/os/linux/programming/linux_pgsignals.html" target="_blank"><b>signal</b></a>s) a otros procesos
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/kill" target="_blank"><code>kill()</code></a>
+		
+		ul.fragment
+			li Envía una <strong>señal</strong> (<code>kill -l</code> muestra una lista)a otro proceso (típicamente <em>SIGTERM</em>)
+			li Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
+
+		img.fragment src='/images/figures/01-signals.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 	section#termination-q
 		p Si el padre muere, ¿deben morir los hijos?
 
-		ul
-			li.fragment Usualmente el SO no permite que un hijo exista si el padre ha terminado.
-			li.fragment Sistema Operativo ejecuta una <strong>terminación en cascada</strong>
+		ul.fragment
+			li Sistema Operativo podría permitir (o no) que un hijo exista si el padre ha terminado.
+			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a>.
 
-	section#termination-getReturnCode
-		p Huérfanos y zombies: the walking process
+		blockquote.fragment style="background:#B7E1CD;" Procesos <b>huérfanos</b>
 
-		p.fragment Proceso terminado no se borra inmediatamente de la tabla de procesos.
-		ul
-			li.fragment ¿Por qué? <span class="fragment">Para que el padre recupere su estado de salida con <code>wait()</code></span>
-			li.fragment Cuando el padre hace <code>wait()</code> la entrada del hijo se borra de la tabla
+		ul.fragment
+			li Linux: Cuando un padre termina (<code>exit</code>) o muere (<code>kill</code>), sus hijos quedan <b>huérfanos</b> y pasan a ser hijos de <code>init</code>
+			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a> (las condiciones pueden ser complicadas).
+			li <code>init</code> hace <code>wait()</code> periódicamente por sus hijos.
 
-		p.fragment ¿Cómo se hace en Linux?
-		pre.fragment
-			code.hljs.lang-c
-				| /* Un proceso (hijo) termina... */
-				  exit(1);
-		pre.fragment
-			code.hljs.lang-c
-				| /* El padre consulta el estado */
-				  int status;
-				  pid_t pid = wait(/*out*/ &status); /* Ahora 'status' tiene el código de retorno */
-				  /* Ahora el SO puede terminar de eliminar el proceso hijo */
-		p.fragment Si el padre tenía varios hijos, ¿a cuál esperamos recién?
+		blockquote.fragment style="background:#B7E1CD;" Procesos <b>zombies</b>
 
-
-	section#termination-zombies
-		p ¿Y si el padre jamás hace <code>wait()</code>?
-		ul
-			li.fragment Si el padre termina sin ejecutar <code>wait()</code>, el hijo queda <strong>huérfano</strong> (zombie).
-			.fragment
-				li Linux/UNIX: huérfanos pasan a ser hijos de <code>init</code>
-				ul
-					li <code>init</code> llama periódicamente a <code>wait()</code> para deshacerse de los huérfanos (reaps zombies).
+		ul.fragment
+			li Linux: Cuando un proceso termina y su padre no hace <code>wait()</code>.
+			li Proceso terminado no se borra inmediatamente de la tabla de procesos (pero tampoco ejecuta).
+			li Proceso queda en estado <b>zombie</b> hasta que el padre hace <code>wait()</code>.
 
 
 	section#termination-necromancy
-		p Creando zombies
+		p Creando un zombie
 
 		pre
-			code.hljs.lang-c
-				| #include "sys/wait.h"
-				  #include "stdlib.h"
-				  #include "unistd.h"
+			code.hljs.lang-c style="max-height:600px;"
+				| #include &lt;stdlib.h&gt;
+				  #include &lt;sys/types.h&gt;
+				  #include &lt;unistd.h&gt;
+				  int main () {
+				    pid_t child_pid;
+				 
+				    /* Create child*/
+				    child_pid = fork ();
+				    if (child_pid > 0) {
+				      /* Parent process */
+				      sleep (60);
+				    }
+				    else {
+				      /*Child process. Exit immediately. */
+				      exit (0);
+				    }
+				    return 0;
+				  }
+
+
+
+	section#termination-necromancy2
+		p Creando zombies
+
+		pre 
+			code.hljs.lang-c style="max-height:600px;"
+				| #include &lt;sys/wait.h&gt;
+				  #include &lt;stdlib.h&gt;
+				  #include &lt;unistd.h&gt;
 				  
 				  pid_t pids[10];
 				  void main() {
@@ -376,15 +382,16 @@ section#termination
 				    
 				    for (int i=9; i>=0; i--)       /* Only root process reaches */
 				      waitpid(pids[i], NULL, 0);   /* First wait [9] is the longest */
+
 				  }
 
 
 
 
-section#_ipc
+/section#_ipc
 	h2 Comunicación entre procesos (IPC)
 /    =================================
-section#ipc
+/section#ipc
 	h2 Comunicación entre procesos (IPC)
 	/  ---------------------------------
 
@@ -429,7 +436,7 @@ section#ipc
 		== image_tag '/images/figures/01-3_12.pdf.png'
 
 
-section#ipc-_shm
+/section#ipc-_shm
 	h2 Memoria Compartida
 
 	section#ipc-shm
@@ -513,7 +520,7 @@ section#ipc-_shm
 
 
 
-section#ipc-_mp
+/section#ipc-_mp
 	h2 Paso de mensajes
 
 	section#ipc-mp
@@ -612,21 +619,6 @@ section#ipc-_mp
 /		== image_tag '/images/figures/01-pipes.png'
 
 
-/section#summary
-/	h2 Resumen: Procesos
-	/ \framesubtitle{Algunos puntos clave}
-
-/	section#summary-proc
-/		p Procesos
-/		ul
-/			li.fragment  Programa en ejecución + recursos
-/			li.fragment  Pasan por estados
-/			li.fragment  Representados por PCBs
-/			li.fragment  Proceso que no está en ejecución se mantiene en una cola
-			/ li.fragment  <em>Scheduler</em> decide qué proceso debe ejecutar
-/			li.fragment  Pueden crear otros procesos, estableciendo relación <em>padre-hijo</em>
-/			li.fragment  Pueden comunicarse usando varios métodos
-
 
 
 / Frame
@@ -645,7 +637,338 @@ section#ipc-_mp
   //         li.fragment  Bonus si funciona para $N$ niveles
   //     li.fragment  Pueden hacerlo en conjuntos de $N$, $1 \leq N \leq 3$.
 
+section#scheduling
+	h2 Scheduling
 
+	section#scheduling-init
+		p <i>CPU Scheduling</i> a.k.a. Planificación de CPU
+
+		div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+
+				div Tenemos
+			
+				ul
+					li Procesos en memoria (<i>multiprogramación</i>), ordenado en una tabla de PCBs
+					li Algunos procesos en estado <i>ready</i> (listos para ejecutar)
+					li CPU, que puede atender <b>solo un proceso</b> a la vez
+
+			div.fragment
+
+				div Y queremos:
+
+				ul
+					li <i>Multitasking</i>: asignar tiempo a múltiples procesos
+
+		img src='/images/figures/01-pcbs.gif' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background:#B7E1CD;"Sistema Operativo debe elegir cuál de todos los procesos en estado <b>ready</b> debe ejecutar a continuación: <b>scheduling</b>
+
+	section
+		div Responsable: <b>scheduler</b>, a.k.a.  <i>planificador</i>
+
+		div <em>Scheduling</em> puede ser visto como un sistema de <em>manejo de colas</em>
+
+		== image_tag '/images/figures/01-3_06.pdf.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		div Distintos niveles de <i>scheduling</i> en el sistema operativo:
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <b>Long-term Scheduler</b>:  Admite procesos en la <em>cola ready</em>. Determina el <strong>grado de multiprogramación</strong> (cantidad de procesos en memoria).
+				li <b>Short-term Scheduler</b> (a.k.a. <b>dispatcher</b>): Selecciona un proceso de la cola <em>ready</em> para ejecutar.
+				li <b>Medium-term Scheduler</b>: Modificación temporal del grado de multiprogramación, haciendo <strong>swapping</strong>
+
+		img src='/images/figures/01-schedulers.gif' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#cpuSched-thrsh
+		p ¿Y si estamos siempre haciendo <em>Scheduling</em> en vez de ejecutar programas?
+
+		div.fragment <em>Scheduling</em> es importante para <strong>multiprogramación</strong> y <b>multitasking</b> &hellip; <span class="fragment">pero <em>scheduling</em> y <em>context switch</em> <strong>son sólo <em>overhead</em></span></strong>
+
+		ul
+			li.fragment ¿Qué pasa si el <em>scheduler</em> o el <i>context switch</i> toman más tiempo de lo que toma el proceso?
+			li.fragment ¿Qué pasa si se le asigna poco tiempo a cada proceso?
+			li.fragment ¿Qué pasa si hay muchos procesos <em>ready</em>? (long-term scheduler)
+
+		blockquote.fragment style="background:#B7E1CD;"
+			| Contención de procesos se refleja en <strong>thrashing</strong>
+
+		img.fragment src='/images/figures/01-thrashing.jpg' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#cpuSched-types
+		h3 Modelo de ejecución de un proceso
+
+		div No todos los procesos se comportan igual. Alternan entre dos fases:
+
+		ul.fragment
+			li Uso de CPU (<b>CPU-burst</b>)
+			li Espera por I/O (<b>I/O-burst</b>)		
+
+		div.fragment Procesos suelen estar dominados por una u otra etapa:
+
+		img.fragment src='/images/figures/01-processtypes.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+
+		div El tiempo que gasta un proceso en espera influye en la utilización de CPU.
+
+		blockquote.fragment style="background:#F4C7C3;" Una CPU bajo el 100% está subutilizada.
+
+		div.fragment
+
+			div $p$ es el porcentaje de tiempo en espera por I/O. 
+
+			div $p^n$ probabilidad que $n$ procesos estén esperando por I/O.
+
+			div Utilización de la CPU es $\text{CPU}_u = 1 - p^n$
+
+		img.fragment src='/images/figures/01-utilization.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+section#SchedTypes
+
+	h2 Tipos de Scheduling
+
+	section
+		div Por tipo de interrupción
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Preemptive</b> (expropiativo)
+
+		div.fragment Utiliza interrupciones (ej: de reloj (<i>timer</i>)) para decidir cuando sacar a un proceso de ejecución.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Non-Preemptive</b> (colaborativo o no-expropiativo)
+
+		div.fragment
+			div Permite que un proceso ejecute hasta que:
+
+			ul
+				li El proceso deja voluntariamente la CPU, ó
+				li El proceso se bloquea en I/O, ó
+				li El proceso termina
+
+	section
+		div Por objetivo:
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			blockquote.fragment style="background:#B7E1CD;" Batch Scheduling
+
+			div.fragment
+				div Trabajo por lotes. Sin interacción.
+				ul
+					li Mantener la CPU lo más ocupada posible
+					li Minimizar <i>turnaround time</i>: tiempo desde envío hasta término.
+					li Maximizar <i>throughput</i>: número de trabajos por hora
+
+			blockquote.fragment style="background:#B7E1CD;" Interactive Scheduling
+
+			div.fragment
+				ul
+					li Minimizar tiempo de respuesta
+					li Satisfacer usuarios
+
+			blockquote.fragment style="background:#B7E1CD;" Real time Scheduling
+
+			div.fragment
+				ul 
+					li Alcanzar <i>deadlines</i>
+					li Tiempo de respuesta debe ser predecible
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			blockquote.fragment style="background:#B7E1CD;" Para todos
+
+			div.fragment <b>Fairness</b>. Que todos los procesos tengan un tiempo razonable de ejecución.
+
+section#SchedTypes
+
+	h2 Algoritmo de Scheduling (Batch)
+
+	section
+		h3 First-Come, First-Served (FCFS)
+
+		div Orden de llegada. Cola FIFO.
+
+		div.fragment
+			img src='/images/figures/01-fifo-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-fifo-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div.fragment Turnaround time promedio: $109$
+
+		div.fragment
+			div Si P2 hubiese llegado en $t=0$, y P1 hubiese llegado en $t=1$, entonces <br><i>turnaround time promedio</i> $\to$ <span class="fragment">$79$
+
+		br
+
+		ul.fragment
+			li Non-Preemptive
+			li &#x1f44d; Simple
+			li &#x1f44e; Poco predecible. <i>Convoy effect</i>
+
+	section
+		h3 Shortest Job First (SJF)
+
+		div El más corto primero
+
+		div.fragment
+			img src='/images/figures/01-sjf-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-sjf-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div.fragment Turnaround time promedio: $49$
+
+		ul.fragment
+			li &#x1f389; <b>Óptimo</b>
+			li &#x1f62d; No sabemos cuánto demora cada <i>CPU-burst</i>
+			li Versión preemptive: <b>Shortest Remaining Time Next</b>. Elige al que le queda menos tiempo.
+			li &#x1f480; Potencial <b>inanición</b> (<i>starvation</i>) de procesos largos.
+
+section#SchedTypes2
+
+	h2 Algoritmo de Scheduling (Interactive)
+
+	section 
+		div Métrica: <b>tiempo de respuesta</b> (<i>response time</i>).
+
+		div Tiempo desde llegada (a la cola) hasta primera ejecución.
+
+		div.fragment
+			img src='/images/figures/01-rr-table.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-rr-chart.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			ul.fragment 
+				li Turnaround time promedio: $9$
+				li Response time promedio: $4$
+
+
+	section 
+		h3 Round-Robin (RR)
+
+		div Un turno (<i>quantum</i>, <i>time slice</i>) para cada uno.
+
+		div Ejemplo con $q=1$
+
+		div.fragment
+			img src='/images/figures/01-rr-table2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img.fragment src='/images/figures/01-rr-chart2.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			ul.fragment 
+				li Turnaround time promedio: $13.9$
+				li Response time promedio: $0.9$
+
+		ul.fragment
+			li Con $n$ procesos, cada uno recibe $1/n$ de CPU. <b>Fair!</b> &#x2696;
+			li Ningún proceso espera más de $(n-1)\times q$ para ejecutar
+			li Altamente dependiente de la elección de $q$ (¿qué pasa si $q$ es muy pequeño o muy grande?)
+
+	section 
+		h3 Priority Scheduling
+
+		div Cada proceso tiene asociada una <strong>prioridad</strong>
+
+		ul.fragment
+			li Se atienden por orden de <strong>prioridad</strong>
+			li Prioridades iguales: FCFS ó RR
+			li SJF es un <em>caso particular</em> de este algoritmo (¿por qué?)
+			li Prioridades pueden ser estáticas o dinámicas
+			li &#x1f480; <b>Starvation</b> de procesos con baja prioridad
+			li &#x1f474; <b>Aging</b>: incrementar prioridad de procesos que llevan más tiempo
+
+		div.fragment <a href="https://linux.die.net/man/2/nice"><code>nice</code></a> permite reducir la prioridad de un proceso (incrementa su <i>niceness</i>)
+
+	section
+		h3 Multilevel Feedback Queue (MLFQ)
+
+		blockquote <a href="https://en.wikipedia.org/wiki/Fernando_J._Corbat%C3%B3">Fernando J. Corbató</a> (Turing Award 1990) et al. <b>"An Experimental Time-Sharing System"</b>, IFIPS 1962.
+
+		div Usado en CTSS (1962) y Multics (1965)
+
+		blockquote style="background:#B7E1CD;" Scheduler que optimize <i>turnaround time</i> (como SJF), pero minimizando <i>response time</i> (como RR)
+
+		div Múltiples colas con distinta prioridad
+
+		ul.fragment
+			li R1. Si $\text{priority}(A) > \text{priority}(B))$, ejecutar $A$
+			li R2. Si $\text{priority}(A) = \text{priority}(B))$, ejecutar $A$ y $B$ con RR
+			li R3. Procesos entran en la cola con <b>mayor</b> prioridad
+			li R4. Si un proceso usa su $q$ (acumulado en todos sus turnos), su prioridad se reduce
+			li R5. Después de un tiempo $S$, todos los procesos se mueven a la cola con mayor prioridad
+
+	section
+		h3 Multilevel Feedback Queue (MLFQ)
+
+		img src='/images/figures/01-mlfq.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Base para schedulers de Windows y MacOSX
+
+		ul
+			li R1. Si $\text{priority}(A) > \text{priority}(B))$, ejecutar $A$
+			li R2. Si $\text{priority}(A) = \text{priority}(B))$, ejecutar $A$ y $B$ con RR
+			li R3. Procesos entran en la cola con <b>mayor</b> prioridad
+			li R4. Si un proceso usa su $q$ (acumulado en todos sus turnos), su prioridad se reduce
+			li R5. Después de un tiempo $S$, todos los procesos se mueven a la cola con mayor prioridad
+
+	section
+		h3 Otros ...
+
+		ul
+			li <b>Lottery </b> (1994). Procesos reciben tickets 
+			li <b>Fair Share</b> (1988). Tiempo compartido entre grupos de procesos (usuarios)
+			li <b>O(1)</b>. Dos colas de procesos. Activos y expirados. Linux 2.6, &lt; 2.6.23.
+			li <b>Completely Fair Scheduler (CFS)</b> (2007). Linux &ge; 2.6.23. Procesos ordenados por su <i>virtual runtime</i>, que se calcula a partir de <i>niceness</i>, prioridad y tiempo de ejecución. Utiliza un <i>red-black tree</i> para mantener el orden.
+			li <b>Brain Fuck Scheduler (BFS)</b> (2009). 
+
+
+section#SchedTypes3
+	h2 Algoritmos de Scheduling (Real time)
+
+	section
+		h3 Procesos Real Time
+
+		ul
+			li Poseen <i>deadlines</i> y periodos de ejecución
+			li Sistema debe determinar si, dado <i>deadline</i> ($d$), periodo ($p$), y tiempo de ejecución ($t$),es capaz de incorporar el procesos a la ejecución.
+
+		img src='/images/figures/01-rt-sched.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+		h3 Rate monotonic Scheduling
+
+		img src='/images/figures/01-rt-sched-dead.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Cada proceso recibe prioridad: $\frac{t_i}{p_i}$
+
+		div Con $P_1: \{p_1=50, t_1=20\}$, y $P_2: \{p_2=100, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-rtm.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+		h3 Earliest Deadline First Scheduling (EDF)
+
+		div <i>Rate Monotonic Scheduling</i> es <b>estático</b>. Podría perder <i>deadlines</i>
+
+		div Con $P_1: \{p_1=50, t_1=25\}$, y $P_2: \{p_2=80, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-rtm-dead.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+		h3 Earliest Deadline First Scheduling (EDF)
+
+		div <i>Earliest Deadline First Scheduling</i> es <b>dinámico</b>. Elige siempre el que tiene <i>deadline</i> más cercano.
+
+		div Con $P_1: \{p_1=50, t_1=25\}$, y $P_2: \{p_2=80, t_2=35\}$
+
+		img src='/images/figures/01-rt-sched-edf.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 section#threads
@@ -658,140 +981,213 @@ section#threads
 		p <strong><em>Thread</em></strong>: Como un proceso, pero más liviano.
 
 		p.fragment Unidad básica de uso de CPU
-		.fragment
-			ul
-				li.fragment  <em>Thread ID</em> (<strong>tid</strong>)
-				li.fragment  Program Counter
-				li.fragment  Registros
-				li.fragment  <em>Stack</em>
-		p.fragment ¿y el resto?&hellip; <span class="fragment">compartido con un proceso</span>
+		ul.fragment
+			li  <em>Thread ID</em> (<strong>tid</strong>)
+			li  Program Counter
+			li  Registros
+			li  <em>Stack</em>
+		p.fragment El resto está compartido con otros <i>thread</i>s del mismo proceso.
 
 
 
 	section#threads-mt
 		p <em>Single-threading</em> vs <em>Multi-threading</em>
 
-		p.fragment Procesos pueden tener uno o más <em>threads</em>
-		== image_tag '/images/figures/01-4_01.pdf.png'
+		p Procesos pueden tener uno o más <em>threads</em>
+		== image_tag '/images/figures/01-4_01.pdf.png', :width=>"60%", :style=>"border:none; box-shadow:none;"
 
 
-	section#threads-mt-1
-		p <em>Multi-threading</em>
+	section#threads-why
+		
+		blockquote style="background:#B7E1CD;" ¿Para qué <i>threads</i>?
 
-		ul
-			ul
-			li.fragment  Proceso son unidades <em>pesadas</em>
-			li.fragment  <em>Threads</em> pueden ejecutar parte del código de un proceso
-			ul
-				li.fragment  Concurrencia real en la medida que hayan múltiples <em>core</em>s
-			li.fragment  Un <em>web browser</em> puede:
-			ul
-				li.fragment  Recuperar y desplegar imágenes
-				li.fragment  Hacer <em>parsing</em> de HTML
-				li.fragment  Proponer opciones de autocompletado mientras se escribir
-				li.fragment  Ejecutar corrector ortográfico mientras se escribe
+		div.fragment data-fragment-index="1" Procesos complejos deben atender múltiples tareas
+		ul.fragment data-fragment-index="1"
+			li Programar con <i>thread</i>s puede hacer el código más simple
+			ul.fragment data-fragment-index="2"
+				li <em>Threads</em> pueden ejecutar distintas partes del código de un proceso
+				li Apropiados para programación guiada por eventos
+			li Programar con <i>thread</i>s puede ayudar a paralelizar/distribuir tareas
+			ul.fragment data-fragment-index="3"
+				li Cuidado. <i>Threads</i> no necesariamente ejecutan <b>al mismo tiempo</b>. 
+				li Solo en presencia de múltiples CPU (cores) podría haber real concurrencia
+				li Un programa con mútiples <i>threads</i> <i>podría ser más lento</i>
 
-		p.fragment Si voy a ejecutar parte del mismo código, talvez no necesito crear un proceso nuevo.
-		p.fragment Es como hacer <code>fork()</code> ¿y &hellip; hacer <code>exec()</code>?
+		blockquote.fragment data-fragment-index="4" style="background:#B7E1CD;" Entonces, ¿crear <i>threads</i> o procesos?
+		ul.fragment data-fragment-index="5"
+			li Creación/destrucción de <i>threads</i> es sustancialmente más liviana que un proceso
 
+	section#threads-web-mt
 
+		div <i>Multihreaded webserver</i> 
 
-	section#threads-mt-2
-		p <em>Multi-threading</em>
+		== image_tag '/images/figures/01-webserver-mt.png', :width=>"40%", :style=>"border:none; box-shadow:none;"
 
-		p Otro caso: un <em>web server</em> necesita atender múltiples conexiones
-		ul
-			li.fragment  ¿Espero atender completamente una antes de recibir la siguiente?
-		.fragment
-			== image_tag '/images/figures/01-4_02.pdf.png'
+		br
 
-
-	section#threads-mt-3
-		p <em>Multi-cores</em> y <em>Multi-threading</em>
-
-		p.fragment Con <em>single-core</em> solo un <em>thread</em> de un proceso puede ejecutar al mismo tiempo
-		.fragment
-			p ¿Cómo se provee la ilusión de que múltiples <em>threads</em> ejecutan simultáneamente?
-			p &hellip; ¡pero ahora hay <strong>multi-cores</strong>!
-		ul.fragment
-			li Múltiples <em>threads</em> avanzan: <strong>concurrencia</strong>
-			li Múltiples <em>threads</em> ejecutan simultáneamente: <strong>paralelismo</strong>
+		== image_tag '/images/figures/01-webserver-mt-threads.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
 
 
-section#ll
-	h2 Paralelismo
 
-	section#ll-Amdahl
-		p <em>Multi-cores</em> y <em>Multi-threading</em>
-		p ¿Cuánto gano?
-
-		p.fragment Gene Amdahl propuso una fórmula (1967) para calcular la mejora <em>potencial</em> de un programa
-				que contiene partes paralelizables y partes secuenciales
-
-		p.fragment style="font-size:1.5em;" $$\mathit{speedup} \leq \frac{1}{s + \frac{\bar{s}}{N}}$$
-
-
-	section#ll-Amdahl-d-0
-		p Midiendo paralelismo
-
-		ul
-			li $s$: Fracción de tiempo usado en de código no-paralelizable (secuencial).
-			li $N$: Número de <em>cores</em>
-
-		p El <em>speedup</em> es un valor positivo que indica la mejora de un código paralelo respecto a su versión secuencial
-		p $$\mathit{speedup} = \frac{T_{\mathit{secuencial}}}{T_{\mathit{paralelo}}} = \frac{T_{1}}{T_{N}}$$
-
-		p.fragment Ejemplo: $\mathit{speedup}=2$ signfica que $T_{1}=2T_{N}$, dos veces más rápido
-
-
-	section#ll-Amdahl-d-1
-		p Sea $T_N$ el tiempo de ejecución con $N$ cores, y $s \in (0, 1]$ la fracción de código estrictamente secuencial
-
-		p.fragment El tiempo en $N$ cores se puede definir como:
-		ul
-			li.fragment
-				| $$T_N = T_1 s + \frac{T_1 \bar{s}}{N} = T_1 \left( s + \frac{\bar{s}}{N} \right)$$
-
-		p.fragment Por lo tanto el <em>speedup</em> es:
-		p.fragment
-			| $$\mathit{speedup} = \frac{T_1}{T_N} = \frac{T_1}{T_1 \left( s + \frac{\bar{s}}{N} \right)} = \frac{1}{s + \frac{\bar{s}}{N}}$$
-
-
-section#mt
-	h2 <em>Multi-threading</em>
-
-	section#mt
-		/p <em>Multi-threading</em>
-		/span.fragment.fade-out data-fragment-index="0"
-		/	small ¿Fácil?
-
-		/p.fragment  data-fragment-index="0" Surgen desafíos para poder aprovechar el <em>multithreading</em>
-		/ul.fragment data-fragment-index="1"
-		/	li <em>División de tareas</em>    ¿Qué tareas ejecuto en paralelo? Ideal: que sean independientes
-		/	li <em>Balance de carga</em>      Idealmente: tareas de tamaño similar
-		/	li <em>División de datos</em>     ¿Bajo qué criterio divido los datos entre <em>threads</em>?
-		/	li <em>Dependencias de datos</em> ¿Hay competencia por datos? ¿Necesito sincronizar accesos? ¿Puedo perder concurrencia?
-		/	li <em>Testing + Debugging</em>   ¿Cómo <em>debuggear</em> una aplicación <em>multithreaded</em>?
-
+section#thread-models
+	h2 Modelos de Threads
 
 	section#mt-dataModels
-		p Modelos de <em>multithreading</em>
+		p <i>Threads</i> surgen de separar el concepto de recursos y ejecución
+		ul.fragment
+			li <b>Procesos</b> agrupan recursos (y ejecución)
+			li <b>Threads</b> son solamente unidades de ejecución: <b>lightweight processes</b>
 
-		p Dos tipos de <em>threads</em>
+
+		== image_tag '/images/figures/01-threads-process-os.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		blockquote style="background:#B7E1CD;" <i>Threads</i> comparten
+		ul.fragment
+			li Espacio de memoria
+			li Variables globales (sección <i>data</i>)
+			li Archivos abiertos
+			li Procesos Hijo
+			li Alarmas pendiente
+			li Señales y manejadores de señales
+			li Información de <i>accountability</i>
+
+		blockquote style="background:#B7E1CD;" <i>Threads</i> <b>NO</b> comparten
+		ul.fragment
+			li <i>Stack</i>
+			li <i>Registros</i> (incluyendo PC)
+			li Estado
+
+		div Información privada tiene que ver con <i>ejecución</i>. 
+
+		div Información compartida tiene que ver con <i>recursos</i>
+
+	section
+		div ¿Cómo se mantienen múltiples <i>stacks</i>?
+
+		== image_tag '/images/figures/01-threads-stacks.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+	section
+		blockquote style="background:#B7E1CD;" Funciones típicas de <i>threads</i>
+
+
 		ul
-			li.fragment  <strong>User threads</strong>
-			ul
-				li.fragment  Manejados por una biblioteca de usuario
-				li.fragment  Sistema Operativo sólo ve procesos
-			li.fragment  <strong>Kernel threads</strong>
-			ul
-				li.fragment  Administrador por el Sistema Operativo (asignables a <em>core</em>s)
-				li.fragment  Soportados en (casi) todos los Sistemas Operativos contemporáneos
+			li <code>thread_create()</code>
+			li <code>thread_exit()</code>
+			li <code>thread_join()</code>
+			li <code>thread_yield()</code>
 
-		p.fragment ¿Cómo se relacionan <em>kernel</em> y <em>user threads</em>?
+	section#posix
+		h3 POSIX Threads
+
+		div Estándar IEEE 1003.1c. Librería <code>pthreads</code>
+
+		== image_tag '/images/figures/01-pthreads.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+		div Ejemplo: <a href="../examples/pthreads1.c" target="_blank">POSIX Threads en acción</a>
+
+		div Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
+
+section#thread-impl
+	h2 Implementación de threads
+
+	section
+
+		div Algunos aspectos no son obvios al diseñar un sistema de <i>multithreading</i>
+
+		ul.fragment
+			li Semántica de <code>fork()</code>, <code>exec</code>
+			li Señales: ¿quién las recibe?
+			li Bloqueos: ¿quién se bloquea?
+
+	section
+
+		div Dos opciones
+
+		ul.fragment
+			li <b>User</b> space
+			li <b>Kernel</b> space
+			li <b>Hybrid</b> (ok, 3 opciones)
 
 
-	section#mt-dataModels-greenThreads
+	section#user
+
+		h3 User space threads
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Implementados y manejados por una biblioteca de usuario
+				div Kernel no ve <i>threads</i>. Solo ve procesos <i>single threaded</i>
+
+			div.fragment
+				ul
+					li &#x1f603; Portable. Implementable en cualquier S.O.
+					li &#x1f603; <i>Context switch</i> y <i>scheduling</i> más rápido.
+					li &#x1f603; Mejor escalabilidad (usa memoria del proceso)
+					li &#x1f61e; Llamadas a <i>syscall</i>s pueden bloquear el proceso
+					li &#x1f61e; Requiere <i>scheduling</i> cooperativo (no hay timers)
+					li Piensen en su uso en <i>multithreaded web server</i>
+					li Implementaciones usan variante no-bloqueantes de algunas <i>syscall</i>s
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-user-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+
+	section#kernel
+
+		h3 Kernel space threads
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Implementados y manejados nativamente por estructuras del kernel
+				div No necesita bibliotecas de usuario
+				div <i>Syscall</i> manejados por el S.O.
+
+			div.fragment
+				ul
+					li &#x1f603; No requiere bibliotecas. Soporte nativo.
+					li &#x1f603; <i>Syscall</i>s no bloquean el proceso.
+					li &#x1f61e; <i>Syscall</i>s más costosas. Requiere llamadas al kernel.
+					li &#x1f61e; Escalabilidad limitada por el S.O.
+					li &#x1f61e; Semántica de <code>fork()</code> no es clara.
+					li &#x1f61e; Semántica de <code>signals</code> no es clara.
+
+			div.fragment Implementaciones evitan crear y destruir <i>threads</i>. Kernel utiliza <i>thread pools</i> y reutiliza estructuras.
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-kernel-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+	section#hybrid
+
+		h3 Hybrid implementations
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment
+				div Kernel threads <b>multiplexados</b> entre user threads
+				div Kernel solo ve kernel threads
+				div Varios user threads asignados a un kernel thread
+
+			div.fragment
+				ul
+					li &#x1f603; Más livianos de crear
+					li &#x1f603; <i>Syscall</i>s no bloquean el proceso.
+					li &#x1f603; Escalable como los user threads
+
+
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+			== image_tag '/images/figures/01-hybrid-threads.png', :width=>"100%", :style=>"border:none; box-shadow:none;"
+
+
+
+	/section#mt-dataModels-greenThreads
 		p <em>Many-to-one</em>
 
 		ul
@@ -804,7 +1200,7 @@ section#mt
 		p.fragment Solaris: biblioteca <em>green threads</em>
 
 
-	section#mt-dataModels-id
+	/section#mt-dataModels-id
 		p <em>One-to-one</em>
 		ul
 			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
@@ -815,7 +1211,7 @@ section#mt
 		br
 		p.fragment Linux & Windows
 
-	section#mt-dataModels-m2m
+	/section#mt-dataModels-m2m
 		p <em>Many-to-many</em>
 		ul
 			li.fragment  + Usuario pueden crear número ilimitado de <em>threads</em>
@@ -828,7 +1224,7 @@ section#mt
     /p.fragment Linux & Windows.
 
 
-	section#mt-threadingLibs
+	/section#mt-threadingLibs
 		p Bibliotecas de <em>threads</em>
 
 		p.fragment Tres principales:
@@ -838,7 +1234,7 @@ section#mt
 			li Java threads (user)
 
 
-	section#mt-threadingLibs-pthreads
+	/section#mt-threadingLibs-pthreads
 		h5
 			code pthread
 
@@ -852,7 +1248,7 @@ section#mt
 			li.fragment  <code>pthread_join()</code>, padre espera que hijo(s) termine(n)
 			li.fragment  <code>pthread_exit()</code>, termina el <em>thread</em> actual
 
-	section#mt-threadingLibs-winThreads
+	/section#mt-threadingLibs-winThreads
 		h5 Windows Threads
 
 		p Disponible nativamente en Windows API (kernel <em>thread</em>s)
@@ -864,7 +1260,7 @@ section#mt
 			li.fragment  <code>CloseHandle()</code>, borra el <em>thread</em> indicado
 
 
-	section#mt-threadingLibs-javaThreads
+	/section#mt-threadingLibs-javaThreads
 		h5 Java Threads
 
 		p Implementado como biblioteca nativa en la JVM
@@ -880,27 +1276,7 @@ section#mt
 			li.fragment  Esperar que un <em>thread</em> hijo termine: <code>join()</code>
 
 
-	/section#mt-threadingLibs-support
-	/	p Usar eficientemente <em>thread</em>s no es fácil.
-
-	/	p.fragment ¿Y si le dejamos el trabajo al compilador o bibliotecas?
-	/	ul
-	/		li.fragment  <em>Thread-pools</em>: piscinas de <em>threads</em> disponibles
-	/		ul.fragment
-	/			li  Windows API: <code>QueueUserWorkItem( &PoolFunction, &hellip;)</code>
-	/			li  Java: package <code>java.util.concurrent</code>
-	/		li.fragment  <code>OpenMP</code>: directivas para identificar regiones paralelas
-	/		ul.fragment
-	/			li  Popular en C, C++, FORTRAN
-	/			li  Número de <em>threads</em> elegidos dinámicamente (p.ej: $\#$cores)
-	/		li.fragment  <code>Grand Central Dispatch</code>
-	/		ul.fragment
-	/			li  Extensiones para C, C++
-	/			li  Usado en Mac OS X, y en iOS
-	/			li  Bloques de paralelismo: esencialmente funciones anónimas ($\lambda$)
-
-
-section#semantics
+/section#semantics
 	h2 Semántica de <code>fork</code>/<code>exec</code> y señales
 
 	p Aún quedan algunas situaciones "poco claras"
@@ -922,7 +1298,7 @@ section#semantics
 
 
 
-section#summary-
+/section#summary-
 	h2 Resumen: <em>Threads</em>
 	ul
 		li.fragment  <em>Thread</em>: flujo de control básico dentro de un proceso
@@ -931,4 +1307,1375 @@ section#summary-
 		li.fragment  <em>Kernel thread</em>s: manejables por el Sistema Operativo, más costosos de crear
 		li.fragment  MacOSX, Windows, Linux, soportan <em>kernel thread</em>s y hacen <em>mapping</em> a <em>user thread</em>s
 		li.fragment  Bibliotecas de <em>thread</em>s más comunes: Pthreads, Windows threads, Java threads
+
+
+
+section#synch-init
+	h2 Sincronización
+
+	section#synch-init-init
+		h2 <em>Sincronización</em>
+
+	section#
+		p <strong><em>Threads</em></strong> como unidad básica de procesamiento
+		ul.fragment
+			li  <i>Threads</i> en un proceso comparten memoria
+			li  <i>Threads</i> son concurrentes (compiten por uso de CPU)
+			li  <i>Threads</i> en un sistema multicore pueden ejecutar en paralelo
+
+		p.fragment Pero deben ser sincronizados... o puede pasar ...
+
+		div.fragment Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
+
+		div.fragment
+			== image_tag '/images/figures/01-2problems.png', :width=>"60%", :style=>"border:none;"
+
+	section
+		h3 ¿Qué ocurre en el programa?
+
+		div Vemos ...
+
+		pre
+			code.hljs.lang-c
+				| counter = counter + 1
+
+		div Pero lo que se ejecuta es... (tip: <code>objdump -d &lt;ejecutable&gt;</code>)
+
+		pre
+			code.hljs.asm
+				|  mov    0x60208c,%eax        
+  				   add    $0x1,%eax
+                   mov    %eax,0x60208c        
+
+	
+		
+	section
+
+		div <i>Thread A</i> ejecuta:
+
+		pre
+			code.hljs.asm
+				|  mov    0x60208c,%eax        
+  				   add    $0x1,%eax
+                   mov    %eax,0x60208c        
+
+		div <i>Thread B</i> ejecuta:
+
+		pre
+			code.hljs.asm
+				|  						  mov    0x60208c,%eax        
+  				   													add    $0x1,%eax
+                   													mov    %eax,0x60208c        
+
+        div En la práctica pueden ocurrir muchos <i>interleaving</i> (entremezclas):
+
+		a href="http://i.imgur.com/MS13CAb.gif"
+			pre
+				code.hljs.asm
+					| mov    0x60208c,%eax ; eax = 10
+					                                    			mov    0x60208c,%eax ; eax = 10
+					                                    			add    $0x1,%eax     ; eax = 11
+					                                    			mov    %eax,0x60208c ; counter = 11, Write lost!!
+					  add    $0x1,%eax     ; eax = 11
+					  mov    %eax,0x60208c ; counter = 11   Dirty write :/
+
+		div.fragment ¿Podemos tener tan mala suerte para que ocurra <a href="https://www.reddit.com/r/Bitcoin/comments/1wtbiu/how_i_stole_roughly_100_btc_from_an_exchange_and">así</a>?
+
+	section
+		div Esta situación ilustra una <b>race condition</b>
+
+		blockquote.fragment style="background:#F4C7C3;" <b>Race Condition</b><br/> Situación en que la salida de una operación depende del orden temporal de sus operaciones internas, el cual no está bajo control del programador.
+
+		p.fragment El resultado depende de la entremezcla (<em>interleaving</em>) de sus <em>threads</em>
+		h5.fragment <strong>Hay que evitarlas</strong>
+
+section
+	h2 El Problema de la Sección Crítica
+	/  ---------------------------------
+
+	section#crS-def
+		div El segmento de código en que el <i>thread</i> accede a recursos compartidos se conoce como <strong>sección crítica</strong>
+
+		blockquote.fragment
+			| Necesitamos un protocolo que <b>no permita</b> que dos o más <i>threads</i> se encuentren en su sección crítica al mismo tiempo
+
+		pre.fragment
+			code.hljs.c
+				| void mess_with_shared_things() {
+				    entry();
+				    /* do stuff with shared resources */
+				    leave();
+				    
+				    /* moar stuff */
+				 }
+
+	section#crS-solReqs
+		p Una solución al problema de la sección crítica (SC) debe cumplir:
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Exclusión Mutua</b>
+
+		div.fragment <b>A lo más un</b> <i>thread</i> está en su SC.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Progreso</b>
+
+		div.fragment <b>Al menos un</b> <i>thread</i> puede entrar a su SC.
+
+		div.fragment Si ningún <i>thread</i> está en su SC, y hay <i>thread</i>s que desean entrar, entonces los que quieren entrar deben decidir quién entra, y decidirlo en un tiempo acotado.
+
+		blockquote.fragment style="background:#B7E1CD;" <b>Espera acotada</b> (ausencia de inanición)
+
+		div.fragment Si un proceso quiere entrar a su SC, podrá hacerlo luego de una cantidad <b>finita</b> de tiempo.
+
+	section
+		div Ejecución deseada:
+
+		== image_tag '/images/figures/01-2processes.png', :width=>"80%", :style=>"border:none;"
+
+section
+	h2 Algunas soluciones
+
+	section
+		div Atacar al problema de raíz
+
+		div.fragment <b>Deshabilitar las interrupciones</b>
+
+		ul.fragment 
+			li Problema ocurre cuando un <i>thread</i> es interrumpido
+			li Si no hay interrupciones no hay problema
+			li ¿Es suficiente?
+			li ¿Quién puede hacer esto?
+
+	section#sol1
+		div En el mundo del usuario estamos a merced de las interrupciones
+
+		div.fragment <b>Solución con variable compartida <code>lock</code></b>
+
+		div.fragment
+			pre
+				code.hljs.lang-c
+					| int lock = 0;  // 0==free, 1==busy
+
+		div.fragment Código de cada <i>thread</i>:
+
+		div.fragment
+			pre
+				code.hljs.lang-c
+					| while(TRUE) {
+					      while(lock);     // busy waiting (spinlock)
+					      lock = 1;
+					      /* ... SC ... */
+					      lock = 0;
+					      /* ... out of SC ... */
+					  }
+
+		div.fragment ¿Problemas?
+
+	section#sol2
+		div <b>Solución con <code>turn</code></b>, para alternar entre dos <i>threads</i>
+
+		div Variable compartida <code>turn</code> determina quién puede entrar.
+
+		pre
+			code.hljs.lang-c
+				| int turn = 1;  // o 0 ... 
+
+		div Código para <i>thread</i> 0 y <i>thread</i> 1:
+		pre
+			code.hljs.lang-c
+				| /* Thread 0 */                            /* Thread 1 */
+				  while(TRUE) {                             while(TRUE) {
+				      while(turn != 0);                         while(turn != 1);
+				      /* ... SC ... */                          /* ... SC ... */
+				      turn = 1;                                 turn = 0;
+				      /* ... out of SC ... */                   /* ... out of SC ... */
+				  }
+
+		div ¿Cumple todas las condiciones?
+
+	section#peterson
+		div <b>Solución de G.L.Peterson, 1981</b> (no la primera, pero la más simple)
+
+		div Variable compartida <code>turn</code> determina quién puede entrar.
+
+		pre
+			code.hljs.lang-c
+				| int turn = 1;                 // o 0 ... 
+				  int flag[2] = {false, false}; // indica t_i está interesado en entrar
+	
+		div Variable local <code>me</code> puede ser 0 ó 1
+		pre
+			code.hljs.c
+				| int me = // ... 0 ó 1;    /* Peterson es para dos threads */
+				  int other = 1-me;
+				  while('o') {
+				      flag[me] = true;  /* wants */
+				      turn = other;
+				      while(flag[other] && turn == other); /* wait */
+				      /* ... SC ... */
+				      flag[me] = false;
+				      /* ... out of SC .../ */
+				  }
+
+		div.fragment ¿Cumple los requisitos? ¿Por qué? ¿Se puede demostrar?
+
+
+
+
+
+section
+	h2 Sincronización por <i>hardware</i>
+
+	section 
+		p Soluciones por <em>software</em> dependen de que existan <strong>instrucciones atómicas</strong> provistas por el <em>hardware</em>.
+
+		pre
+			code.hljs.lang-c
+				| int lock = 0;  // 0==free, 1==busy
+
+		pre
+			code.hljs.c
+				| while(TRUE) {
+				      while (lock);
+				      lock = 1;
+				      /* Critical Section */
+				      lock = 0;
+				      /* ... */
+
+		p.fragment Esto no era suficiente. ¿Qué instruccion(es) nos gustaría que fuese(n) atómica(s)?
+
+
+	section
+		p <code>test_and_set()</code> (TSL)
+
+		p Algunas arquitecturas proveen instrucciones atómicas del tipo <code>test_and_set</code>
+
+		p La instrucción, que se ejecuta atómicamente, es equivalente a este código:
+			
+		pre
+			code.hljs.c
+				| bool SOFTWARE_test_and_set (bool *target) {
+				      bool old_value = *target;
+				      *target = true;
+				   
+				      return old_value;
+				 }
+
+		p.fragment  ¿Cómo usarlo?
+
+	section
+		div Código equivalente a <code>test_and_set</code>
+		pre
+			code.hljs.c
+				| bool SOFTWARE_test_and_set (bool *target) {
+				      bool old_value = *target;
+				      *target = true;
+				   
+				      return old_value;
+				 }
+
+		div Ahora se puede implementar la versión "ingenua"
+
+		pre
+			code.hljs.lang-c
+				| bool lock = false;  // false==free, true==busy
+
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      while (test_and_set(&lock));
+				      /* ... SC ... */
+				      lock = false;
+				      /* ... Out of SC ... */
+				  }
+
+		div.fragment ¿Cumple las propiedades?
+
+
+	section
+		div Otra instrucción atómica <code>compare_and_swap()</code> (XCHG, CAS)
+		pre
+			code.hljs.c
+				| bool SOFTWARE_compare_and_swap (int *value, int expected, int new_value) {
+				    int previous = *value;
+				    
+				    if(*value == expected)
+				      *value = new_value;
+				    
+				    return previous;
+				  }
+
+		p.fragment  ¿Cómo usarlo?
+
+	section
+		div Código equivalente a <code>compare_and_swap()</code>
+		pre
+			code.hljs.c
+				| int SOFTWARE_compare_and_swap (int *value, int expected, int new_value) {
+				    int previous = *value;
+				    
+				    if(*value == expected)
+				      *value = new_value;
+				    
+				    return previous;
+				  }
+
+		div Otra implementación simple, gracias a una instrucción atómica
+
+		pre
+			code.hljs.lang-c
+				| int lock = 0;  // 0==free, 1==busy
+
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      while (compare_and_swap(&lock, 0, 1));
+				      /* ... SC ... */
+				      lock = 0;
+				      /* ... Out of SC ... */
+				  }
+
+		div.fragment ¿Cumple las propiedades?
+
+
+	section#hw-sync-n
+
+		div Sección crítica para <code>N</code> procesos
+
+		pre
+			code.hljs.lang-c
+				| bool lock = false;  // false==free, true==busy
+				  bool waiting[N];    // todos inicializados en false
+
+		div Cada <i>thread</i> <code>i</code> ejecuta:
+
+		pre 
+			code.hljs.lang-c style="max-height:600px;"
+				| while('-') {
+				    /* ... ... ... */
+				    waiting[i] = key = true;          /* I'm waiting and it's locked */
+				    while (waiting[i] && key)
+				      key = test_and_set(&lock);
+				    waiting[i] = false;               /* I'm no longer waiting */
+				    
+				    /* ... ... SC ... ... */
+				    
+				    j = (i+1)%N;                      /* Find waiting proc (clockwise circle) */
+				    while((j != i) && !waiting[j])
+				      j = ++j%N;
+				    if(j == i)                          /* -Nobody was waiting */
+				      lock = false;
+				    else                                /* -proc_j should go (stop waiting) */
+				      waiting[j] = false;
+				    /* ... out of SC ... ... */'
+				 }
+
+		p.fragment ¿Cumplen con las propiedades de solución para sección crítica?
+
+	section
+		div Soluciones anteriores son correctas &hellip;
+
+		div Pero utilizan <b>busy waiting</b> (<i>espera ocupada</i>)
+
+		pre
+			code.hljs.lang-c
+				| lock = true;     // false==free, true==busy
+				  while(lock);     // busy waiting, consume ciclos de CPU "esperando"
+				  /* enter */
+
+		blockquote style="background:#B7E1CD;" Solo cuando se espera un tiempo de bloqueo muy corto, puede justificarse usar <i>busy waiting</i>. En este caso se le llama <b>spinlock</b>
+
+		div <b>Ejemplo:</b>Dos procesos con prioridades $H$ y $L$, $H>L$. 
+		ul
+			li $L$ ejecuta y toma un <i>lock</i> (está en su SC)
+			li $H$ llega y <i>scheduler</i> (preemptive) ejecuta a $H$
+			li $H$ hace <i>busy waiting</i>
+			li Mientras $H$ exista, $L$ no puede ejecutar ni salir de su SC &#x1f613;
+
+
+
+
+
+section#abstractions
+	h2 Abstracciones de Sincronización
+	/  -------------------------------
+
+	section#abstractions-init
+		p En general no se usan directamente soluciones por <em>hardware</em>
+
+		p Se construyen <b>primitivas de <em>software</em></b> sobre ellas.
+
+
+section#Locks-init
+	h2 Mutex Locks
+
+	section
+		div La más simple: <b>MUTual EXclusion locks</b> (<i>mutex locks</i>)
+		ul
+			li <code>Lock::acquire();</code> toma el <i>lock</i>
+			li <code>Lock::release();</code> libera el <i>lock</i> (error si no está tomado)
+
+		pre
+			code.hljs.c
+				| struct Lock {
+				    bool value = false; // false==free, true==busy
+				  }
+
+		div Implementación sin (mucho) <i>busy waiting</i>
+
+		pre
+			code.hljs.c
+				| void acquire() {     
+				    while(test_and_set(&value))
+				      thread_yield();            // otras implementaciones usan sleep() y colas de espera
+				  }
+				  void release() {
+				    value = false;
+				  }
+	section
+
+		div Solución a Sección Crítica
+
+		pre
+			code.hljs.c
+				| while(true) {
+				      /* ... ... ... */
+				      lock.acquire();
+				      /* ... SC ... */
+				      lock.release();
+				      /* ... Out of SC ... */
+				  }
+
+		div Contador con acceso exclusivo
+
+		pre
+			code.hljs.c
+				| struct Lock l; // compartido
+
+		pre
+			code.hljs.c
+				| /* ... ... ... */
+				  for(int i=0; i&lt;max; i++) {
+				  	l.acquire();
+				  	counter = counter + 1;
+				  	l.release();
+				  }
+
+section#producer-consumer
+
+	h2 Problema del productor-consumidor
+
+	section 
+		h3 Ó problema del <i>bounded-buffer</i>
+		ul
+			li Un <i>buffer</i> circular de tamaño limitado $N$
+			li Dos <i>threads</i>: productor (agrega) y consumidor (consume)
+			li Todos los elementos producidos deben ser consumidos en orden
+
+		div style="border:none; width:70%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					| int stock = 0;
+					  T storage[N];
+
+			pre
+				code.hljs.c
+					| int in = 0;
+					  while('p') {
+					      item = produce();
+				  		  while (stock == N);  // Storage full 
+				   		  storage[in] = item;
+						  in = ++in%N;         // rotate index
+				   		  stock++;
+				   	  }
+
+			pre
+				code.hljs.c
+					| int out = 0;
+					  while ('c') {
+				          while(!stock);       // Wait for new items
+				          item = storage[out];
+				          out = ++out%N;       // rotate index
+				          stock--;
+				          consume(item);
+				      } /* ' */
+
+		img src='/images/figures/01-ProdCons.jpg' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+	    div Podemos agregar locks en <i>stock</i>
+
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  while (stock == N);  // Storage full 
+			   		  storage[in] = item;
+					  in = ++in%N;         // rotate index
+					  lock.acquire();
+			   		  stock++;
+			   		  lock.release();
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          while(!stock);       // Wait for new items
+			          item = storage[out];
+			          out = ++out%N;       // rotate index
+			          lock.acquire();
+			          stock--;
+			          lock.release();
+			          consume(item);
+			      } /* ' */
+
+        div ¿Cómo eliminamos busy waiting?
+
+
+	section
+	    ul
+	      li <code>sleep()</code> se bloquea en cola <i>waiting</i>
+	      li <code>wakeup(t)</code> saca a <code>t</code> de la cola <i>waiting</i> (si está)
+
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  while (stock == N) sleep(); // Storage full 
+			   		  storage[in] = item;
+					  in = ++in%N;                // rotate index
+					  lock.acquire();
+			   		  stock++;
+			   		  lock.release();
+			   		  if(stock == 1) wakeup(consumer);
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          while(!stock) sleep();     // Wait for new items
+			          item = storage[out];
+			          out = ++out%N;             // rotate index
+			          lock.acquire();
+			          stock--;
+			          lock.release();
+			          if(stock == N-1) wakeup(producer);
+			          consume(item);
+			      } /* ' */
+
+        div ¿Problema? <span class="fragment">¿Si $C$ es interrumpido antes de dormir?</span>
+
+section#semaphore
+
+    h2 Semáforos 
+
+	section#sema
+
+        div E.W.Dijkstra (1965) propone una nueva primitiva de sincronización: <b>semáforos</b>, y las introduce en Algol 68.
+
+		p <b>Semáforos</b> permiten un número limitado de <i>thread</i>s en una sección crítica.
+
+		div.fragment
+			dl
+				dt style="background:#B7E1CD;" Semáforo
+				dd
+					p Un semáforo <code>S</code> incluye un contador y dos operaciones:
+					ul
+						li.fragment <em>proberen</em> <code>P()</code> ó <code>wait()</code> ó <code>up()</code>. Intenta decrementar el valor.
+						li.fragment <em>verhogen</em> <code>V()</code> ó <code>signal()</code> ó <code>down()</code>. Incrementa el valor.
+			p.fragment E.W.Dijkstra era holandés, pero si no saben holandés es más fácil recordar <code>Pedir</code>/<code>Votar</code>
+
+	section
+
+		div Implementación de semáforos
+
+		pre
+			code.hljs.c
+				| struct semaphore{
+				    int count;
+				    struct Lock l;
+				    struct process* slept = NULL;
+				  }
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					| void init(c) {
+					      count = c;
+					  }
+
+					  void P() {      /* wait: put into queue and sleep */
+					    l.acquire();
+					    while(count <= 0) {
+					        /* code to add itself to 'slept' */ // /
+					        l.release();
+					        sleep();
+					        l.acquire();
+					    }
+					    count--;
+					    l.release();
+					  }
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					|
+					  void V(S) {    /* signal */
+					  	l.acquire();
+					    count++;
+					    wakeup(/* first from 'slept' */); 
+					    // plus, remove from queue
+					    l.release();
+					  }
+
+		div Otras implementaciones usan <i>busy waiting</i> (para multiprocesadores)
+
+
+	section#sem-bounded-buffer
+	    
+	    div Bounded-buffer con semáforos
+
+		pre
+			code.hljs.c
+				| struct lock l; int stock = 0; T storage[N];
+				  struct semaphore full;  full.init(0);
+				  struct sempahore empty; empty.init(N);
+		
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+			  		  empty.P();            // Wait one empty slot. P=='wait'=='down'
+			  		  l.acquire();
+			   		  storage[in] = item;
+					  in = ++in%N;                // rotate index
+			   		  stock++;
+			   		  lock.release();
+			   		  full.V();             // One more full slot. V=='signal'=='up'
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          full.P()             // Wait one more item. P=='wait'=='down'
+			          lock.acquire();
+			          item = storage[out];
+			          out = ++out%N;             // rotate index
+			          stock--;
+			          lock.release();
+			          empty.V();           // One more empty slot. V=='signal'=='up'
+			          consume(item);
+			      } 
+
+section#conditions
+
+    h2 Variables de Condición (Condition Variables)
+
+	section#cond
+
+        div Semáforos sirven para controlar cantidad de accesos a una región protegida
+
+        div Mecanismo consisten en bloquearse (<code>P()</code>) bajo una condición (contador negativo) y avisar o señalar (<code>V()</code>) que una condición se ha cumplido (contador mayor a 0)
+
+        blockquote.fragment style="background:#B7E1CD;" Variables de condición permitan bloquearse bajo condiciones arbitrarias.
+
+		ul.fragment
+			li  <code>Condition::wait()</code> bloquea <strong>siempre</strong> el <em>thread</em>
+			li  <code>Condition::signal()</code> despierta a un <em>thread</em> bloqueado, si lo hay
+
+
+	section#cond-bounded-buffer
+	    
+	    div Bounded-buffer con <i>condition variables</i>
+
+		pre
+			code.hljs.c
+				| struct lock l; 
+				  struct condition condCons, condProd;
+				  int stock = 0; T storage[N];
+		
+		pre
+			code.hljs.c
+				| int in = 0;
+				  while('p') {
+				      item = produce();
+				      l.acquire();                        // with mutex
+				      while(stock == N) condProd.wait(l); // wait if full
+			   		  storage[in] = item;  in = ++in%N;   // fill and rotate index
+			   		  stock++;
+			   		  condCons.signal();                  // signal new item for consumer
+			   		  l.release();
+			   	  }
+
+		pre
+			code.hljs.c
+				| int out = 0;
+				  while ('c') {
+			          l.acquire();
+			          while(!stock) condCons.wait(l);     // wait if empty
+			          item = storage[out]; out = ++out%N; // extract and rotate index
+			          stock--;
+			          condProd.signal();                  // signal new slot for producer
+			          l.release();
+			          consume(item);
+			      }
+
+		<i>Condition variables</i> utilizan un <i>lock</i> y lo liberan antes de bloquearse. 
+
+
+section#readers-writers
+
+	h2 Problema de los lectores y escritores
+
+	section#rw-problem
+		h3 Readers-Writers
+
+		div Planteado por Courtois et al. (1971). Modela acceso a una base datos.
+
+		ul
+			li Permitir acceso de $n$ lectores simultáneos, pero solamente 1 escritor
+
+		pre
+			code.hljs.c
+				| struct semaphore rw; rw.init(1); 
+				  struct semaphore mutex; mutex.init(1); 
+				  int readers = 0;        // leen o quieren leer
+		
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Writers
+
+			pre
+				code.hljs.c
+					| while('w') {
+					      rw.P();
+					      /* ... WRITE ... */
+				   		  rw.V();
+				   	  }
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Readers
+
+			pre
+				code.hljs.c
+					| while ('r') {
+				          mutex.P();
+				          readers += 1;
+				          if(readers == 1)
+				              rw.P();
+				          mutex.V();
+				          /* ... READ ... */
+				          mutex.P();
+				          readers -= 1;
+				          if(readers == 0)
+				              rw.V();
+				          mutex.V();
+				      }
+
+
+section#philosophers
+
+	h2 Problema de los filósofos comensales
+
+	section#block-phi
+		div 5 filósofos se pasan la vida en dos actividades: <em>comer</em> y <em>pensar</em>
+		div
+			ul
+				li  Para comer deben tomar ambos palillos
+				li  Sólo pueden tomar un palillo a la vez
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Código para filósofo <code>i</code>
+
+			pre
+				code.hljs.c
+					| int left =  i;
+					  int right = (i+1)%N;           // N==5
+					  struct semaphore chopstick[N]; // inicializados en 1
+					  
+					  do {
+					    chopstick[left].P();
+					    chopstick[right].P();
+					    
+					    /* eat */
+					    
+					    chopstick[left].V();
+					    chopstick[right].V();
+					    
+					    /* philosophise */
+					    
+					  } while ('p');
+
+		img src='/images/figures/01-5_13.pdf.png' width="25%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#block-phi-sem
+		h3 Filósofos Comensales con Semáforos
+
+		pre
+			code.hljs.c
+				| int N = 5;
+				  enum {PHILOSOPHISE, HUNGRY, EATING} state[N];   /* free / waiting / using */
+				  struct lock l;
+				  struct semaphore philosopher[N]; // inicializados en 0
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre.stretch
+				code.hljs.c
+					| int left(i)  { return (i+N-1)%N; }
+					  int right(i) { return (i+1)%N; }
+
+	                  void philosoph(int i) {
+	                      while(TRUE) {
+	                          think();
+	                          take_forks();
+	                          eat();
+	                          release_forks();
+	                      }
+	                  }
+
+				      void take_forks(int i) {
+				          l.acquire();
+				          state[i] = HUNGRY;
+				          try_forks(i);
+				          l.release();
+				          philosopher[i].P();
+					  }
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre.stretch
+				code.hljs.c
+					| void release_forks(int i) {
+				          l.acquire();
+				          state[i] = PHILOSOPHISE;
+				          try_forks(left(i));
+				          try_forks(right(i));
+				          l.release();
+				      }
+				    
+				      void try_forks(int i) {
+				          if(state[i] == HUNGRY && state[left(i)] != EATING 
+				          	 && state[right] != EATING) {
+				              state[i] = EATING;
+				              philosopher[i].V();
+				          }
+				      }
+
+section#deadlocks-init
+	h2 Deadlocks
+	/  -------------------------------
+
+	section#deadlocks-first
+		div <i>Threads</i> ayudan a obtener concurrencia &hellip; <span class="fragment">pero cuidado con los <i>bugs de concurrencia</i></span>
+
+		div.fragment
+			img src='/images/figures/01-realbugs.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div style='font-size:20px;' Source: S.Lu et al. <i>Learning from Mistakes - A Comprehensive Study on Real World Concurrency Bug Characteristics</i>. ACM SIGOPS 42, 2, March 1998.  /
+
+	section
+		h3 Errores clásicos (non-deadlock)
+
+		div <b>Atomicity Violation</b>
+
+		pre
+			code.hljs.c
+				| /* Thread 1 */
+				  if(thd->proc_info) {
+				     /* ... */
+				     fputs(thd->proc_info, /*...*/);
+				     /* ... */
+				  }
+
+		pre
+			code.hljs.c
+				| /* Thread 2 */
+				  thd->proc_info = NULL;
+
+		div.fragment 
+			div Encontrado en una versión de MySQL. 
+
+			div <i>Thread 1</i> en <code>ha_innodb.cc</code>
+
+			div <i>Thread 2</i> en <code>sql_parse.cc</code>.
+
+			div style='font-size:20px;' Documentado en: <a href="https://github.com/jieyu/concurrency-bugs/blob/master/mysql-3596/DESCRIPTION" target="_blank">https://github.com/jieyu/concurrency-bugs/blob/master/mysql-3596/DESCRIPTION</a> /
+
+	section 
+		h3 Errores clásicos (non-deadlock)
+
+		div <b>Order Violation</b>
+
+		pre
+			code.hljs.c
+				| /* Thread 1 */
+				  void init() {
+				      /* ... */
+				      mThread = PR_CreateThread(mMain, /*...*/); /
+				      /* ... */
+				  }
+
+		pre
+			code.hljs.c
+				| /* Thread 2 */
+				  void mMain(/*...*/) {
+				      /* ... */
+				      mState = mThread->State;
+				      /* ... */
+				  }
+
+		div.fragment 
+			div Encontrado en Mozilla (browser).
+
+			div 72 de 74 errores (non-deadlock) eran <i>atomicity</i> u <i>order violation</i>.
+
+section 
+	h2 Deadlocks
+
+	section
+		div Errores de <i>deadlock</i> son relativamente fáciles de producir
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.c
+					| /* Thread1 */     	/* Thread2 */
+					  L1.acquire();
+					                    	L2.acquire();
+					  L2.acquire();
+					  /*  =( */
+					                    	L1.acquire();
+					                    	/*  =( */
+					  
+					  /* ... */             /* ... */
+					  L1.release();         L2.release();
+					  L2.release();         L1.release();
+
+		img.fragment src='/images/figures/01-dl-cycle.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+		div A veces el diseño del "sistema" lo permite
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			blockquote style="font-size:30px;"
+				| Ley 18290: Ley de Tránsito.<br/>
+				  Título XI. Derecho preferente de paso.<br/>
+				  Artículo 143:<br/><br/>
+				  Todo vehículo que se aproxime a un cruce deberá hacerlo a velocidad razonable y prudente, deteniéndose si fuere necesario, y el de la izquierda cederá el paso al vehículo que se acerque al cruce por la derecha, el que tendrá derecho preferente de paso.<br/><br/>
+				  El conductor del vehículo de la izquierda reiniciará la marcha e ingresará a la intersección sólo cuando se asegure que no hay riesgos de accidente, en atención a la distancia, visibilidad y velocidad de los otros vehículos que se aproximen por la derecha.
+
+		img.fragment src='/images/figures/01-cruce-gridlock.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+		div ¿Cuándo se producen? <span class="fragment"> cuando hay <b>competencia por recursos</b></span>
+
+		div.fragment Modelo
+
+		ul.fragment
+			li Cantidad <b>finita</b> de recursos y de procesos
+			li Distintas clases de recursos (CPU, dispositivos I/O, <i>locks</i>, registros de BD, &hellip;)
+			li Cada procesos ejecuta en algún momento la secuencia
+			ul
+				li <b>Solicitar</b> (<i>request</i>) recursos
+				li <b>Utilizar</b> (<i>use</i>) recurso
+				li <b>Liberar</b> (<i>release</i>) recursos
+
+		div <b>Deadlock</b> a.k.a. <b>bloqueo mutuo</b> a.k.a. <b>interbloqueo</b> a.k.a <b>abrazo mortal</b> (<i>deadly embrace</i>)
+
+	section
+		div <b>Condiciones</b>
+
+		div Para la ocurrencia de <i>deadlock</i> deben cumplirse 4 condiciones:
+
+		div.fragment
+			blockquote style="background:#B7E1CD;" <b>Exclusión Mutua</b>
+
+			div <i>Threads</i> pueden poseer el recursos de manera única
+
+		div.fragment
+
+			blockquote style="background:#B7E1CD;" <b>Hold-and-wait</b>
+
+			div <i>Esperar-y-retener</i>. <i>Threads</i> que ya possen recursos asignados están esperando por recursos adicionales.
+
+		div.fragment
+
+			blockquote style="background:#B7E1CD;" <b>No preemption</b>
+
+			div <i>Ausencia de expropiación</i>. Recursos no pueden ser arrebatos a los <i>threads</i> que los tienen asignados.
+
+		div.fragment
+			
+			blockquote style="background:#B7E1CD;" <b>Espera circular</b>
+
+			div Cadena circular de <i>threads</i> tal que cada uno espera por un recurso que posee el siguiente.
+
+section 
+	h2 Deadlock Prevention
+
+	section
+
+		div Prevención: diseñar para que <b>no pueda ocurrir <i>deadlock</i></b>
+
+		div.fragment
+			
+			blockquote style="background:#B7E1CD;" Impedir <b>Espera circular</b>
+
+			div Que todos los recursos deban ser solicitados en el mismo orden.
+			ul
+				li ¿Por qué esto es suficiente?
+				li &#x1f644; La regla debe ser respetada por el programador
+
+		div.fragment
+			div Si tenemos una función que toma dos <i>locks</i>:
+			pre
+				code.hljs.c
+					| do_something(mutex_t *m1, mutex_t *m2);
+					  /* Thread1 */                     /* Thread2*/
+					  do_something(L1, L2);             do_something(L2, L1);
+
+		div.fragment
+			div Pero se puede usar este (dirty) C hack:
+
+			pre
+				code.hljs.c
+					| if(m1 < m2) {
+					      pthread_mutex_lock(m1);
+					      pthread_mutex_lock(m2);
+					  } else {
+					      pthread_mutex_lock(m2);
+					      pthread_mutex_lock(m1);
+					  }
+
+
+	section
+
+		div Prevención: diseñar para que <b>no pueda ocurrir <i>deadlock</i></b>
+
+		div.fragment
+			
+			blockquote style="background:#B7E1CD;" Impedir <b>Hold-and-wait</b> /
+
+			div Tomar todos los recursos atómicamente <b>al principio</b> de la ejecución
+
+			pre
+				code.hljs.c
+					| pthread_mutex_lock(prevention);
+					  pthread_mutex_lock(L1);
+					  pthread_mutex_lock(L2);
+					  /* ... ... ... */
+					  pthread_mutex_lock(LN);
+					  pthread_mutex_lock(prevention);
+					  /* ... go ahead ... */
+
+		ul.fragment
+			li ¿Es suficiente?
+			li &#x1f644; Es necesario saber cuantos recursos se van a usar <b>ANTES</b> que se usen efectivamente
+			li Perjudica la concurrencia
+
+	section
+
+		div Prevención: diseñar para que <b>no pueda ocurrir <i>deadlock</i></b>
+
+		div.fragment
+
+			blockquote style="background:#B7E1CD;" Impedir <b>No preemption</b> 
+
+			div Permitir que un recurso asignado pueda ser expropiado.
+			
+			div Si un <i>thread</i> posee un recursos y no puede tomar el siguiente, debe liberar los que tiene.
+
+			pre
+				code.hljs.c
+					| while(!success) {
+					      pthread_mutex_lock(L1);
+					      if(pthread_mutex_trylock(L2) != 0) {
+					          pthread_mutex_unlock(L1);
+					          continue;
+					      }
+					      success = TRUE;
+					  }
+					  /* ... go ahead ... */
+
+		ul.fragment
+			li No aplicable a todo tipo de recursos
+			li &#x1f644; Puede dejar al <i>thread</i> en un estado inconsistente
+			li ¿Podrían dos <i>threads</i> entrar en un ciclo haciendo esto? <span class="fragment"><b>livelock</b></span>
+
+	section
+
+		div Prevención: diseñar para que <b>no pueda ocurrir <i>deadlock</i></b>
+
+		div.fragment
+
+			blockquote style="background:#B7E1CD;" Impedir <b>Exclusión Mutua</b> 
+
+			div Difícil, pues el código posee secciones críticas (pero no imposible)
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			pre
+				code.hljs.c
+					| /* Inserta un valor en la cabeza 
+					     de una lista ligada */
+					  void insert(List *list, int value) {
+					      node_t *n = malloc(sizeof(node_t));
+					      assert(n != NULL);
+					      n->value = value;
+					      n->next = list->head;
+					      list->head = n;
+					  }
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			pre
+				code.hljs.c
+					| /* Lock-based solution */
+					  void insert(List *list, int value) {
+					      node_t *n = malloc(sizeof(node_t));
+					      assert(n != NULL);
+					      n->value = value;
+					      pthread_mutex_lock(listlock);
+					      n->next = list->head;
+					      list->head = n;
+					      pthread_mutex_unlock(listlock);
+					  }
+
+
+	section
+
+		div Prevención: diseñar para que <b>no pueda ocurrir <i>deadlock</i></b>
+
+		div.fragment
+
+			blockquote style="background:#B7E1CD;" Impedir <b>Exclusión Mutua</b> 
+
+			div Pero podemos tener una solución <b>lock-free</b> gracias a <code>compare_and_swap</code>
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			pre
+				code.hljs.c
+					| /* Inserta un valor en la cabeza 
+					     de una lista ligada */
+					  void insert(List *list, int value) {
+					      node_t *n = malloc(sizeof(node_t));
+					      assert(n != NULL);
+					      n->value = value;
+					      n->next = list->head;
+					      list->head = n;
+					  }
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			pre
+				code.hljs.c
+					| /* Lock-free solution */
+					  void insert(List *list, int value) {
+					      node_t *n = malloc(sizeof(node_t));
+					      assert(n != NULL);
+					      pthread_mutex_lock(listlock);
+					      do {
+					          n->next = list->head;
+					      } while( cas(&(list->head), n->next, n) == n->next)
+					  }
+
+		div.fragment Programación <b>lock-free</b> es difícil (pero no imposible)
+
+
+
+section 
+	h2 Deadlock Avoidance
+
+	section
+		div Evasión: monitorear y evitar el <i>deadlock</i> antes que ocurra
+
+		div Requieren llevar un registro de <b>recursos asignados</b> a cada proceso, y que cada proceso <b>declare el máximo de recursos</b> que podría utilizar
+
+		img src='/images/figures/01-dl-matrix.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div El conjunto $\langle E,A,C,R \rangle$ determina un <b>estado</b> del sistema
+
+	section
+		div Evasión: monitorear y evitar el <i>deadlock</i> antes que ocurra
+
+		img src='/images/figures/01-dl-matrix.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote style="background:#B7E1CD;" <b>Estado Seguro (safe)</b> 
+
+		div Un estado es <b>seguro</b> si hay un <i>scheduling</i> en el cual todos pueden terminar aún si solicitan todos los recursos que les faltan por pedir.
+
+		div.fragment style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Con $E=\langle 10 \rangle$, $A=\langle 7 \rangle$, $C=\text{has}$, $R=\text{max}$<br/>¿Es este estado seguro?
+
+		img src='/images/figures/01-dl-safeA.png' width="10%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+
+		div El estado inicial <b>es seguro</b> ya que es posible hacer terminar a todos los procesos si solicitan todos los recursos que les faltan.
+
+		img src='/images/figures/01-dl-safeB.png' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+
+		div Con $E=\langle 10 \rangle$, $A=\langle 8 \rangle$, $C=\text{has}$, $R=\text{max}$<br/>¿Es este estado seguro?
+
+		img src='/images/figures/01-dl-unsafeA.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section
+
+		div El nuevo estado es <b>inseguro</b> ya que no es posible hacer terminar a todos los procesos si solicitan todos los recursos que les faltan. 
+
+		img src='/images/figures/01-dl-unsafeB.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background:#F4C7C3;" <b>Estado inseguro</b> $\neq$ <b>deadlock</b>. <br/> Pero podría convertirse en <b>deadlock</b> si todos piden los recursos que les faltan.
+
+	section
+		h3 Algoritmo del Banquero
+
+		div Otro algoritmo creado por E.W.Dijkstra (1965).
+
+		div Objetivo es mantener el sistema en <b>estados seguros</b>.
+
+		div.fragment
+			div Para cada solicitud:
+			ul
+				li Simular la solicitud. 
+				li Si la solicitud lleva a estado inseguro, no asignarla.
+				li Si la solicitud lleva a estado seguro, efectuarla.
+
+		img.fragment src='/images/figures/01-dl-banker1.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Con $E=\langle 10 \rangle$, $A=\langle 8 \rangle$, $C=\text{has}$, $R=\text{max}$<br/> (situación del medio). Si $B$ pide un recurso, ¿debo asignárselo?
+
+	section
+		h3 Algoritmo del Banquero
+
+		div Algoritmo del banquero puede ser "fácilmente" extendido para múltiples tipos de recursos.
+
+		img.fragment src='/images/figures/01-dl-banker2.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div.fragment Con $E=$ existent, $P=$ possessed (asignados), $A=$ available (disponible), $C=$assigned (left matrix), $R=$remaining (right matrix)
+
+		ul.fragment
+			li ¿Estado seguro?
+			li Proceso $B$ solicita una impresora. ¿Se la asigno?
+			li Después, $E$ solicita otra impresora. ¿Se la asigno?
+
+
+section 
+	h2 Deadlock Ignorance
+
+	section
+		h3 Ostrich Algorithm
+
+		div <b>No hacer nada</b>
+
+		div Si la probabilidad de ocurrencia es muy baja respecto al costo de evitar/detectar/prevenir.
+
+		img.fragment src='/images/figures/01-avestruces.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+section 
+	h2 Deadlock Detection
+
+	section 
+		div <b>Grafo de asignaciones</b>
+
+		div Utiliza un grafo $G=(V,E)$, de asignación de recursos.
+
+		p Grafo dirigido $G=(V,E)$
+		ul
+			li = '$V = P \cup R$'
+			ul
+				li = '$P=\{P_1, P_2,\cdots , P_n\}$ son los procesos activos'
+				li = '$R=\{R_1, R_2,\cdots , R_m\}$ son clases de recursos en el sistema'
+			li = "$E$:"
+			ul
+				li = '$P_i \to R_j$:   solicitud, $P_i$ está esperando un recurso de clase $R_j$'
+				li = '$R_j \to P_i$:  asignación, Recurso clase $R_j$ ha sido asignado a $P_i$'
+
+	section
+		p Costo de detectar ciclos en grafo de asignación de $n$ procesos: $O(n^2)$
+
+		== image_tag 'images/figures/01-7_09.pdf.png', :width=>"40%", :style=>"background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		p Herramienta para determinar la ocurrencia de <em>deadlocks</em>
+
+
+	section#resourceGraph-sample
+		= image_tag 'images/figures/01-7_01.pdf.png', :width=>"25%", :style=>"background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		p <em>¿Deadlock?</em>&hellip; <span class="fragment">No (¿por qué?)</span>
+
+
+	section#resourceGraph-dlCond
+		p Condición de <em>deadlock</em>
+
+		p.fragment  Si en el grafo de asignación de recursos:
+		ul
+			li.fragment  No hay ciclos $\to$ no hay <em>deadlock</em>
+			li.fragment  Hay ciclos $\to$ <strong>puede</strong> haber <em>deadlock</em>
+
+		p.fragment  ¿Y si hay una sola instancia de cada clase de recurso?
+		p.fragment  Ciclo $\Leftrightarrow$ <em>deadlock</em>
+
+
+
+	/ Graph loop samples
+	/ ------------------
+	section#resourceGraph-dl-sample-dl-1
+		== image_tag '/images/figures/01-7_01.pdf.png', :width=>"25%", :style=>"background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		p.fragment  $P_3$ solicita $R_2$
+
+	section#resourceGraph-dl-sample-dl-2
+		== image_tag '/images/figures/01-7_02.pdf.png', :width=>"25%", :style=>"background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		p.fragment  ¡<em>Deadlock</em>!
+
+	section#resourceGraph-dl-sample-nodl
+		== image_tag 'images/figures/01-7_03.pdf.png', :width=>"25%", :style=>"background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		p.fragment  ¡Ciclo!<span class="fragment">&hellip; pero sin <em>deadlock</em></span>
+
+	section
+		h3 Recuperación ante <i>deadlocks</i>
+
+		div OK. Lo detectamos (so what?)
+
+		div.frgment
+
+			blockquote style="background:#B7E1CD;" Recuperación por expropiación
+		
+			div Temporalmente recuperar los recursos para asignárselos a otros proceso, y luego devolverlo. 
+			ul.fragment
+				li Difícil de aplicar a todo tipo de recursos
+
+			blockquote style="background:#B7E1CD;" Recuperación por rollback
+
+			div Usar <i>checkpoints</i>. Guardar el estado cada ciertos intervalos. Ante un <i>deadlock</i> restaurar el sistema al estado anterior.
+
+			blockquote style="background:#B7E1CD;" Recuperación eliminando procesos (kill)
+
+			div Matar todos los procesos involucrados en el <i>deadlock</i>
+
+			ul.fragment
+				li O bien, matar la mínima cantidad que me asegura poder resolver el <i>deadlock</i>
+				li O matar todos los procesos del sistema (¿para qué gastamos tiempo en detectarlo?)
 

@@ -6,87 +6,126 @@ layout: slide
 
 
 section
+
+    h2 ¿Para qué un Sistema Operativo?
+
+	section
+		div Queremos ejecutar un código como esto
+
+		img src='/images/figures/00-main.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;" 
+		div.fragment data-fragment-index="1" style="border:none; width:20%; vertical-align:middle; display:inline-block;" más bien esto
+		div.fragment data-fragment-index="1" style="border:none; width:30%; vertical-align:middle; display:inline-block;"
+			img src='/images/figures/00-compiled.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div
+			div.fragment data-fragment-index="2" style="border:none; width:30%; vertical-align:middle; display:inline-block;" Y para eso tenemos:
+			div.fragment data-fragment-index="2" style="border:none; width:50%; vertical-align:middle; display:inline-block;"
+				img src='/images/figures/00-motherboard.jpg' width="60%" style="background:none; border:none; box-shadow:none;"
+
+    section 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="border:none;" ¿Qué ocurre al ejecutar un programa (compilado)?
+			br
+			br
+			div style="border:none;" ¿Ejecutamos esto manualmente?
+
+		img src='/images/figures/00-basic-ic.jpg' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			
+    section
+    	div El computador es una máquina programable (léase "reconfigurable")
+
+		div 
+			img src='/images/figures/00-arqui.png' width="50%" style="background:none; border:none; box-shadow:none;"
+
+		div ¿Quién controla qué programa se ejecuta?
+		div ¿Quién controla cuando se lee I/O?
+		blockquote.fragment style="background:#B7E1CD;"Afortunadamente existe el <b>Sistema Operativo</b> &#x1f605;
+
+
+
+section
+
 	h2 Estructura de un Sistema Operativo
-	/  ----------------------------------
 
-	section data-transition="fade"
-		div ¿Dónde vive el Sistema Operativo?
-		div.fragment == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
-		/	== image_tag '/images/figures/00-ComponentesSistComp.png', :width=>"50%"
+	section
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
-	section data-transition="fade"
-		div Sistema Operativo <b>es</b> <i>software</i>
-		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
+			div style="border:none;" ¿Dónde vive el Sistema Operativo?
+			br
+			div.fragment style="border:none;" Sistema Operativo <b>ES</b> <i>software</i>
+			div.fragment style="border:none;" Sistema Operativo <b>habla con</b> el <i>hardware</i>
+			br
+			div.fragment ¿Qué pasaría si no tuviésemos Sistema Operativo? <span class="fragment">... (antes no había)</span>
+			br
+			div.fragment ¿Interactuamos con el sistema operativo? <span class="fragment">... ¿o con <i>shell</i>s o GUIs?</span>
+			br
+			div.fragment ¿<i>User mode</i>?, ¿<i>Kernel mode</i>? <span class="fragment">... Solo el Sistema Operativo puede utilizar el <i>Kernel mode</i></span>
 
-	section data-transition="fade"
-		div Sistema Operativo <b>habla con</b> el <i>hardware</i>
-		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
-		div.fragment ¿Qué pasaría si no hubiese sistema operativo? ... <span class="fragment">Antes no había</span>
+		img src='/images/figures/00-os-location.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-	section data-transition="fade"
-		div ¿Interactuamos con el Sistema Operativo?
-		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
-		div.fragment Normalmente interactuamos con <b>interfaces de usuario</b>: <span class="fragment"><b>shell</b>, <b>GUI</b></span>
-
-	section data-transition="fade"
-		div ¿User mode?, ¿kernel mode?
-		div == image_tag '/images/figures/00-os-location.jpg', :width=>"50%"
-		div.fragment Solo el Sistema Operativo utiliza el <i>kernel mode</i> ... <span class="fragment"><i>(a.k.a. monitor, privileged, system, supervised)</i></span>
 		
 
 section
 	h2 ¿Qué es un Sistema Operativo?
 	/  -------------------------------
 
-	section
-		p.fragment <i>Software</i> ... <span class="fragment">que corre en <i>kernel mode</i></span>
-		p.fragment No hace mucho por sí mismo (es como el gobierno)
-		p.fragment Pero es fundamental
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
+		p.fragment <i>Software</i> ... que corre en <i>kernel mode</i>
+		p.fragment No sirve de mucho por sí mismo (es como el gobierno) ... <span class="fragment"> pero es fundamental</span>
 		p.fragment Sería inútil sin programas/aplicaciones/usuarios (personas)
 
-	section
+		blockquote.fragment style="background: #F4C7C3;" Sistema Operativo nos permite <b>usar efectivamente</b> el computador
+
+		/img src='/images/figures/00-os-location.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
 		h3 ¿Qué hace el sistema operativo?
-		ul
-			li.fragment data-fragment-index="1" Para el usuario:
-			blockquote.fragment data-fragment-index="3" style="background: #F4C7C3;" Permite <strong>utilizar los recursos</strong> del computador (el <i>hardware</i>)
-			<span class="fragment" data-fragment-index="4">Ejecutar programas, leer archivos, efectuar cálculos ... de manera limpia, fácil y rápida</span>
+
+		div style="text-align:left;"
+			div style="display:inline-block;" Para el usuario: &nbsp;
+			div style="display:inline-block; background:#F4C7C3;" permite <b>utilizar los recursos</b> del computador (el <i>hardware</i>)
+
+			div.fragment Ejecutar programas, leer archivos, efectuar cálculos ... de manera limpia, fácil y rápida
+
 			br
-			br
-			br
-			li.fragment data-fragment-index="2" Para el sistema computacional:
-			blockquote.fragment data-fragment-index="5" style="background: #F4C7C3;" Permite <b>administrar los recursos</b>
-			<span class="fragment" data-fragment-index="6">Permite <b>multiplexar</b> el uso de los recursos (escasos) entre múltiples programas.</span>
-			ul
-				li.fragment Multiplexión en tiempo: turnos. Ejemplo: uso de CPU(s), uso de impresora
-				li.fragment Multiplexión en espacio: división del recurso. Ejemplo: procesos cargados en memoria, programas almacenados en disco
+			
+			div style="display:inline-block;" Para el sistema computacional: &nbsp;
+			div style="display:inline-block; background:#F4C7C3;" permite <b>administrar los recursos</b>
+			div.fragment Permite <b>multiplexar</b> el uso de los recursos (escasos) entre múltiples programas.
+			ul.fragment 
+				li Multiplexión en tiempo: turnos. Ejemplo: uso de CPU(s), uso de impresora
+				li Multiplexión en espacio: división del recurso. Ejemplo: procesos cargados en memoria, programas almacenados en disco
+
+		blockquote.fragment style="background: #F4C7C3;" Sistema Operativo <b>virtualiza los recursos</b>: CPU, memoria, disco
 
 section
-	h2 Historia de los Sistemas Operativos
+	h2 Evolución de los Sistemas Operativos
 
 	section
 
 		p Érase una vez ...
 
-		/div == image_tag '/images/figures/00-babbage.jpg', :width=>"10%"  
-
 		div.fragment style="display:inline-block; width=50px"
-			div Charles Babbage (1791-1871)
+			div Charles Babbage (1791-1871) and the Analytical Engine
 			div
 				img src='/images/figures/00-babbage.jpg' width="20%"  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-				img src='/images/figures/00-babbage-analytical.jpg' width="20%" 
-		div.fragment style="display:inline-block; width=50px"
-			div style="display:inline-block;" and the Analytical Engine  
+				img src='/images/figures/00-babbage-analytical.jpg' width="25%" 
 
+		div.fragment Primer diseño de <i>computador digital</i> ... <span class="fragment">aunque nunca lo terminó</span>
 
 	section 
 		
 		div style="display:inline-block; width=50px"
-			div Ada Lovelace (1815-1852)
+			div Ada Lovelace (1815-1852) and the First Algorithm
 			div
 				img src='/images/figures/00-AdaLovelace.jpg' width="20%" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-				img src='/images/figures/00-AdaLovelace-algorithm.jpg' width="20%" 
-		div.fragment style="display:inline-block; width=50px"
-			div style="display:inline-block;" and the First Algorithm  		
+				img src='/images/figures/00-AdaLovelace-algorithm.jpg' width="40%" 
+		/div.fragment style="display:inline-block; width=50px"
+			/div style="display:inline-block;" and the First Algorithm
+
+		div.fragment La primera programadora... <span class="fragment">su programa calculaba los números de Bernoulli usando la Analytical Engine</span>
 
 
 	section
@@ -96,6 +135,9 @@ section
 		div
 			img src='/images/figures/00-colossus.jpg' width="60%"
 
+		div Primeros computadores digitales <b>electrónicos</b> ... programables, pero no de propósito general (no Turing-complete)
+
+
 	section data-transition="fade"
 		h3 Primera Generación (1945-55): Tubos de vacío
 
@@ -103,8 +145,15 @@ section
 		div
 			img src='/images/figures/00-ENIAC.jpg' width="40%"
 
+		div Primeros computadores programables de <i>propósito general</i>
+
+
 	section data-transition="fade"
-		/h3 Primera Generación (1945-55): Tubos de vacío
+
+		h3 Primera Generación (1945-55): Tubos de vacío
+		
+		div
+			img src='/images/figures/00-eniac-programming.jpg' width="40%"
 
 		ul
 			li Programación via conexión de cables (y luego, tarjetas perforadas)
@@ -119,7 +168,7 @@ section
 		p <b>Mainframes</b>
 
 		div
-			img src='/images/figures/00-ibm1401.jpg' width="30%"
+			img src='/images/figures/00-ibm1401.jpg' width="35%"
 
 		p IBM1402 (card reader), IBM1401 (processing), IBM1403 (printer)
 
@@ -140,10 +189,12 @@ section
 
 	section data-transition="fade"
 		/h3 Segunda Generación (1955-65): Transistores y Sistemas <i>Batch</i>
+		div
+			img src='/images/figures/00-batch-manual.png' width="60%"
 
 		p Proceso de <i>trabajo por lotes</i>, <b>batch</b>
 		ul
-			li Uso de lenguajes: assembler y FORTRAN
+			li Lenguajes: assembler y FORTRAN (primer lenguaje de programación)
 			li Sistema Operativo: FMS (Fortran Monitor System)
 			li Sistema Operativo: IBSYS (para el IBM7094)
 
@@ -151,166 +202,204 @@ section
 	section
 		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
 
-		p IBM unifica sus <i>mainframes</i> en System/360. Misma arquitectura e instruction set.
+		p IBM unifica sus <i>mainframes</i> en System/360. Misma arquitectura e <i>instruction set</i>.
 
-		blockquote Primeros en utilizar <b>circuitos integrados</b>
+		blockquote style="background: #B7E1CD;" Primeros en utilizar <b>circuitos integrados</b>
 
 		div
 			img src='/images/figures/00-ibms360.jpg' width="40%"
 
 
 	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+		h3 Tercera Generación (1965-1980): IC y Multiprogramación
 
-		p Si el <i>hardware</i> está unificado, ¿por qué no el <i>software</i>?
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
-		p.fragment <b>OS/360</b> (Fred Brooks)
+			div Si el <i>hardware</i> está unificado, ¿por qué no el <i>software</i>?
+			div style="background:#B7E1CD;" <b>OS/360</b> (Fred Brooks)
+			div style="border:none;" Mientras se procesa I/O, la CPU no realizaba trabajo
+			div style="background:#B7E1CD;" OS/360 introduce la <b>multiprogramación</b>
+			
 
-		p.fragment Mientras se procesa I/O, la CPU no realizaba trabajo
+		img src='/images/figures/00-ibm360.jpg' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-		blockquote.fragment style="background: #F4C7C3;" OS/360 introduce la <b>multiprogramación</b>
+		ul.fragment
+			li Particionamiento de la memoria
+			li Si un proceso no está ocupando la CPU, se entrega a otro
 
-		ul
-			li.fragment Particionamiento de la memoria
-			li.fragment Si un proceso no está ocupando la CPU, se entrega a otro
+		p.fragment Posibilidad de cargar un programa de tarjeta a memoria en el momento que un espacio queda libre
+
+		blockquote.fragment style="background: #B7E1CD;" Simultaneous Peripheral Operation On Line <b>SPOOLing</b>
+
+
 
 	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+		h3 Tercera Generación (1965-1980): IC y Multiprogramación
 
-		p Posibilidad de cargar un programa de tarjeta a memoria en el momento que un espacio queda libre
+		p Usuarios aún deben esperar horas para obtener un resultado. ¿Y si hay error de compilación?
 
-		blockquote.fragment style="background: #F4C7C3;" Simultaneous Peripheral Operation On Line <b>SPOOLing</b>
+		p <b>Solución</b>: que múltiples usuarios puedan utilizar el computador simultáneamente
 
-
-	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
-
-		p Usuarios aún deben esperar horas para obtener un resultado. <span class="fragment">¿Y si hay error de compilación?</span>
-
-		p.fragment Solución: que múltiples usuarios puedan utilizar el computador simultáneamente
-
-		blockquote.fragment style="background: #F4C7C3;" <b>Timesharing</b>
+		blockquote.fragment style="background: #B7E1CD;" <b>Timesharing</b>
 
 		p.fragment Cada usuario posee un terminal para entregar comandos al computador.
 
 		ul.fragment
-			li CTSS (Compatible Time Sharing System), MIT.
-			li Primer sistema de timesharing de propósito general.
-			li Problema: usuarios deben tener cuidado de no alterar el trabajo de otros
+			li <b>CTSS</b> (<i>Compatible Time Sharing System</i>), MIT.
+			li Primer sistema de <i>timesharing</i> de propósito general.
+			li <b>Problema</b>: usuarios deben tener cuidado de no alterar el trabajo de otros
 
 	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+		h3 Tercera Generación (1965-1980): IC y Multiprogramación
 
-		p MIT, Bell Labs, General Electric, deciden crear un sistema que soporte cientos de usuarios.
+		div style="border:none; width:70%; vertical-align:middle; display:inline-block;" 
 
-		ul
-			li.fragment MULTICS (MULTIplexed Information and Computing Service)
-			li.fragment Escrito en lenguaje PL/I (poco popular y con un compilador deficiente)
-			li.fragment Bell Labs y General Electric abandonan
+			div MIT, Bell Labs, General Electric, deciden crear un sistema que soporte cientos de usuarios, inspirados en el modelo de la red eléctrica.
+			div style="background:#B7E1CD;" <b>MULTICS</b> (<b>MULT</b>iplexed <b>I</b>nformation and <b>C</b>omputing <b>S</b>ervice)
+			div style="border:none;" Escrito en lenguaje <b>PL/I</b> (poco popular y con un compilador deficiente)
+			div Bell Labs y General Electric abandonan
+			
 
-		p.fragment Visión de MULTICS: sistema de computación que pueda ser accedido por múltiples usuarios, en que el <i>mainframe</i> ejecuta todo, y usuarios acceden a través de terminales "livianos"
+		img src='/images/figures/00-multics.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
-
-	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
-
-		p DEC (Digital Equipment Corporation) produjo su propia seria de minicomputadores, desde PDP-1 al PDP-11
-
-		p.fragment 1970. Ken Thompson y Dennis Ritchie escriben una versión reducida de MULTICS para un PDP-7 abandonado.
-
-		blockquote.fragment style="background: #F4C7C3;" Al ser un MULTICS reducido, lo llaman UNICS, y finalmente <b>UNIX</b>
-
-		ul
-			li.fragment 1972. Dennis Ritchie reescribe el código de Unix en C
-			li.fragment Surgen muchas versiones (incompatibles entre sí), pero dos sobreviven
-			li.fragment <b>System V</b>, de AT&T, y <b>BSD</b> (Berkeley Software Distribution) de U.C.Berkeley.
-			li.fragment IEEE desarrolla una interfaz estándar: <b>POSIX</b>
+		blockquote.fragment <b>Visión de MULTICS</b>: sistema de computación que pueda ser accedido por múltiples usuarios, en que el <i>mainframe</i> ejecuta todo, y usuarios acceden a través de terminales "livianos"
 
 
 	section data-transition="fade"
-		h3 Tercera Generación (1965-1980): Circuitos Integrados y Multiprogramación
+		h3 Tercera Generación (1965-1980): IC y Multiprogramación
 
-		p 1987. Andrew Tanenbaum desarrolla una versión simplificada con objetivos educacionales: MINIX
+		div <b>DEC</b> (<i>Digital Equipment Corporation</i>) produce su serie de minicomputadores, desde <b>PDP-1</b> al <b>PDP-11</b>
 
-		p.fragment 1991. Linus Torvalds, inspirado en MINIX, escribe su propia versión: <b>LINUX</b>
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" <i>1970</i>. Ken Thompson y Dennis Ritchie escriben una versión reducida de MULTICS para un PDP-7 abandonado.
+			div style="background:#B7E1CD;"Al ser un MULTICS reducido, lo llaman UNICS, y finalmente <b>UNIX</b>
+			div style="text-align:left;" <i>1972</i>. Dennis Ritchie reescribe el código de Unix en <b>C</b>
+			div style="text-align:left;" Surgen muchas versiones (incompatibles entre sí), pero dos sobreviven
+			ul
+				li <b>System V</b>, de AT&T
+				li <b>BSD</b> (Berkeley Software Distribution) de U.C.Berkeley.
+			
+		div style="width:20%; vertical-align:middle; display:inline-block;"
+			img src='/images/figures/00-unix.gif' width="65%" style="background:none; border:none; box-shadow:none; display:block;"
+
+			img src='/images/figures/00-ThompsonRitchie.jpg' width="65%" style="background:none; border:none; box-shadow:none; display:block;"
+
+		div style="text-align:left;" <i>1987</i>. Andrew Tanenbaum desarrolla una versión simplificada con objetivos educacionales: <b>MINIX</b>
+		div style="text-align:left;" <i>1988</i>. IEEE desarrolla una interfaz estándar: <b>POSIX</b>
+		div style="text-align:left;" <i>1991</i>. Linus Torvalds, inspirado en MINIX, escribe su propia versión: <b>LINUX</b>
+
 
 
 	section 
 		h3 Cuarta Generación (1980-): Computadores Personales
 
-		p LSI (Large Scale Integration) posibilita la construcción de miles de transistores en 1cm2. <span class="fragment">Surgen los computadores personales, o <b>microcomputadores</b></span>
+		p LSI (Large Scale Integration) posibilita la construcción de miles de transistores en 1cm2. 
+		
+		blockquote.fragment style="background: #B7E1CD;" Surgen los computadores personales, o <b>microcomputadores</b>
 
 		ul
-			li.fragment 1974. Intel 8080. Primera CPU de propósito general de 8-bit. No tiene S.O.
-			li.fragment Gary Kildall, consultor, escriben <b>CP/M</b> (Control Program for Microcomputers) en un diskette de 8''.
+			li.fragment <i>1974</i>. <b>Intel 8080</b>. Primera CPU de propósito general de 8-bit. <b>No tiene sistema operativo</b>.
+			li.fragment Gary Kildall, consultor, escribe <b>CP/M</b> (<i>Control Program for Microcomputers</i>) en un diskette de 8''.
 			li.fragment Intel no se interesa, y entrega CP/M de vuelta a Gary Kildall.
-			li.fragment 1977. Gary Kildall funda Digital Research y adapta CP/M para otras CPU.
-			li.fragment 1980. IBM crea el IBM PC. Para probarlo obtienen un intérprete BASIC de <span class="fragment">Bill Gates</span>
+			li.fragment <i>1977</i>. Gary Kildall funda <b>Digital Research</b> y adapta CP/M para otras CPU.
+			li.fragment <i>1980</i>. IBM crea <b>IBM PC</b> (Intel 8088). Usa un intérprete de BASIC de ... <span class="fragment"><b>Bill Gates</b></span>
 			li.fragment IBM PC no tiene Sistema Operativo. Bill Gates sugiere que contacten a Gary Kildall
 			li.fragment Kildall rechaza a IBM. IBM solicita un Sistema Operativo a Bill Gates.
-			li.fragment Bill Gates compra <b>DOS</b> a Seatlle Computer Products, y lo ofrece a IBM.
-			li.fragment Bill Gates contrata a Tim Patterson en su nueva compañía, Microsoft, y producen <b>MS-DOS</b>
+			li.fragment Bill Gates compra <b>DOS</b> (<i>Disk Operating System</i>) a <b>Seattle Computer Products</b>, y lo ofrece a IBM.
+			li.fragment Bill Gates contrata a Tim Paterson en su nueva compañía, <b>Microsoft</b>, y producen <b>MS-DOS</b>
 			li.fragment MS-DOS se populariza al ser ofrecido a empresas de computación y no a usuarios.
 
 
 	section data-transition="fade"
-		h3 Cuarta Generación (1980-): Computadores Personales
+		/h3 Cuarta Generación (1980-): Computadores Personales
 
-		p GUIs atraen a usuarios que no saben (ni les interesa) el funcionamiento del computador.
+		div style="width:65%; vertical-align:middle; display:inline-block;" 
 
-		ul
-			li.fragment 1983. IBM PC/AT, con Intel 80286 y MS-DOS.
-			li.fragment MS-DOS ampliamente usado con Intel 80386 y 80486.
-			li.fragment Tanto CP/M como MS-DOS usaban una <b>shell</b> (línea de comandos) como interacción.
-			li.fragment 1960s. Doug Engelbart inventa las <b>GUI</b> (Graphical User Interface), que empiezan a ser usadas en XEROX PARC.
-			li.fragment Steve Jobs conoce la GUI en XEROX PARC y la incorpora su siguiente computador Apple: <span class="fragment">Macintosh</span>
+			div style="text-align:left;" <i>1983</i>. IBM lanza <b>IBM PC/AT</b>, con Intel 80286 y MS-DOS.
+			div style="text-align:left;" MS-DOS ampliamente usado con Intel 80386 y 80486.
+			div style="text-align:left;" Tanto CP/M como MS-DOS usan una <b>shell</b> como interacción.
+			
+		img src='/images/figures/00-msdos.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
+		div <i>1960's</i> Doug Engelbart (1925-2013) Stanford Research Institute, crea las <b>GUI</b> (<i>Graphical User Interface</i>)
 
-	section data-transition="fade" 
-		h3 Cuarta Generación (1980-): Computadores Personales
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
 
-		p Microsoft adopta GUIs: Windows
+			div style="text-align:left;" <i>1968</i>. <a href="https://www.youtube.com/watch?v=yJDv-zdhzMY">Mother of all demos</a>. Engelbart presenta <i>windows</i>, <i>hypertext</i>, <i>mouse</i>, ...
+			div style="text-align:left;" GUIs empiezan a ser usadas en XEROX PARC (Palo Alto Research Center)
+			div style="text-align:left;" Steve Jobs conoce la GUI en XEROX PARC y la incorpora en Apple Macintosh
 
-		ul
-			li.fragment 1985-1995. MS-DOS ejecuta Windows como una aplicación de usuario.
-			li.fragment 1995. Windows 95 reemplaza a MS-DOS.
-			li.fragment Windows 95 y Windows 98 aún mantienen código assembler Intel 16-bit.
-			li.fragment Microsoft reescribe Windows completamente para 32-bit. Windows New Technology: <span class="fragment">Windows NT</span>
-			li.fragment 1999. Windows NT 4.0 y Windows 2000 se posicionan en el ámbito corporativo.
-			li.fragment Windows Me termina con la línea de Windows 95/98.
-			li.fragment 2001. Windows 2000 evoluciona a Windows XP.
-			li.fragment Línea server. Windows 2003 Server, Windows 2008.
-			li.fragment Línea client. Windows Vista, Windows 7, Windows 8, Windows 10.
+		img src='/images/figures/00-mouse.jpg' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div <b>GUI</b>s atraen a usuarios que no saben (ni les interesa) el funcionamiento del computador.
+
 
 	section data-transition="fade" 
 		h3 Cuarta Generación (1980-): Computadores Personales
 
-		p Evolución de UNIX
+		blockquote style="background: #B7E1CD;" Microsoft adopta GUIs: <b><a src="https://www.youtube.com/watch?v=U7PxUYnbOf4">Windows</a></b>
 
-		ul
-			li.fragment UNIX popular en ambiente de servidores. 
-			li.fragment Linux crece en computadores personales.
-			li.fragment <b>FreeBSD</b> deriva de BSD. OSX es una versión modificada de FreeBSD.
-			li.fragment MIT produce un sistema de ventanas para UNIX: X Windows System (luego X11).
-			li.fragment UNIX adopta GUIs que funcionan sobre X11 (Gnome, KDE, XFCE, etc)
-			li.fragment Windows Me termina con la línea de Windows 95/98.
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <i>1985-1995</i>. MS-DOS ejecuta Windows como aplicación de usuario
+				li <i>1995</i>. <b>Windows 95</b> reemplaza a MS-DOS.
+				li <b>Windows 95</b> y <b>Windows 98</b> mantienen código assembler Intel 16-bit.
+				li Microsoft reescribe Windows para 32-bit. <b>Windows New Technology</b>: <b>Windows NT</b>
+				li <i>1999</i>. <b>Windows NT 4.0</b> y <b>Windows 2000</b>, ámbito corporativo.
+				li <i>2000</i>. <b>Windows Me</b> termina con la línea de Windows 95/98.
+				li <i>2001</i>. Windows 2000 evoluciona a <b>Windows XP</b>.
+				li Línea server: Windows 2003 Server, Windows 2008.
+				li Línea client: Windows Vista, Windows 7, Windows 8, Windows 10.
+
+		img src='/images/figures/00-windows.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section data-transition="fade" 
+		/h3 Cuarta Generación (1980-): Computadores Personales
+
+		blockquote style="background: #B7E1CD;"  Evolución de <b>UNIX</b>
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li <b>UNIX</b> popular en ambiente de servidores. 
+				li <b>Linux</b> crece en computadores personales.
+				li <i>1993</i>. <b>FreeBSD</b> deriva de BSD. <b>OSX</b> es una versión modificada de FreeBSD.
+				li MIT produce un sistema de ventanas para UNIX: <b>X Windows System</b> (luego X11, Xorg).
+				li UNIX adopta GUIs que funcionan sobre X11 (Gnome, KDE, XFCE, etc)
+				li Múltiples <a href="http://futurist.se/gldt/wp-content/uploads/12.10/gldt1210.png">distribuciones de Linux</a>
+
+		img src='/images/figures/00-linuxes.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+	
+		img src='/images/figures/00-linux.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section 
 		h3 Quinta Generación (1980-): Computadores Móviles
 
-		p Evolución de dispositivos móviles
+		blockquote style="background: #B7E1CD;" Evolución de dispositivos móviles
 
-		ul
-			li.fragment 1946. Primer teléfono móvil. 40 kg.
-			li.fragment 1970. Teléfono móvil de 1 kg. (ladrillo)
-			li.fragment 1990s. Nokia N9000 combina teléfono con PDA (Personal Digital Assistant)
-			li.fragment Primeros sistemas operativos para móviles: SymbianOS
-			li.fragment 2002. RIM. Blackberry OS
-			li.fragment 2007. Apple. iOS.
-			li.fragment 2008. Google. Android. Basado en Linux.
-			li.fragment 2011. Nokia cambia SymbianOS por Windows Phone.
+		div style="width:75%; vertical-align:middle; display:inline-block;" 
 
+			ul.fragment
+				li <i>1946</i>. Primer teléfono móvil. 40 kg.
+				li <i>1970</i>. Teléfono móvil de 1 kg. (ladrillo)
+				li <i>1990s</i>. Nokia combina teléfono con PDA (Personal Digital Assistant)
+				li <i>2001</i>. Primeros sistemas operativos para móviles: SymbianOS
+				li <i>2002</i>. RIM. Blackberry OS
+				li <i>2007</i>. Apple. iOS.
+				li <i>2008</i>. Google. Android. Basado en Linux.
+				li <i>2009</i>. WebOS. Para dispositivos <i>smart</i>
+				li <i>2011</i>. Nokia cambia SymbianOS por Windows Phone.
+				li <i>2013</i>. Samsung reemplaza Bada por Tizen.
+
+		div style="width:25%; vertical-align:middle; display:inline-block;"
+		
+			img src='/images/figures/00-simon.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img src='/images/figures/00-mobiles.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		
 
 section
 	h2 ¿De qué tamaño es un Sistema Oprerativo?
@@ -320,359 +409,175 @@ section
 		p.fragment <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">(¿Megas? ¿Kilos? ¿Gigas?)</a>
 		ul
 			li.fragment Windows 7: \( \sim 40\times 10^6 \) líneas de código
-			li.fragment Linux: \( \sim 15 \times 10^6 \) líneas de código
+			li.fragment Windows 8: \( \sim 50\times 10^6 \) líneas de código
+			li.fragment <a href="https://www.linuxcounter.net/statistics/kernel">Linux</a>: \( \sim 15 \times 10^6 \) líneas de código
 		
 
 	section
 		h3 ¿Qué incluye?
 		ul
-			li.fragment Sistema Operativo
+			li Sistema Operativo
 
-			blockquote.fragment
-				| Sistema Operativo = Kernel + Programas del Sistema
+			blockquote.fragment style="background: #B7E1CD;" Sistema Operativo = Kernel + Programas del Sistema
 
-			li.fragment Kernel
+			li Kernel
 
-			blockquote.fragment
-				| Un programa que <strong>siempre</strong> se está ejecutando.
-				| <br/>Provee funcionalidad mínima: acceso a CPU, memoria, dispositivos.
-			li.fragment Programas del sistema
+			blockquote.fragment style="background: #B7E1CD;" Un programa que permite controlar directamente el <i>hardware</i>. Provee funcionalidad mínima: acceso a CPU, memoria, dispositivos.
+			
+			li Programas del sistema
 
-			blockquote.fragment
-				| Extienden las funciones del kernel.
+			blockquote.fragment style="background: #B7E1CD;" Extienden las funciones del kernel.
 
 
-
-/ section
-/ 	h2 ¿Sobre qué <em>hardware</em>?
-/ 	/  -----------------------------
-
-/ 	section
-/ 		p Distintas arquitecturas
-/ 		ul
-/ 			div.fragment
-/ 				li Single-core
-/ 				ul
-/ 					li Un procesador de propósito general
-/ 					li Algunas funciones delegadas a procesadores especializados
-/ 			div.fragment
-/ 				li Multi-core
-/ 				ul
-/ 					li Mayor rendimiento: ¿\(N\)?
-/ 					li Economía de escala
-/ 					li Mayor confiabilidad (reliability)
-/ 			div.fragment
-/ 				li Arquitectura en <em>cluster</em>
-/ 				ul
-/ 					li Múltiples procesadores conectados por red
-/ 					li Mayor potencia de cómputo (HPC)
-/ 					li Es necesario manejar balance de carga y consistencia de datos
-/ 		blockquote.fragment
-/ 			| Sistema operativo debe ser capaz de explotar las características de cada arquitectura
 
 
 
 section
-	h2 ¿Por qué estudiar Sistemas Operativos?
-	/  --------------------------------------
-	h6
-		small
-			| (o ¿por qué no?)
+	h2 Tareas del Sistema Operativo
 
-	section
-		ul
-			div.fragment
-				li Piezas de software complejas
-				ul
-					li Años de estudio y evolución
-					li ¿Cuántos sistemas operativos distintos manejan?
-					li ¿Cuántos sistemas operativos distintos usarán?
-
-			div.fragment
-				li Un Sistema Operativo tiene múltiples desafíos:
-				ul
-					li ¿Cómo proveer sistemas de alto rendimiento?
-					li ¿Cómo consumir la menor cantidad de energía?
-					li ¿Cómo asegurar que un usuario no altere datos o programas privados?
-
-
-
-/ section
-/ 	h2 Evolución de Sistemas Operativos
-/ 	/  --------------------------------
-
-
-
-/ section
-/ 	h2 Versión 1.0
-/ 	/  -----------
-
-/ 	section
-/ 		p Objetivo: acceder transparentemente a <em>hardware</em>
-/ 		ul
-/ 			div.fragment
-/ 				li ¿Cómo?: API para acceder a instrucción de <em>hardware</em> y conjunto de <em>drivers</em> para dispositivos.
-
-/ 			div.fragment
-/ 				li Supuestos:
-/ 				ul
-/ 					li Sólo un usuario accede simultáneamente al computador
-/ 					li Ningún usuario/programa hace uso malicioso del <em>hardware</em>
-
-/ 			div.fragment
-/ 				li Problemas:
-/ 				ul
-/ 					li Baja utilización de <em>hardware</em>: CPU inutilizada mientras se accede a disco
-/ 					li Usuario debe esperar que un programa termine antes de utilizar otro
-
-
-
-/ section
-/ 	h2 Versión 2.0
-/ 	/  -----------
-
-/ 	section
-/ 		p Objetivo: ejecutar múltiples programas simultáneamente. <strong>Multiprogramación</strong>
-
-/ 		ul
-/ 			div.fragment
-/ 				li ¿Cómo?: Si un proceso se bloquea, ejecutar otro.
-
-/ 			div.fragment
-/ 				li Supuestos:
-/ 				ul
-/ 					li Ningún programa utilizará la CPU demasiado tiempo (programas cooperativos)
-/ 					li Ningún programa sobreescribirá datos de otro programa
-
-/ 			div.fragment
-/ 				li Métodos:
-/ 				ul
-/ 					li <em>Preemption</em>: capacidad de <em>expropiar</em> la CPU a un programa
-/ 					li <em>Protección de memoria</em>: definir secciones de memoria para cada programa
-
-
-
-/ section
-/ 	h2 Versión 3.0
-/ 	/  -----------
-
-/ 	section
-/ 		p Objetivo: que más de un usuario pueda utilizar simultáneamente el computador
-
-/ 		ul
-/ 			div.fragment
-/ 				li ¿Cómo?: Dándole un tiempo a cada usuario (<em>multitasking</em>)
-/ 			div.fragment
-/ 				li Problemas:
-/ 				ul
-/ 					li Cada usuario quiere el mayor tiempo posible: <em>planificación y políticas de uso</em>
-/ 					li Cada usuario quiere usar la mayor cantidad de memoria disponible: <em>virtualización de memoria</em>
-/ 					li ¿Hasta cuántos usuarios/programas aceptar? (<em>thrashing</em>)
-
-/ 			div.fragment
-/ 				li Método: niveles de privilegio
-/ 				ul
-/ 					li Programas de usuario (aplicaciones) son <em>no privilegiados</em>
-/ 					li Programas de <em>kernel</em> son <em>privilegiados</em>
-/ 					li Solo programas de <em>kernel</em> pueden modificar el sistema
-
-
-section
-	h2 Conceptos de Sistemas Operativos
-
-	p.fragment <b>Administración de procesos</b>
+	blockquote style="background: #F4C7C3;" <b>Administración de procesos</b>
 	ul
-		li.fragment Proceso
-		li.fragment Tablas (árbol) de proceso
-		li.fragment Comunicación entre procesos
+		li Proceso
+		li Tablas (árbol) de proceso
+		li Comunicación entre procesos
 
-	p.fragment <b>Administración de memoria</b>
+	blockquote style="background: #F4C7C3;" <b>Administración de memoria</b>
 	ul
-		li.fragment Espacios de direcciones
-		li.fragment Memoria Virtual
+		li Espacios de direcciones
+		li Memoria Virtual
 
 
-	p.fragment <b>Administración de almacenamiento</b>
+	blockquote style="background: #F4C7C3;" <b>Administración de almacenamiento</b>
 	ul
-		li.fragment Archivos
-		li.fragment Directorios
-		li.fragment Rutas absolutas y relativas
+		li Archivos
+		li Directorios
+		li Rutas absolutas y relativas
 
 
 
 section
 	h2 ¿Cómo funciona el Sistema Operativo?
-	/  ------------------------------------
 	
 	p El Sistema Operativo está siempre en ejecución <span class="fragment">¿y el usuario?</span>
 
-	blockquote.fragment
-		| Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
+	blockquote.fragment style="background: #F4C7C3;" Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
 
-	p.fragment Mientras nadie (usuario/programa) lo llame, el S.O. no hace nada.
-	ul
-		li.fragment <em>Trap</em>: interrupción generada por software
-		ul.fragment
-			li Error o solicitud de un programa
-			li Por cada solicitud, el S.O. toma una acción
+	p.fragment Mientras nadie (usuario/programa) lo llame, el Sistema Operativo no hace nada.
+	ul.fragment
+		li <em>Trap</em>: interrupción generada por software
+		
+		li Sistema Operativo debe controlar que: 
+		ul
+			li Procesos puedan acceder a datos
+			li Procesos no puedan monopolizar la CPU
+			li Procesos no puedan modificar (intencionalmente o no) el funcionamiento de otro proceso
 
-		li.fragment S.O. debe asegurar que errores en un programa no afecten a otro
-		ul.fragment
-			li ¿Qué pasa si un programa entra en un loop infinito?
-			li ¿Si un programa trata de modificar memoria de otro programa? ¿o del S.O.?
-			li Habría que asegurar que solo un proceso puede estar en modo ejecutable
-
-		li.fragment Pero el S.O. sí debería poder modificar la memoria de otro programa, para cargarlo/descargarlo
+		li Solo el Sistema Operativo debe ser capaz de administrar el <i>hardware</i>, y no los procesos.
 
 
 
 section
 	h2 Modos de operación de un Sistema Operativo
-	/  ------------------------------------------
-
+	
 	section
+
 		br
-		= image_tag "/images/figures/00-1_10.pdf.png", :width=>"60%"
+
+		div 
+			img src="/images/figures/00-1_10.pdf.png" width="60%" style="background:none; border:none; box-shadow:none;"
 
 		p Modo dual suportado por hardware: mode bit (0=kernel/1=user)
 
-		p.fragment <strong>Solo puede ser modificado por el S.O.</strong> (¿por qué?)
-		p.fragment Kernel mode, a.k.a. (Privileged | Supervised | Monitor | System) mode
+		p <b>Solo puede ser modificado por el S.O.</b> (¿por qué?)
+		p Kernel mode, a.k.a. (<i>Privileged</i> | <i>Supervised</i> | <i>Monitor</i> | <i>System</i>) mode
 
-		blockquote.fragment
-			| Instrucciones privilegiadas solo pueden ejecutar en modo kernel <br/>
-			| Si se intenta ejecutar en mode=1, el hardware no la ejecuta y genera una interrupción para el S.O. Evita acceso indebido de otros usuarios
+		blockquote.fragment style="background: #F4C7C3;" Instrucciones privilegiadas solo pueden ejecutar en modo <b>kernel</b>. <br/> Si se intenta ejecutar en modo <b>user</b>, el <i>hardware</i> no la ejecuta y genera una interrupción para el Sistema Operativo.
 
 		p.fragment Ej: cambio mode bit, llamada I/O, manejo timer, manejo de interrupciones
 
 
-	section
-		p Multi-modos: Más de dos modos de operación, ¿para qué?
 
-		ul
-			li.fragment Útil para virtualización
-			li.fragment VMM (<em>Virtual Machine Manager</em>) opera en modo intermedio
-			ul.fragment
-				li Menos privilegios que S.O.
-				li Más privilegios que cada <em>Virtual Machine</em>
-
-		.fragment
-			== image_tag "images/figures/00-1_20.pdf.png", :width=>"40%"
-
-
-	section
-		p Programas de usuario hacen llamadas al S.O para que ejecute acciones a nombre de ellos
-
-		ul
-			li.fragment <em>syscall</em>, <em>trap</em>
-
-		br
-		br
-		p.fragment ¿Qué puede pasar si no hay bit mode? (Intel 8088 no lo tenía)
-		/ caso de 8088 y MS-DOS. Un proceso en MS-DOS podía echarse el SO
-
-		ul
-			li.fragment Mode bit permite protección de hardware
-			li.fragment Si un programa comete un acceso indebido o error, trap al S.O.
-			/ul
-			/	li.fragment S.O. termina el programa <em>abnormally</em>
-
-			li.fragment ¿Cómo evitar que un programa no devuelva el control al SO?
-			/ul
-			/	li.fragment S.O. usa un timer que genera un trap a intervalo definido
-			/	li.fragment Timer también debe ser establecido en modo Kernel
-
-
-
-
-// %section
-// %	\frametitle{Protección y Seguridad}
-// %
-// %	Ante múltiples usuarios, el acceso a datos debe ser regulado
-// %
-// %	\onslide<2->{Hasta ahora \ldots}
-// %	ul
-// %		ul.fragment Hardware asegura que procesos solo pueden acceder memoria dentro de su espacio
-// %		ul.fragment Timer asegura que ningún proceso se quede sin devolver la CPU
-// %		ul.fragment Registros de control de dispositivos no son accesibles por usuarios
-// %
-// %
-// %	\onslide<4->{Sistemas de <strong>protección} controlan el acceso de procesos o usuarios a los recursos computacionales</strong>
-// %
-// %	ul
-// %		ul.fragment Un buen sistema de protección también puede sufrir de accesos indebidos
-// %
-// %
-// %	\onslide<6->{Un sistema de <strong>seguridad} debe defender de ataques externos e internos</strong>
-
-
-// %section
-// %	\frametitle{Protección y Seguridad}
-// %
-// %	Algunos requisitos de los sistemas de protección y seguridad
-// %
-// %	ul
-// %		ul.fragment Distinción entre usuarios: nombre e identificador (userID, securityID)
-// %		ul.fragment Grupos de usuarios e identificadores de grupos
-// %		ul.fragment Asociación de privilegios/permisos
-// %		ul.fragment Métodos seguros para escalar privilegios (setuid)
 
 
 section
 	h2 Llamadas al sistema
-	/  -------------------
 
 	section
 		h4 System Calls
-		p Programas utilizan llamadas al sistemas frecuentemente
-		p Ej: <code>copy source.txt dest.txt</code>... ¿qué requiere?
+		p Programas utilizan llamadas al sistema frecuentemente
+
+		div ¿Qué debe hacer el Sistema Operativo antes este comando?
+
+		p <code>copy source.txt dest.txt</code>
 
 		ul
-			div.fragment
-				li Abrir <code>source.txt</code>
-				ul
-					li ¿Existe? ¿Tiene permisos?
-
-			div.fragment
-				li Abrir <code>dest.txt</code>
-				ul
-					li ¿Existe? ¿se reemplaza? ¿Se puede escribir?
-
+			li.fragment Abrir <code>source.txt</code> (¿posición en disco?, ¿existe?, ¿tiene permisos?,...)
+			li.fragment Abrir <code>dest.txt</code> (¿existe?, ¿se reemplaza?, ¿se puede escribir?,...)
+			li.fragment Leer <code>source.txt</code> (¿hacia qué parte de la memoria?)
+			li.fragment Escribir <code>dest.txt</code> (¿desde qué posición de memoria?, ¿en qué posición del disco?,...)
 			li.fragment Lectura/escritura en disco requiere llamadas al sistema
 			li.fragment Terminar el programa en caso de error, requiere llamadas al sistema
-
-		/p.fragment ...pero el programador no quiere programar todas las llamadas
 
 
 	section
 		h4 API: Application Programming Interface
 
 		p Sistemas Operativos proveen una API para el programador.
-		ul
-			li.fragment Windows API
-			li.fragment POSIX API (UNIX, Linux, MacOS X), a través de <span style="font-family:'Lucida Console', monospace">libc</span>
-			li.fragment Java API (para la JVM)
+		ul.fragment
+			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
+			li POSIX API (UNIX, Linux, MacOS X), a través de <code>libc</code>
+			li Java API (para la JVM)
 
-		br
-		p.fragment ¿Cómo usarla?
-		div.fragment
-			p eg:
+		div 
+			img src="/images/figures/00-LinuxAPI.png" width="35%" style="background:none; border:none; box-shadow:none;"
+			img src="/images/figures/00-WinArch.png" width="35%" style="background:none; border:none; box-shadow:none;"
+
+		/div.fragment
+		/	pre style="width:50%;"
+		/		code.hljs
+		/			| count = read(fd, buffer, nbytes);
+
+	section
+
+		img src="/images/figures/00-2_06.pdf.png" width="60%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+
+	section
+
+		div
 			pre style="width:50%;"
 				code.hljs
 					| count = read(fd, buffer, nbytes);
 
-	section
-		= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+		img src="/images/figures/00-syscall-read.png" width="50%" style="background:none; border:none; box-shadow:none;"
 
-	section
-		= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
+		/= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
 
 
 	section
-		= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX. 
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
 
 	section
-		= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
+
+		div style="width:20%; vertical-align:middle; display:inline-block;" 
+
+			div Equivalencias entre <i>syscalls</i> Win32 y POSIX
+
+		div style="width:80%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix-win32.png" width="70%" style="background:none; border:none; box-shadow:none;"
+
+		/= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
 
 
 section
@@ -685,7 +590,6 @@ section
 		= image_tag '/images/figures/00-2_01.pdf.png', :width => "80%"
 
 
-
 section
 	h2 Interfaces de Usuario (UI)
 	/  --------------------------
@@ -693,15 +597,18 @@ section
 	section
 		p Varias alternativas...
 		ul
-			li.fragment <em>Command-Line Inteface (CLI):</em> Comandos se ingresan por teclado
-			li.fragment <em>Batch interface:</em> Comandos se ingresan en archivos
-			li.fragment <em>Graphical User Interface (GUI):</em> Sistema de ventanas + <em>pointing-device</em>
+			li <b>Command-Line Inteface (CLI):</b> Comandos se ingresan por teclado
+			li <b>Batch interface:</b> Comandos se ingresan en archivos
+			li <b>Graphical User Interface (GUI):</b> Sistema de ventanas + <em>pointing-device</em>
 
 	section
-		h4 Command-Line (línea de comandos) <span class="fragment">(<strong>shells</strong>)</span>
+		h4 Command-Line
 
-		p.fragment Para UNIX
-		div.fragment
+		div A.K.A. Línea de comandos, shell (menos preciso: terminal, consola, xterm, prompt). Para UNIX:
+
+		/p Para UNIX
+
+		div
 			ul
 				li <em>Bourne shell</em>: Stephen Bourne, 1977, UNIX, <code>sh</code>
 				li <em>C shell</em>: Bill Joy, 1978, BSD UNIX, <code>csh</code>
@@ -710,12 +617,28 @@ section
 				li <em>Bourne-Again shell</em>: Brian Fox, 1989, <code>bash</code>
 				li <em>Z shell</em>: Paul Fastad, 1990, <code>zsh</code>
 
-		p.fragment En windows
-		div.fragment
+		div 
+			img src="/images/figures/00-bash.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
+			img src="/images/figures/00-zsh.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+		h4 Command-Line
+
+		p Para Windows
+
+		div
 			ul
-				li <em>MS-DOS prompt</em>: MS-DOS, Win95/98/Me, <code>COMMAND.COM</code>
-				li <em>Command Prompt</em>: <code>cmd.exe</code>
-				li <em>PowerShell</em>
+				li <b>MS-DOS prompt</b>: MS-DOS, Win95/98/Me, <code>COMMAND.COM</code>
+				li <b>Command Prompt</b>: <code>cmd.exe</code>
+				li <b>PowerShell</b>
+
+		div 
+			img src="/images/figures/00-commandcom.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
+			img src="/images/figures/00-powershell.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 	section
@@ -724,13 +647,13 @@ section
 		p Uso común:
 		ul
 			li Solicitar comando/instrucción al usuario y ejecutarlo
-			li Formato: <code>prompt comando [parametros]</code>
+			li <code>prompt comando [parametros]</code>
 
-		div.fragment
+		div
 			p <em>Command Prompt</em> (símbolo del sistema)
-			ul
-				li.fragment Indica que el sistema está lista para recibir un comando
-				li.fragment Usualmente un texto terminado en <code>$, %, #, :, ></code>
+			ul.fragment
+				li Indica que el sistema está lista para recibir un comando
+				li Usualmente un texto terminado en <code>$, %, #, :, ></code>
 
 		div.fragment
 			pre
@@ -755,10 +678,11 @@ section
 				li Métaforas: escritorio, íconos, carpetas, menúes
 				li Más allá de <em>pointing-device</em>: gestos y acciones visuales
 
-		p.fragment Vienen de los \(\sim\) 1970's
+		p.fragment Vienen de 1968 (Douglas Engelbart), <a href="https://www.youtube.com/watch?v=yJDv-zdhzMY" target="_blank">Mother of All Demos</a>
+
 		div.fragment
 			ul
-				li Investigación de Xerox Palo Alto Research Center (PARC)
+				li Investigación en Xerox Palo Alto Research Center (PARC)
 				li Primera interfaz gráfica: 1973
 				li Popularizados en 1980s: Apple Macintosh (Mac OS)
 				li Windows 1.0 agregó GUI a MS-DOS
@@ -770,10 +694,10 @@ section
 		p Tradicionalmente UNIX/Linux han sido manejados por CLI,
 		p.fragment pero se han desarrollado muchas GUIs
 
-		ul
-			li.fragment CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
-			li.fragment X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
-			li.fragment <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
+		ul.fragment
+			li CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
+			li X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
+			li <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
 
 		= image_tag "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
 
@@ -805,90 +729,91 @@ section
 
 
 section
-	h2 Estructura: MS-DOS
-	/  ------------------
+	h2 Arquitectura
 
 	section
 		p ¿Sistemas <strong>monolíticos</strong> o sistemas <strong>modulares</strong>?
 		p.fragment Algunos ni siquiera tienen estructura
-		ul
-			li.fragment MS-DOS: sistema monolítico simple
-			li.fragment Nadie pensó que sería tan popular
-			li.fragment Intel 8088 no tenía protección de <em>dual mode</em>
-			li.fragment ¿Problemas? <span class="fragment">Seguridad</span>
+		ul.fragment
+			li MS-DOS: sistema monolítico simple
+			li Nadie pensó que sería tan popular
+			li Intel 8088 no tenía protección de <em>dual mode</em>
+			li ¿Problemas? <span class="fragment">Seguridad</span>
 
 		br
-		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right;", :height=>"25%", :width=>"25%"
-
-
-
-section
-	h2 Estructura: UNIX
-	/  ----------------
+		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right; border:none;", :height=>"25%", :width=>"25%"
 
 	section
+
 		p UNIX: Estructura monolítica diseñada de acuerdo al <em>hardware</em>
 
-		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%'
+		p Todo el sistema se diseña como un único programa.
 
-		p.fragment ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
+		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%', :style=>"border:none;"
+
+		p ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
 
 
-
-section
-	h2 Estructura: diseño por capas
-	/  ----------------------------
 
 	section
-		p Capas se diseñan por niveles más <em>abstractos</em> de funcionalidad
+	
+		p Diseño por capas se diseñan por niveles más <em>abstractos</em> de funcionalidad
+
+		div style="width:70%; vertical-align:middle; display:inline-block;" 
 
 		ul
-			li          Capa \(M\) invoca llamadas sobre capa \(M-1\)
-			li.fragment Ventaja: Facilidad de <em>debugging</em>
-			li.fragment Desventaja: dificultad de definición de capas, eficiencia
+			li Capa \(M\) invoca llamadas sobre capa \(M-1\)
+			li Ventaja: Facilidad de <em>debugging</em>
+			li Desventaja: dificultad de definición de capas, eficiencia
 
+		div style="width:30%; vertical-align:middle; display:inline-block;" 
 
-		= image_tag "/images/figures/00-2_13.pdf.png", :width => '25%'
+		
+			= image_tag "/images/figures/00-2_13.pdf.png", :width => '65%', :style=>"border:none;"
 
+		br
 
-		p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
+			p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
 
-section
-	h2 Estructura: <em>microkernels</em>
-	/  ---------------------------------
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+			
+			= image_tag "/images/figures/00-THE.png", :width => '70%', :style=>"border:none;"
+
 
 	section
+
+		h4 Microkernels
+
 		p <b>Mach</b>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
 
-		ul
-			li.fragment Set de funcionalidades mínimas
-			li.fragment Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
-			li.fragment Ventaja: Sistemas pequeño y fácil de portar
-			li.fragment Desventaja: Mucha más interacción a través de <em>syscalls</em>!
-			li.fragment <b>Darwin</b> (MacOS X kernel) basado parcialmente en modelo Mach
-			li.fragment <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
-			li.fragment <b>GNU/Hurd</b> es más lento que Linux.
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-		= image_tag "/images/figures/00-2_14.pdf.png", :width=>'50%'
+			ul.fragment
+				li Set de funcionalidades mínimas
+				li Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
+				li Ventaja: Sistemas pequeño y fácil de portar
+				li Desventaja: ¡Mucha más interacción a través de <em>syscalls</em>!
+				li <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
+				li <b>GNU/Hurd</b> es más lento que Linux.
 
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
-section
-	h2 Estructura: <i>Monolíticos</i> vs <i>microkernels</i>
-	/  ---------------------------------
+			= image_tag "/images/figures/00-2_14.pdf.png", :width=>'80%', :style=>"border:none;"
 
 	section
+	
+		h4 Monolíticos vs Microkernels
 
-		= image_tag "/images/figures/00-mono-micro.png", :width=>'100%'
+
+		= image_tag "/images/figures/00-mono-micro.png", :width=>'90%', :style=>"border:none;"
 
 
-
-section
-	h2 Estructura: <em>módulos</em>
-	/  ----------------------------
 
 	section
-		p Lo más común: <strong>loadable kernel modules</strong>
+	
+		p Monolíticos con extensiones: <strong>Loadable kernel modules</strong>
 
 		ul
 			li Kernel tiene un conjunto de componentes principales (<em>core</em>)
@@ -897,22 +822,26 @@ section
 			li Solaris, Linux, MacOS X, Windows
 			li Ej: kernel con soporte de manejo de archivo + módulos por cada <em>filesystem</em>
 
-		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%'
+		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%', :style=>"border:none;"
 
 
-
-section
-	h2 Al final: Estructuras híbridas
-	/  ------------------------------
 
 	section
+		h4 Híbridos
+
 		p En la práctica, pocos sistemas pueden ser encasillados
 
-		ul
-			li Linux, Solaris, Windows tienen características monolíticas (performance!)
-			li Pero algunas funcionalidades siguen el diseño de <em>microkernel</em>
-			li ¡Y además permiten cargar módulos dinámicamente!
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
+			ul
+				li Algunos tienen características monolíticas (performance!)
+				li Pero algunas funcionalidades siguen el diseño de <em>microkernel</em>
+				li ¡Y además permiten cargar módulos dinámicamente!
+				li Windows NT, XNU (el kernel de Darwin) son monolíticos
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			= image_tag "/images/figures/00-Win2000.svg", :width=>'50%', :style=>"border:none;"
 
 
 
