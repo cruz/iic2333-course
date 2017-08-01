@@ -13,3 +13,6 @@ bundle install
 ```sh
 middleman
 ```
+
+That's it
+
