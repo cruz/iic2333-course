@@ -59,6 +59,11 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 06/Oct, 08:30
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC06"
 
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'RecorrI1', 'https://docs.google.com/forms/d/e/1FAIpQLScI0YosQWkQ9wXpGvObESSUmw6oQkWTjobTvxkWnTWTtYevcA/viewform?usp=sf_link'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 11/Oct, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI1"
+
     /div
       div style="border:none; display:inline-block; width:80px;" = link_to 'T4', 'homeworks/4/T4.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 7/Jun, 23:59
@@ -224,8 +229,10 @@ article
     div
       div style="border:none; display:inline-block; width:260px;" <del>I1 - M 29/Ago, 18:30, Sala C200// </del>
       div style="border:none; display:inline-block; width:100px;" = link_to 'Enunciado',   'evals/i1.pdf'
-      div style="border:none; display:inline-block; width:100px;" = link_to 'Solución', 'evals/i1-sol.pdf'
-      div style="border:none; display:inline-block; width:100px;" = link_to 'Old',   'old/old-i1s.tar.gz'
+      div style="border:none; display:inline-block; width:80px;" = link_to 'Solución', 'evals/i1-sol.pdf'
+      div style="border:none; display:inline-block; width:40px;" = link_to 'Old',   'old/old-i1s.tar.gz'
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Recorrección', 'https://docs.google.com/forms/d/e/1FAIpQLScI0YosQWkQ9wXpGvObESSUmw6oQkWTjobTvxkWnTWTtYevcA/viewform?usp=sf_link'
+      div style="border:none; display:inline-block; width:200px;" class="timerRecI1"
       
     div
       div style="border:none; display:inline-block; width:260px;" I2 - J 28/Sep, 18:30
@@ -400,6 +407,14 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Aug 29, 2017 18:30:00')
+  });
+
+  var countdownRecI1 = new Countdown({
+    selector: '.timerRecI1',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Oct 11, 2017 23:59:59')
   });
 
   var countdownI2 = new Countdown({
