@@ -69,12 +69,12 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 13/Oct, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px;" I3
       div style="border:none; display:inline-block; width:380px;" Inicio: Jueves 26/Oct, 18:30, Sala K202
       div style="border:none; display:inline-block;" class="timerI3"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'RecorrI2', 'https://docs.google.com/forms/d/e/1FAIpQLScI0YosQWkQ9wXpGvObESSUmw6oQkWTjobTvxkWnTWTtYevcA/viewform?usp=sf_link'
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 11/Oct, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI2"
@@ -85,9 +85,9 @@ article
       div style="border:none; display:inline-block;" class="timerT4"
 
 
-    /div
-      div style="border:none; display:inline-block; width:80px;" = link_to 'T5', 'homeworks/5/T5.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 21/Jun, 23:59
+    div
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 13/Nov, 23:59
       div style="border:none; display:inline-block;" class="timerT5"
 
     /div
@@ -95,9 +95,9 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 03/Jul, 23:59
       div style="border:none; display:inline-block;" class="timerT6"
 
-    /div
-      div style="border:none; display:inline-block; width:80px;" Examen
-      div style="border:none; display:inline-block; width:380px;" Inicio: Miércoles 21/Jun, 09:00
+    div
+      div style="border:none; display:inline-block; width:100px;" Examen
+      div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 20/Nov, 09:00
       div style="border:none; display:inline-block;" class="timerEX"
 
 
@@ -182,16 +182,16 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
     div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 4', 'homeworks/4/T4.pdf'
-      div style="border:none; display:inline-block; width:260px;" Deadline: Jueves 2/Nov, 23:59
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 4', 'homeworks/4/T4.pdf</del>'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Domingo 5/Nov, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
       /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
 
     div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" Tarea 5
-      div style="border:none; display:inline-block; width:260px;" Deadline: Martes 14/Nov, 23:59
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
-      /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 5', 'homeworks/5/T5.pdf'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 13/Nov, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
+
 
     div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" Tarea 6
@@ -261,8 +261,8 @@ article
       div style="border:none; display:inline-block; width:200px;" class="timerRecI2"
 
     div
-      div style="border:none; display:inline-block; width:260px;" I3 - J 26/Oct, 18:30, Sala K202
-      /div style="border:none; display:inline-block; width:100px;" = link_to 'Enunciado',   'evals/i3.pdf'
+      div style="border:none; display:inline-block; width:260px;" <del>I3 - J 26/Oct, 18:30, Sala K202</del>
+      div style="border:none; display:inline-block; width:100px;" = link_to 'Enunciado',   'evals/i3.pdf'
       /div style="border:none; display:inline-block;" = link_to 'Solución', 'evals/i3-sol.pdf'
 
     div
@@ -363,7 +363,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Nov 14, 2017 23:59:59')
+    dateEnd: new Date('Nov 13, 2017 23:59:59')
   });
 
   var countdownT6 = new Countdown({
@@ -467,5 +467,5 @@ javascript:
     msgAfter: "Empezó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Jun 21, 2017 09:00:00')
+    dateEnd: new Date('Nov 20, 2017 09:00:00')
   });
