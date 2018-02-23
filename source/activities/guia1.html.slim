@@ -1,0 +1,267 @@
+---
+title: Evolución de los sistemas operativos
+layout: activity
+---
+
+article
+  section.top
+    p Algunos comandos útiles
+
+  section
+    h3 Obteniendo el código <i>assembler</i>
+
+    p En esta actividad vamos a interrumpir el proceso de compilación de C, y vamos a obtener el lenguaje generado en assembler.
+
+    p Como primer paso, escriba el siguiente programa en C para sumar dos números.
+
+    pre
+      code.hljs.c
+        | #include &lt;stdio.h&gt;
+
+          int main() {
+              int a,b,c;
+              a = 2;
+              b = 3;
+              c = a+b;
+              printf("La suma es %d\n", c);
+              return 0;
+          }
+
+    p Normalmente utilizamos <code>gcc</code> para obtener el ejecutable <code>sum</code> con:
+
+    pre
+      code.hljs.shell
+        | gcc -o sum sum.c
+
+    p Y obtenemos el resultado:
+
+    pre
+      code.hljs.shell
+        | cruz@hercules:activities$ ./sum 
+          La suma es 5
+
+    p Si agregamos el <i>flag</i> <code>-S</code>, el proceso se detiene justo después de la compilación, pero antes del ensamblador. El detalle de los <i>flags</i> que se le pueden pasar a <code>gcc</code> puede consultarlo en la <a href="https://linux.die.net/man/1/gcc"/><i>manpage</i></a> de <code>gcc</code>, o bien ejecutando <code>man gcc</code>.
+
+    p La salida que se obtiene es un código <i>assembler</i> en el lenguaje de la máquina (en este caso, Intel x86-64). Se genera un archivo resultado <code>sum.s</code>, cuyo contenido debería ser similar a:
+
+    pre
+      code.hljs.x86asm style="font-size:10px;"
+        |         .file   "sum.c"
+                  .section        .rodata
+          .LC0:
+                  .string "La suma es %d\n"
+                  .text
+                  .globl  main
+                  .type   main, @function
+          main:
+          .LFB0:
+                  .cfi_startproc
+                  pushq   %rbp
+                  .cfi_def_cfa_offset 16
+                  .cfi_offset 6, -16
+                  movq    %rsp, %rbp
+                  .cfi_def_cfa_register 6
+                  subq    $16, %rsp
+                  movl    $2, -12(%rbp)
+                  movl    $3, -8(%rbp)
+                  movl    -12(%rbp), %edx
+                  movl    -8(%rbp), %eax
+                  addl    %edx, %eax
+                  movl    %eax, -4(%rbp)
+                  movl    -4(%rbp), %eax
+                  movl    %eax, %esi
+                  movl    $.LC0, %edi
+                  movl    $0, %eax
+                  call    printf
+                  movl    $0, %eax
+                  leave
+                  .cfi_def_cfa 7, 8
+                  ret
+                  .cfi_endproc
+          .LFE0:
+                  .size   main, .-main
+                  .ident  "GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.5) 5.4.0 20160609"
+                  .section        .note.GNU-stack,"",@progbits
+
+    p Este código aún no es directamente ejecutable en la máquina. Le falta el código de librerías como <code>stdio</code> que contienen la definición de funciones como <code>printf</code> y otras estándar de C. Sin embargo, el código que escribimos se puede <i>ver</i> traducido en líneas que escriben las constantes <code>2</code> y <code>3</code> a <code>12</code> y <code>8</code> byte de distancia del registro <code>rbp</code> que corresponde al <i>stack base pointer</i> para luego copiarlas a dos registros de la CPU, <code>edx</code> y <code>eax</code>, que posteriormente son sumados con la instrucción <code>addl</code>. El resultado, que queda en <code>eax</code>, y el <i>string</i> <code>"La suma es %d\n"</code> se copian a los registros <code>esi</code> y <code>edi</code>, y se limpia el registro <code>eax</code> (escribiendo la constante <code>0</code>) para luego llamar al código de <code>printf</code>. El llamado a la función <code>main</code> termina con <code>ret</code>.
+
+    p Pueden aprender más sobre el proceso de compilación de <code>gcc</code> en <a href="http://www.network-theory.co.uk/docs/gccintro/index.html"><i>An Introduction to GCC</i></a>, y una referencia a la arquitectura x86 en <a href="https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture">wikibooks</a>
+
+    section
+      h5 VM
+      /  --------
+      p Si ya usan Linux vayan a la sección de <a href="#programas">programas</a>.
+      p Si no usan Linux, les recomendamos usar una VM, ya que no requiere particionar su disco.
+      p Mientras descargan e instalan pueden comenzar a leer en paralelo la sección de <a href="#git" target="blank">git</a>.
+      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+        li
+          strong = link_to 'VirtualBox (Gratis)', 'https://www.virtualbox.org/wiki/Downloads'
+        li = link_to 'VMWare', 'http://www.vmware.com/'
+        li = link_to 'Parallels', 'http://www.parallels.com/'
+      p En algunos computadores la virtualización debe ser habilitada desde la BIOS.
+      p Existen muchas distribuciones de Linux. Todas ofrecen el kernel de Linux y un package manager, el que permite instalar paquetes de software, los que tienen programas o librerías que se instalan de manera uniforme tanto en interfaz como dentro del sistema de archivos.
+
+    ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+      li = link_to 'Archlinux', 'https://www.archlinux.org/download'
+      li
+        strong = link_to 'Manjaro (Archlinux-based)',   'https://manjaro.github.io/download'
+      li = link_to 'Debian',    'https://www.debian.org/distrib/netinst'
+      li
+        strong = link_to 'Ubuntu (Debian-based)',    'https://www.ubuntu.com/desktop'
+
+    p Manjaro y Ubuntu ofrecen discos de instalación bastante amigables. Desde ahora en adelante asumiremos que usan Linux.
+
+    section#programas
+      h5 Programas
+      /  --------
+      p Los programas necesarios son:
+      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+        li
+          dl.iinlinenline
+            dt
+              dfn
+                abbr title="GNU Compiler Collection" GCC
+            dd Un compilador de C.
+        li
+          dl.inline
+            dt
+              dfn Qemu
+            dd  Un emulador.
+        li
+          strong git
+        li Un emulador de Terminal.
+        li Una <strong>shell</strong>.
+        li Un editor de texto.
+
+  section
+    h3 Ambiente
+    /  --------
+    p Durante el proyecto y las tareas van a pasar la mayoría del tiempo trabajando con una shell, por lo que es recomendable por lo que es recomendable que inviertan un poco de tiempo en acostumbrarse y hacerla más cómoda.
+    section
+      h5 Terminal
+      /  --------
+
+      p Los <a href="https://en.wikipedia.org/wiki/VT100">terminales</a> son máquinas para usar remotamente un servidor, básicamente una pantalla y un teclado conectado en red al servidor. Hoy ya no se usan máquinas especiales, sólo un programa que simula una, por lo que en la práctica son sólo un programa para interactuar con una shell.
+      p No hay demasiado que aprender y arreglar acá, sólo pueden cambiar la fuente y el colorscheme, así que pueden saltar a la sección de <a href="#shell">Shells</a>.
+      p Varios 'prompts' usan caracteres especiales que necesitan parchar las fuentes para agregarlos, el set más usual es el de powerline, y existen paquetes con versiones parchadas de las fuentes, así que si su prompt se ve mal tienen que instalar y usar una fuente adecuada.
+
+      p Existen varios emuladores de terminal, por lo general los escritorios tienen uno preferido, pero pueden usar cualquiera.
+      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+        li konsole / yakuake <small>(KDE [Qt])</small>
+        li gnome-terminal / guake <small>(Gnome,Unity [GTK])</small>
+        li terminology <small>(Enlightenment [EFL])</small>
+        li terminator <small>([GTK])</small>
+        li
+          small urxvt
+        li
+          small xterm
+
+      p Fonts
+      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+        li = link_to 'powerline/fonts', 'https://github.com/powerline/fonts'
+        li = link_to 'AUR: powerline-fonts-git', 'https://aur.archlinux.org/packages/powerline-fonts-git/'
+      p ColorSchemes
+      ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+        li = link_to 'Solarized', 'http://ethanschoonover.com/solarized'
+        li = link_to 'SMYCK', 'http://color.smyck.org/'
+        li = link_to 'Terminal ColorScheme Designer', 'http://ciembor.github.io/4bit/'
+
+
+    section#shell
+      h5 Shell
+      /  -----
+
+      p Una shell es un intérprete de comandos (al igual que el REPL de ruby/python/js/haskell/), lo que tiene de especial es que está orientada a ejecutar otros programas.
+
+      h6 ¿Cuál usar?
+      p Existen varias,
+      ul
+        li bash (generalmente default)
+        li zsh
+        p Casi 100% compatible con bash. La configuración default es mala, pero existen algunos frameworks fáciles de usar para configurarla:
+        ul
+          li
+            strong = link_to 'prezto', 'https://github.com/sorin-ionescu/prezto'
+          li = link_to 'oh-my-zsh', 'https://github.com/robbyrussell/oh-my-zsh'
+        li fish
+        p Muy buena por default. Tiene sintáxis distinta a la de bash, lo que quita portabilidad a sus scripts, pero no es un problema. También existe un framework para instalar plugins y themes:
+        ul
+          li = link_to 'oh-my-fish', 'https://github.com/oh-my-fish/oh-my-fish'
+        li tsh, csh, ksh, ...
+
+      h6 Usando la shell
+      p Existe una lista de directorios donde la shell puede descubrir programas, es conocida como <code>PATH</code>. Es posible extenderla para ejecutar programas desde directorios personales.
+
+      p Ejecutar programas es simple, basta escribir el nombre del programa<small>, o la ruta completa si no están en el PATH</small>. Se le pueden entregar argumentos separados por espacios, todos son strings.
+      p Por ejemplo, podemos llamar a 'telnet' y darle un string como argumento para conectarnos a algún servidor.
+      pre
+        code.hljs
+          | telnet towel.blinkenlights.nl
+
+      h6 Pipes
+      pre
+        code.hljs
+          | echo "Mooo" | cowsay
+      p Acá llamamos a 'echo' con 'Mooo' como argumento, el que ejecuta y pasa su output como input de 'cowsay' sin argumentos. Esto produce el siguiente output:
+      pre
+        code.hljs
+          |   ______
+             < Mooo >
+              ------
+                       \   ^__^
+                        \  (oo)\_______
+                           (__)\       )\/\
+                               ||----w |
+                               ||     ||
+      p El operador pipe <code>|</code> toma el output del programa de la izquierda y se lo entrega como input al de la derecha, se puede usar siempre. La ejecución se hace en paralelo y los datos se intercambian en líneas completas. Hay que notar que algunos programas no pueden generar output antes de consumir todo el input (sort).
+      p Pueden encadenarse varios programas,
+      pre
+        code.hljs
+          | echo "Moooooooo" | cowsay | cowsay -n | cowsay -n
+
+      p Más adelante se verán con más detalle, por ahora basta que sepan que sirven para componer programas.
+
+
+    section
+      h5 Editor
+      /  ------
+      p Existen varios editores de texto. Vim y Emacs son muy configurables, por lo que es cómodo comenzar con una base.
+      ul
+        li vim
+        ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+          li
+            strong = link_to "vim spf13", "https://github.com/spf13/spf13-vim"
+          li = link_to "haskell-vim-now", "https://github.com/begriffs/haskell-vim-now"
+          li = link_to "Derek Wyatt's config", "https://github.com/derekwyatt/vim-config"
+          li = link_to "Vundle (Plugin Manager, DIY config)", "https://github.com/VundleVim/Vundle.vim"
+        li emacs
+        ul style="-webkit-columns:2; -moz-columns:2; columns:2;  list-style-position: inside;"
+          li
+            strong = link_to "Spacemacs", "https://github.com/syl20bnr/spacemacs"
+          li = link_to "Aaron Bedra's config", "http://aaronbedra.com/emacs.d/"
+          li = link_to "Sacha Chua's config", "http://pages.sachachua.com/.emacs.d/Sacha.html"
+        li kate/gedit
+        li atom/sublime/notepad++
+        li <small>(ed)</small>
+
+      p Lo más importante es que les sea una herramienta útil y los haga eficientes en vez de ser un obstáculo. Vim y Emacs son superiores a la mayoría, pero hay que aprender a usarlos (comenzar es fácil, gastar 30 minutos y ser más lento al principio se paga).
+
+
+    section#git
+      h5 Git
+      /  ---
+      p Git es un sistema de control de versiones distribuido que se ha convertido en una herramienta esencial para cualquier proyecto serio.
+
+      p Para aprender git existe mucho material en internet.
+      ul
+        li
+          strong = link_to "Book", "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control"
+        li = link_to "Docs", "https://git-scm.com/docs"
+        li
+          strong = link_to "Simple Guide", "http://rogerdudler.github.io/git-guide/"
+        li = link_to "Git Immersion", "http://gitimmersion.com/"
+        li
+          strong = link_to "CodeSchool", "https://try.github.io/levels/1/challenges/1"
+        li = link_to "SO practical guide", "http://stackoverflow.com/questions/315911/git-for-beginners-the-definitive-practical-guide"
+        li = link_to "Git Cheatsheet", "http://ndpsoftware.com/git-cheatsheet.html"
+        li = link_to "Explain git with D3 (tree management)", "http://onlywei.github.io/explain-git-with-d3"

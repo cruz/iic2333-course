@@ -9,6 +9,8 @@ section
 
     h2 ¿Para qué un Sistema Operativo?
 
+    section
+
 	section
 		div Queremos ejecutar un código como esto
 
@@ -18,87 +20,465 @@ section
 			img src='/images/figures/00-compiled.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 		div
-			div.fragment data-fragment-index="2" style="border:none; width:30%; vertical-align:middle; display:inline-block;" Y para eso tenemos:
-			div.fragment data-fragment-index="2" style="border:none; width:50%; vertical-align:middle; display:inline-block;"
-				img src='/images/figures/00-motherboard.jpg' width="60%" style="background:none; border:none; box-shadow:none;"
+			div.fragment data-fragment-index="2" style="border:none; width:30%; vertical-align:middle; display:inline-block; horizontal-align:right;" Y para eso tenemos:
+			div.fragment data-fragment-index="2" style="border:none; width:25%; vertical-align:middle; display:inline-block;"
+				img src='/images/figures/00-motherboard.jpg' width="100%" style="background:none; border:none; box-shadow:none;"
+
+		div.fragment data-fragment-index="2" style="font-size:12px;" Source: https://www.soundonsound.com/techniques/installing-new-pc-motherboard
+
 
     section 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
-			div style="border:none;" ¿Qué ocurre al ejecutar un programa (compilado)?
+			div style="border:none;horizontal-align:left;" <i>Hardware</i> ejecuta ciclos de instrucciones
+			ul style="font-size:28px;horizontal-align:left;"
+				li <i>Fetch</i>
+				li <i>Decode</i>
+				li <i>Execute</i>
+			
 			br
 			br
-			div style="border:none;" ¿Ejecutamos esto manualmente?
+			div <i>Hardware</i> ejecuta programas (código) compilado
+			
+			ul.fragment data-fragment-index="1" style="font-size:28px;"
+				li ¿Cuál programa? ¿En qué orden?
+				li ¿Un programa a la vez?
+				li ¿En qué región de memoria?
+				li ¿Cómo utiliza los dispositivos de I/O?
 
-		img src='/images/figures/00-basic-ic.jpg' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		/img src='/images/figures/00-basic-ic.jpg' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		img src='/images/figures/00-instructioncycle-opt.svg' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 			
     section
-    	div El computador es una máquina programable (léase "reconfigurable")
+    	div El computador es una máquina programable (léase "reconfigurable") &hellip;
+
+    	div style="font-size:24px;" &hellip; pero electrónicamente compleja
 
 		div 
-			img src='/images/figures/00-arqui.png' width="50%" style="background:none; border:none; box-shadow:none;"
+			/img src='/images/figures/00-arqui.png' width="50%" style="background:none; border:none; box-shadow:none;"
+			img src='/images/figures/00-vonneumann-opt.svg' width="35%" style="background:none; border:none; box-shadow:none;"
 
-		div ¿Quién controla qué programa se ejecuta?
-		div ¿Quién controla cuando se lee I/O?
-		blockquote.fragment style="background:#B7E1CD;"Afortunadamente existe el <b>Sistema Operativo</b> &#x1f605;
+		div.fragment data-fragment-index="1" Cuando ejecutamos un programa ...
+		ul.fragment data-fragment-index="1" style="font-size:24px;"
+			li No nos preocupamos del <i>hardware</i> del computador
+			li No tenemos que esperar que otro programa termine para que el nuestro ejecute
+			li No especificamos qué región de la memoria va a utilizar
+			li No decidimos en que bloques del disco está almacenado
+
+		blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;"Porque afortunadamente existe el <b>Sistema Operativo</b> &#x1f605;
+
+		div.fragment data-fragment-index="2" style="font-size:18px;" Afortunadamente también tenemos compiladores, pero en este curso alabaremos al sistema operativo
+
+
+
+
+
+
+
+
+
+
 
 
 
 section
 
 	h2 Estructura de un Sistema Operativo
-
-	section
-		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
-
-			div style="border:none;" ¿Dónde vive el Sistema Operativo?
-			br
-			div.fragment style="border:none;" Sistema Operativo <b>ES</b> <i>software</i>
-			div.fragment style="border:none;" Sistema Operativo <b>habla con</b> el <i>hardware</i>
-			br
-			div.fragment ¿Qué pasaría si no tuviésemos Sistema Operativo? <span class="fragment">... (antes no había)</span>
-			br
-			div.fragment ¿Interactuamos con el sistema operativo? <span class="fragment">... ¿o con <i>shell</i>s o GUIs?</span>
-			br
-			div.fragment ¿<i>User mode</i>?, ¿<i>Kernel mode</i>? <span class="fragment">... Solo el Sistema Operativo puede utilizar el <i>Kernel mode</i></span>
-
-		img src='/images/figures/00-os-location.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
 		
-
-section
-	h2 ¿Qué es un Sistema Operativo?
-	/  -------------------------------
-
 	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
-		p.fragment <i>Software</i> ... que corre en <i>kernel mode</i>
-		p.fragment No sirve de mucho por sí mismo (es como el gobierno) ... <span class="fragment"> pero es fundamental</span>
-		p.fragment Sería inútil sin programas/aplicaciones/usuarios (personas)
 
-		blockquote.fragment style="background: #F4C7C3;" Sistema Operativo nos permite <b>usar efectivamente</b> el computador
+		div ¿Dónde vive el Sistema Operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment data-fragment-index="1" Sistema Operativo <b>ES</b> <i>software</i>
+			div.fragment data-fragment-index="1" Sistema Operativo <b>habla con</b> el <i>hardware</i>
+			br
+			div.fragment data-fragment-index="2" El <b>Sistema Operativo</b> es nuestro <b>servidor</b> más importante
+			ul.fragment data-fragment-index="3" style="font-size:36px;"
+				li Nos <b>protege</b> de los detalles del <i>hardware</i>
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li ¿Un core, dos core?, ¿4GB RAM?, ¿disco SSD?, &hellip; úselo no más, yo me encargo
+				li Nos permite <b>compartir recursos</b> con otros programas
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li ¿Quiere navegar, tocar música, jugar WoW, compilar su tarea, todo al mismo tiempo? No se preocupe
+				li Nos ofrece <b>servicios</b> para hacer más cómodo el uso del <i>hardware</i>
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li Escritura y lectura de disco, envío de mensajes por red, acceso a su pendrive USB, y todo eso &hellip; con una interfaz gráfica
+
+			/div.fragment ¿Interactuamos con el sistema operativo? <span class="fragment">... ¿o con <i>shell</i>s o GUIs?</span>
+			/br
+			/div.fragment ¿<i>User mode</i>?, ¿<i>Kernel mode</i>? <span class="fragment">... Solo el Sistema Operativo puede utilizar el <i>Kernel mode</i></span>
+
+			blockquote.fragment data-fragment-index="5" style="background:#B7E1CD;"Nos permite <b>usar</b> el computador &#x1f603;
+
+			div.fragment data-fragment-index="5" style="font-size:14px;" ¿Como no querer/estudiar a nuestro sistema operativo?
+
 
 		/img src='/images/figures/00-os-location.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-monkey-user.gif' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div ¿Qué esperamos de un sistema operativo?
+
+		div ¡TODO lo bueno!
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+
+			ul 
+				li Que sea <b>confiable</b> (<i>reliable</i>)
+				ul style="font-size:20px;"
+					li "Que no se caiga/bloquee/cuelgue"
+				li Que mis programas ejecuten rápidamente
+				ul style="font-size:20px;"
+					li "Para eso tengo mis 8 core y mis 128GB RAM"
+					li "Así puedo jugar, compilar, ver películas, etc. al mismo tiempo"
+				li Que no gaste todos los recursos (CPU, memoria, disco)
+				ul style="font-size:20px;"
+					li "Este Windows/Linux/MacOSX cada vez consume más"				
+				li Que mis datos estén seguros: que no me hackeen
+				li Que mis programas sigan funcionando después de una actualización
+				li Que me permita usar el computador (que no me moleste)
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Debe cumplir varios roles
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+
+			ul 
+				li Debe ser un <b>administrador de recursos</b>
+				ul style="font-size:20px;"
+					li ¿A quién le toca ejecutar? ¿Qué recursos necesita?
+					li ¿Qué CPU uso? ¿En qué disco escribo?
+					li Sistema Operativo <b>multiplexa</b> recursos escasos entre múltiples usuarios
+				li Debe ser capaz de <b>proteger</b> los recursos
+				ul style="font-size:20px;"
+					li "No tiene permisos para leer/escribir esos archivos"
+					li "No intente leer la memoria de otro proceso"
+					li "¿Quién es este usuario?"
+				li Debe ser capaz de <b>abstraernos</b> de los detalles del <i>hardware</i>
+				ul style="font-size:20px;"
+					li Permite que el sistema se vea como una máquina única
+					li ¿AMD, Intel, Samsung, Seagate?, no importa, aquí tiene una máquina con: CPU, memoria y disco.
+					li Provee una <b>interfaz</b> para poder usar apropiadamente el <i>hardware</i>
+					li Sistema Operativo <b>virtualiza</b> recursos para hacernos creer que hay más
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div El sistema operativo es como el <b>gobierno</b> &hellip; no sirve para nada por sí solo &hellip;
+
+		div &hellip; pero es <b>fundamental</b> para que podamos usar programas
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Qué hay dentro de un sistema operativo?
+
+		div style="border:none; width:30%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			ul 
+				li Administración de procesos
+				li Manejo de memoria
+				li Sistemas de archivos
+				li Protección y seguridad
+				li Control de I/O
+
+		div style="border:none; width:30%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			ul 
+				li Manejo de errores
+				li Comunicación inter-procesos
+				li Contabilidad / <i>logging</i>
+				li Controladores (<i>drivers</i>)
+				li etc &hellip;
+
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Programas utilizan <b>servicios</b> del sistema operativo. ¿Cómo los invocan?
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Cómo se invocan los servicios del sistema operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Sistema operativo provee una interfaz de <b>llamadas al sistema</b> (<i>syscalls</i>)
+			br
+			ul style="font-size:24px;"
+				li Cada vez que un programa desea solicitar algo al sistema operativo, debe invocar una <i>syscall</i>
+				li "Por favor, sistema operativo, haz esto por mi"
+				li Cada sistema operativo puede proveer un conjunto distinto de <i>syscalls</i>
+				li Sistemas operativos proveen bibliotecas (<i>libraries</i>) en algún lenguaje de programación (C) para invocar <i>syscalls</i>.
+
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Sin embargo, cuando interactuamos con el computador no escribimos <i>syscalls</i>
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Cómo interactuamos con el sistema operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Sistema operativo provee <b>interfaces de usuario</b> (<i>user interface</i>) que enmascara <i>syscalls</i>
+			ul style="font-size:24px;"
+				li Ofrecen un entorno más "amigable" para usar el computador
+				li ¿Son parte del sistema operativo?
+			br
+			div style="text-align:left;" Distintas maneras de interactuar con el sistema operativo
+			ul style="font-size:24px;"
+				li <b>Interfaces gráficas</b>: <b>GUI</b> (<i>Graphical User Interface</i>)
+				li <b>Intérprete de comandos</b> (<i>Command Line</i>)
+				li <b>Batch</b> (lotes): secuencias de comandos no-interactivas
+			
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Interfaces gráficas: GUI
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" GUIs ofrecen un entorno basado en abstracciones (ventanas, punteros) para interactuar con el sistema operativo
+			img src='/images/figures/00-CDE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-XFCE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			/img src='/images/figures/00-GNOME.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-tonystark.gif' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-KDE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-windows.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-macosx.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Intérprete de comandos / linea de comandos / <i>command line</i>
+		div style="font-size:12px;" menos preciso: <i>shell</i>, terminal, consola, xterm, prompt
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div
+				ul
+					li UNIX/Linux/MacOSX: <code>sh</code>, <code>csh</code>, <code>tcsh</code>, <code>ksh</code>, <code>bash</code>, <code>zsh</code>
+					li MS-DOS/Windows: <code>COMMAND.COM</code>, <code>cmd.exe</code>, PowerShell
+
+			div 
+				img src="/images/figures/00-bash.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-hacker-console.gif" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-zsh.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-commandcom.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-powershell.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Intérprete de comandos / linea de comandos / <i>command line</i>
+		div style="font-size:12px;" menos preciso: <i>shell</i>, terminal, consola, xterm, prompt
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+			ul
+				li Solicitar comando/instrucción al usuario y ejecutarlo
+				li <code>prompt comando [parametros]</code>
+
+			div
+				p <em>Command Prompt</em> (símbolo del sistema)
+				ul.fragment
+					li Indica que el sistema está lista para recibir un comando
+					li Usualmente un texto terminado en <code>$, %, #, :, ></code>
+
+			div.fragment
+				pre
+					code.hljs.shell
+						| cruz$ ls
+						 
+						 jabaier@grima$ cp clase-01.tex backup/
+						 
+						 jnavon@www[15:35]:> rm tareaSistOp.*
+						 
+						 dietr1ch@nb# ~/SO/Tareas
+						 ls -d */ | parallel --tag 'cd {} && make'
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Hay <a href="https://en.wikipedia.org/wiki/List_of_command-line_interpreters" target="_blank">muchas alternativas</a>
+
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+			blockquote style="background: #F4C7C3;" El <b>kernel</b> (núcleo, supervisor)
+
+			div style="text-align:left;" El código fundamental del sistema operativo.
+			ul style="font-size:24px;"
+				li Es <i>software</i>
+				li Suele ser lo más pequeño posible (o no)
+
+			div style="text-align:left;" Tiene completo control sobre el sistema (<i>hardware</i>)
+			ul style="font-size:24px;"
+				li Es el único programa que ejecuta en un <b>modo privilegiado</b>
+				li También conocido como <b>modo monitor</b>, <b>modo kernel</b>, <b>modo sistema</b>
+				li Todo lo que no es parte del <i>kernel</i>, ejecuta en <b>modo usuario</b>
+
+			div style="text-align:left;" Sistema operativo incluye herramientas (programas) que facilitan la labor del kernel, pero que no son fundamentales
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background: #B7E1CD;" Sistema Operativo = Kernel + Programas del Sistema
+
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿De qué tamaño es todo esto?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li MacOSX (Tiger, 2005): \( \sim 86 \times 10^6 \) líneas de código
+				li Windows 10: \( \sim 50\times 10^6 \) líneas de código
+				li <a href="https://www.linuxcounter.net/statistics/kernel">Linux</a> 4.14: \( \sim 20\times 10^6 \) líneas de código
+				ul style="font-size:14px;"
+					li Version 1.0.0 (Marzo 1994) tenía 176250 líneas
+					li Kernel Linux está en archivo <code>vmlinuz</code> (Virtual Memory LINUx gZip)
+				li ChromeOS: \( 17 \times 10^6 \) líneas de código
+				li MINIX 3: \( \sim 12000 \) líneas de código
+
+			div.fragment Más <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">comparaciones</a> y <a href="https://en.wikipedia.org/wiki/Comparison_of_operating_systems">más aún</a>
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
-		h3 ¿Qué hace el sistema operativo?
 
-		div style="text-align:left;"
-			div style="display:inline-block;" Para el usuario: &nbsp;
-			div style="display:inline-block; background:#F4C7C3;" permite <b>utilizar los recursos</b> del computador (el <i>hardware</i>)
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
 
-			div.fragment Ejecutar programas, leer archivos, efectuar cálculos ... de manera limpia, fácil y rápida
+		div A veces fallan ... 
 
-			br
-			
-			div style="display:inline-block;" Para el sistema computacional: &nbsp;
-			div style="display:inline-block; background:#F4C7C3;" permite <b>administrar los recursos</b>
-			div.fragment Permite <b>multiplexar</b> el uso de los recursos (escasos) entre múltiples programas.
-			ul.fragment 
-				li Multiplexión en tiempo: turnos. Ejemplo: uso de CPU(s), uso de impresora
-				li Multiplexión en espacio: división del recurso. Ejemplo: procesos cargados en memoria, programas almacenados en disco
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
 
-		blockquote.fragment style="background: #F4C7C3;" Sistema Operativo <b>virtualiza los recursos</b>: CPU, memoria, disco
+			div style="text-align:left;" Errores y vulnerabilidades pueden deberse a una combinación entre el <i>hardware</i> y el sistema operativo
+			ul
+				li O en las herramientas del <i>kernel</i>
+
+			div 
+				<a href="http://heartbleed.com/"><img src="/images/figures/00-heartbleed.png" width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+				<a href="https://meltdownattack.com/"><img src="/images/figures/00-meltdown-spectre.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+				<a href="https://www.statista.com/chart/7478/android-is-the-most-vulnerable-operating-system/"><img src="/images/figures/00-vulnerabilities.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div <a href="https://cve.mitre.org/">Common list of Vulnerabilities and Exposures (CVE)</a>
+
+
+
+
+
+
+
+
+
+
+section
+
+	h2 Arquitecturas de <i>kernel</i>
+		
+	section 
+
+		div ¿Cómo se organiza el <i>kernel</i>?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Muchos componentes a integrar
+			ul style="font-size:28px;"
+				li Primeros sistemas operativos empezaron pequeños y luego crecieron
+				li No tenían mucha estructura
+
+			div style="text-align:left;" MS-DOS (1981)
+			ul style="font-size:28px;"
+				li Sistema <b>monolítico</b> (un gran <i>kernel</i> estático)
+				li Programas de usuario podían acceder directamente al <i>hardware</i>
+				li <i>Hardware</i> (Intel 8088) no proveía modos de protección
+
+			img src='/images/figures/00-2_11.pdf.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
 
 section
 	h2 Evolución de los Sistemas Operativos
@@ -401,57 +781,6 @@ section
 			img src='/images/figures/00-mobiles.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 		
 
-section
-	h2 ¿De qué tamaño es un Sistema Oprerativo?
-	/  -----------------------------
-
-	section
-		p.fragment <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">(¿Megas? ¿Kilos? ¿Gigas?)</a>
-		ul
-			li.fragment Windows 7: \( \sim 40\times 10^6 \) líneas de código
-			li.fragment Windows 8: \( \sim 50\times 10^6 \) líneas de código
-			li.fragment <a href="https://www.linuxcounter.net/statistics/kernel">Linux</a>: \( \sim 15 \times 10^6 \) líneas de código
-		
-
-	section
-		h3 ¿Qué incluye?
-		ul
-			li Sistema Operativo
-
-			blockquote.fragment style="background: #B7E1CD;" Sistema Operativo = Kernel + Programas del Sistema
-
-			li Kernel
-
-			blockquote.fragment style="background: #B7E1CD;" Un programa que permite controlar directamente el <i>hardware</i>. Provee funcionalidad mínima: acceso a CPU, memoria, dispositivos.
-			
-			li Programas del sistema
-
-			blockquote.fragment style="background: #B7E1CD;" Extienden las funciones del kernel.
-
-
-
-
-
-section
-	h2 Tareas del Sistema Operativo
-
-	blockquote style="background: #F4C7C3;" <b>Administración de procesos</b>
-	ul
-		li Proceso
-		li Tablas (árbol) de proceso
-		li Comunicación entre procesos
-
-	blockquote style="background: #F4C7C3;" <b>Administración de memoria</b>
-	ul
-		li Espacios de direcciones
-		li Memoria Virtual
-
-
-	blockquote style="background: #F4C7C3;" <b>Administración de almacenamiento</b>
-	ul
-		li Archivos
-		li Directorios
-		li Rutas absolutas y relativas
 
 
 
@@ -580,35 +909,12 @@ section
 		/= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
 
 
-section
-	h2 Elementos y Servicios de un Sistema Operativo
-	/  ---------------------------------------------
-
-	section
-		p At a glance...
-
-		= image_tag '/images/figures/00-2_01.pdf.png', :width => "80%"
 
 
-section
-	h2 Interfaces de Usuario (UI)
-	/  --------------------------
-
-	section
-		p Varias alternativas...
-		ul
-			li <b>Command-Line Inteface (CLI):</b> Comandos se ingresan por teclado
-			li <b>Batch interface:</b> Comandos se ingresan en archivos
-			li <b>Graphical User Interface (GUI):</b> Sistema de ventanas + <em>pointing-device</em>
-
-	section
-		h4 Command-Line
-
-		div A.K.A. Línea de comandos, shell (menos preciso: terminal, consola, xterm, prompt). Para UNIX:
 
 		/p Para UNIX
 
-		div
+		/div
 			ul
 				li <em>Bourne shell</em>: Stephen Bourne, 1977, UNIX, <code>sh</code>
 				li <em>C shell</em>: Bill Joy, 1978, BSD UNIX, <code>csh</code>
@@ -617,58 +923,7 @@ section
 				li <em>Bourne-Again shell</em>: Brian Fox, 1989, <code>bash</code>
 				li <em>Z shell</em>: Paul Fastad, 1990, <code>zsh</code>
 
-		div 
-			img src="/images/figures/00-bash.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
-			img src="/images/figures/00-zsh.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-
-	section
-		h4 Command-Line
-
-		p Para Windows
-
-		div
-			ul
-				li <b>MS-DOS prompt</b>: MS-DOS, Win95/98/Me, <code>COMMAND.COM</code>
-				li <b>Command Prompt</b>: <code>cmd.exe</code>
-				li <b>PowerShell</b>
-
-		div 
-			img src="/images/figures/00-commandcom.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-			div style="border:none; width:5%; vertical-align:middle; display:inline-block;"
-			img src="/images/figures/00-powershell.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-
-
-	section
-		h4 Command-Line (línea de comandos)
-
-		p Uso común:
-		ul
-			li Solicitar comando/instrucción al usuario y ejecutarlo
-			li <code>prompt comando [parametros]</code>
-
-		div
-			p <em>Command Prompt</em> (símbolo del sistema)
-			ul.fragment
-				li Indica que el sistema está lista para recibir un comando
-				li Usualmente un texto terminado en <code>$, %, #, :, ></code>
-
-		div.fragment
-			pre
-				code.hljs
-					| cruz$ ls
-					 
-					 jabaier@grima$ cp clase-01.tex backup/
-					 
-					 jnavon@www[15:35]:> rm tareaSistOp.*
-					 
-					 dietr1ch@nb ~/SO/Tareas 
-					 ls -d */ | parallel --tag 'cd {} && make'
-
-
-	section
+	/section
 		h4 Graphical User Interface (GUI)
 
 		p Interfaz gráfica (para quienes no les gusta escribir comandos)
@@ -688,7 +943,7 @@ section
 				li Windows 1.0 agregó GUI a MS-DOS
 
 
-	section
+	/section
 		h4 Graphical User Interface (GUI)
 
 		p Tradicionalmente UNIX/Linux han sido manejados por CLI,
@@ -702,24 +957,20 @@ section
 		= image_tag "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
 
 
-	section
-		= image_tag "/images/figures/00-CDE.png", :style => 'max-width:50%; max-height:50%'
-		p CDE (Common Desktop Environment)
 
 
-	section
-		= image_tag "/images/figures/00-XFCE.png", :style => 'max-width:50%; max-height:50%'
-		p Xfce
 
 
-	section
-		= image_tag "/images/figures/00-GNOME.png", :style => 'max-width:50%; max-height:50%'
-		p GNOME
 
 
-	section
-		= image_tag "/images/figures/00-KDE.png", :style => 'max-width:50%; max-height:50%'
-		p KDE (K Desktop Environment)
+
+
+
+
+
+
+
+
 
 
 
@@ -843,5 +1094,70 @@ section
 
 			= image_tag "/images/figures/00-Win2000.svg", :width=>'50%', :style=>"border:none;"
 
+
+/section
+	h2 Use this for OS
+
+	section
+		div
+			/https://xkcd.com/1508/
+			img src='https://imgs.xkcd.com/comics/operating_systems.png' width="80%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div 
+			img src="http://i1-news.softpedia-static.com/images/fitted/620x/this-windows-10-joke-just-won-the-internet-491641-7.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div 
+			img src="https://i.pinimg.com/736x/5c/e5/77/5ce57717f273181f93eae308bf04163d--linux-funny-jokes.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="http://4.bp.blogspot.com/-X2i0Btn7Fjs/TV-_nNvQ1oI/AAAAAAAABoQ/Ogqyto4Ggi4/s1600/index_htm_m5c4d33af.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://imgs.xkcd.com/comics/cautionary.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://imgs.xkcd.com/comics/compiler_complaint.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="http://www.thinkgeek.com/images/blog/devotion_to_duty.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://tctechcrunch2011.files.wordpress.com/2011/10/dropbox-comic.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="http://redscourge.servehttp.com/jokes/funnypics/xkcd.com/abstraction.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://images.techhive.com/images/idge/imported/article/itw/2014/05/21/george-rr-martin-endorses-linux-game-of-thrones-100520296-orig.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://i.stack.imgur.com/m1rI9.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://qph.ec.quoracdn.net/main-qimg-10e4d6310bef083bb2670c126109c815" width="50%" style="background:none; border:none; box-shadow:none;"
+
+	section
+		div
+			img src="https://imgs.xkcd.com/comics/windows_7.png" width="50%" style="background:none; border:none; box-shadow:none;"
+
+
+/section
+	h2 Use this for Networks
+
+	section
+		div
+			/https://xkcd.com/1508/
+			img src='https://moodle.polytechnique.fr/pluginfile.php/67042/course/summary/UDP%20Jokes.JPG' width="80%" style="background:none; border:none; box-shadow:none;"
 
 
