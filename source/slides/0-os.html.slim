@@ -530,7 +530,7 @@ section
 			div style="text-align:left;" Mantener el <i>kernel</i> del menor tamaño posible
 			ul style="font-size:28px;"
 				li Solo servicios básicos en el <i>kernel</i>
-				li Funcionalidades (<i>servers</i>)se ejecutan en <i>user space</i>
+				li Funcionalidades (<i>servers</i>) se ejecutan en <i>user space</i>
 				li Errores en los servicios no afectan al <i>kernel</i>
 				li Kernel más sencillo, pequeño y fácil de portar
 				li Procesos se comunican (IPC) mediante paso de mensajes
@@ -560,10 +560,11 @@ section
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
-			div style="text-align:left;" Lo mejor de ambos mundos
+			div style="text-align:left;" &quot;Lo mejor&quot; de ambos mundos
 			ul style="font-size:28px;"
 				li Construido como monolítico con módulos
 				li Con funcionalidades que ejecutan en <i>user space</i>
+				li O <i>marketing</i> según <a href="https://www.realworldtech.com/forum/?threadid=65915&curpostid=65936" title="As to the whole &quot;hybrid kernel&quot; thing - it's just marketing. It's &quot;oh, those microkernels had good PR, how can we try to get good PR for our working kernel? Oh, I know, let's use a cool name and try to imply that it has all the PR advantages that that other system has&quot;">Linus Torvalds</a>
 			br
 			br
 			div style="text-align:left;" Ejemplos
@@ -582,7 +583,8 @@ section
 	section 
 
 		div Monolítico vs Microkernel
-		br
+
+		div style="font-size:24px;" Must read: <a href="http://www.oreilly.com/openbook/opensources/book/appa.html">Tanenbaum-Torvals debate&colon; <i>Linux is obsolete</i></a>, 1992
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
@@ -623,26 +625,34 @@ section
 
 
 section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
-	h2 Sistemas Operativos
+	h2 Sistema Operativo
 
 	
 	blockquote style="background: #B7E1CD;" La herramienta de <i>software</i> que nos permite <b>usar</b> el computador
 
-	div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+	div style="border:none; width:30%; vertical-align:middle; display:inline-block;" 
+		h3 Roles
+		ul
+			li Administrador de recursos
+			li Protector
+			li Servidor
+
+	div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
 		h3 Tareas
 		ul
-			li Administración de procesos
-			li Manejo de memoria
-			li Sistemas de archivos
+			li <b>Administración de procesos</b>
+			li <b>Manejo de memoria</b>
+			li <b>Sistemas de archivos</b>
 			li Protección y seguridad
 			li Control de dispositivos I/O
 
-	div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+	div style="border:none; width:30%; vertical-align:middle; display:inline-block;" 
 		h3 Arquitecturas
 		ul
 			li Monolítico
 			li Microkernel
 			li Híbrido
+
 
 	blockquote style="background: #B7E1CD;" Sistema Operativo = Kernel + Herramientas
 
@@ -664,33 +674,13 @@ section data-background-image='/images/figures/00-os-list.png' data-background-s
 
 
 
+
+
+
+
+
 /section
 	h2 Evolución de los Sistemas Operativos
-
-	section
-
-		p Érase una vez ...
-
-		div.fragment style="display:inline-block; width=50px"
-			div Charles Babbage (1791-1871) and the Analytical Engine
-			div
-				img src='/images/figures/00-babbage.jpg' width="20%"  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-				img src='/images/figures/00-babbage-analytical.jpg' width="25%" 
-
-		div.fragment Primer diseño de <i>computador digital</i> ... <span class="fragment">aunque nunca lo terminó</span>
-
-	section 
-		
-		div style="display:inline-block; width=50px"
-			div Ada Lovelace (1815-1852) and the First Algorithm
-			div
-				img src='/images/figures/00-AdaLovelace.jpg' width="20%" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-				img src='/images/figures/00-AdaLovelace-algorithm.jpg' width="40%" 
-		/div.fragment style="display:inline-block; width=50px"
-			/div style="display:inline-block;" and the First Algorithm
-
-		div.fragment La primera programadora... <span class="fragment">su programa calculaba los números de Bernoulli usando la Analytical Engine</span>
-
 
 	section
 		h3 Primera Generación (1945-55): Tubos de vacío
