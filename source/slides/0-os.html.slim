@@ -81,6 +81,9 @@ section
 
 
 
+
+
+
 section
 
 	h2 Estructura de un Sistema Operativo
@@ -407,7 +410,7 @@ section
 			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
-	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
 
 		div El sistema operativo es un <i>software</i> <b>complejo</b>
 
@@ -440,6 +443,9 @@ section
 
 
 
+
+
+
 section
 
 	h2 Arquitecturas de <i>kernel</i>
@@ -448,7 +454,7 @@ section
 
 		div ¿Cómo se organiza el <i>kernel</i>?
 
-		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
 			div style="text-align:left;" Muchos componentes a integrar
 			ul style="font-size:28px;"
@@ -464,10 +470,144 @@ section
 			img src='/images/figures/00-2_11.pdf.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
-		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
 
-			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			img src='/images/figures/00-oslayers5-opt.svg' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> monolítico
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Todo dentro en un único programa
+			ul style="font-size:28px;"
+				li Servicios para el sistema y para el usuario en el mismo espacio
+				li Todos los servicios se ejecutan en modo <i>kernel</i>
+				li La falla de un servicio compromete al <i>kernel</i>
+				li Kernel complejo y de mayor tamaño
+				li Ejecución más rápida
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li Unix (BSD, System V)
+				li <a href="https://www.kernel.org/">Linux</a>
+				li MS-DOS, Windows 95/98/Me
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-osmonolithic-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> monolítico con módulos
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Todo en un único programa extensible
+			ul style="font-size:28px;"
+				li Componentes pueden ser incluidos al momento de compilar, o bien durante la ejecución como módulos
+				li Módulos extienden al <i>kernel</i>
+				li Módulos se ejecutan en el espacio del <i>kernel</i>
+				li Ayuda a controlar el tamaño del <i>kernel</i> (<i>footprint</i>)
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osmonolithic-modules-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section  data-transition="fade"
+
+		div <i>Microkernel</i>
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Mantener el <i>kernel</i> del menor tamaño posible
+			ul style="font-size:28px;"
+				li Solo servicios básicos en el <i>kernel</i>
+				li Funcionalidades (<i>servers</i>)se ejecutan en <i>user space</i>
+				li Errores en los servicios no afectan al <i>kernel</i>
+				li Kernel más sencillo, pequeño y fácil de portar
+				li Procesos se comunican (IPC) mediante paso de mensajes
+				li Ejecución con <i>overhead</i> por comunicación
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li <a href="http://www.cs.cmu.edu/afs/cs/project/mach/public/www/mach.html">Mach</a>, implementación de UNIX con microkernel (CMU)
+				li <a href="http://hurd.gnu.org/">GNU/Hurd</a>, inspirado en <a href="https://www.gnu.org/software/hurd/microkernel/mach/gnumach.html">Mach</a>
+				li <a href="https://en.wikipedia.org/wiki/L4_microkernel_family">L4</a>
+				li <a href="http://www.minix3.org/">MINIX 3</a>, desarrollado por Andrew S. Tanenbaum
+
+			div style="text-align:left;" Se han propuesto <i>exokernels</i> y <i>nanokernels</i>
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osmicrokernel-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> híbrido
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Lo mejor de ambos mundos
+			ul style="font-size:28px;"
+				li Construido como monolítico con módulos
+				li Con funcionalidades que ejecutan en <i>user space</i>
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li <a href="http://www.microsoft.com/windows">Windows NT</a>
+				li <a href="https://www.reactos.org/">ReactOS</a>
+				li <a href="http://opensource.apple.com/source/xnu/">XNU</a>, kernel de Darwin (Mac OS X, iOS)
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oshybrid-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section 
+
+		div Monolítico vs Microkernel
+		br
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:center;" <b>Monolítico</b>
+			ul style="font-size:28px;"
+				li <i>Kernel</i> de mayor tamaño y complejo
+				li Todos los servicios en <i>kernel space</i>
+				li Falla en un servicio afecta a todo el <i>kernel</i>
+				li Ejecución más rápida
+				li Difícil de extender, pero puede usar módulos
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:center;" <b>Microkernel</b>
+			ul style="font-size:28px;"
+				li <i>Kernel</i> pequeño y simple
+				li Servicios mínimos en <i>kernel space</i>. Mayoría en <i>user space</i>
+				li Falla en un servicio queda aislada
+				li Ejecución con <i>overhead</i> por comunicación
+				li Fácil de extender
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osarchitectures-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -480,7 +620,51 @@ section
 
 
 
-section
+
+
+section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
+	h2 Sistemas Operativos
+
+	
+	blockquote style="background: #B7E1CD;" La herramienta de <i>software</i> que nos permite <b>usar</b> el computador
+
+	div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+		h3 Tareas
+		ul
+			li Administración de procesos
+			li Manejo de memoria
+			li Sistemas de archivos
+			li Protección y seguridad
+			li Control de dispositivos I/O
+
+	div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+		h3 Arquitecturas
+		ul
+			li Monolítico
+			li Microkernel
+			li Híbrido
+
+	blockquote style="background: #B7E1CD;" Sistema Operativo = Kernel + Herramientas
+
+	div
+		/https://xkcd.com/1508/
+		a href="https://xkcd.com/1508/"
+			img src='https://imgs.xkcd.com/comics/operating_systems.png' width="75%" style="background:none; border:none; box-shadow:none;" title="One of the survivors, poking around in the ruins with the point of a spear, uncovers a singed photo of Richard Stallman. They stare in silence. &quot;This,&quot; one of them finally says, &quot;This is a man who BELIEVED in something.&quot;" alt="Operating Systems"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/section
 	h2 Evolución de los Sistemas Operativos
 
 	section
@@ -803,6 +987,9 @@ section
 
 		li Solo el Sistema Operativo debe ser capaz de administrar el <i>hardware</i>, y no los procesos.
 
+		/div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 section
@@ -1095,7 +1282,7 @@ section
 			= image_tag "/images/figures/00-Win2000.svg", :width=>'50%', :style=>"border:none;"
 
 
-/section
+section
 	h2 Use this for OS
 
 	section
