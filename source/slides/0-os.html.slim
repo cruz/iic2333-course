@@ -1,5 +1,5 @@
 ---
-title: 0 - Caracterización de Sistemas Operativos
+title: 0 - Estructura y Funcionamiento de Sistemas Operativos
 layout: slide
 ---
 
@@ -575,8 +575,6 @@ section
 
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
-
-
 			img src='/images/figures/00-oshybrid-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
@@ -679,160 +677,160 @@ section data-background-image='/images/figures/00-os-list.png' data-background-s
 
 
 
-/section
-	h2 Evolución de los Sistemas Operativos
 
-
-
-
-		ul
-			li.fragment <i>1974</i>. <b>Intel 8080</b>. Primera CPU de propósito general de 8-bit. <b>No tiene sistema operativo</b>.
-			li.fragment Gary Kildall, consultor, escribe <b>CP/M</b> (<i>Control Program for Microcomputers</i>) en un diskette de 8''.
-			li.fragment Intel no se interesa, y entrega CP/M de vuelta a Gary Kildall.
-			li.fragment <i>1977</i>. Gary Kildall funda <b>Digital Research</b> y adapta CP/M para otras CPU.
-			li.fragment <i>1980</i>. IBM crea <b>IBM PC</b> (Intel 8088). Usa un intérprete de BASIC de ... <span class="fragment"><b>Bill Gates</b></span>
-			li.fragment IBM PC no tiene Sistema Operativo. Bill Gates sugiere que contacten a Gary Kildall
-			li.fragment Kildall rechaza a IBM. IBM solicita un Sistema Operativo a Bill Gates.
-			li.fragment Bill Gates compra <b>DOS</b> (<i>Disk Operating System</i>) a <b>Seattle Computer Products</b>, y lo ofrece a IBM.
-			li.fragment Bill Gates contrata a Tim Paterson en su nueva compañía, <b>Microsoft</b>, y producen <b>MS-DOS</b>
-			li.fragment MS-DOS se populariza al ser ofrecido a empresas de computación y no a usuarios.
-
-
-	section data-transition="fade"
-		/h3 Cuarta Generación (1980-): Computadores Personales
-
-		div style="width:65%; vertical-align:middle; display:inline-block;" 
-
-			div style="text-align:left;" <i>1983</i>. IBM lanza <b>IBM PC/AT</b>, con Intel 80286 y MS-DOS.
-			div style="text-align:left;" MS-DOS ampliamente usado con Intel 80386 y 80486.
-			div style="text-align:left;" Tanto CP/M como MS-DOS usan una <b>shell</b> como interacción.
-			
-		img src='/images/figures/00-msdos.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-		div <i>1960's</i> Doug Engelbart (1925-2013) Stanford Research Institute, crea las <b>GUI</b> (<i>Graphical User Interface</i>)
-
-		div style="width:80%; vertical-align:middle; display:inline-block;" 
-
-			div style="text-align:left;" <i>1968</i>. <a href="https://www.youtube.com/watch?v=yJDv-zdhzMY">Mother of all demos</a>. Engelbart presenta <i>windows</i>, <i>hypertext</i>, <i>mouse</i>, ...
-			div style="text-align:left;" GUIs empiezan a ser usadas en XEROX PARC (Palo Alto Research Center)
-			div style="text-align:left;" Steve Jobs conoce la GUI en XEROX PARC y la incorpora en Apple Macintosh
-
-		img src='/images/figures/00-mouse.jpg' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-		div <b>GUI</b>s atraen a usuarios que no saben (ni les interesa) el funcionamiento del computador.
-
-
-	section data-transition="fade" 
-		h3 Cuarta Generación (1980-): Computadores Personales
-
-		blockquote style="background: #B7E1CD;" Microsoft adopta GUIs: <b><a src="https://www.youtube.com/watch?v=U7PxUYnbOf4">Windows</a></b>
-
-		div style="width:70%; vertical-align:middle; display:inline-block;" 
-
-			ul.fragment
-				li <i>1985-1995</i>. MS-DOS ejecuta Windows como aplicación de usuario
-				li <i>1995</i>. <b>Windows 95</b> reemplaza a MS-DOS.
-				li <b>Windows 95</b> y <b>Windows 98</b> mantienen código assembler Intel 16-bit.
-				li Microsoft reescribe Windows para 32-bit. <b>Windows New Technology</b>: <b>Windows NT</b>
-				li <i>1999</i>. <b>Windows NT 4.0</b> y <b>Windows 2000</b>, ámbito corporativo.
-				li <i>2000</i>. <b>Windows Me</b> termina con la línea de Windows 95/98.
-				li <i>2001</i>. Windows 2000 evoluciona a <b>Windows XP</b>.
-				li Línea server: Windows 2003 Server, Windows 2008.
-				li Línea client: Windows Vista, Windows 7, Windows 8, Windows 10.
-
-		img src='/images/figures/00-windows.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-	section data-transition="fade" 
-		/h3 Cuarta Generación (1980-): Computadores Personales
-
-		blockquote style="background: #B7E1CD;"  Evolución de <b>UNIX</b>
-
-		div style="width:80%; vertical-align:middle; display:inline-block;" 
-
-			ul.fragment
-				li <b>UNIX</b> popular en ambiente de servidores. 
-				li <b>Linux</b> crece en computadores personales.
-				li <i>1993</i>. <b>FreeBSD</b> deriva de BSD. <b>OSX</b> es una versión modificada de FreeBSD.
-				li MIT produce un sistema de ventanas para UNIX: <b>X Windows System</b> (luego X11, Xorg).
-				li UNIX adopta GUIs que funcionan sobre X11 (Gnome, KDE, XFCE, etc)
-				li Múltiples <a href="http://futurist.se/gldt/wp-content/uploads/12.10/gldt1210.png">distribuciones de Linux</a>
-
-		img src='/images/figures/00-linuxes.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-	
-		img src='/images/figures/00-linux.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-
-	section 
-		h3 Quinta Generación (1980-): Computadores Móviles
-
-		blockquote style="background: #B7E1CD;" Evolución de dispositivos móviles
-
-		div style="width:75%; vertical-align:middle; display:inline-block;" 
-
-			ul.fragment
-				li <i>1946</i>. Primer teléfono móvil. 40 kg.
-				li <i>1970</i>. Teléfono móvil de 1 kg. (ladrillo)
-				li <i>1990s</i>. Nokia combina teléfono con PDA (Personal Digital Assistant)
-				li <i>2001</i>. Primeros sistemas operativos para móviles: SymbianOS
-				li <i>2002</i>. RIM. Blackberry OS
-				li <i>2007</i>. Apple. iOS.
-				li <i>2008</i>. Google. Android. Basado en Linux.
-				li <i>2009</i>. WebOS. Para dispositivos <i>smart</i>
-				li <i>2011</i>. Nokia cambia SymbianOS por Windows Phone.
-				li <i>2013</i>. Samsung reemplaza Bada por Tizen.
-
-		div style="width:25%; vertical-align:middle; display:inline-block;"
-		
-			img src='/images/figures/00-simon.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-
-			img src='/images/figures/00-mobiles.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
-		
 
 
 
 
 section
 	h2 ¿Cómo funciona el Sistema Operativo?
-	
-	p El Sistema Operativo está siempre en ejecución <span class="fragment">¿y el usuario?</span>
 
-	blockquote.fragment style="background: #F4C7C3;" Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
+	/https://manybutfinite.com/post/when-does-your-os-run/
+	/https://neosmart.net/wiki/mbr-boot-process/
 
-	p.fragment Mientras nadie (usuario/programa) lo llame, el Sistema Operativo no hace nada.
-	ul.fragment
-		li <em>Trap</em>: interrupción generada por software
-		
-		li Sistema Operativo debe controlar que: 
-		ul
-			li Procesos puedan acceder a datos
-			li Procesos no puedan monopolizar la CPU
-			li Procesos no puedan modificar (intencionalmente o no) el funcionamiento de otro proceso
+	section
 
-		li Solo el Sistema Operativo debe ser capaz de administrar el <i>hardware</i>, y no los procesos.
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			div style="text-align:left;" El sistema operativo efectúa muchas tareas, pero &hellip; <span class="fragment">¿cuando le toca el usuario?</span>
+			br
+			div style="text-align:left;" Y si ahora le toca al usuario, ¿entonces el sistema operativo ya no ejecuta más?
+			br
+			div style="text-align:left;" Recordemos una de las tareas del sistema operativo:
+			ul style="font-size:24px;"
+				li Permitir que el usuario pueda utilizar el computador
+				li Sistema operativo debe mantener el computador disponible para el usuario
 
-		/div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
-			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+
+		h3 El proceso de arranque
+
+		div style="border:none; width:65%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div Al iniciar el computador se ejecuta código de la tarjeta madre
+			ul style="font-size:24px;"
+				li <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a>: <i>Basic Input/Output System</i>, o bien
+				li <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a>: <i>Unified Extensible Firmware Interface</i>
+			br
+
+			div Este código tiene dos misiones fundamentales
+			ul style="font-size:24px;"
+				li Inicializar/identificar el <i>hardware</i>
+				li Ubicar y arrancar mediante un <i>bootloader</i> el <i>kernel</i> en modo privilegiado
+			br
+
+			blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+			/div style="text-align:center;"
+
+		div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-boot-1.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			img src='/images/figures/00-bios-uefi.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div style="font-size:14px; text-align:left;" Fuente: <a href="https://neosmart.net/wiki/mbr-boot-process/">https://neosmart.net/wiki/mbr-boot-process/</a>
+			div style="font-size:14px; text-align:left;" Fuente: <a href="http://www.unhappyghost.com/2014/05/bios-vs-uefi-booting.html">hhttp://www.unhappyghost.com/2014/05/bios-vs-uefi-booting.html</a>
+
+	section
+
+		h3 Modos de protección
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
+			div El <i>hardware</i> posee dos modos de protección
+			ul style="font-size:24px;"
+				li <b>Kernel mode</b>: acceso completo al <i>hardware</i>
+				ul style="font-size:20px;"
+					li a.k.a. <i>Privileged</i> | <i>Supervised</i> | <i>Monitor</i> | <i>System</i> mode
+				li <b>User mode</b>: acceso a un set restringido de instrucciones
+
+			div ¿Y si un código intenta ejecutar una instrucción privilegiado en modo <i>user</i>?
+			ul style="font-size:24px;"
+				li <i>Hardware</i> genera una interrupción (<i>protection fault</i>), o bien
+				li Ignora la instrucción
+
+			blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-oskerneluser1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-transition="fade"
+
+		h3 Modos de protección
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
+			div Instrucciones privilegiadas (<i>ring 0</i>)
+			ul style="font-size:24px;"
+				li Modificar <i>vector de interrupciones</i> (<code>CLI</code>, <code>IRET</code>)
+				li Acceder a dispositivos de I/O
+				li Modificar <i>timer</i> del computador
+				li Detener el computador (<i>halt</i>, <code>HLT</code>)
+				li Cambiar el modo de protección (<i>user</i> a <i>kernel</i>, o viceversa)
+				li Modificar tablas de acceso a memoria (<i>pagetable</i>, <code>INVLPG</code>)
+				li Almacenar estado de la máquina (<code>SMSW</code>)
+			br
+
+			div Estas instrucciones son un ejemplo de las instrucciones privilegiadas del <a href="https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf">set de instrucciones Intel 64</a>.
+			br
+
+			/blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+			div <i>Hardware</i> moderno posee 4 o más modos de protección
+			ul style="font-size:24px;"
+				li Se les llama <i>rings</i> (anillos) de protección
+				li Permite implementar <b>virtualización</b>
+				li Intel 64 posee 4 niveles (<a href="https://software.intel.com/sites/default/files/managed/a4/60/325384-sdm-vol-3abcd.pdf">sección 5.5</a>)
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-osprivilegerings-opt.svg' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section data-transition="fade"
+
+		h3 Interrupciones
+
+		blockquote style="background: #F4C7C3;" Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
+
+		div style="text-align:center;" Mientras nadie lo llame, el sistema operativo no hace nada.
+
+		ul style="font-size:28px;"
+			li Programa de usuario genera un <i>trap</i>: interrupción generada por software
+			li Control pasa al sistema operativo: <i>kernel space</i>
+			li Sistema operativo ejecuta servicio solicitado por el usuario
+			li Una vez terminado el servicio, sistema operativo regresa el control al programa de usuario
+			
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-osinterrupt-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 
 section
-	h2 Modos de operación de un Sistema Operativo
-	
+	h2 <i>Syscalls</i>: llamadas al sistema
+
 	section
 
+	section data-transition="fade"
+
+		div style="text-align:center;" Interfaz para solicitar servicios al sistema operativo
+		ul style="font-size:28px;"
+			li Manera precisa de llamar al sistema operativo es altamente dependiente del <i>hardware</i>
+			li Sistemas proveen bibliotecas que implementan <i>syscalls</i>
 		br
+		br
+		div style="text-align:center;" Definir una interfaz estándar ayuda a la portabilidad
+		ul style="font-size:28px;"
+			li <a href="http://standards.ieee.org/develop/wg/POSIX.html">POSIX</a>, interfaz definida en IEEE1003.1-2017
+			li SCI, System Call Interface. Interfaz de <i>syscalls</i> de Linux
+			li Linux kernel API: interfaz SCI + implementación en <code>glibc</code>
+			li Windows NT Native API (WinAPI), interfaz para Windows NT. Implementada en <code>ntdll.dll</code>
+			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
 
-		div 
-			img src="/images/figures/00-1_10.pdf.png" width="60%" style="background:none; border:none; box-shadow:none;"
-
-		p Modo dual suportado por hardware: mode bit (0=kernel/1=user)
-
-		p <b>Solo puede ser modificado por el S.O.</b> (¿por qué?)
-		p Kernel mode, a.k.a. (<i>Privileged</i> | <i>Supervised</i> | <i>Monitor</i> | <i>System</i>) mode
-
-		blockquote.fragment style="background: #F4C7C3;" Instrucciones privilegiadas solo pueden ejecutar en modo <b>kernel</b>. <br/> Si se intenta ejecutar en modo <b>user</b>, el <i>hardware</i> no la ejecuta y genera una interrupción para el Sistema Operativo.
-
-		p.fragment Ej: cambio mode bit, llamada I/O, manejo timer, manejo de interrupciones
+			
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-ossyscalls-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 
@@ -922,187 +920,21 @@ section
 
 
 
-		/p Para UNIX
 
-		/div
-			ul
-				li <em>Bourne shell</em>: Stephen Bourne, 1977, UNIX, <code>sh</code>
-				li <em>C shell</em>: Bill Joy, 1978, BSD UNIX, <code>csh</code>
-				li <em>TENEX C Shell</em>: Ken Greer, 1983, <code>tcsh</code>
-				li <em>Korn shell</em>: David Korn, 1983, <code>ksh</code>
-				li <em>Bourne-Again shell</em>: Brian Fox, 1989, <code>bash</code>
-				li <em>Z shell</em>: Paul Fastad, 1990, <code>zsh</code>
 
-	/section
-		h4 Graphical User Interface (GUI)
 
-		p Interfaz gráfica (para quienes no les gusta escribir comandos)
-		div.fragment
-			ul
-				li Usualmente con un <em>pointing-device</em> y ventanas
-				li Métaforas: escritorio, íconos, carpetas, menúes
-				li Más allá de <em>pointing-device</em>: gestos y acciones visuales
 
-		p.fragment Vienen de 1968 (Douglas Engelbart), <a href="https://www.youtube.com/watch?v=yJDv-zdhzMY" target="_blank">Mother of All Demos</a>
 
-		div.fragment
-			ul
-				li Investigación en Xerox Palo Alto Research Center (PARC)
-				li Primera interfaz gráfica: 1973
-				li Popularizados en 1980s: Apple Macintosh (Mac OS)
-				li Windows 1.0 agregó GUI a MS-DOS
 
 
-	/section
-		h4 Graphical User Interface (GUI)
 
-		p Tradicionalmente UNIX/Linux han sido manejados por CLI,
-		p.fragment pero se han desarrollado muchas GUIs
 
-		ul.fragment
-			li CDE (<em>Common Desktop Environment</em>): Unix, OpenVMS
-			li X-Windows Systems: Xfce, KDE, GNOME (Unix/Linux)
-			li <a href="https://wayland.freedesktop.org/">Wayland</a>: Nueva API de GUI (Linux)
 
-		= image_tag "/images/figures/00-Xwindows.png", :style => "max-width:50%;float:right;"
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-section
-	h2 Arquitectura
-
-	section
-		p ¿Sistemas <strong>monolíticos</strong> o sistemas <strong>modulares</strong>?
-		p.fragment Algunos ni siquiera tienen estructura
-		ul.fragment
-			li MS-DOS: sistema monolítico simple
-			li Nadie pensó que sería tan popular
-			li Intel 8088 no tenía protección de <em>dual mode</em>
-			li ¿Problemas? <span class="fragment">Seguridad</span>
-
-		br
-		= image_tag "/images/figures/00-2_11.pdf.png", :style=>"float;right; border:none;", :height=>"25%", :width=>"25%"
-
-	section
-
-		p UNIX: Estructura monolítica diseñada de acuerdo al <em>hardware</em>
-
-		p Todo el sistema se diseña como un único programa.
-
-		= image_tag "/images/figures/00-2_12.pdf.png", :width => '50%', :style=>"border:none;"
-
-		p ¿Problemas? <span class="fragment">Dificultad de mantenimiento</span>
-
-
-
-	section
-	
-		p Diseño por capas se diseñan por niveles más <em>abstractos</em> de funcionalidad
-
-		div style="width:70%; vertical-align:middle; display:inline-block;" 
-
-		ul
-			li Capa \(M\) invoca llamadas sobre capa \(M-1\)
-			li Ventaja: Facilidad de <em>debugging</em>
-			li Desventaja: dificultad de definición de capas, eficiencia
-
-		div style="width:30%; vertical-align:middle; display:inline-block;" 
-
-		
-			= image_tag "/images/figures/00-2_13.pdf.png", :width => '65%', :style=>"border:none;"
-
-		br
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-
-			p.fragment THE (Technische Hogeschool Eindhoven), E. W. Dijkstra (1968) y estudiantes. 6 capas.
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-			
-			= image_tag "/images/figures/00-THE.png", :width => '70%', :style=>"border:none;"
-
-
-	section
-
-		h4 Microkernels
-
-		p <b>Mach</b>: versión de UNIX usando diseño de <em>microkernel</em> (CMU)
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-
-			ul.fragment
-				li Set de funcionalidades mínimas
-				li Otras funcionalidades agregadas como programas de usuario ¿dónde poner el límite?
-				li Ventaja: Sistemas pequeño y fácil de portar
-				li Desventaja: ¡Mucha más interacción a través de <em>syscalls</em>!
-				li <b>Windows NT</b> usaba microkernel pero era más lento que Win95.
-				li <b>GNU/Hurd</b> es más lento que Linux.
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-
-			= image_tag "/images/figures/00-2_14.pdf.png", :width=>'80%', :style=>"border:none;"
-
-	section
-	
-		h4 Monolíticos vs Microkernels
-
-
-		= image_tag "/images/figures/00-mono-micro.png", :width=>'90%', :style=>"border:none;"
-
-
-
-	section
-	
-		p Monolíticos con extensiones: <strong>Loadable kernel modules</strong>
-
-		ul
-			li Kernel tiene un conjunto de componentes principales (<em>core</em>)
-			li Módulos necesarios se agregan durante ejecución
-			li Evita recompilar el kernel para cada nueva funcionalidad
-			li Solaris, Linux, MacOS X, Windows
-			li Ej: kernel con soporte de manejo de archivo + módulos por cada <em>filesystem</em>
-
-		= image_tag "/images/figures/00-2_15.pdf.png", :width=>'50%', :style=>"border:none;"
-
-
-
-	section
-		h4 Híbridos
-
-		p En la práctica, pocos sistemas pueden ser encasillados
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-
-			ul
-				li Algunos tienen características monolíticas (performance!)
-				li Pero algunas funcionalidades siguen el diseño de <em>microkernel</em>
-				li ¡Y además permiten cargar módulos dinámicamente!
-				li Windows NT, XNU (el kernel de Darwin) son monolíticos
-
-		div style="width:50%; vertical-align:middle; display:inline-block;" 
-
-			= image_tag "/images/figures/00-Win2000.svg", :width=>'50%', :style=>"border:none;"
 
 
 section
