@@ -9,15 +9,16 @@ article
     h3 Deadlines activos
     /  ------
 
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 19/Mar, 10:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
+
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 1</del>', 'homeworks/1/T1.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 25/Ago, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
 
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC01</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 28/Ago, 23:59
-      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
 
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC02</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/b80a2831e8bd40f3b5fa39171bbde1f5/'
@@ -215,9 +216,9 @@ article
     /  --------
     = link_to 'Curso en EdX', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/'
     div style="font-size:14px;" Deben registrarse usando el login de su correo UC. Problemas a cruz@ing.puc.cl
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC01</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
-      div style="border:none; display:inline-block; width:260px;" <del>Deadline: Lunes 28/Ago, 23:59</del>
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 19/Mar, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC02</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/b80a2831e8bd40f3b5fa39171bbde1f5/'
@@ -382,7 +383,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Aug 28, 2017 23:59:59')
+    dateEnd: new Date('Mar 19, 2018 10:00:00')
   });
 
   var countdownAC02 = new Countdown({
