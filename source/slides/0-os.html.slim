@@ -661,7 +661,9 @@ section data-background-image='/images/figures/00-os-list.png' data-background-s
 	div
 		/https://xkcd.com/1508/
 		a href="https://xkcd.com/1508/"
-			img src='https://imgs.xkcd.com/comics/operating_systems.png' width="75%" style="background:none; border:none; box-shadow:none;" title="One of the survivors, poking around in the ruins with the point of a spear, uncovers a singed photo of Richard Stallman. They stare in silence. &quot;This,&quot; one of them finally says, &quot;This is a man who BELIEVED in something.&quot;" alt="Operating Systems"
+			img src='https://imgs.xkcd.com/comics/operating_systems.png' width="60%" style="background:none; border:none; box-shadow:none;" title="One of the survivors, poking around in the ruins with the point of a spear, uncovers a singed photo of Richard Stallman. They stare in silence. &quot;This,&quot; one of them finally says, &quot;This is a man who BELIEVED in something.&quot;" alt="Operating Systems"
+		div style="font-size:12px;"
+			a href="https://explainxkcd.com/1508/" Explicación
 
 
 
@@ -812,6 +814,25 @@ section
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 section
 	h2 <i>Syscalls</i>: llamadas al sistema
 
@@ -825,99 +846,184 @@ section
 			li Sistemas proveen bibliotecas que implementan <i>syscalls</i>
 		br
 		br
+			
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-ossyscalls-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-transition="fade"
+
+		div ¿Qué hace el sistema operativo ante el siguiente comando?
+
+		div <code>copy source.txt dest.txt</code>
+		br
+
+		div style="border:none; width:55%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+
+			ul.fragment style="font-size:28px;"
+				li Abrir <code>source.txt</code> (<code>stat</code>, <code>open</code>)
+				ul
+					li style="font-size:20px;" ¿existe?, ¿tiene permiso de lectura?, &hellip;
+				li Abrir <code>dest.txt</code> (<code>stat</code>, <code>open</code>)
+				ul
+					li style="font-size:20px;" ¿existe?, ¿se reemplaza?, ¿se puede escribir?, &hellip;
+				li Leer <code>source.txt</code> hacia alguna región de memoria (<code>mmap</code>, <code>read</code>)
+				li Escribir desde la memoria hacia <code>dest.txt</code> (<code>write</code>)
+				li Liberar la memoria y guardar los archivos (<code>munmap</code>, <code>close</code>)
+			br
+			br
+
+		div style="border:none; width:45%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div.fragment 
+			div Todas estas acciones requieren llamadas al sistema
+			br
+			
+			div Pruebe con: <code>strace cp source.txt dest.txt</code>
+
+
+	section 
+
 		div style="text-align:center;" Definir una interfaz estándar ayuda a la portabilidad
 		ul style="font-size:28px;"
 			li <a href="http://standards.ieee.org/develop/wg/POSIX.html">POSIX</a>, interfaz definida en IEEE1003.1-2017
 			li SCI, System Call Interface. Interfaz de <i>syscalls</i> de Linux
 			li Linux kernel API: interfaz SCI + implementación en <code>glibc</code>
-			li Windows NT Native API (WinAPI), interfaz para Windows NT. Implementada en <code>ntdll.dll</code>
+			li Windows NT Native API, interfaz para Windows NT. Implementada en <code>ntdll.dll</code>
 			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
 
 			
-		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
-			img src='/images/figures/00-ossyscalls-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div 
+			img src="/images/figures/00-LinuxAPI.png" width="40%" style="background:none; border:none; box-shadow:none;" &nbsp;&nbsp;
+			img src="/images/figures/00-WinArch.png" width="40%" style="background:none; border:none; box-shadow:none;"
+
+
+	section data-transition="fade"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div style="text-align:center;" ¿Cómo se ejecuta una <i>syscall</i>?
+			div style="text-align:center;" Procedimiento es dependiente del <i>hardware</i>
+			br
+			div Participan:
+			ul style="font-size:24px;"
+				li Proceso ejecutable de usuario
+				li Biblioteca (estática o dinámica) que invoca la <i>syscall</i>
+				li Vector de interrupciones del <i>hardware</i>, configurado por el sistema operativo
+				li Código de <i>syscalls</i> del sistema operativo, que utilizan el <i>hardware</i>
+			br
+			br
+			div ¿Qué hace <code>read</code>? <a href="https://linux.die.net/man/2/read">RTFM</a>
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-transition="fade"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div style="text-align:center;" ¿Cómo se ejecuta una <i>syscall</i>?
+
+			div Ejemplo basado en Linux e Intel64
+			ol style="font-size:24px;"
+				li Proceso de usuario invoca rutina de biblioteca <code>read</code>
+				li Implementación de <code>read</code> prepara la invocación configurando el <i>stack</i> y el registro <code>eax</code>
+				li Generación de interrupción: <code>int 0x80</code>. Intel64 usa (fast) <code>syscall</code>
+				li <i>Hardware</i> pasa de modo <i>user</i> a <i>kernel</i> y actúa de acuerdo al vector de interrupciones
+				li Vector de interrupciones ejecuta instrucción <code>system_call</code> del sistema operativo
+				li Sistema operativo obtiene número de <i>syscall</i> desde <code>eax</code>, y configura <i>stack</i> para poder retornar al usuario
+				li Sistema operativo ejecuta el código de <code>sys_write</code>
+				li Ejecución de <code>sys_write</code> recupera argumentos, ejecuta acción, y deja valor de retorno en <code>eax</code>
+				li Sistema operativo cambio modo a <i>user</i>, y <code>sys_write</code> retorna al código de la biblioteca (<code>sysexit</code>)
+				li Código de biblioteca recupera el valor de retorno de la <i>syscall</i> y lo entrega al proceso de usuario
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section 
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX. 
+			br
+			div Lista de <a href="https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/unistd.h"><i>syscalls</i> de Linux</a>
+			ul style="font-size:24px;"
+				li Más claro con: <a href="http://man7.org/linux/man-pages/man2/syscalls.2.html"><code>man syscalls</code></a>
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix.png" width="80%" style="background:none; border:none; box-shadow:none;"
+
+
+	section 
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX y su equivalencia en Win32 
+			br
+			ul style="font-size:28px;"
+				li Es natural que no todas las <i>syscall</i> tenga una equivalencia.
+				li Cada sistema provee su propio conjunto de instrucciones para interactuar con el usuario
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix-win32.png" width="100%" style="background:none; border:none; box-shadow:none;"
+			
+		
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 section
-	h2 Llamadas al sistema
-
-	section
-		h4 System Calls
-		p Programas utilizan llamadas al sistema frecuentemente
-
-		div ¿Qué debe hacer el Sistema Operativo antes este comando?
-
-		p <code>copy source.txt dest.txt</code>
-
-		ul
-			li.fragment Abrir <code>source.txt</code> (¿posición en disco?, ¿existe?, ¿tiene permisos?,...)
-			li.fragment Abrir <code>dest.txt</code> (¿existe?, ¿se reemplaza?, ¿se puede escribir?,...)
-			li.fragment Leer <code>source.txt</code> (¿hacia qué parte de la memoria?)
-			li.fragment Escribir <code>dest.txt</code> (¿desde qué posición de memoria?, ¿en qué posición del disco?,...)
-			li.fragment Lectura/escritura en disco requiere llamadas al sistema
-			li.fragment Terminar el programa en caso de error, requiere llamadas al sistema
-
-
-	section
-		h4 API: Application Programming Interface
-
-		p Sistemas Operativos proveen una API para el programador.
-		ul.fragment
-			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
-			li POSIX API (UNIX, Linux, MacOS X), a través de <code>libc</code>
-			li Java API (para la JVM)
-
-		div 
-			img src="/images/figures/00-LinuxAPI.png" width="35%" style="background:none; border:none; box-shadow:none;"
-			img src="/images/figures/00-WinArch.png" width="35%" style="background:none; border:none; box-shadow:none;"
-
-		/div.fragment
-		/	pre style="width:50%;"
-		/		code.hljs
-		/			| count = read(fd, buffer, nbytes);
+	h2 Arquitecturas y llamadas al sistema
 
 	section
 
-		img src="/images/figures/00-2_06.pdf.png" width="60%" style="background:none; border:none; box-shadow:none;"
+		div style="width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
 
-		/= image_tag "/images/figures/00-2_06.pdf.png", :style => 'max-width:60%; max-height:60%'
+			div Sistemas Operativos proveen niveles de abstracción
+			ul style="font-size:24px;"
+				li <a href="https://manybutfinite.com/post/when-does-your-os-run/">¿Cuándo ejecuta el sistema operativo?</a>
+			br
+			br
+			div Protección entre espacios de <i>user</i> y <i>kernel</i>
+			ul style="font-size:24px;"
+				li Cuánto queda en <i>kernel space</i> y en <i>user space</i> determina si el <i>kernel</i> es monolítico o microkernel 
+			br
+			br
+			div Usuario solicita servicios a través de <i>syscalls</i>
+			ul style="font-size:24px;"
+				li Todas las funciones definidas por <a href="http://pubs.opengroup.org/onlinepubs/9699919799/nframe.html">POSIX</a>
+				li En Linux, la función <a href="http://man7.org/linux/man-pages/man2/syscall.2.html"><code>syscall</code></a> permite invocar cualquier <i>syscall</i> ... <code>man syscall</code>
+				li Todas las <a href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf">instrucciones de Intel64</a>
+				li Tutorial: Como crear <a href="https://brennan.io/2016/11/14/kernel-dev-ep3/">su propia <i>syscall</i></a>
+			br
+			br
+			div Sistema operativo es una pieza de <i>software</i> compleja ... y fascinante
+			ul style="font-size:24px;"
+				li <a href="https://wiki.osdev.org/Getting_Started">¿Quieres construir uno?</a>
 
-	section
+		div style="width:40%; vertical-align:middle; display:inline-block;" 
 
-		div
-			pre style="width:50%;"
-				code.hljs
-					| count = read(fd, buffer, nbytes);
-
-		img src="/images/figures/00-syscall-read.png" width="50%" style="background:none; border:none; box-shadow:none;"
-
-		/= image_tag "/images/figures/00-syscall-read.png", :style => 'max-width:60%; max-height:60%'
-
-
-	section
-
-		div style="width:20%; vertical-align:middle; display:inline-block;" 
-
-			div Algunas <i>syscalls</i> de POSIX. 
-
-		div style="width:80%; vertical-align:middle; display:inline-block;" 
-
-			img src="/images/figures/00-syscalls-posix.png" width="50%" style="background:none; border:none; box-shadow:none;"
-
-		/= image_tag "/images/figures/00-syscalls-posix.png", :style => 'max-width:50%; max-height:50%'
-
-	section
-
-		div style="width:20%; vertical-align:middle; display:inline-block;" 
-
-			div Equivalencias entre <i>syscalls</i> Win32 y POSIX
-
-		div style="width:80%; vertical-align:middle; display:inline-block;" 
-
-			img src="/images/figures/00-syscalls-posix-win32.png" width="70%" style="background:none; border:none; box-shadow:none;"
+			img src="/images/figures/00-xkcd-abstraction.png" width="100%" style="background:none; border:none; box-shadow:none;" title="If I'm such a god, why isn't Maru *my* cat?" alt="Abstraction"
+			div style="font-size:12px;"
+				a href="https://explainxkcd.com/676/" Explicación
 
 		/= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
 
@@ -942,7 +1048,7 @@ section
 
 
 
-section
+/section
 	h2 Use this for OS
 
 	section
@@ -977,10 +1083,6 @@ section
 	section
 		div
 			img src="https://tctechcrunch2011.files.wordpress.com/2011/10/dropbox-comic.jpg" width="50%" style="background:none; border:none; box-shadow:none;"
-
-	section
-		div
-			img src="http://redscourge.servehttp.com/jokes/funnypics/xkcd.com/abstraction.png" width="50%" style="background:none; border:none; box-shadow:none;"
 
 	section
 		div
