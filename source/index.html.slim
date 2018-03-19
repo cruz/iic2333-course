@@ -20,9 +20,14 @@ article
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerDCCercano"
 
     div
-      div style="border:none; display:inline-block; width:180px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
       div style="border:none; display:inline-block; width:380px;" Lunes 19/Mar, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC02', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
+      div style="border:none; display:inline-block; width:380px;" Lunes 26/Mar, 10:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC02"
 
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 1</del>', 'homeworks/1/T1.pdf'
@@ -30,10 +35,6 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
 
 
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC02</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/b80a2831e8bd40f3b5fa39171bbde1f5/'
-      div style="border:none; display:inline-block; width:380px;" Lunes 28/Ago, 23:59
-      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC02"
 
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC03</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
@@ -230,10 +231,12 @@ article
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
       div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 19/Mar, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC02</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/0c1783be7d914f10999d8618c6479169/b80a2831e8bd40f3b5fa39171bbde1f5/'
-      div style="border:none; display:inline-block; width:260px;" <del>Deadline: Lunes 28/Ago, 23:59</del>
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC02', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
+      div style="border:none; display:inline-block; width:260px;" Deadline: Lunes 26/Mar, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC02"
+
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC03</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+2017_S2/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
       div style="border:none; display:inline-block; width:260px;" <del>Deadline: Martes 29/Ago, 08:30</del>
@@ -390,8 +393,8 @@ javascript:
 
   var countdownAC01 = new Countdown({
     selector: '.timerAC01',
-    msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    msgAfter: "Se acabó, pero está disponible la AC02 :)",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Mar 19, 2018 10:00:00')
   });
@@ -399,9 +402,9 @@ javascript:
   var countdownAC02 = new Countdown({
     selector: '.timerAC02',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Aug 28, 2017 23:59:59')
+    dateEnd: new Date('Mar 26, 2018 10:00:00')
   });
 
   var countdownAC03 = new Countdown({
