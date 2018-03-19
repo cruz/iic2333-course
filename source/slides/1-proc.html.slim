@@ -156,7 +156,7 @@ section#creation
 			li Windows: <code>InitialSystemProcess</code>, <code>System</code>
 
 	section#creation-tree
-		p Todos los procesos tienen un proceso padre, o madre. (<i>parent</i>)
+		p Todos los procesos tienen un proceso padre, o madre (<i>parent</i>).
 
 		p La relación de creación permite formar un <i>árbol de procesos</i>
 
@@ -177,12 +177,14 @@ section#creation
 
 
 	section#creation-init
-		p Un proceso (padre) crea a un proceso (hijo).
+		p Un proceso (<i>parent</i>) crea a otro proceso hijo (<i>child</i>).
 		ul
 			li ¿Quién sigue ejecutando? 
 			ul
-				li Padre e hijo continúan ejecutando concurrentemente
-				li Padre espera que algunos o todos sus hijos terminen
+				li <i>Parent</i> e <i>hijo</i> continúan ejecutando concurrentemente.
+				li Ambos existen en la memoria del computador.
+			br
+			br
 			li ¿Qué "personalidad" tiene el hijo? (espacio de direcciones)
 			ul
 				li El hijo es un duplicado <a href="http://linux.die.net/man/2/fork" target="_blank">casi</a> exacto del padre

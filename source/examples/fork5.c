@@ -1,10 +1,10 @@
 /* Source: http://www.amparo.net/ce155/fork-ex.html 
 
    Compile with:
-     gcc -o fork fork.c
+     gcc -o fork5 fork5.c
 
    Run (in Unix/Linux/MacOSX) with:
-     ./fork
+     ./fork5
 
 */
 
