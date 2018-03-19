@@ -38,7 +38,7 @@ section
 
 
 		div style="border:none; width:20%; vertical-align:middle; display:inline-block;" 
-			img src='/images/figures/proc-internals-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			img src='/images/figures/01-proc-internals-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section
@@ -57,7 +57,7 @@ section
 				li <b>Heap</b>. Memoria asignada dinámicamente (durante la ejecución)
 
 		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
-			img src='/images/figures/proc-internals-proc1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			img src='/images/figures/01-proc-internals-proc1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section#repr
@@ -66,9 +66,12 @@ section
 
 		blockquote style="background:#F4C7C3;"<b>Process Control Block (PCB)</b>
 
-		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+		div style="border:none; width:65%; vertical-align:middle; display:inline-block;" 
 
-			ul.fragment
+			div Sistema Operativo mantiene <b>Tabla de Procesos</b>.
+			
+			div Información de cada procesos almacenada en su PCB
+			ul.fragment style="font-size:28px;"
 				li Estado
 				li Identificador (PID, <i>Process ID</i>)
 				li Program Counter (PC)
@@ -78,9 +81,13 @@ section
 				li Contabilidad (<em>accounting</em>)
 				li Información de I/O: archivos y dispositivos abiertos, &hellip;
 
-		img src='/images/figures/01-3_03.pdf.png' width="15%" style="background:none; box-shadow:none; vertical-align:middle;"
+			div.fragment PCB pueden tener mucha información. Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
 
-		p.fragment Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
+		/img src='/images/figures/01-3_03.pdf.png' width="15%" style="background:none; box-shadow:none; vertical-align:middle;"
+		div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-internals-pcb-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		/p.fragment Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
 
 
 	section#states-inside
@@ -93,12 +100,19 @@ section
 			li <b>Ready     </b>: Listo para ejecutar. Esperando asignación de CPU
 			li <b>Terminated</b>: Ejecución terminada
 
-		img src='/images/figures/01-3_02.pdf.png' width="60%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		img src='/images/figures/01-proc-states-opt.svg' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section#repr-contextSwitch
 		p El cambio de procesos se conoce como <strong>Context Switch</strong>
-		== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%", :style=>"border:none;"
+
+		ul style="font-size:28px;"
+			li Sistema Operativo actúa luego de una interrupción (<i>syscall</i>, <i>timer</i>, evento, &hellip;).
+			li Sistema Operativo almacena estado de registros de P1 en PCB1. P1 queda "en pausa".
+			li Sistema Operativo restaura estado de registros desde PCB2.
+			li Proceso P2 continúa su ejecución.
+		/== image_tag '/images/figures/01-3_04.pdf.png', :width=>"50%", :style=>"border:none;"
+		== image_tag '/images/figures/01-proc-contextchange-opt.svg', :width=>"90%", :style=>"border:none; box-shadow:none;"
 
 
 	section#states-status
@@ -125,6 +139,7 @@ section
 section#creation
 	h2 Creando procesos
 	/  ----------------
+	section
 
 	section#creation-0
 		p Creación de procesos: ¿el huevo o la gallina?
@@ -133,15 +148,18 @@ section#creation
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso</span>
 			li.fragment  ¿Quién crea ese otro proceso?  <span class="fragment"> otro proceso&hellip;</span>
 
-		p.fragment Existe un proceso llamado <code>init</code>, construido durante la inicialización del kernel. PID=1.
-		/! Salvo Windows por supuesto, que usa el 4.
+		p.fragment Durante la inicialización del <i>kernel</i> se crea un proceso "raíz", con PID=1
+
 		ul.fragment
-			li Linux: systemd, init, upstart
-			li MacOS X: launchd
-			li Windows: InitialSystemProcess, System
+			li Linux: <code>systemd</code>, <code>init</code>, <code>upstart</code>
+			li macOS: <code>launchd</code>
+			li Windows: <code>InitialSystemProcess</code>, <code>System</code>
 
 	section#creation-tree
-		p Como todos los procesos tienen un padre, forman un árbol de procesos
+		p Todos los procesos tienen un proceso padre, o madre. (<i>parent</i>)
+
+		p La relación de creación permite formar un <i>árbol de procesos</i>
+
 		pre
 			code.hljs
 				| $ pstree --show-pids
