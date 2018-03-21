@@ -177,35 +177,36 @@ section#creation
 
 
 	section#creation-init
-		p Un proceso (<i>parent</i>) crea a otro proceso hijo (<i>child</i>).
-		ul
-			li ¿Quién sigue ejecutando? 
-			ul
+		p Un proceso (<i>parent</i>) crea a otro proceso hijo (<i>child</i>)
+
+		div style="border:none; width:75%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left" ¿Quién sigue ejecutando? 
+			ul style="font-size:28px; text-align:left;"
 				li <i>Parent</i> e <i>hijo</i> continúan ejecutando concurrentemente.
 				li Ambos existen en la memoria del computador.
-			br
-			br
-			li ¿Qué "personalidad" tiene el hijo? (espacio de direcciones)
-			ul
+				li Cuál proceso continúa en estado <i>running</i> depende de la implementación. 
+				br
+				br
+			div style="text-align:left" ¿Qué &quot;personalidad&quot; tiene el hijo? (código, espacio de direcciones)
+			ul style="font-size:28px; text-align:left;"
 				li El hijo es un duplicado <a href="http://linux.die.net/man/2/fork" target="_blank">casi</a> exacto del padre
-				li El hijo es un <b>nuevo proceso</b>
+				li El hijo es un <b>nuevo proceso</b> (otro espacio de direcciones)
+				li El hijo <b>copia</b> la memoria del padre a su nuevo espacio
+				li El hijo continúa ejecutando en <b>la misma instrucción</b> que el padre: el retorno de <code>fork()</code>
+
+		div style="border:none; width:25%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-fork1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
 	section#creation-syscalls
 		
-		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
 
 		ul.fragment
 			li Crea un nuevo proceso como <strong>copia</strong> del padre.
-			li Ambos continúan ejecutando desde la instrucción posterior a <code>fork()</code>
-			li La llamada retorna el <code>PID</code> del hijo al padre y <code>0</code> al hijo
-
-		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
-		
-		ul.fragment
-			li Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
-			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
-
+			li Ambos continúan ejecutando desde la instrucción de retorno de <code>fork()</code>
+			li <code>fork()</code> retorna <code>PID</code> del hijo al padre, y retorna <code>0</code> al hijo
 
 
 	section#creation-fork-l-q
@@ -236,6 +237,22 @@ section#creation
 				    fork();
 				    printf("[%4d] %d\n", getpid(), i);
 				  }
+
+
+	section
+		
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
+
+		ul
+			li Crea un nuevo proceso como <strong>copia</strong> del padre.
+			li Ambos continúan ejecutando desde la instrucción de retorno de <code>fork()</code>
+			li <code>fork()</code> retorna <code>PID</code> del hijo al padre, y retorna <code>0</code> al hijo
+
+		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
+		
+		ul.fragment
+			li Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
+			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
 
 
 	/section#creation-fork-q
@@ -643,6 +660,36 @@ section#termination
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 / Frame
   //   \frametitle{Desafío \#1: Fork de Procesos}
   //   %\framesubtitle{Algunos puntos clave}
@@ -681,7 +728,7 @@ section#scheduling
 				div Y queremos:
 
 				ul
-					li <i>Multitasking</i>: asignar tiempo a múltiples procesos
+					li <b><i>Multitasking</i></b>: asignar tiempo a múltiples procesos
 
 		img src='/images/figures/01-pcbs.gif' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
@@ -700,9 +747,19 @@ section#scheduling
 		div style="width:50%; vertical-align:middle; display:inline-block;" 
 
 			ul.fragment
-				li <b>Long-term Scheduler</b>:  Admite procesos en la <em>cola ready</em>. Determina el <strong>grado de multiprogramación</strong> (cantidad de procesos en memoria).
-				li <b>Short-term Scheduler</b> (a.k.a. <b>dispatcher</b>): Selecciona un proceso de la cola <em>ready</em> para ejecutar.
-				li <b>Medium-term Scheduler</b>: Modificación temporal del grado de multiprogramación, haciendo <strong>swapping</strong>
+				li <b>Long-term Scheduler</b>
+				ul style="text-align:left; font-size:28px;" 
+					li Admite procesos en la <em>cola ready</em>. 
+					li Determina el <strong>grado de multiprogramación</strong> (cantidad de procesos en memoria).
+				li <b>Short-term Scheduler</b> (a.k.a. <b>dispatcher</b>)
+				ul style="text-align:left; font-size:28px;" 
+					li Selecciona un proceso de la cola <em>ready</em> para ejecutar.
+					li Ejecuta el cambio de contexto
+				li <b>Medium-term Scheduler</b>
+				ul style="text-align:left; font-size:28px;" 
+					li Modifica temporalmente el grado de multiprogramación
+					li Ejecuta <strong>swapping</strong> copiando memoria RAM a disco, y de disco a RAM.
+
 
 		img src='/images/figures/01-schedulers.gif' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
@@ -710,12 +767,12 @@ section#scheduling
 	section#cpuSched-thrsh
 		p ¿Y si estamos siempre haciendo <em>Scheduling</em> en vez de ejecutar programas?
 
-		div.fragment <em>Scheduling</em> es importante para <strong>multiprogramación</strong> y <b>multitasking</b> &hellip; <span class="fragment">pero <em>scheduling</em> y <em>context switch</em> <strong>son sólo <em>overhead</em></span></strong>
+		div.fragment <em>Scheduling</em> es importante para <b>multitasking</b> &hellip; pero <em>scheduling</em> y <em>context switch</em> <strong>son sólo <em>overhead</em></strong>
 
-		ul
-			li.fragment ¿Qué pasa si el <em>scheduler</em> o el <i>context switch</i> toman más tiempo de lo que toma el proceso?
-			li.fragment ¿Qué pasa si se le asigna poco tiempo a cada proceso?
-			li.fragment ¿Qué pasa si hay muchos procesos <em>ready</em>? (long-term scheduler)
+		ul.fragment style="font-size:28px;"
+			li ¿Qué pasa si el <em>scheduler</em> o el <i>context switch</i> toman más tiempo de lo que toma el proceso?
+			li ¿Qué pasa si se le asigna poco tiempo a cada proceso?
+			li ¿Qué pasa si hay muchos procesos <em>ready</em>? (long-term scheduler)
 
 		blockquote.fragment style="background:#B7E1CD;"
 			| Contención de procesos se refleja en <strong>thrashing</strong>
@@ -728,7 +785,7 @@ section#scheduling
 
 		div No todos los procesos se comportan igual. Alternan entre dos fases:
 
-		ul.fragment
+		ul
 			li Uso de CPU (<b>CPU-burst</b>)
 			li Espera por I/O (<b>I/O-burst</b>)		
 
@@ -748,7 +805,7 @@ section#scheduling
 
 			div $p^n$ probabilidad que $n$ procesos estén esperando por I/O.
 
-			div Utilización de la CPU es $\text{CPU}_u = 1 - p^n$
+			div Utilización de la CPU es $\text{CPU}_n = 1 - p^n$
 
 		img.fragment src='/images/figures/01-utilization.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
