@@ -25,6 +25,12 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
 
     div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" Ayudantía T1
+      div style="border:none; display:inline-block; width:380px;" Viernes 23/Mar, 10:00, E11
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerAyud2"
+
+
+    div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC02', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/4819f8e7ce54488086511e6bf29d3cfd/366dde4501ac4ce7a9d6b9da8d2fe907/'
       div style="border:none; display:inline-block; width:380px;" Lunes 26/Mar, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC02"
@@ -513,4 +519,12 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Mar 14, 2018 15:30:00')
+  });
+
+  var countdownEX = new Countdown({
+    selector: '.timerAyud2',
+    msgAfter: "Empezó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Mar 23, 2018 10:00:00')
   });
