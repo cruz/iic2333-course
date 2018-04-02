@@ -215,7 +215,7 @@ section#creation
 			img src='/images/figures/01-proc-fork2-opt.svg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
-	section#creation-fork-l-q
+	section#creation-fork-l-q data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		pre
@@ -233,7 +233,7 @@ section#creation
 				  }
 
 
-	section#creation-fork-l-result
+	section#creation-fork-l-result data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
@@ -262,7 +262,7 @@ section#creation
 			li Las líneas <code>PARENT</code> y <code>CHILD</code> pueden estar intercaladas.
 			li El valor de <code>a</code> que imprime PID 4601 es siempre 43, y el que imprime PID 4592 es siempre 42.
 
-	section#creation-fork-loop-q
+	section#creation-fork-loop-q  data-transition="fade"
 		p ¿Cuántos procesos se crean?
 
 		pre
@@ -274,7 +274,7 @@ section#creation
 				  }
 
 
-	section#creation-fork-loop-r
+	section#creation-fork-loop-r  data-transition="fade"
 		p ¿Cuántos procesos se crean?
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
@@ -291,7 +291,7 @@ section#creation
 			img src='/images/figures/01-proc-fork4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
-	section
+	section 
 		
 		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
 
@@ -307,7 +307,7 @@ section#creation
 			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
 
 
-	section#exec-fork-l-q
+	section#exec-fork-l-q  data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		pre
@@ -323,7 +323,7 @@ section#creation
 				    printf("PARENT: child_pid is %d\n", child_pid);
 
 
-	section#exec-fork-l-r
+	section#exec-fork-l-r  data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
@@ -408,7 +408,7 @@ section#creation
 
 
 
-	section#wait-exec-fork-l-q
+	section#wait-exec-fork-l-q  data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		pre
@@ -427,7 +427,7 @@ section#creation
 				  printf("PARENT: Child finished\n");
 
 
-	section#wait-exec-fork-l-r
+	section#wait-exec-fork-l-r  data-transition="fade"
 		p ¿Qué imprime este programa?
 
 		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
