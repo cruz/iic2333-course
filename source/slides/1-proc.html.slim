@@ -1050,6 +1050,36 @@ section#SchedTypes3
 		img src='/images/figures/01-rt-sched-edf.png' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 section#threads
 	h2 Threads
 
@@ -1266,126 +1296,35 @@ section#thread-impl
 
 
 
-	/section#mt-dataModels-greenThreads
-		p <em>Many-to-one</em>
-
-		ul
-			li.fragment  + Manejo de <em>threads</em> en biblioteca de usuario
-			li.fragment  - Un <em>syscall</em> de un <em>thread</em> bloquea todo el proceso
-		.fragment
-			== image_tag '/images/figures/01-4_05.pdf.png', :width=>"40%"
-
-		br
-		p.fragment Solaris: biblioteca <em>green threads</em>
-
-
-	/section#mt-dataModels-id
-		p <em>One-to-one</em>
-		ul
-			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
-			li.fragment  + Asignables a distintos <em>core</em>s
-			li.fragment  - Creación implica ejecutar <em>syscalls</em>
-			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		== image_tag '/images/figures/01-4_06.pdf.png', :width=>"60%"
-		br
-		p.fragment Linux & Windows
-
-	/section#mt-dataModels-m2m
-		p <em>Many-to-many</em>
-		ul
-			li.fragment  + Usuario pueden crear número ilimitado de <em>threads</em>
-			li.fragment  + Asignación de <em>user thread</em> a <em>kernel thread</em> se hace <em>on-demand</em>
-			li.fragment  + <em>Threads</em> ejecutando <em>syscall</em> no bloquean el proceso
-			li.fragment  - Creación implica ejecutar <em>syscalls</em>
-			li.fragment  - Sistemas Operativos limitan el máximo número de <em>threads</em>
-		== image_tag '/images/figures/01-4_07.pdf.png', :width=>"40%"
-		br
-    /p.fragment Linux & Windows.
-
-
-	/section#mt-threadingLibs
-		p Bibliotecas de <em>threads</em>
-
-		p.fragment Tres principales:
-		ul.fragment
-			li POSIX Pthreads (kernel ó user)
-			li Windows Threads (kernel)
-			li Java threads (user)
-
-
-	/section#mt-threadingLibs-pthreads
-		h5
-			code pthread
-
-		p POSIX standard IEEE 1003.1c (especificación)
-
-		p.fragment API para creación y sincronización de <em>thread</em>s.
-		p.fragment Implementaciones para Linux, Mac OS X, Solaris
-		ul
-			li.fragment  <code>pthread_t</code>, identificador
-			li.fragment  <code>pthread_create()</code>, creación de <em>thread</em>
-			li.fragment  <code>pthread_join()</code>, padre espera que hijo(s) termine(n)
-			li.fragment  <code>pthread_exit()</code>, termina el <em>thread</em> actual
-
-	/section#mt-threadingLibs-winThreads
-		h5 Windows Threads
-
-		p Disponible nativamente en Windows API (kernel <em>thread</em>s)
-		ul
-			li.fragment  <code>HANDLE</code>, permite acceder al <em>thread</em> (puntero)
-			li.fragment  <code>CreateThread()</code>, creación de <em>thread</em>
-			li.fragment  <code>WaitForSingleObject()</code> padre espera que hijo termine
-			li.fragment  <code>WaitForMultipleObjects()</code> padre espera que hijo(s) termine(n)
-			li.fragment  <code>CloseHandle()</code>, borra el <em>thread</em> indicado
-
-
-	/section#mt-threadingLibs-javaThreads
-		h5 Java Threads
-
-		p Implementado como biblioteca nativa en la JVM
-
-		p.fragment Se consideran <em>user thread</em>s ya que la JVM ejecuta sobre algún Sistema Operativo <em>host</em>
-		ul
-			li.fragment  Creación: extender clase <code>Thread</code> y hacer <em>override</em> del método <code>run()</code>
-			li.fragment  Creación: clase que implementa la interfaz <code>Runnable</code>
-			li.fragment  <em>Thread</em> es efectivamente creado al invocar <code>start()</code>
-			ul
-				li.fragment  Asigna memoria para el nuevo objeto <em>thread</em> en la JVM
-				li.fragment  Llama al método <code>run()</code> iniciando la ejecución del <em>thread</em>
-			li.fragment  Esperar que un <em>thread</em> hijo termine: <code>join()</code>
-
-
-/section#semantics
-	h2 Semántica de <code>fork</code>/<code>exec</code> y señales
-
-	p Aún quedan algunas situaciones "poco claras"
-	ul
-		li.fragment  Semántica de <code>fork()</code> y <code>exec()</code> en proceso <em>multithreaded</em>
-		ul
-			li.fragment  ¿Se duplican todos los <em>thread</em>s o solo el actual?
-			li.fragment  ¿<code>exec()</code> reemplaza todos los <em>thread</em>s?
-			/!ul
-				li.fragment  No se debería poder, el resto de los threads quedarían corruptos
-				li.fragment  Si se espera que funcione  debe ser creando un proceso nuevo y terminando el thread
-
-		li.fragment  Semántica de señales (<em>signal</em>s) en Unix, ¿quién la recibe?
-		ul
-			li.fragment  Un <em>thread</em>, aquél al cual se le aplica
-			li.fragment  A todos los <em>thread</em>s del proceso
-			li.fragment  A algunos <em>thread</em>s
-			li.fragment  Siempre al mismo <em>thread</em>
 
 
 
-/section#summary-
-	h2 Resumen: <em>Threads</em>
-	ul
-		li.fragment  <em>Thread</em>: flujo de control básico dentro de un proceso
-		li.fragment  Múltiples <em>thread</em>s en el mismo proceso comparten espacio de memoria
-		li.fragment  <em>User thread</em>s: fáciles de crear, pero no visto por el Sistema Operativo
-		li.fragment  <em>Kernel thread</em>s: manejables por el Sistema Operativo, más costosos de crear
-		li.fragment  MacOSX, Windows, Linux, soportan <em>kernel thread</em>s y hacen <em>mapping</em> a <em>user thread</em>s
-		li.fragment  Bibliotecas de <em>thread</em>s más comunes: Pthreads, Windows threads, Java threads
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1393,20 +1332,20 @@ section#synch-init
 	h2 Sincronización
 
 	section#synch-init-init
-		h2 <em>Sincronización</em>
+		/h2 <em>Sincronización</em>
 
 	section#
 		p <strong><em>Threads</em></strong> como unidad básica de procesamiento
-		ul.fragment
+		ul style="font-size:28px;"
 			li  <i>Threads</i> en un proceso comparten memoria
 			li  <i>Threads</i> son concurrentes (compiten por uso de CPU)
 			li  <i>Threads</i> en un sistema multicore pueden ejecutar en paralelo
 
-		p.fragment Pero deben ser sincronizados... o puede pasar ...
+		p.fragment data-fragment-index="1" Pero deben ser sincronizados... o puede pasar ...
 
-		div.fragment Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
+		div.fragment data-fragment-index="1" Ejemplo: <a href="../examples/pthreads2.c" target="_blank">POSIX Threads compartiendo memoria</a>
 
-		div.fragment
+		div.fragment data-fragment-index="2" 
 			== image_tag '/images/figures/01-2problems.png', :width=>"60%", :style=>"border:none;"
 
 	section
@@ -1514,13 +1453,11 @@ section
 	h2 Algunas soluciones
 
 	section
-		div Atacar al problema de raíz
-
-		div.fragment <b>Deshabilitar las interrupciones</b>
+		div Atacar al problema de raíz: <b>Deshabilitar las interrupciones</b>
 
 		ul.fragment 
 			li Problema ocurre cuando un <i>thread</i> es interrumpido
-			li Si no hay interrupciones no hay problema
+			li Si no hay interrupciones, no hay problema
 			li ¿Es suficiente?
 			li ¿Quién puede hacer esto?
 
