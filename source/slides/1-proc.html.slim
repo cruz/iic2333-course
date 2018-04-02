@@ -208,6 +208,12 @@ section#creation
 			li Ambos continúan ejecutando desde la instrucción de retorno de <code>fork()</code>
 			li <code>fork()</code> retorna <code>PID</code> del hijo al padre, y retorna <code>0</code> al hijo
 
+		br
+		br
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-fork2-opt.svg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 	section#creation-fork-l-q
 		p ¿Qué imprime este programa?
@@ -215,17 +221,46 @@ section#creation
 		pre
 			code.hljs.lang-c
 				| int a = 42;
-				  
+				  printf("Antes de fork()\n");
 				  pid_t child_pid = fork(); /* create new process */
 				  if (child_pid == 0) { /* child gets 0 */
 				    a++;
-				    printf("CHILD: a is : %d\n", a); /* ??? */
+				    printf("CHILD: a is %d\n", a); /* ??? */
 				  }
 				  else if(child_pid > 0) { /* parent gets the new pid */
 				    printf("PARENT: child_pid is %d\n", child_pid);
 				    printf("PARENT: a is %d\n", a); /* ??? */
 				  }
 
+
+	section#creation-fork-l-result
+		p ¿Qué imprime este programa?
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.lang-c
+					| int a = 42;
+					  printf("Antes de fork()\n");
+					  pid_t child_pid = fork(); /* create new process */
+					  if (child_pid == 0) { /* child gets 0 */
+					    a++;
+					    printf("CHILD: a is %d\n", a); /* ??? */
+					  }
+					  else if(child_pid > 0) { /* parent gets the new pid */
+					    printf("PARENT: child_pid is %d\n", child_pid);
+					    printf("PARENT: a is %d\n", a); /* ??? */
+					  }
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-fork3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+		ul style="font-size:28px;"
+			li El proceso PID 4601 empieza inmediatamente después de <code>fork()</code> con valor de retorno 0.
+			li La memoria de PID 4601 es una copia de la que tenía PID 4592 al momento de ejecutar <code>fork()</code>
+			li Las líneas <code>PARENT</code> y <code>CHILD</code> pueden estar intercaladas.
+			li El valor de <code>a</code> que imprime PID 4601 es siempre 43, y el que imprime PID 4592 es siempre 42.
 
 	section#creation-fork-loop-q
 		p ¿Cuántos procesos se crean?
@@ -239,23 +274,86 @@ section#creation
 				  }
 
 
+	section#creation-fork-loop-r
+		p ¿Cuántos procesos se crean?
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.lang-c
+					| /* ... */
+					  for(int i=0; i<4; i++) {
+					    fork();
+					    printf("[%4d] %d\n", getpid(), i);
+					  }
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-fork4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
 	section
 		
 		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/fork" target="_blank"><code>fork()</code></a>
 
-		ul
+		ul style="font-size:28px;"
 			li Crea un nuevo proceso como <strong>copia</strong> del padre.
 			li Ambos continúan ejecutando desde la instrucción de retorno de <code>fork()</code>
 			li <code>fork()</code> retorna <code>PID</code> del hijo al padre, y retorna <code>0</code> al hijo
 
 		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/execve" target="_blank"><code>exec()</code></a>
 		
-		ul.fragment
+		ul.fragment style="font-size:28px;"
 			li Carga un binario en memoria <strong>reemplazando</strong> el código de quien lo llamó, e inicia su ejecución.
 			li El programa nuevo se "roba" el proceso (la memoria se sobreescribe)
 
 
-	/section#creation-fork-q
+	section#exec-fork-l-q
+		p ¿Qué imprime este programa?
+
+		pre
+			code.hljs.lang-c
+				| printf("Antes de fork()\n");
+				  pid_t child_pid = fork(); 
+				  if (child_pid == 0) { 
+				    printf("CHILD: About to exec\n");
+				    execlp("/bin/date","",NULL);
+				    printf("CHILD: exec done"); /* not reached */
+				  }
+				  else if(child_pid > 0)
+				    printf("PARENT: child_pid is %d\n", child_pid);
+
+
+	section#exec-fork-l-r
+		p ¿Qué imprime este programa?
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.lang-c
+					| printf("Antes de fork()\n");
+					  pid_t child_pid = fork(); 
+					  if (child_pid == 0) { 
+					    printf("CHILD: About to exec\n");
+					    execlp("/bin/date","",NULL);
+					    printf("CHILD: exec done"); /* not reached */
+					  }
+					  else if(child_pid > 0)
+					    printf("PARENT: child_pid is %d\n", child_pid);
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-exec1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+		ul style="font-size:28px;"
+			li El proceso PID 4601 se convierte en <code>/bin/date</code>. 
+			li La línea <code>CHILD: exec done</code> nunca se imprime (salvo que <code>exec</code> falle)
+			li <code>exec</code> <b>no retorna</b> (salvo si falla). Falla cuando no puede lanzar el proceso (ej: no encuentra el ejecutable)
+			li El proceso PID 4601 sigue siendo hijo de PID 4592, pero ahora su código y memoria son distintos.
+			li Tanto PID 4592 como PID 4601 siguen ejecutando concurrentemente
+
+
+	section#creation-fork-q
 		p ¿Qué hacen estos programas? (*)
 		p <small>asumiendo que fork no falla</small>
 		pre
@@ -270,13 +368,26 @@ section#creation
 				  /* ... */
 
 
+
 	section#creation-wait
-		p Después del <code>fork()</code>, uno de los procesos (el hijo) podría ejecutar un <code>exec()</code>.
-		ul.fragment
-			li El padre conoce el <strong>pid</strong> del hijo
-			li El padre podría seguir ejecutando y crear más hijos
-			li &hellip; o bien esperar que el hijo termine (o muera)
-		== image_tag '/images/figures/01-3_10.pdf.png', :style=>"border:none;"
+
+		div <b>Esperando a los hijos</b>
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			p Un flujo común de ejecución para lanzar un programa nuevo:
+			ul style="font-size:28px"
+				li Proceso hace <code>fork()</code>, para que el hijo haga <code>exec()</code>
+				li Proceso padre puede crear más hijos,...
+				li ... o esperar que el hijo termine antes de lanzar otro programa
+
+			p Padre debe ser capaz de saber cuando algún hijo termina
+			ul style="font-size:28px;"
+				li El padre conoce el <strong>pid</strong> del hijo (se lo da <code>fork()</code>)
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-exec2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
 
 
 	section#creation-wait-def
@@ -293,6 +404,64 @@ section#creation
 		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/wait" target="_blank"><code>wait()</code></a>
 
 		div.fragment Espera el término de un proceso hijo
+
+
+
+
+	section#wait-exec-fork-l-q
+		p ¿Qué imprime este programa?
+
+		pre
+			code.hljs.lang-c
+				| printf("Antes de fork()\n");
+				  pid_t child_pid = fork(); 
+				  if (child_pid == 0) { 
+				    printf("CHILD: About to exec\n");
+				    execlp("/bin/date","",NULL);
+				    printf("CHILD: exec done"); /* not reached */
+				  }
+				  else if(child_pid > 0) {
+				    printf("PARENT: child_pid is %d\n", child_pid);
+				    wait(NULL);
+				  }
+				  printf("PARENT: Child finished\n");
+
+
+	section#wait-exec-fork-l-r
+		p ¿Qué imprime este programa?
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.lang-c
+					| printf("Antes de fork()\n");
+					  pid_t child_pid = fork(); 
+					  if (child_pid == 0) { 
+					    printf("CHILD: About to exec\n");
+					    execlp("/bin/date","",NULL);
+					    printf("CHILD: exec done"); /* not reached */
+					  }
+				      else if(child_pid > 0) {
+				        printf("PARENT: child_pid is %d\n", child_pid);
+				        wait(NULL);
+				      }
+				      printf("PARENT: Child finished\n");
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-exec3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+		ul style="font-size:28px;"
+			li El proceso PID 4592 se bloquea (estado <i>waiting</i>) hasta que su hijo termina. 
+			li Cuando el hijo termina, el sistema operativo mueve a PID 4592 de regreso a estado <i>ready</i>
+			li El proceso PID 4601 sigue siendo hijo de PID 4592, por lo tanto PID 4601 sabe cuando el hijo ha terminado
+
+
+
+
+
+
 
 	section#creation-shell
 
