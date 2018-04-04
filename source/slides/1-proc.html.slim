@@ -475,18 +475,26 @@ section#termination
 	h2 Terminando procesos
 	/  -------------------
 
-	section#termination-0
-		p.fragment Todo proceso, al terminar su ejecución, ejecuta <code>exit()</code>
-		ul.fragment
-			li Entrega un <em>código de retorno</em> (¿para qué?)
-			li El Sistema Operativo recupera todos los recursos asignados
+	section
 
-		p.fragment El código de retorno se utiliza para avisar cómo resultó la ejecución
-		ul.fragment
-			li Generalmente es <code>0</code> cuando no hubo problemas
-			li Y un número distinto de <code>0</code> para indicar un problema
-			li La documentación del programa debería relacionar errores a códigos de retorno.
-			li También se le llama <em>código de error</em>.
+	section#termination-0
+		p Todo proceso, al terminar su ejecución, ejecuta <code>exit()</code>
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul style="font-size:28px;"
+				li Proceso entrega un <em>código de retorno</em> (¿para qué?)
+				li Sistema Operativo recupera todos los recursos asignados a ese proceso
+
+			p El código de retorno se utiliza para informar cómo resultó la ejecución
+			ul style="font-size:28px;"
+				li También se le llama <i>código de error</i>.
+				li Convención: <code>0</code> indica que terminó de manera normal (sin problemas)
+				li Convención: $\neq$<code>0</code> se usa para indicar un problema (error, o situación especial)
+				li La documentación del programa debería relacionar errores a códigos de retorno.
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-exit1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 	section#termination-syscalls
 
@@ -507,14 +515,42 @@ section#termination
 
 		div.fragment Termina el proceso con un código de retorno dado, y lo entrega al padre
 
+	section#termination-1
+		p El proceso padre puede recuperar el <i>exit code</i> del hijo
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			pre
+				code.hljs.lang-c
+					| printf("Antes de fork()\n");
+					  pid_t child_pid = fork(); 
+					  if (child_pid == 0) { 
+					    printf("CHILD: running\n");
+					    // ...
+					    exit(9);
+					  }
+				      else if(child_pid > 0) {
+				        printf("PARENT: child_pid is %d\n", child_pid);
+				        wait(&status);
+				      }
+				      printf("PARENT: Child finished\n");
+				      printf("Exit status: %d\n", WEXITSTATUS(status));
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-exit2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="font-size:28px;" La <i>syscall</i> <code>wait()</code> permite recibir un valor del hijo, desde donde se puede extraer el <i>exit code</i>.
+
+
+
 
 	section#termination-signals
 
 		div Un proceso puede enviar <i>señales</i> (<a href="http://www.comptechdoc.org/os/linux/programming/linux_pgsignals.html" target="_blank"><b>signal</b></a>s) a otros procesos
 
-		blockquote.fragment style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/kill" target="_blank"><code>kill()</code></a>
+		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/kill" target="_blank"><code>kill()</code></a>
 		
-		ul.fragment
+		ul.fragment style="font-size:28px;"
 			li Envía una <strong>señal</strong> (<code>kill -l</code> muestra una lista)a otro proceso (típicamente <em>SIGTERM</em>)
 			li Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
 
