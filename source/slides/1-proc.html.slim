@@ -542,7 +542,10 @@ section#termination
 		div style="font-size:28px;" La <i>syscall</i> <code>wait()</code> permite recibir un valor del hijo, desde donde se puede extraer el <i>exit code</i>.
 
 
+section#signals
+	h2 Señales, huérfanos, y zombies
 
+	section
 
 	section#termination-signals
 
@@ -550,61 +553,99 @@ section#termination
 
 		blockquote style="background:#B7E1CD;" Syscall <a href="http://linux.die.net/man/2/kill" target="_blank"><code>kill()</code></a>
 		
-		ul.fragment style="font-size:28px;"
-			li Envía una <strong>señal</strong> (<code>kill -l</code> muestra una lista)a otro proceso (típicamente <em>SIGTERM</em>)
-			li Se puede especificar la señal (<em>SIGKILL</em> no tiene piedad)
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
-		img.fragment src='/images/figures/01-signals.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			ul.fragment style="font-size:28px;"
+				li Envía una <strong>señal</strong> a otro proceso (por defecto <em>SIGTERM</em>)
+				li <code>kill -l</code> permite ver las señales disponibles
+				li <code>SIGTERM</code> indica al proceso que debe terminar
+				li <code>SIGKILL</code> elimina al proceso de la tabla de procesos (sin piedad)
 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img.fragment src='/images/figures/01-signals.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
+	section#signals-martin
+
+		div El comando <a href="https://linux.die.net/man/1/killall"><code>killall</code></a> permite enviar una <code>signal</code> a un grupo de procesos.
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+			a href="https://en.wikipedia.org/wiki/George_R._R._Martin"
+				img src='/images/figures/01-proc-grrmartin-killall.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 	section#termination-q
 		p Si el padre muere, ¿deben morir los hijos?
 
-		ul.fragment
+		ul.fragment style="font-size:28px;"
 			li Sistema Operativo podría permitir (o no) que un hijo exista si el padre ha terminado.
+			li Linux permite que procesos hijos sigan viviendo, aún cuando el padre haya terminado.
 			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a>.
 
 		blockquote.fragment style="background:#B7E1CD;" Procesos <b>huérfanos</b>
 
-		ul.fragment
+		ul.fragment style="font-size:28px;"
 			li Linux: Cuando un padre termina (<code>exit</code>) o muere (<code>kill</code>), sus hijos quedan <b>huérfanos</b> y pasan a ser hijos de <code>init</code>
 			li Sin embargo, <a href="http://unix.stackexchange.com/questions/158727/is-there-any-unix-variant-on-which-a-child-process-dies-with-its-parent" target="_blank">podría parecer que los hijos sí mueren</a> (las condiciones pueden ser complicadas).
 			li <code>init</code> hace <code>wait()</code> periódicamente por sus hijos.
 
 		blockquote.fragment style="background:#B7E1CD;" Procesos <b>zombies</b>
 
-		ul.fragment
+		ul.fragment style="font-size:28px;"
 			li Linux: Cuando un proceso termina y su padre no hace <code>wait()</code>.
 			li Proceso terminado no se borra inmediatamente de la tabla de procesos (pero tampoco ejecuta).
 			li Proceso queda en estado <b>zombie</b> hasta que el padre hace <code>wait()</code>.
+
+	section#termination-r
+		p Huérfanos y zombies
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img.fragment data-fragment-index="1" src='/images/figures/01-proc-orphan-opt.svg' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img.fragment data-fragment-index="2" src='/images/figures/01-proc-zombie-opt.svg' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			ul.fragment data-fragment-index="1" style="font-size:28px;"
+				li P1 termina antes que P2
+				li P2 pasa a ser hijo de <code>init</code>
+				li <code>init</code> hace <code>wait()</code>
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			ul.fragment data-fragment-index="2"  style="font-size:28px;"
+				li P2 termina antes que P1
+				li P1 no ha hecho <code>wait</code>
+				li No se puede eliminar el PCB de P2 hasta que P1 haga <code>wait</code>
+				li P2 queda zombie hasta que P1 hace <code>wait</code>
 
 
 	section#termination-necromancy
 		p Creando un zombie
 
-		pre
-			code.hljs.lang-c style="max-height:600px;"
-				| #include &lt;stdlib.h&gt;
-				  #include &lt;sys/types.h&gt;
-				  #include &lt;unistd.h&gt;
-				  int main () {
-				    pid_t child_pid;
-				 
-				    /* Create child*/
-				    child_pid = fork ();
-				    if (child_pid > 0) {
-				      /* Parent process */
-				      sleep (60);
-				    }
-				    else {
-				      /*Child process. Exit immediately. */
-				      exit (0);
-				    }
-				    return 0;
-				  }
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
 
+			pre
+				code.hljs.lang-c style="max-height:600px;"
+					| #include &lt;stdlib.h&gt;
+					  #include &lt;sys/types.h&gt;
+					  #include &lt;unistd.h&gt;
+					  int main () {
+					    pid_t child_pid;
+					 
+					    /* Create child*/
+					    child_pid = fork ();
+					    if (child_pid > 0) {
+					      /* Parent process */
+					      sleep (60);
+					    }
+					    else {
+					      /*Child process. Exit immediately. */
+					      exit (0);
+					    }
+					    return 0;
+					  }
 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+			div La <i>syscall</i> <a href="https://linux.die.net/man/3/sleep"><code>sleep()</code></a> duerme al proceso, pasándolo a estado <i>blocked</i> durante una cantidad definida de tiempo.
+			
 
 	section#termination-necromancy2
 		p Creando zombies
@@ -629,270 +670,7 @@ section#termination
 
 				  }
 
-
-
-
-/section#_ipc
-	h2 Comunicación entre procesos (IPC)
-/    =================================
-/section#ipc
-	h2 Comunicación entre procesos (IPC)
-	/  ---------------------------------
-
-	section#ipc-0
-		p <em>InterProcess Comunication (IPC)</em>
-
-		p.fragment Si hay multiprogramación, hay múltiples procesos "en ejecución"
-		/''\footnote{ya sabemos que esto no es estrictamente correcto}
-		ul
-			li.fragment Procesos <strong>independientes</strong> no provocan problemas &hellip;
-			li.fragment procesos <strong>cooperativos</strong> requieren <strong>comunicación inter-procesos</strong>
-
-		p.fragment Dos modelos fundamentales de IPC:
-		ul
-			li.fragment <strong>Memoria compartida</strong> (<em>shared memory</em>)
-			li.fragment <strong>Paso de mensajes</strong> (<em>message passing</em>)
-
-
-	section#ipc-shm_vs_mp
-		p Memoria compartida vs. Paso de mensajes
-
-		p Memoria Compartida
-		p.fragment data-fragment-index="1" Procesos acuerdan un espacio de memoria donde ambos pueden escribir
-		ul
-			li.fragment data-fragment-index="3" Más rápido que paso de mensajes (sólo un <em>syscall</em> para crearla)
-			li.fragment data-fragment-index="5" Requiere coordinar accesos
-
-
-		p
-		span.fragment.fade-in data-fragment-index="0" 
-			span.fragment.fade-out data-fragment-index="1"
-				small Fight!
-
-		p Paso de Mensajes
-		p.fragment data-fragment-index="2" Procesos se envían mensajes
-		ul
-			li.fragment data-fragment-index="4" Requiere <em>Syscall</em>s <code>send</code>/<code>recv</code>
-			li.fragment data-fragment-index="6" Fácil de programar para envíos pequeños (no provoca conflictos)
-
-
-	section#ipc-shm_vs_mp-fig
-		== image_tag '/images/figures/01-3_12.pdf.png'
-
-
-/section#ipc-_shm
-	h2 Memoria Compartida
-
-	section#ipc-shm
-		p ¿Escribir en memoria de otro proceso?
-
-		ul.fragment
-			li Procesos $A$ y $B$ deben <strong>acordar</strong> permitirse acceso
-			li Proceso $A$ designa una región de su espacio de memoria como <em>compartida</em>
-			li Proceso $B$ agrega esa región como parte de su espacio
-			li $A$ y $B$ se preocupan de coordinar los accesos
-
-		p.fragment API POSIX provee syscall para crear y exponer regiones de memoria compartida
-		ul.fragment
-			li <em>Memory-mapped files</em>
-			li <code>shm_open()</code>, <code>ftruncate()</code>, <code>mmap()</code>, <code>shm_unlink()</code>
-
-
-	/section#ipc-shm-prod_cons
-	/	p Un problema clásico de coordinación
-
-	/	p
-	/		em Problema del productor y consumidor
-	/	ul.fragment
-	/		li Proceso <strong>productor</strong> produce información.
-	/		li Proceso <strong>consumidor</strong> consume información del productor.
-	/	pre
-	/		== image_tag '/images/figures/01-ProdCons.png'
-	/	.fragment
-	/		p Variantes: con <strong>buffer limitado</strong> ó <strong>ilimitado</strong>
-	/		ul
-	/			li.fragment Con <strong>buffer limitado</strong> el productor puede tener que esperar
-
-
-
-	/section#ipc-shm-prod_cons-code
-	/	p Buffer limitado (<em>bounded</em>) en memoria compartida
-	/	pre
-	/		code.hljs.lang-c
-	/			| #define BUFFER_SIZE 10
-	/			  
-	/			  typedef struct {
-	/			    /* ... */
-	/			  } item;
-	/			  
-	/			  item buffer[BUFFER_SIZE];
-	/			  int in = 0;     // proxima posicion libre
-	/			  int out = 0;    // primera posicion llena
-	/	p ¿Cuándo está lleno el buffer? ¿Cuándo está vacío?
-
-
-	/section#ipc-shm-prod_cons-code-prod
-	/	p Proceso <strong>productor</strong>
-	/	pre
-	/		code.hljs.lang-c
-	/			| item next_product;
-	/			  while(true) {
-	/			    next_product = produce();
-	/			    while ( ((in+1)%BUFFER_SIZE) == out);  /* !!! */
-	/			    
-	/			    buffer[in] = next_product;
-	/			    in = (in+1)%BUFFER_SIZE;
-	/			  }
-
-
-	/section#ipc-shm-prod_cons-code-cons
-	/	p Proceso <strong>consumidor</strong>
-
-	/	pre
-	/		code.hljs.lang-c
-	/			| item next_consumed;
-	/			  
-	/			  while(true) {
-	/			    while(in == out); /* !!! */
-	/			    
-	/			    next_consumed = buffer[out];
-	/			    out = (out+1)%BUFFER_SIZE;
-	/			    
-	/			    consume(next_consumed);
-	/			  }
-	/	p ¿Cuántos ítemes puede haber como máximo en el <em>buffer</em>?
-
-
-
-/section#ipc-_mp
-	h2 Paso de mensajes
-
-	section#ipc-mp
-		p.fragment Abstracción de <em>mensaje</em>. Dos primitivas:
-
-		ul.fragment
-			li <code>send(message)</code>
-			li <code>receive(message)</code>
-
-		/p.fragment ¿Cómo habilitar la comunicación? Varios aspectos a decidir
-		/ul
-		/	li.fragment Comunicación directa o indirecta
-		/	ul
-		/		li.fragment <code>send(P, message)</code>, <code>recv(Q, message)</code>, <code>recv(&id, message)</code>
-		/		li.fragment <code>send(A, message)</code>, <code>recv(A, message)</code>
-		/	li.fragment Comunicación síncrona o asíncrona
-
-
-	section#ipc-mp-d-u
-		p Comunicación directa vs indirecta
-
-		p.fragment data-fragment-index="0" Con <strong>comunicación directa</strong>, cada proceso debe conocer el <em>nombre</em> del otro
-		ul.fragment
-			li <code>send(P, message)</code>
-			li <code>receive(Q, message)</code>
-		p.fragment Este esquema es <strong>simétrico</strong><span class="fragment">. Variante <em>asimétrica</em>: <code>receive(&id, message)</code></span>
-
-		p.fragment data-fragment-index="0" Con <strong>comunicación indirecta</strong> utiliza abstracción de <em>mailbox</em> o <em>port</em>
-		ul.fragment
-			li <code>send(A, message)</code>
-			li <code>receive(A, message)</code>
-		p.fragment Ambos deben poseer un referencia al <em>mailbox</em> <code>A</code>
-
-
-	section#ipc-mp-sync
-		p Comunicación síncrona vs asíncrona
-
-		p.fragment Tanto <code>send()</code> como <code>receive()</code> pueden ser <strong>bloqueantes</strong> (síncrono) o <strong>no bloqueantes</strong> (asíncrono)
-
-		ul
-			li.fragment <code>send</code> <strong>bloqueante</strong>: bloquea hasta que el mensaje es recibido
-			li.fragment <code>send</code> <strong>no-bloqueante</strong>: envía y continúa
-			li.fragment <code>recv</code> <strong>bloqueante</strong>: espera hasta recibir un mensaje
-			li.fragment <code>recv</code> <strong>no-bloqueante</strong>: recibe un mensaje inmediatamente o <code>null</code>
-
-
-
-	/section#ipc-mp-buf
-	/	p Comunicación <em>buffered</em> o <em>unbuffered</em>
-
-	/	p.fragment Sistemas Operativos usan <em>colas</em> temporales para transmitir mensajes
-	/	ul
-	/		li.fragment <strong>Cola de capacidad cero</strong>: fuerza <code>send()</code> bloqueante
-	/		li.fragment <strong>Cola de capacidad limitada</strong>: máximo de $n$ mensajes encolados mientras no sean recibidos.
-	/		ul
-	/			li.fragment Si se llena, el siguiente <code>send()</code> se bloquea
-	/		li.fragment <strong>Cola de capacidad ilimitada</strong>: cola potencialmente infinita
-
-
-/section#ipc-hl
-/	h2 Más comunicación inter-procesos
-/	small Algunas técnicas de más alto nivel
-
-
-/	section#ipc-hl-sockets
-/		p.fragment <strong>Sockets</strong>: punto de comunicación de servicios
-
-/		ul
-/			li.fragment Indexado
-/			li.fragment Comunicación cliente/servidor
-/			li.fragment Para comunicación TCP o UDP
-			/ \footnote{Si no sabe que es esto, búsquelo en Google o espere hasta los capítulos de redes}
-/		== image_tag '/images/figures/01-3_20.pdf.png', :width=>"50%", :style=>"float:right;"
-
-
-/	section#ipc-hl-rpc
-/		p <strong>RPC</strong>: Remote Procedure Call
-		/ \footnote{Más de esto en IIC2523, Sistemas Distribuidos}
-/		ul
-/			li.fragment Comunicación a nivel de funciones (métodos) en otro proceso
-/			li.fragment Requiere un intermediario (<em>matchmaker/portmapper</em>) para ubicar los proveedores del método remoto
-/			li.fragment Versión <em>object oriented</em>: <strong>RMI</strong>, <em>Remote Method Invocation</em>
-/			li.fragment Mismo esquema usado por <em>Web Services</em>
-
-/		== image_tag '/images/figures/01-RPC.png', :width=>"40%"
-
-
-/	section#ipc-hl-rpc
-/		p <strong>Pipes</strong>: <em>tubo</em> entre dos procesos
-
-/		ul
-/			li.fragment  Unidireccionales o bidireccionales
-/			li.fragment  Un proceso escribe en un extremo (<em>write-end</em>), y otro proceso lee desde el otro extremo (<em>read-end</em>)
-/			li.fragment  Pueden ser tratadas como archivos
-/			li.fragment  Implementación implícita en consolas. Ej: <code>ls | more</code>
-/		== image_tag '/images/figures/01-pipes.png'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" ¿Por qué este código permite crear múltiples zombies? ¿Cuántos crea?
 
 
 / Frame
@@ -911,31 +689,47 @@ section#termination
   //         li.fragment  Bonus si funciona para $N$ niveles
   //     li.fragment  Pueden hacerlo en conjuntos de $N$, $1 \leq N \leq 3$.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 section#scheduling
 	h2 Scheduling
 
 	section#scheduling-init
 		p <i>CPU Scheduling</i> a.k.a. Planificación de CPU
 
-		div style="width:60%; vertical-align:middle; display:inline-block;" 
+		div style="width:60%; vertical-align:middle; display:inline-block;"
+			div data-fragment-index="1" Tenemos:
+			ul.fragment data-fragment-index="1" style="font-size:28px;"
+				li Múltiples procesos en memoria (<i>multiprogramación</i>), ordenados en una tabla de PCBs
+				li Algunos procesos en estado <i>ready</i> (listos para ejecutar)
+				li CPU que puede atender <b>solo un proceso</b> a la vez
+			br
+			br
+			div.fragment data-fragment-index="2" Y queremos:
+			ul.fragment data-fragment-index="2" style="font-size:28px;"
+				li <b><i>Multitasking</i></b>: asignar tiempo a múltiples procesos
 
-			div.fragment
-
-				div Tenemos
-			
-				ul
-					li Procesos en memoria (<i>multiprogramación</i>), ordenado en una tabla de PCBs
-					li Algunos procesos en estado <i>ready</i> (listos para ejecutar)
-					li CPU, que puede atender <b>solo un proceso</b> a la vez
-
-			div.fragment
-
-				div Y queremos:
-
-				ul
-					li <b><i>Multitasking</i></b>: asignar tiempo a múltiples procesos
-
-		img src='/images/figures/01-pcbs.gif' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-internals-pcb-opt.svg' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
 
 		blockquote.fragment style="background:#B7E1CD;"Sistema Operativo debe elegir cuál de todos los procesos en estado <b>ready</b> debe ejecutar a continuación: <b>scheduling</b>
 
