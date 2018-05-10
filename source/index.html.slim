@@ -67,7 +67,7 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC05"
 
     
-    div
+    /div
       div style="border:none; display:inline-block; width:100px;" I2
       div style="border:none; display:inline-block; width:380px;" Inicio: Martes 8/May, 18:30, B24(A-H), B25(J-Z)
       div style="border:none; display:inline-block;" class="timerI2"
@@ -82,9 +82,9 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 11/May, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI1"
 
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.zip'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 13/Oct, 23:59
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Jueves 24/May, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
     /div
@@ -203,10 +203,10 @@ article
       /div style="border:none; display:inline-block; width:100px;" = link_to 'shm-example.c', 'homeworks/2/shm-example.c'
 
     div
-      div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 3 (7-May)
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 3</del>', 'homeworks/3/T3.zip'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Viernes 11/May, 23:59
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
+      /div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 3 (7-May)
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Jueves 24/May, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
     div
       div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 4 (21-May)
@@ -394,7 +394,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Oct 13, 2017 23:59:59')
+    dateEnd: new Date('May 24, 2018 23:59:59')
   });
   var countdownT4 = new Countdown({
     selector: '.timerT4',
@@ -538,4 +538,12 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Mar 23, 2018 10:00:00')
+  });
+
+  var countdownEX = new Countdown({
+    selector: '.timerAyud3',
+    msgAfter: "Empezó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('May 14, 2018 10:00:00')
   });
