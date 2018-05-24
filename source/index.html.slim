@@ -72,19 +72,19 @@ article
       div style="border:none; display:inline-block; width:380px;" Inicio: Martes 8/May, 18:30, B24(A-H), B25(J-Z)
       div style="border:none; display:inline-block;" class="timerI2"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC06', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/ff9b890159704d39b9fbe5ca1d33f0fb/1cbbf451c3b9460f8fde2cf1b6ebe173/'
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 11/May, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC06"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'RecorrI1', 'https://goo.gl/JRr9hh'
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 11/May, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI1"
 
     div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Jueves 24/May, 23:59
+      div style="border:none; display:inline-block; width:380px;" Deadline: <del>Jueves 24/May</del> Sábado 26/May, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
     /div
@@ -205,20 +205,20 @@ article
     div
       /div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 3 (7-May)
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 3', 'homeworks/3/T3.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Jueves 24/May, 23:59
+      div style="border:none; display:inline-block; width:360px;" Deadline: <del>Jueves 24/May</del> Sábado 26/May, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT3"
 
     div
       div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 4 (21-May)
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 4</del>', 'homeworks/4/T4.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Domingo 27/May, 23:59
+      div style="border:none; display:inline-block; width:360px;" Deadline: Viernes 8/Jun, 23:59
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT4"
       /div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'socketsTCP.tar.gz', 'homeworks/4/socketsTCP.tar.gz'
 
     div
       div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 5 (4-Jun)
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 5</del>', 'homeworks/5/T5.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Domingo 10/Jun, 23:59
+      div style="border:none; display:inline-block; width:360px;" Deadline: Viernes 15/Jun, 23:59
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
 
 
@@ -261,8 +261,8 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC05"
 
     div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC06', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/ff9b890159704d39b9fbe5ca1d33f0fb/1cbbf451c3b9460f8fde2cf1b6ebe173/'
-      div style="border:none; display:inline-block; width:260px;" Deadline: Viernes 11/May, 10:00
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC06</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/ff9b890159704d39b9fbe5ca1d33f0fb/1cbbf451c3b9460f8fde2cf1b6ebe173/'
+      div style="border:none; display:inline-block; width:260px;" Deadline: <del>Viernes 11/May, 10:00</del>
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC06"
 
 
@@ -394,7 +394,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('May 24, 2018 23:59:59')
+    dateEnd: new Date('May 26, 2018 23:59:59')
   });
   var countdownT4 = new Countdown({
     selector: '.timerT4',
