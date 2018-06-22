@@ -92,7 +92,7 @@ article
       div style="border:none; display:inline-block; width:380px;" Inicio: Martes 5/Jun, 18:30
       div style="border:none; display:inline-block;" class="timerI3"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'RecorrI2', 'https://goo.gl/JRr9hh'
       div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 15/Jun, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI2"
@@ -103,20 +103,21 @@ article
       div style="border:none; display:inline-block;" class="timerT4"
 
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 5', 'homeworks/5/T5.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 20/Jun, 23:59
       div style="border:none; display:inline-block;" class="timerT5"
 
-    /div
-      div style="border:none; display:inline-block; width:80px;" =link_to 'Tarea 6', 'homeworks/6/T6.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 01/Dic, 23:59
-      div style="border:none; display:inline-block;" class="timerT6"
-
+    
     div
       div style="border:none; display:inline-block; width:100px;" Examen
       div style="border:none; display:inline-block; width:380px;" Inicio: Jueves 28/Jun, 09:00
       div style="border:none; display:inline-block;" class="timerEX"
+    
+    div
+      div style="border:none; display:inline-block; width:80px;" =link_to 'Tarea 6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 02/Jul, 23:59
+      div style="border:none; display:inline-block;" class="timerT6"
 
     /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'RecorrI3', 'https://docs.google.com/forms/d/e/1FAIpQLScI0YosQWkQ9wXpGvObESSUmw6oQkWTjobTvxkWnTWTtYevcA/viewform?usp=sf_link'
@@ -217,17 +218,17 @@ article
       div style="border:none; display:inline-block; width:90px; vertical-align:top;" = link_to 'Diagrama', 'homeworks/4/T4-diagram.pdf'
 
     div
-      div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 5 (4-Jun)
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 5</del>', 'homeworks/5/T5.pdf'
+      /div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 5 (4-Jun)
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 5</del>', 'homeworks/5/T5.pdf'
       div style="border:none; display:inline-block; width:360px;" Deadline: Miércoles 20/Jun, 23:59
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT5"
 
 
     div
-      div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 6 (11-Jun)
-      /div style="border:none; display:inline-block; width:80px;" =link_to 'Tarea 6', 'homeworks/6/T6.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Domingo 24/Jun, 23:59
-      /div style="border:none; display:inline-block;" class="timerT6"
+      /div style="border:none; display:inline-block; width:130px; vertical-align:top;" Tarea 6 (11-Jun)
+      div style="border:none; display:inline-block; width:80px;" =link_to 'Tarea 6', 'homeworks/6/T6.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 2/Jul, 23:59
+      div style="border:none; display:inline-block;" class="timerT6"
 
 
 
@@ -418,7 +419,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 23:59:59'),
-    dateEnd: new Date('Dec 1, 2017 23:59:59')
+    dateEnd: new Date('Jul 2, 2018 23:59:59')
   });
 
   var countdownAC01 = new Countdown({
