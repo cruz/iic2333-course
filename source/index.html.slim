@@ -109,7 +109,7 @@ article
       div style="border:none; display:inline-block;" class="timerT5"
 
     
-    div
+    /div
       div style="border:none; display:inline-block; width:100px;" Examen
       div style="border:none; display:inline-block; width:380px;" Inicio: Jueves 28/Jun, 09:00
       div style="border:none; display:inline-block;" class="timerEX"
@@ -124,6 +124,15 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 27/Nov, 12:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI3"
 
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC07', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/baa35e75a8c2429eb372fa9343887a86/6a2ed4a0a7bf4f7598d456f415dda027/'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Martes 10/Jul, 12:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC07"
+
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC08', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333+IIC2333_2018/courseware/fb0efaf44dd94da78d57dc9962bb58c0/4d29b5c68e7e4abcb314223e0450af31/'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Martes 10/Jul, 12:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerAC07"
 
   section#slides
     h3 Material de Clases
@@ -470,6 +479,14 @@ javascript:
     msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 11, 2018 10:00:00')
+  });
+
+  var countdownAC07 = new Countdown({
+    selector: '.timerAC07',
+    msgAfter: "Se acabó.",
+    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jul 10, 2018 12:00:00')
   });
 
   var countdownI1 = new Countdown({
