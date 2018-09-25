@@ -57,7 +57,7 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC04"
 
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: <del>Martes 11/Sep</del>Jueves 13/Sep, 23:59
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
@@ -67,6 +67,10 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 24/Sep, 08:30
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC05"
 
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'projects/1/P1.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 15/Oct, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
 
     /div
       div style="border:none; display:inline-block; width:100px;" I2
@@ -217,15 +221,15 @@ article
     div
       /div style="border:none; display:inline-block; width:150px; vertical-align:top;" Tarea 2 (M 4-Sep)
       div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
-      div style="border:none; display:inline-block; width:250px;" Deadline: <del>Martes 11/Sep</del>Jueves 11/Sep, 23:59
-      div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
+      div style="border:none; display:inline-block; width:360px;" Deadline: <del>Martes 11/Sep</del>Jueves 11/Sep, 23:59
+      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
       div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/2/RubricaT2.pdf'
       div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaT2.pdf'
       div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Test', 'homeworks/2/t2_tests.zip'
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'data.bin', 'homeworks/2/data.bin'
       /div style="border:none; display:inline-block; width:100px;" = link_to 'mmap-example.c', 'homeworks/2/mmap-example.c'
       /div style="border:none; display:inline-block; width:100px;" = link_to 'shm-example.c', 'homeworks/2/shm-example.c'
-
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
     div
       div style="border:none; display:inline-block; width:150px; vertical-align:top;" Tarea 3 (M 9-Oct)
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 3</del>', 'homeworks/3/T3.pdf'
@@ -246,10 +250,10 @@ article
     h3 Proyectos
     /  ------
     div
-      div style="border:none; display:inline-block; width:200px; vertical-align:top;" Proyecto SO (M 11-Sep)
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 1</del>', 'homeworks/1/T1.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Martes 2/Oct, 23:59
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
+      /div style="border:none; display:inline-block; width:200px; vertical-align:top;" Proyecto SO (M 11-Sep)
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'projects/1/P1.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 15/Oct, 23:59
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
       /div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/1/rubricaT1.pdf'
       /div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'https://docs.google.com/presentation/d/1V_Eol_6VXAsq1WL6l5VIkL05pJnvapE9vO5sY0uveVU/edit?usp=sharing'
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'ejemplo.txt', 'homeworks/1/ejemplo.txt'
@@ -447,8 +451,12 @@ javascript:
     dateEnd: new Date('Jun 9, 2018 23:59:59')
   });
 
-
-
+ var countdownP1 = new Countdown({
+   selector: '.timerP1',
+   msgAfter: "Se acabó.",
+   msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+   dateEnd: new Date('Oct 15, 2018 23:59:59')
+ });
 
   var countdownAC01 = new Countdown({
     selector: '.timerAC01',
