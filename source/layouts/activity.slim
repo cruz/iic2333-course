@@ -17,7 +17,7 @@ html lang="es"
 
     / Bootstrap
     link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.min.css"
-    link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css"
+    / link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css"
 
     /  Code syntax highlighting
     /link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/zenburn.min.css"
@@ -50,6 +50,10 @@ html lang="es"
 
     style type="text/css"
       |
+        html {
+          font-family: "Comic Sans MS";
+          background-color: #FFFFE0;
+        }
         pre code.hljs {
           display: block;
         }
@@ -125,11 +129,20 @@ html lang="es"
         .container-col > img {
           align-content: center;
         }
+        body {
+          font-family: "Comic Sans MS";
+          background-color: #FFFFE0;
+          color: #000;
+
+        }
 
   body
     a href="/"
+      img src='/images/figures/logo.png' width="95%"/
+      img src='/images/figures/iexplorer.gif' width="5%"/
+
       header.col-xs-12.col-md-8.col-md-offset-2
-        h2 IIC2333 Sistemas Operativos y Redes 2018-2
+        / h2 IIC2333 Sistemas Operativos y Redes 2018-2
 
     /nav#myNavmenu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas role="navigation"
     /nav#myNavmenu.navmenu.navmenu-fixed-left.offcanvas role="navigation"
@@ -156,11 +169,11 @@ html lang="es"
     footer
       .col-xs-12.col-md-8.col-md-offset-2
         p style='padding-top:4em;' IIC2333 Sistemas Operativos y Redes, Semestre 2018-2<br/>Departamento de Ciencia de la Computación<br/>Pontificia Universidad Católica de Chile<br/>
-
+        img style='width:220px' src="https://i.giphy.com/media/VOMvlxVHR7CF2/200.gif"
     / jQuery
     script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"
     / Bootstrap
-    script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"
+    / script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"
 
 
     javascript:
