@@ -108,6 +108,11 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerRecI2"
 
     div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto Redes', 'projects/2/P2.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 03/Dic, Presencial
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP2"
+
+    div
       div style="border:none; display:inline-block; width:100px;" = link_to 'Tarea 4', 'homeworks/4/T4.pdf'
       div style="border:none; display:inline-block; width:380px;" <del>Miércoles 14/Nov </del> Viernes 16/Nov, 23:59
       div style="border:none; display:inline-block;" class="timerT4"
@@ -266,10 +271,10 @@ article
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Test', 'projects/1/p1_tests.zip' 
 
     div
-      div style="border:none; display:inline-block; width:200px; vertical-align:top;" Proyecto Redes
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>Tarea 1</del>', 'homeworks/1/T1.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Martes 20/Nov, 23:59
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
+      /div style="border:none; display:inline-block; width:200px; vertical-align:top;" Proyecto Redes
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto Redes', 'homeworks/2/P2.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 03/Dic, Presencial
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP2"
       /div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/1/rubricaT1.pdf'
       /div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'https://docs.google.com/presentation/d/1V_Eol_6VXAsq1WL6l5VIkL05pJnvapE9vO5sY0uveVU/edit?usp=sharing'
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'ejemplo.txt', 'homeworks/1/ejemplo.txt'
@@ -464,6 +469,14 @@ javascript:
    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
    dateEnd: new Date('Oct 15, 2018 23:59:59')
  });
+
+  var countdownP2 = new Countdown({
+   selector: '.timerP2',
+   msgAfter: "Se acabó.",
+   msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+   dateEnd: new Date('Dec 03, 2018 11:59:59')
+ });
+
 
   var countdownAC01 = new Countdown({
     selector: '.timerAC01',
