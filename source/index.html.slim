@@ -6,8 +6,10 @@ layout: activity
 
 article
   section#deadlines
-    h3 Deadlines activos
+    h3 🚨 Deadlines activos 🚨
     /  ------
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Distribución IPs 🙂', 'projects/2/distribuciones-ip.pdf'
 
     /div
       div style="border:none; display:inline-block; width:180px; vertical-align:top;" = link_to 'DCCercano, Sala de Consejo DCC', 'https://www.facebook.com/events/608109699537724/'
@@ -167,10 +169,10 @@ article
 
 
   section#slides
-    h3 Material de Clases
+    h3 📚 Material de Clases 📚
     /  ------
     ul
-      li  Sistemas Operativos
+      li  🖥 Sistemas Operativos
       ul
         li = link_to 'Sistemas Operativos',  'slides/0-os.html'
         li = link_to 'Procesos',             'slides/1-proc.html'
@@ -181,7 +183,7 @@ article
         li = link_to 'Archivos',             'slides/5-disk.html'
         /li = link_to 'Protección',           'slides/6-sec.html'
 
-      li  Redes
+      li  🌐 Redes 
       ul
         li = link_to 'Redes',                'slides/7-net.html'
         li = link_to 'Capa Aplicación',     'slides/11-net-app.html'
@@ -191,7 +193,7 @@ article
         /li = link_to 'Capa Física',          'slides/8-net-phy.html'
 
   section#utiles
-    h3 Articulos útiles
+    h3 🤔 Articulos útiles 🤔
     /  -----------
     ul
       li = link_to 'Preparación de una máquina virtual', 'activities/0-init/'
@@ -205,7 +207,7 @@ article
 
 
   section#ayudantias
-    h3 Ayudantías
+    h3 ⛑ Ayudantías ⛑
     /  -----------
     ul
       li = link_to 'Ayudantía C, V 17/Ago', 'ayudantias/AyudantiaC.zip'
@@ -218,7 +220,7 @@ article
 
 
   section#assignments
-    h3 Tareas
+    h3 📝 Tareas 📝
     /  ------
     div
       /div style="border:none; display:inline-block; width:150px; vertical-align:top;" Tarea 1 (J 23-Ago)
@@ -262,7 +264,7 @@ article
 
 
   section#challenges
-    h3 Proyectos
+    h3 📑 Proyectos 📑
     /  ------
     div
       /div style="border:none; display:inline-block; width:200px; vertical-align:top;" Proyecto SO (M 11-Sep)
@@ -284,7 +286,7 @@ article
 
 
   section#edx
-    h3 Actividades EdX
+    h3 ⭐ Actividades EdX ⭐
     /  --------
     = link_to 'Curso en EdX', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_II+IIC2333_II_2018/'
     div style="font-size:12px;" Deben registrarse <b>usando el login de su correo UC</b>. Problemas a cruz@ing.puc.cl
@@ -347,11 +349,11 @@ article
 
 
   section#programa
-    h3 Programa
+    h3 ⚖️ Programa ⚖️
     = link_to 'Programa del curso 2018-2', 'programa.pdf'
 
   section#interrogaciones
-    h3 Evaluaciones escritas
+    h3 ✏️ Evaluaciones escritas ✏️
 
     div
       div style="border:none; display:inline-block; width:260px;" Midterm (SO), <del>L 1/Oct, 18:30, Sala C202</del>
@@ -372,7 +374,7 @@ article
 
 
   section#ejemplos
-    h3 Ejemplos
+    h3 😊 Ejemplos 😊
 
     div
       div style="border:none; display:inline-block; width:80px;" L 20-Ago
@@ -431,7 +433,7 @@ article
 
   section#notas
 
-    h3 Notas
+    h3 📈 Notas 📈
     = link_to 'Notas', 'https://docs.google.com/spreadsheets/d/1p5QCwzPEJebpjUYAUs01Jqt_TouUJBSoZm7VRdQJhdA/edit?usp=sharing', :target => '_blank'
 
 
@@ -439,28 +441,28 @@ javascript:
   var countdown1 = new Countdown({
     selector: '.timerT1',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Sep 02, 2018 23:59:59')
   });
   var countdown2 = new Countdown({
     selector: '.timerT2',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Sept 13, 2018 23:59:59')
   });
   var countdownT3 = new Countdown({
     selector: '.timerT3',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Oct 31, 2018 23:59:59')
   });
   var countdownT4 = new Countdown({
     selector: '.timerT4',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Nov 16, 2018 23:59:59')
   });
@@ -468,14 +470,14 @@ javascript:
  var countdownP1 = new Countdown({
    selector: '.timerP1',
    msgAfter: "Se acabó.",
-   msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+   msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
    dateEnd: new Date('Oct 15, 2018 23:59:59')
  });
 
   var countdownP2 = new Countdown({
    selector: '.timerP2',
    msgAfter: "Se acabó.",
-   msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
+   msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
    dateEnd: new Date('Dec 03, 2018 11:59:59')
  });
 
@@ -483,7 +485,7 @@ javascript:
   var countdownAC01 = new Countdown({
     selector: '.timerAC01',
     msgAfter: "Se acabó",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Aug 15, 2018 08:30:00')
   });
@@ -491,7 +493,7 @@ javascript:
   var countdownAC02 = new Countdown({
     selector: '.timerAC02',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Aug 24, 2018 08:30:00')
   });
@@ -499,7 +501,7 @@ javascript:
   var countdownAC03 = new Countdown({
     selector: '.timerAC03',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Sep 03, 2018 08:30:00')
   });
@@ -507,7 +509,7 @@ javascript:
   var countdownAC04 = new Countdown({
     selector: '.timerAC04',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Sep 10, 2018 08:30:00')
   });
@@ -515,7 +517,7 @@ javascript:
   var countdownAC05 = new Countdown({
     selector: '.timerAC05',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Sep 24, 2018 08:30:00')
   });
@@ -523,7 +525,7 @@ javascript:
   var countdownAC06 = new Countdown({
     selector: '.timerAC06',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Oct 1, 2018 08:30:00')
   });
@@ -531,7 +533,7 @@ javascript:
   var countdownAC07 = new Countdown({
     selector: '.timerAC07',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Dec 06, 2018 18:00:00')
   });
@@ -539,7 +541,7 @@ javascript:
   var countdownI1 = new Countdown({
     selector: '.timerI1',
     msgAfter: "Empezó",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Apr 6, 2018 18:30:00')
   });
@@ -547,7 +549,7 @@ javascript:
   var countdownRecI1 = new Countdown({
     selector: '.timerRecI1',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 11, 2018 23:59:59')
   });
@@ -555,7 +557,7 @@ javascript:
   var countdownRecI2 = new Countdown({
     selector: '.timerRecI2',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Jun 15, 2018 23:59:59')
   });
@@ -563,7 +565,7 @@ javascript:
   var countdownRecI3 = new Countdown({
     selector: '.timerRecI3',
     msgAfter: "Se acabó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Nov 27, 2017 12:00:00')
   });
@@ -571,7 +573,7 @@ javascript:
   var countdownI2 = new Countdown({
     selector: '.timerI2',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 8, 2018 18:30:00')
   });
@@ -579,7 +581,7 @@ javascript:
   var countdownMT = new Countdown({
     selector: '.timerMT',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Oct 1, 2018 18:30:00')
   });
@@ -587,7 +589,7 @@ javascript:
   var countdownI3 = new Countdown({
     selector: '.timerI3',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Jun 05, 2018 18:30:00')
   });
@@ -595,7 +597,7 @@ javascript:
   var countdownEX = new Countdown({
     selector: '.timerEX',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Nov 26, 2018 09:00:00')
   });
@@ -603,7 +605,7 @@ javascript:
   var countdownEX = new Countdown({
     selector: '.timerDCCercano',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m {seconds}s",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Mar 14, 2018 15:30:00')
   });
@@ -611,7 +613,7 @@ javascript:
   var countdownEX = new Countdown({
     selector: '.timerAyud2',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Mar 23, 2018 10:00:00')
   });
@@ -619,7 +621,7 @@ javascript:
   var countdownEX = new Countdown({
     selector: '.timerAyud3',
     msgAfter: "Empezó.",
-    msgPattern: "Quedan {days} días, {hours}h {minutes}m",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('May 14, 2018 10:00:00')
   });
