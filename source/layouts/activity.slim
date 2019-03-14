@@ -137,15 +137,55 @@ html lang="es"
         }
         .card{
           margin:auto;
-          width: 50%;
+          float: left;
+          width: 12rem;
           text-align: center;
+          margin-left: 5%;
         }
+
+        .column {
+          float: left;
+          width: 33.33%;
+         
+        }
+        
+        .row {
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+  
+        }
+
+        .row:after {
+          content: "";
+          display: table;
+          clear: both;
+          
+        }
+
 
   body
     a href="/"
       header.col-xs-8.col-md-10.col-md-offset-1
         img src='/images/figures/logo1.png' width="100%"/
       / h2 IIC2333 Sistemas Operativos y Redes 2018-2
+    
+    .col-xs-12.col-md-8.col-md-offset-3
+      div class="row"
+        div class="columm"
+          div class="card"
+            div class="card-title" ❓ Foro de Preguntas ❓
+            div class="card-title"
+              <a href="https://github.com/IIC2333/foro-2019-1" class="btn btn-primary btn-sm" role="button">Ir</a>
+        div class="columm"
+          div class="card"
+            div class="card-title" ⭐️ Actividades edX ⭐️
+            div class="card-title"
+              <a href="http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/" class="btn btn-primary btn-sm" role="button">Ir</a>
+        div class="columm"
+          div class="card"
+            div class="card-title" 📈 Planilla de Notas 📈
+            div class="card-title"
+              <a href="#" class="btn btn-primary btn-sm disabled" role="button">Ir</a>
 
     /nav#myNavmenu.navmenu.navmenu-default.navmenu-fixed-left.offcanvas role="navigation"
     /nav#myNavmenu.navmenu.navmenu-fixed-left.offcanvas role="navigation"
