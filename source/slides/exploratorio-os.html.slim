@@ -1,0 +1,1381 @@
+---
+title: Sistemas Operativos <br/> <div style="font-size:24px;">(o ¿Cómo funciona un computador?, parte II)</div>
+layout: slide
+---
+
+
+
+section
+
+    h2 ¿Para qué un Sistema Operativo?
+
+    section
+
+    section
+    	div ¿Qué ocurre cuando interactuamos con el computador?
+
+	section
+		div Queremos ejecutar un código como esto
+
+		img src='/images/figures/00-main.png' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;" 
+		div.fragment data-fragment-index="1" style="border:none; width:20%; vertical-align:middle; display:inline-block;" más bien esto
+		div.fragment data-fragment-index="1" style="border:none; width:30%; vertical-align:middle; display:inline-block;"
+			img src='/images/figures/00-compiled.png' width="70%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div
+			div.fragment data-fragment-index="2" style="border:none; width:30%; vertical-align:middle; display:inline-block; horizontal-align:right;" Y para eso tenemos:
+			div.fragment data-fragment-index="2" style="border:none; width:25%; vertical-align:middle; display:inline-block;"
+				img src='/images/figures/00-motherboard.jpg' width="100%" style="background:none; border:none; box-shadow:none;"
+
+		div.fragment data-fragment-index="2" style="font-size:12px;" Source: https://www.soundonsound.com/techniques/installing-new-pc-motherboard
+
+
+    section 
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="border:none;horizontal-align:left;" <i>Hardware</i> ejecuta ciclos de instrucciones
+			ul style="font-size:28px;horizontal-align:left;"
+				li <i>Fetch</i>
+				li <i>Decode</i>
+				li <i>Execute</i>
+			
+			br
+			br
+			div <i>Hardware</i> ejecuta programas (código) compilado
+			
+			ul.fragment data-fragment-index="1" style="font-size:28px;"
+				li ¿Cuál programa? ¿En qué orden?
+				li ¿Un programa a la vez?
+				li ¿En qué región de memoria?
+				li ¿Cómo utiliza los dispositivos de I/O?
+
+		/img src='/images/figures/00-basic-ic.jpg' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		img src='/images/figures/00-instructioncycle-opt.svg' width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			
+    section
+    	div El computador es una máquina programable (léase "reconfigurable") &hellip;
+
+    	div style="font-size:24px;" &hellip; pero electrónicamente compleja
+
+		div 
+			/img src='/images/figures/00-arqui.png' width="50%" style="background:none; border:none; box-shadow:none;"
+			img src='/images/figures/00-vonneumann-opt.svg' width="35%" style="background:none; border:none; box-shadow:none;"
+
+		div.fragment data-fragment-index="1" Cuando ejecutamos un programa ...
+		ul.fragment data-fragment-index="1" style="font-size:24px;"
+			li No nos preocupamos del <i>hardware</i> del computador
+			li No tenemos que esperar que otro programa termine para que el nuestro ejecute
+			li No especificamos qué región de la memoria va a utilizar
+			li No decidimos en que bloques del disco está almacenado
+
+		blockquote.fragment data-fragment-index="2" style="background:#B7E1CD;"Porque afortunadamente existe el <b>Sistema Operativo</b> &#x1f605;
+
+		div.fragment data-fragment-index="2" style="font-size:18px;" Afortunadamente también tenemos compiladores, pero en este curso alabaremos al sistema operativo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section
+
+	h2 Estructura de un Sistema Operativo
+		
+	section 
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
+
+		div ¿Dónde vive el Sistema Operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div.fragment data-fragment-index="1" Sistema Operativo <b>ES</b> <i>software</i>
+			div.fragment data-fragment-index="1" Sistema Operativo <b>habla con</b> el <i>hardware</i>
+			br
+			div.fragment data-fragment-index="2" El <b>Sistema Operativo</b> es nuestro <b>servidor</b> más importante
+			ul.fragment data-fragment-index="3" style="font-size:36px;"
+				li Nos <b>protege</b> de los detalles del <i>hardware</i>
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li ¿Un core, dos core?, ¿4GB RAM?, ¿disco SSD?, &hellip; úselo no más, yo me encargo
+				li Nos permite <b>compartir recursos</b> con otros programas
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li ¿Quiere navegar, tocar música, jugar WoW, compilar su tarea, todo al mismo tiempo? No se preocupe
+				li Nos ofrece <b>servicios</b> para hacer más cómodo el uso del <i>hardware</i>
+				ul.fragment data-fragment-index="4" style="font-size:20px;"
+					li Escritura y lectura de disco, envío de mensajes por red, acceso a su pendrive USB, y todo eso &hellip; con una interfaz gráfica
+
+			/div.fragment ¿Interactuamos con el sistema operativo? <span class="fragment">... ¿o con <i>shell</i>s o GUIs?</span>
+			/br
+			/div.fragment ¿<i>User mode</i>?, ¿<i>Kernel mode</i>? <span class="fragment">... Solo el Sistema Operativo puede utilizar el <i>Kernel mode</i></span>
+
+			blockquote.fragment data-fragment-index="5" style="background:#B7E1CD;"Nos permite <b>usar</b> el computador &#x1f603;
+
+			div.fragment data-fragment-index="5" style="font-size:14px;" ¿Como no querer/estudiar a nuestro sistema operativo?
+
+
+		/img src='/images/figures/00-os-location.jpg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-monkey-user.gif' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	/section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div ¿Qué esperamos de un sistema operativo?
+
+		div ¡TODO lo bueno!
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+
+			ul 
+				li Que sea <b>confiable</b> (<i>reliable</i>)
+				ul style="font-size:20px;"
+					li "Que no se caiga/bloquee/cuelgue"
+				li Que mis programas ejecuten rápidamente
+				ul style="font-size:20px;"
+					li "Para eso tengo mis 8 core y mis 128GB RAM"
+					li "Así puedo jugar, compilar, ver películas, etc. al mismo tiempo"
+				li Que no gaste todos los recursos (CPU, memoria, disco)
+				ul style="font-size:20px;"
+					li "Este Windows/Linux/MacOSX cada vez consume más"				
+				li Que mis datos estén seguros: que no me hackeen
+				li Que mis programas sigan funcionando después de una actualización
+				li Que me permita usar el computador (que no me moleste)
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Debe cumplir varios roles
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+
+			ul 
+				li Debe ser un <b>administrador de recursos</b>
+				ul style="font-size:20px;"
+					li ¿A quién le toca ejecutar? ¿Qué recursos necesita?
+					li ¿Qué CPU uso? ¿En qué disco escribo?
+					li Sistema Operativo <b>multiplexa</b> recursos escasos entre múltiples usuarios
+				li Debe ser capaz de <b>proteger</b> los recursos
+				ul style="font-size:20px;"
+					li "No tiene permisos para leer/escribir esos archivos"
+					li "No intente leer la memoria de otro proceso"
+					li "¿Quién es este usuario?"
+				li Debe ser capaz de <b>abstraernos</b> de los detalles del <i>hardware</i>
+				ul style="font-size:20px;"
+					li Permite que el sistema se vea como una máquina única
+					li ¿AMD, Intel, Samsung, Seagate?, no importa, aquí tiene una máquina con: CPU, memoria y disco.
+					li Provee una <b>interfaz</b> para poder usar apropiadamente el <i>hardware</i>
+					li Sistema Operativo <b>virtualiza</b> recursos para hacernos creer que hay más
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div El sistema operativo es como el <b>gobierno</b> &hellip; no sirve para nada por sí solo &hellip;
+
+		div &hellip; pero es <b>fundamental</b> para que podamos usar programas
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Qué hay dentro de un sistema operativo?
+
+		div style="border:none; width:30%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			ul 
+				li Administración de procesos
+				li Manejo de memoria
+				li Sistemas de archivos
+				li Protección y seguridad
+				li Control de I/O
+
+		div style="border:none; width:30%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			ul 
+				li Manejo de errores
+				li Comunicación inter-procesos
+				li Contabilidad / <i>logging</i>
+				li Controladores (<i>drivers</i>)
+				li etc &hellip;
+
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Programas utilizan <b>servicios</b> del sistema operativo. ¿Cómo los invocan?
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Cómo se invocan los servicios del sistema operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Sistema operativo provee una interfaz de <b>llamadas al sistema</b> (<i>syscalls</i>)
+			br
+			ul style="font-size:24px;"
+				li Cada vez que un programa desea solicitar algo al sistema operativo, debe invocar una <i>syscall</i>
+				li "Por favor, sistema operativo, haz esto por mi"
+				li Cada sistema operativo puede proveer un conjunto distinto de <i>syscalls</i>
+				li Sistemas operativos proveen bibliotecas (<i>libraries</i>) en algún lenguaje de programación (C) para invocar <i>syscalls</i>.
+
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Sin embargo, cuando interactuamos con el computador no escribimos <i>syscalls</i>
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿Cómo interactuamos con el sistema operativo?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Sistema operativo provee <b>interfaces de usuario</b> (<i>user interface</i>) que enmascara <i>syscalls</i>
+			ul style="font-size:24px;"
+				li Ofrecen un entorno más "amigable" para usar el computador
+				li ¿Son parte del sistema operativo?
+			br
+			div style="text-align:left;" Distintas maneras de interactuar con el sistema operativo
+			ul style="font-size:24px;"
+				li <b>Interfaces gráficas</b>: <b>GUI</b> (<i>Graphical User Interface</i>)
+				li <b>Intérprete de comandos</b> (<i>Command Line</i>)
+				li <b>Batch</b> (lotes): secuencias de comandos no-interactivas
+			
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Interfaces gráficas: GUI
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" GUIs ofrecen un entorno basado en abstracciones (ventanas, punteros) para interactuar con el sistema operativo
+			img src='/images/figures/00-CDE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-XFCE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			/img src='/images/figures/00-GNOME.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-tonystark.gif' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-KDE.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-windows-10.png' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+			img src='/images/figures/00-macosx.jpg' width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"	
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Intérprete de comandos / linea de comandos / <i>command line</i>
+		div style="font-size:12px;" menos preciso: <i>shell</i>, terminal, consola, xterm, prompt
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div
+				ul
+					li UNIX/Linux/MacOSX: <code>sh</code>, <code>csh</code>, <code>tcsh</code>, <code>ksh</code>, <code>bash</code>, <code>zsh</code>
+					li MS-DOS/Windows: <code>COMMAND.COM</code>, <code>cmd.exe</code>, PowerShell
+
+			div 
+				img src="/images/figures/00-bash.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-hacker-console.gif" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-zsh.png" width="30%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-commandcom.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+				img src="/images/figures/00-powershell.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div Intérprete de comandos / linea de comandos / <i>command line</i>
+		div style="font-size:12px;" menos preciso: <i>shell</i>, terminal, consola, xterm, prompt
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+			ul
+				li Solicitar comando/instrucción al usuario y ejecutarlo
+				li <code>prompt comando [parametros]</code>
+
+			div
+				p <em>Command Prompt</em> (símbolo del sistema)
+				ul.fragment
+					li Indica que el sistema está lista para recibir un comando
+					li Usualmente un texto terminado en <code>$, %, #, :, ></code>
+
+			div.fragment
+				pre
+					code.hljs.shell
+						| cruz$ ls
+						 
+						 jabaier@grima$ cp clase-01.tex backup/
+						 
+						 jnavon@www[15:35]:> rm tareaSistOp.*
+						 
+						 dietr1ch@nb# ~/SO/Tareas
+						 ls -d */ | parallel --tag 'cd {} && make'
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div Hay <a href="https://en.wikipedia.org/wiki/List_of_command-line_interpreters" target="_blank">muchas alternativas</a>
+
+
+
+	section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+			blockquote style="background: #F4C7C3;" El <b>kernel</b> (núcleo, supervisor)
+
+			div style="text-align:left;" El código fundamental del sistema operativo.
+			ul style="font-size:24px;"
+				li Es <i>software</i>
+				li Suele ser lo más pequeño posible (o no)
+
+			div style="text-align:left;" Tiene completo control sobre el sistema (<i>hardware</i>)
+			ul style="font-size:24px;"
+				li Es el único programa que ejecuta en un <b>modo privilegiado</b>
+				li También conocido como <b>modo monitor</b>, <b>modo kernel</b>, <b>modo sistema</b>
+				li Todo lo que no es parte del <i>kernel</i>, ejecuta en <b>modo usuario</b>
+
+			div style="text-align:left;" Sistema operativo incluye herramientas (programas) que facilitan la labor del kernel, pero que no son fundamentales
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background: #B7E1CD;" Sistema Operativo = Kernel + Programas del Sistema
+
+
+
+	/section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div ¿De qué tamaño es todo esto?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul.fragment
+				li MacOSX (Tiger, 2005): \( \sim 86 \times 10^6 \) líneas de código
+				li Windows 10: \( \sim 50\times 10^6 \) líneas de código
+				li <a href="https://www.linuxcounter.net/statistics/kernel">Linux</a> 4.14: \( \sim 20\times 10^6 \) líneas de código
+				ul style="font-size:14px;"
+					li Version 1.0.0 (Marzo 1994) tenía 176250 líneas
+					li Kernel Linux está en archivo <code>vmlinuz</code> (Virtual Memory LINUx gZip)
+				li ChromeOS: \( 17 \times 10^6 \) líneas de código
+				li MINIX 3: \( \sim 12000 \) líneas de código
+
+			div.fragment Más <a href="http://www.informationisbeautiful.net/visualizations/million-lines-of-code">comparaciones</a> y <a href="https://en.wikipedia.org/wiki/Comparison_of_operating_systems">más aún</a>
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	/section data-background-image='/images/figures/00-os-list.png' data-background-size="50%" data-transition="fade"
+
+		div El sistema operativo es un <i>software</i> <b>complejo</b>
+
+		div A veces fallan ... 
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Errores y vulnerabilidades pueden deberse a una combinación entre el <i>hardware</i> y el sistema operativo
+			ul
+				li O en las herramientas del <i>kernel</i>
+
+			div 
+				<a href="http://heartbleed.com/"><img src="/images/figures/00-heartbleed.png" width="20%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+				<a href="https://meltdownattack.com/"><img src="/images/figures/00-meltdown-spectre.png" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+				<a href="https://www.statista.com/chart/7478/android-is-the-most-vulnerable-operating-system/"><img src="/images/figures/00-vulnerabilities.jpg" width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"></a>
+
+	
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-oslayers5-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div <a href="https://cve.mitre.org/">Common list of Vulnerabilities and Exposures (CVE)</a>
+
+
+
+
+
+
+
+
+section data-background-image='/images/figures/00-os-list.png' data-background-size="50%"
+	h2 Sistema Operativo
+
+	
+	blockquote style="background: #B7E1CD;" La herramienta de <i>software</i> que nos permite <b>usar</b> el computador
+
+	div style="border:none; width:30%; vertical-align:middle; display:inline-block;" 
+		h3 Roles
+		ul
+			li Administrador de recursos
+			li Protector
+			li Servidor
+
+	div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
+		h3 Tareas
+		ul
+			li <b>Administración de procesos</b>
+			li <b>Manejo de memoria</b>
+			li <b>Sistemas de archivos</b>
+			li Protección y seguridad
+			li Control de dispositivos I/O
+
+	div style="border:none; width:30%; vertical-align:middle; display:inline-block;" 
+		h3 Arquitecturas
+		ul
+			li Monolítico
+			li Microkernel
+			li Híbrido
+
+
+	blockquote style="background: #B7E1CD;" Sistema Operativo = Kernel + Herramientas
+
+	div
+		/https://xkcd.com/1508/
+		a href="https://xkcd.com/1508/"
+			img src='https://imgs.xkcd.com/comics/operating_systems.png' width="60%" style="background:none; border:none; box-shadow:none;" title="One of the survivors, poking around in the ruins with the point of a spear, uncovers a singed photo of Richard Stallman. They stare in silence. &quot;This,&quot; one of them finally says, &quot;This is a man who BELIEVED in something.&quot;" alt="Operating Systems"
+		div style="font-size:12px;"
+			a href="https://explainxkcd.com/1508/" Explicación
+
+
+
+
+
+
+
+
+
+
+
+
+
+/section
+
+	h2 Arquitecturas de <i>kernel</i>
+		
+	section
+		
+	section 
+
+		div ¿Cómo se organiza el <i>kernel</i>?
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Muchos componentes a integrar
+			ul style="font-size:28px;"
+				li Primeros sistemas operativos empezaron pequeños y luego crecieron
+				li No tenían mucha estructura
+
+			div style="text-align:left;" MS-DOS (1981)
+			ul style="font-size:28px;"
+				li Sistema <b>monolítico</b> (un gran <i>kernel</i> estático)
+				li Programas de usuario podían acceder directamente al <i>hardware</i>
+				li <i>Hardware</i> (Intel 8088) no proveía modos de protección
+
+			img src='/images/figures/00-2_11.pdf.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-oslayers5-opt.svg' width="90%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> monolítico
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Todo dentro en un único programa
+			ul style="font-size:28px;"
+				li Servicios para el sistema y para el usuario en el mismo espacio
+				li Todos los servicios se ejecutan en modo <i>kernel</i>
+				li La falla de un servicio compromete al <i>kernel</i>
+				li Kernel complejo y de mayor tamaño
+				li Ejecución más rápida
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li Unix (BSD, System V)
+				li <a href="https://www.kernel.org/">Linux</a>
+				li MS-DOS, Windows 95/98/Me
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src='/images/figures/00-osmonolithic-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> monolítico con módulos
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Todo en un único programa extensible
+			ul style="font-size:28px;"
+				li Componentes pueden ser incluidos al momento de compilar, o bien durante la ejecución como módulos
+				li Módulos extienden al <i>kernel</i>
+				li Módulos se ejecutan en el espacio del <i>kernel</i>
+				li Ayuda a controlar el tamaño del <i>kernel</i> (<i>footprint</i>)
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osmonolithic-modules-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section  data-transition="fade"
+
+		div <i>Microkernel</i>
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" Mantener el <i>kernel</i> del menor tamaño posible
+			ul style="font-size:28px;"
+				li Solo servicios básicos en el <i>kernel</i>
+				li Funcionalidades (<i>servers</i>) se ejecutan en <i>user space</i>
+				li Errores en los servicios no afectan al <i>kernel</i>
+				li Kernel más sencillo, pequeño y fácil de portar
+				li Procesos se comunican (IPC) mediante paso de mensajes
+				li Ejecución con <i>overhead</i> por comunicación
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li <a href="http://www.cs.cmu.edu/afs/cs/project/mach/public/www/mach.html">Mach</a>, implementación de UNIX con microkernel (CMU)
+				li <a href="http://hurd.gnu.org/">GNU/Hurd</a>, inspirado en <a href="https://www.gnu.org/software/hurd/microkernel/mach/gnumach.html">Mach</a>
+				li <a href="https://en.wikipedia.org/wiki/L4_microkernel_family">L4</a>
+				li <a href="http://www.minix3.org/">MINIX 3</a>, desarrollado por Andrew S. Tanenbaum
+
+			div style="text-align:left;" Se han propuesto <i>exokernels</i> y <i>nanokernels</i>
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osmicrokernel-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section  data-transition="fade"
+
+		div <i>Kernel</i> híbrido
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:left;" &quot;Lo mejor&quot; de ambos mundos
+			ul style="font-size:28px;"
+				li Construido como monolítico con módulos
+				li Con funcionalidades que ejecutan en <i>user space</i>
+				li O <i>marketing</i> según <a href="https://www.realworldtech.com/forum/?threadid=65915&curpostid=65936" title="As to the whole &quot;hybrid kernel&quot; thing - it's just marketing. It's &quot;oh, those microkernels had good PR, how can we try to get good PR for our working kernel? Oh, I know, let's use a cool name and try to imply that it has all the PR advantages that that other system has&quot;">Linus Torvalds</a>
+			br
+			br
+			div style="text-align:left;" Ejemplos
+			ul style="font-size:28px;"
+				li <a href="http://www.microsoft.com/windows">Windows NT</a>
+				li <a href="https://www.reactos.org/">ReactOS</a>
+				li <a href="http://opensource.apple.com/source/xnu/">XNU</a>, kernel de Darwin (Mac OS X, iOS)
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oshybrid-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section 
+
+		div Monolítico vs Microkernel
+
+		div style="font-size:24px;" Must read: <a href="http://www.oreilly.com/openbook/opensources/book/appa.html">Tanenbaum-Torvals debate&colon; <i>Linux is obsolete</i></a>, 1992
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:center;" <b>Monolítico</b>
+			ul style="font-size:28px;"
+				li <i>Kernel</i> de mayor tamaño y complejo
+				li Todos los servicios en <i>kernel space</i>
+				li Falla en un servicio afecta a todo el <i>kernel</i>
+				li Ejecución más rápida
+				li Difícil de extender, pero puede usar módulos
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+
+			div style="text-align:center;" <b>Microkernel</b>
+			ul style="font-size:28px;"
+				li <i>Kernel</i> pequeño y simple
+				li Servicios mínimos en <i>kernel space</i>. Mayoría en <i>user space</i>
+				li Falla en un servicio queda aislada
+				li Ejecución con <i>overhead</i> por comunicación
+				li Fácil de extender
+
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block;" 
+
+
+			img src='/images/figures/00-osarchitectures-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section
+	h2 ¿Cómo funciona el Sistema Operativo?
+
+	/https://manybutfinite.com/post/when-does-your-os-run/
+	/https://neosmart.net/wiki/mbr-boot-process/
+	section
+
+	section
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			div style="text-align:left;" El sistema operativo efectúa muchas tareas, pero &hellip; ¿cuando le toca el usuario?
+			br
+			div style="text-align:left;" Y si ahora le toca al usuario, ¿entonces el sistema operativo ya no ejecuta más?
+			br
+			div style="text-align:left;" Recordemos una de las tareas del sistema operativo:
+			ul style="font-size:24px;"
+				li Permitir que el usuario pueda utilizar el computador
+				li Sistema operativo debe mantener el computador disponible para el usuario
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-oslayers-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section
+
+		h3 El proceso de arranque
+
+		div style="border:none; width:65%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div Al iniciar el computador se ejecuta código de la tarjeta madre
+			ul style="font-size:24px;"
+				li <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a>: <i>Basic Input/Output System</i>, o bien
+				li <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a>: <i>Unified Extensible Firmware Interface</i>
+			br
+
+			div Este código tiene dos misiones fundamentales
+			ul style="font-size:24px;"
+				li Inicializar/identificar el <i>hardware</i>
+				li Ubicar y arrancar mediante un <i>bootloader</i> el <i>kernel</i> en modo privilegiado
+			br
+
+			blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+			/div style="text-align:center;"
+
+		div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/00-boot-1.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+			img src='/images/figures/00-bios-uefi.jpg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+			div style="font-size:14px; text-align:left;" Fuente: <a href="https://neosmart.net/wiki/mbr-boot-process/">https://neosmart.net/wiki/mbr-boot-process/</a>
+			div style="font-size:14px; text-align:left;" Fuente: <a href="http://www.unhappyghost.com/2014/05/bios-vs-uefi-booting.html">hhttp://www.unhappyghost.com/2014/05/bios-vs-uefi-booting.html</a>
+
+	section
+
+		h3 Modos de protección
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
+			div El <i>hardware</i> posee dos modos de protección
+			ul style="font-size:24px;"
+				li <b>Kernel mode</b>: acceso completo al <i>hardware</i>
+				ul style="font-size:20px;"
+					li a.k.a. <i>Privileged</i> | <i>Supervised</i> | <i>Monitor</i> | <i>System</i> mode
+				li <b>User mode</b>: acceso a un set restringido de instrucciones
+
+			div ¿Y si un código intenta ejecutar una instrucción privilegiado en modo <i>user</i>?
+			ul style="font-size:24px;"
+				li <i>Hardware</i> genera una interrupción (<i>protection fault</i>), o bien
+				li Ignora la instrucción
+
+			blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-oskerneluser1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	/section data-transition="fade"
+
+		h3 Modos de protección
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
+			div Instrucciones privilegiadas (<i>ring 0</i>)
+			ul style="font-size:24px;"
+				li Modificar <i>vector de interrupciones</i> (<code>CLI</code>, <code>IRET</code>)
+				li Acceder a dispositivos de I/O
+				li Modificar <i>timer</i> del computador
+				li Detener el computador (<i>halt</i>, <code>HLT</code>)
+				li Cambiar el modo de protección (<i>user</i> a <i>kernel</i>, o viceversa)
+				li Modificar tablas de acceso a memoria (<i>pagetable</i>, <code>INVLPG</code>)
+				li Almacenar estado de la máquina (<code>SMSW</code>)
+			br
+
+			div Estas instrucciones son un ejemplo de las instrucciones privilegiadas del <a href="https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf">set de instrucciones Intel 64</a>.
+			br
+
+			/blockquote style="background: #F4C7C3;" El <i>kernel</i> es el <b>único</b> <i>software</i> que funciona en modo privilegiado
+
+			div <i>Hardware</i> moderno posee 4 o más modos de protección
+			ul style="font-size:24px;"
+				li Se les llama <i>rings</i> (anillos) de protección
+				li Permite implementar <b>virtualización</b>
+				li Intel 64 posee 4 niveles (<a href="https://software.intel.com/sites/default/files/managed/a4/60/325384-sdm-vol-3abcd.pdf">sección 5.5</a>) y una lista de instrucciones privilegiadas (<a href="https://software.intel.com/sites/default/files/managed/a4/60/325384-sdm-vol-3abcd.pdf">sección 5.9</a>)
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-osprivilegerings-opt.svg' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+	section data-transition="fade"
+
+		h3 Interrupciones
+
+		blockquote style="background: #F4C7C3;" Los Sistemas Operativos son manejados por <b>interrupciones</b> / <b>traps</b>.
+
+		div style="text-align:center;" Mientras nadie lo llame, el sistema operativo no hace nada.
+
+		ul style="font-size:28px;"
+			li Programa de usuario genera un <i>trap</i>: interrupción generada por software
+			li Control pasa al sistema operativo: <i>kernel space</i>
+			li Sistema operativo ejecuta servicio solicitado por el usuario
+			li Una vez terminado el servicio, sistema operativo regresa el control al programa de usuario
+			
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-osinterrupt-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section
+	h2 <i>Syscalls</i>: llamadas al sistema
+
+	section
+
+	section data-transition="fade"
+
+		div style="text-align:center;" Interfaz para solicitar servicios al sistema operativo
+		ul style="font-size:28px;"
+			li Manera precisa de llamar al sistema operativo es altamente dependiente del <i>hardware</i>
+			li Sistemas proveen bibliotecas que implementan <i>syscalls</i>
+		br
+		br
+			
+		div style="border:none; width:100%; vertical-align:middle; display:inline-block; text-align:center;" 
+			img src='/images/figures/00-ossyscalls-opt.svg' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-transition="fade"
+
+		div ¿Qué hace el sistema operativo ante el siguiente comando?
+
+		div <code>copy source.txt dest.txt</code>
+		br
+
+		div style="border:none; width:55%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+
+			ul.fragment style="font-size:28px;"
+				li Abrir <code>source.txt</code> (<code>stat</code>, <code>open</code>)
+				ul
+					li style="font-size:20px;" ¿existe?, ¿tiene permiso de lectura?, &hellip;
+				li Abrir <code>dest.txt</code> (<code>stat</code>, <code>open</code>)
+				ul
+					li style="font-size:20px;" ¿existe?, ¿se reemplaza?, ¿se puede escribir?, &hellip;
+				li Leer <code>source.txt</code> hacia alguna región de memoria (<code>mmap</code>, <code>read</code>)
+				li Escribir desde la memoria hacia <code>dest.txt</code> (<code>write</code>)
+				li Liberar la memoria y guardar los archivos (<code>munmap</code>, <code>close</code>)
+			br
+			br
+
+		div style="border:none; width:45%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls2-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		div.fragment 
+			div Todas estas acciones requieren llamadas al sistema
+			br
+			
+			div Pruebe con: <code>strace cp source.txt dest.txt</code>
+
+
+	/section 
+
+		div style="text-align:center;" Definir una interfaz estándar ayuda a la portabilidad
+		ul style="font-size:28px;"
+			li <a href="http://standards.ieee.org/develop/wg/POSIX.html">POSIX</a>, interfaz definida en IEEE1003.1-2017
+			li SCI, System Call Interface. Interfaz de <i>syscalls</i> de Linux
+			li Linux kernel API: interfaz SCI + implementación en <code>glibc</code>
+			li Windows NT Native API, interfaz para Windows NT. Implementada en <code>ntdll.dll</code>
+			li Windows API (Win32), en <code>kernel32.dll</code>, <code>advapi32.dll</code>, <code>user32.dll</code>
+
+			
+		div 
+			img src="/images/figures/00-LinuxAPI.png" width="40%" style="background:none; border:none; box-shadow:none;" &nbsp;&nbsp;
+			img src="/images/figures/00-WinArch.png" width="40%" style="background:none; border:none; box-shadow:none;"
+
+
+	section data-transition="fade"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div style="text-align:center;" ¿Cómo se ejecuta una <i>syscall</i>?
+			div style="text-align:center;" Procedimiento es dependiente del <i>hardware</i>
+			br
+			div Participan:
+			ul style="font-size:24px;"
+				li Proceso ejecutable de usuario
+				li Biblioteca (estática o dinámica) que invoca la <i>syscall</i>
+				li Vector de interrupciones del <i>hardware</i>, configurado por el sistema operativo
+				li Código de <i>syscalls</i> del sistema operativo, que utilizan el <i>hardware</i>
+			br
+			br
+			div ¿Qué hace <code>read</code>? <a href="https://linux.die.net/man/2/read">RTFM</a>
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls4-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section data-transition="fade"
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div style="text-align:center;" ¿Cómo se ejecuta una <i>syscall</i>?
+
+			div Ejemplo basado en Linux e Intel64
+			ol style="font-size:24px;"
+				li Proceso de usuario invoca rutina de biblioteca <code>read</code>
+				li Implementación de <code>read</code> prepara la invocación configurando el <i>stack</i> y el registro <code>eax</code>
+				li Generación de interrupción: <code>int 0x80</code>. Intel64 usa (fast) <code>syscall</code>
+				li <i>Hardware</i> pasa de modo <i>user</i> a <i>kernel</i> y actúa de acuerdo al vector de interrupciones
+				li Vector de interrupciones ejecuta instrucción <code>system_call</code> del sistema operativo
+				li Sistema operativo obtiene número de <i>syscall</i> desde <code>eax</code>, y configura <i>stack</i> para poder retornar al usuario
+				li Sistema operativo ejecuta el código de <code>sys_write</code>
+				li Ejecución de <code>sys_write</code> recupera argumentos, ejecuta acción, y deja valor de retorno en <code>eax</code>
+				li Sistema operativo cambio modo a <i>user</i>, y <code>sys_write</code> retorna al código de la biblioteca (<code>sysexit</code>)
+				li Código de biblioteca recupera el valor de retorno de la <i>syscall</i> y lo entrega al proceso de usuario
+
+
+		div style="border:none; width:50%; vertical-align:middle; display:inline-block; text-align:left;" 
+			img src='/images/figures/00-ossyscalls3-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+	/section 
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX. 
+			br
+			div Lista de <a href="https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/unistd.h"><i>syscalls</i> de Linux</a>
+			ul style="font-size:24px;"
+				li Más claro con: <a href="http://man7.org/linux/man-pages/man2/syscalls.2.html"><code>man syscalls</code></a>
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix.png" width="80%" style="background:none; border:none; box-shadow:none;"
+
+
+	/section 
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			div Algunas <i>syscalls</i> de POSIX y su equivalencia en Win32 
+			br
+			ul style="font-size:28px;"
+				li Es natural que no todas las <i>syscall</i> tenga una equivalencia.
+				li Cada sistema provee su propio conjunto de instrucciones para interactuar con el usuario
+
+		div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-syscalls-posix-win32.png" width="100%" style="background:none; border:none; box-shadow:none;"
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+section
+	h2 Arquitecturas y llamadas al sistema
+
+	section
+
+		div style="width:60%; vertical-align:middle; display:inline-block; text-align:left;" 
+
+			div Sistemas Operativos proveen niveles de abstracción
+			ul style="font-size:24px;"
+				li <a href="https://manybutfinite.com/post/when-does-your-os-run/">¿Cuándo ejecuta el sistema operativo?</a>
+			br
+			br
+			div Protección entre espacios de <i>user</i> y <i>kernel</i>
+			ul style="font-size:24px;"
+				li Cuánto queda en <i>kernel space</i> y en <i>user space</i> determina si el <i>kernel</i> es monolítico o microkernel 
+			br
+			br
+			div Usuario solicita servicios a través de <i>syscalls</i>
+			ul style="font-size:24px;"
+				li Todas las funciones definidas por <a href="http://pubs.opengroup.org/onlinepubs/9699919799/nframe.html">POSIX</a>
+				li En Linux, la función <a href="http://man7.org/linux/man-pages/man2/syscall.2.html"><code>syscall</code></a> permite invocar cualquier <i>syscall</i> ... <code>man syscall</code>
+				li Todas las <a href="https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf">instrucciones de Intel64</a>
+				li Tutorial: Como crear <a href="https://brennan.io/2016/11/14/kernel-dev-ep3/">su propia <i>syscall</i></a>
+			br
+			br
+			div Sistema operativo es una pieza de <i>software</i> compleja ... y fascinante
+			ul style="font-size:24px;"
+				li <a href="https://wiki.osdev.org/Getting_Started">¿Quieres construir uno?</a>
+
+		div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+			img src="/images/figures/00-xkcd-abstraction.png" width="100%" style="background:none; border:none; box-shadow:none;" title="If I'm such a god, why isn't Maru *my* cat?" alt="Abstraction"
+			div style="font-size:12px;"
+				a href="https://explainxkcd.com/676/" Explicación
+
+		/= image_tag "/images/figures/00-syscalls-posix-win32.png", :style => 'max-width:50%; max-height:50%'
+
+
+section
+	h2 Procesos
+
+	section
+
+	section
+		div Composición: ¿Qué hay en un Proceso?
+
+		div style="border:none; width:60%; vertical-align:middle; display:inline-block;" 
+
+			ul style="font-size:28px;"
+				li <b>Código</b> (<code>.text</code>, información estática)
+				li <b>Datos</b> (<code>.data</code>): variables globales
+				li <b>Stack</b>. Cada item del stack representa un llamado a función (<i>call frame</i>), y contiene:
+				ul
+					li Parámetros
+					li Variables locales
+					li Lugar de retorno (donde estaba la ejecución anterior, PC)
+				li <b>Heap</b>. Memoria asignada dinámicamente (durante la ejecución)
+
+		div style="border:none; width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-internals-proc1-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+	section#repr
+		div Representación: ¿Cómo lo ve el Sistema Operativo?
+		/  --------------------------
+
+		blockquote style="background:#F4C7C3;"<b>Process Control Block (PCB)</b>
+
+		div style="border:none; width:65%; vertical-align:middle; display:inline-block;" 
+
+			div Sistema Operativo mantiene <b>Tabla de Procesos</b>.
+			
+			div Información de cada procesos almacenada en su PCB
+			ul.fragment style="font-size:28px;"
+				li Estado
+				li Identificador (PID, <i>Process ID</i>)
+				li Program Counter (PC)
+				li Registros de CPU: <em>estado de ejecución</em>
+				li Información de <em>scheduling</em>: prioridades, tipo de cola, &hellip;
+				li Información de memoria: límites, tabla de páginas/segmentos, &hellip;
+				li Contabilidad (<em>accounting</em>)
+				li Información de I/O: archivos y dispositivos abiertos, &hellip;
+
+			div.fragment PCB pueden tener mucha información. Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
+
+		/img src='/images/figures/01-3_03.pdf.png' width="15%" style="background:none; box-shadow:none; vertical-align:middle;"
+		div style="border:none; width:35%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-internals-pcb-opt.svg' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		/p.fragment Miremos en <a href="https://github.com/torvalds/linux/blob/master/include/linux/sched.h" target="_blank"><code>include/linux/sched.h</code></a>
+
+
+	section#states-inside
+		div Un proceso en ejecución puede cambiar de estado
+
+		ul
+			li <b>New       </b>: En creación
+			li <b>Running   </b>: En ejecución
+			li <b>Waiting   </b>: Esperando (I/O, signal)
+			li <b>Ready     </b>: Listo para ejecutar. Esperando asignación de CPU
+			li <b>Terminated</b>: Ejecución terminada
+
+		img src='/images/figures/01-proc-states-opt.svg' width="75%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+section#scheduling
+	h2 Scheduling
+
+	section#scheduling-init
+		p <i>CPU Scheduling</i> a.k.a. Planificación de CPU
+
+		div style="width:60%; vertical-align:middle; display:inline-block;"
+			div data-fragment-index="1" Tenemos:
+			ul.fragment data-fragment-index="1" style="font-size:28px;"
+				li Múltiples procesos en memoria (<i>multiprogramación</i>), ordenados en una tabla de PCBs
+				li Algunos procesos en estado <i>ready</i> (listos para ejecutar)
+				li CPU que puede atender <b>solo un proceso</b> a la vez
+			br
+			br
+			div.fragment data-fragment-index="2" Y queremos:
+			ul.fragment data-fragment-index="2" style="font-size:28px;"
+				li <b><i>Multitasking</i></b>: asignar tiempo a múltiples procesos
+
+		div style="width:40%; vertical-align:middle; display:inline-block;" 
+			img src='/images/figures/01-proc-internals-pcb-opt.svg' width="80%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+		blockquote.fragment style="background:#B7E1CD;"Sistema Operativo debe elegir cuál de todos los procesos en estado <b>ready</b> debe ejecutar a continuación: <b>scheduling</b>
+
+
+	section
+		div Responsable: <b>scheduler</b>, a.k.a.  <i>planificador</i>
+
+		div <em>Scheduling</em> puede ser visto como un sistema de <em>manejo de colas</em>
+
+		== image_tag '/images/figures/01-3_06.pdf.png', :width=>"50%", :style=>"border:none; box-shadow:none;"
+
+
+
+section
+  h2 Memoria
+
+  section#memory0
+    h3 Direcciones de Memoria
+
+    div 
+
+      ul
+        li Un gran arreglo de <i>bytes</i>
+        li Cada uno con su propia <b>dirección</b>
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Al principio &hellip;
+
+      img src='/images/figures/02-memory-old.png' width="40%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+    div.fragment style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      div Con multiprogramación &hellip;
+
+      img src='/images/figures/02-memory-new.png' width="35%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+section#pagination
+  h2 Paginación
+
+  section
+
+    div Problema: un espacio de direcciones muy grande.
+    ul
+      li Idea 1: Dividir el espacio de direcciones en <b>segmentos</b>
+      li.fragment data-fragment-index="1" Idea 2: Que los segmentos sean del mismo tamaño: <b>páginas de memoria</b>
+
+    blockquote.fragment data-fragment-index="2" style="background:#F4C7C3;" <b>Paginación</b>
+
+    div.fragment data-fragment-index="2" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Espacio virtual: <b>páginas</b>
+        li Espacio físico: <i><b>frames</b></i> (marcos)
+        li Páginas y <i>frames</i> del <b>mismo</b> tamaño
+
+      br 
+      br
+
+      div.fragment data-fragment-index="3" Sistema con 128B RAM
+      
+      ul.fragment data-fragment-index="3" 
+        li Espacio virtual (lógico) de 64B.
+        li Espacio físico de 128B.
+        li Páginas (y <i>frames</i>) de 16B.
+
+    div.fragment data-fragment-index="3" style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-pages-1.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+      img src='/images/figures/02-pages-2.png' width="50%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+  section
+    blockquote style="background:#B7E1CD;"  <b>¿Cuántos accesos a memoria?</b>
+
+    div Dirección de tabla de páginas se guarda en PCB, como <b>PageTableBaseRegister</b> (PTBR)
+
+    div.fragment data-fragment-index="2" style="width:55%; vertical-align:middle; display:inline-block;" 
+
+      pre
+        code.hljs.lang-c
+          |  VPN = (virtualAddress & VPN_MASK) >> VPN_SHIFT;
+             PTEAddress = PageTableBaseRegister + (VPN * sizeof(PTE));
+             PTE = ReadMemory(PTEAddress);
+             
+             // está en memoria
+             if(!PTE.valid)
+               raise(SEG_FAULT);
+             // verificación de permisos
+             else if(PTE.protected)       
+               raise(PROTECTION_FAULT);
+             // Acceso OK
+             else {
+               offset = virtualAddress & OFFSET_MASK;
+               physicalAddress = (PTE.PFN << PFN_SHIFT) | offset;
+               register = ReadMemory(physicalAddress);
+
+      /div <b>Cada acceso a memoria se convierte en DOS accesos</b>
+
+      /div <b>Problema</b>: accesos en el doble de tiempo &#x1f61e;
+
+    div.fragment data-fragment-index="2" style="width:45%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/02-8_10.pdf.png' width="100%" style="background:none; border:none; box-shadow:none; vertical-align:middle;"
+
+
+
+
+section
+  h2 Sistemas de Archivos
+
+  section 
+    h3 Archivos
+
+    blockquote style="background:#B7E1CD;" Colección de información en almacenamiento secundario  
+    ul.fragment style="text-align:left;"
+      li Unidad mínima de almacenamiento para el usuario
+      li Agrupación lógica de <i>bytes</i>
+      li Abstracción
+  
+    br
+    br
+
+    blockquote.fragment style="background:#B7E1CD;" Contenido: cualquier cosa
+    ul.fragment
+      li Significado está determinado por la forma en que se utiliza su contenido
+      li Texto, imagen, código fuente, código binario (ejecutable), ...
+
+
+  section
+    h3 Directorios
+
+    div Archivos se organizan en una estructura de <b>directorios</b> (otra abstracción)
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li Nombre (low-level name): <i>inode number</i>
+        li Contiene lista de pares: (<i>readable name</i>, <i>low-level name</i>)
+        li Puede contener otros directorios: <b>jerarquía</b> o <b>árbol de directorios</b>
+        ul
+          li Jerarquía empieza en una raíz: <b>root</b>, o <code>/</code>
+          li Usa un separador: <code>/</code>
+          li Unidades son <b>subdirectorios</b>
+        li Nombres con subdirectorios: <b>pathname</b> o <b>ruta</b>
+        ul
+          li Ruta absoluta: <b>Absolute path</b>
+          ul
+            li style='font-size:18px;' <code>/foo</code>, <code>/bar/bar</code>, <code>/bar/foo/bar.txt</code>
+          li Ruta relativa: <b>Relative path</b>
+          ul
+            li style='font-size:18px;' <code>foo</code>, <code>foo/bar.txt</code>, <code>foo/bar.txt</code>
+        ul Ruta absoluta no puede repetirse
+
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/03-directory-tree.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+
+  section
+    h3 Asignación contigua
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  Archivo de $n$ bloques: $b, b+1, \ldots b+n-1$
+        li  Fácil de acceder a siguiente bloque
+        li  -Problema: fragmentación externa
+        li  Require operaciones de <b>compactación</b> (defragmentación)
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_05.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Asignación enlazada (<i>linked</i>)
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  Almacena punteros a bloque siguiente
+        li  Ej: bloque de 512 bytes, solo puede guardar 508 bytes. Se pierde espacion.
+        li  No requiere tamaño inicial de archivo. Puede crecer.
+        li  -Acceso solo secuencial.
+        li  Alternativa: almacenar <i>clusters</i> de bloques en lugar de bloques individuales (frag. interna)
+        li  -Vulnerable a falla de un bloque
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_06.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+  
+  section
+    h3 Asignación enlazada (<i>linked</i>): FAT
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  FAT: <b>File Allocation Table</b>
+        li  Tabla al inicio del disco con una entrada por archivo
+        li  Último cluster almacena EOF (<i>end-of-file</i>)
+        li  +Mejor acceso aleatorio
+        li  -Limitado por tamaño de tabla (para FAT32, 4GB por archivo)
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_07.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+  
+  section
+    h3 Asignación indexada
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  Archivos contienen <i>index block</i>
+        li  <i>Index Block</i> contiene bloques del archivo
+        li  Último cluster almacena EOF (<i>end-of-file</i>)
+        li  +Acceso aleatorio sin frag. externa
+        li  Se pierde espacio por tamaño de <i>index block</i>
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_08.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    h3 Asignación indexada: tamaño del <i>index block</i>
+
+    div style="width:70%; vertical-align:middle; display:inline-block;" 
+
+      ul
+        li  <b>Esquema enlazado</b>: última entrada de <i>index block</i> apunta a otro <i>index block</i>
+        li  <b>Índice multinivel</b>: similar a tablas de página multinivel
+        ul
+          li  Ej: blocks de 4KB, permiten 1024 punteros (de 32-bit)
+          li  Dos niveles permiten direccionar $1048576$ bloques $\to 4$GB
+
+        li  <b>Esquema combinado</b>: primeros $p$ punteros son bloques directos, los siguientes apuntan a bloque de índice simple, los siguientes a bloque de índice doble, etc
+
+    div style="width:30%; vertical-align:middle; display:inline-block;" 
+
+      img src='/images/figures/03-12_09.pdf.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
