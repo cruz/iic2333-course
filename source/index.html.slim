@@ -21,12 +21,12 @@ article
       div style="border:none; display:inline-block; width:380px;" Viernes 16/Mar, 10:00
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerDCCercano"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 1', 'homeworks/1/T1.pdf'
       div style="border:none; display:inline-block; width:380px;" Martes 02/Abr, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
       div style="border:none; display:inline-block; width:380px;" Miércoles 03/Abr, 10:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
@@ -60,9 +60,9 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC04"
 
 
-    /div
+    div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: <del>Martes 11/Sep</del>Jueves 13/Sep, 23:59
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 15/Abr, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
 
     /div
@@ -227,7 +227,7 @@ article
     ul
       li = link_to 'Ayudantía C, V 15/Mar', 'ayudantias/AyudantiaC.zip'
       li = link_to 'Ayudantía T1, V 22/Mar', 'ayudantias/AyudantiaT1.pdf'
-      / li = link_to 'Ayudantía T2, V 07/Sept', 'ayudantias/AyudantiaT2.pdf'
+      li = link_to 'Ayudantía T2, V 05/Abr', 'ayudantias/AyT2.zip'
       / li = link_to 'Ayudantía T3, L 22/Oct', 'ayudantias/AyudantiaT3.pdf'
       / li = link_to 'Ayudantía T4', 'ayudantias/AyudantiaT4.zip'
       / li = link_to 'Ayudantía Proyecto Redes', 'ayudantias/AyP2.pdf'
@@ -246,13 +246,13 @@ article
       div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Test', 'homeworks/1/tests.zip'
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
     div
-      div style="border:none; display:inline-block; width:300px; vertical-align:top;" Tarea 2 (5-Abr al 15-Abr)
-      /div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
-      /div style="border:none; display:inline-block; width:360px;" Deadline: <del>Martes 11/Sep</del>Jueves 11/Sep, 23:59
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
+      /div style="border:none; display:inline-block; width:300px; vertical-align:top;" Tarea 2 (5-Abr al 15-Abr)
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 15/Abr, 14:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
       /div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/2/RubricaT2.pdf'
-      /div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaT2.pdf'
-      /div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Test', 'homeworks/2/t2_tests.zip'
+      div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyT2.zip'
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tests', 'homeworks/2/TestsT2.zip'
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'data.bin', 'homeworks/2/data.bin'
       /div style="border:none; display:inline-block; width:100px;" = link_to 'mmap-example.c', 'homeworks/2/mmap-example.c'
       /div style="border:none; display:inline-block; width:100px;" = link_to 'shm-example.c', 'homeworks/2/shm-example.c'
@@ -469,7 +469,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Sept 13, 2018 23:59:59')
+    dateEnd: new Date('Apr 15, 2019 14:00:00')
   });
   var countdownT3 = new Countdown({
     selector: '.timerT3',
