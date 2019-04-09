@@ -62,7 +62,7 @@ article
 
     div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 15/Abr, 14:00
+      div style="border:none; display:inline-block; width:380px;" Deadline: Miércoles 17/Abr, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
 
     /div
@@ -238,8 +238,8 @@ article
     /  ------
     div
       /div style="border:none; display:inline-block; width:300px; vertical-align:top;" Tarea 1 (22-Mar al 1-Abr)
-      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 1', 'homeworks/1/T1.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Martes 02/Abr, 14:00
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to '<del>Tarea 1</del>', 'homeworks/1/T1.pdf'
+      div style="border:none; display:inline-block; width:360px;" <del>Deadline: Martes 02/Abr, 14:00</del>
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
       div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/1/RubricaT1.pdf'
       div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaT1.pdf'
@@ -248,7 +248,7 @@ article
     div
       /div style="border:none; display:inline-block; width:300px; vertical-align:top;" Tarea 2 (5-Abr al 15-Abr)
       div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
-      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 15/Abr, 14:00
+      div style="border:none; display:inline-block; width:360px;" Deadline: <del>Lunes 15</del> Miércoles 17/Abr, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
       /div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/2/RubricaT2.pdf'
       div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyT2.zip'
@@ -271,7 +271,7 @@ article
     h3 📑 Proyectos 📑
     /  ------
     div
-      div style="border:none; display:inline-block; width:300px; vertical-align:top;" Proyecto SO (17-Abr al 2-May)
+      div style="border:none; display:inline-block; width:300px; vertical-align:top;" Proyecto SO (19-Abr al 3-May)
       /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'projects/1/P1.pdf'
       / div style="border:none; display:inline-block; width:360px;" Deadline: <del>Lunes 15/Oct</del>Miércoles 17/Oct, 23:59
       / div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
@@ -295,8 +295,8 @@ article
     = link_to 'Curso en EdX', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/'
     div style="font-size:12px;" Deben registrarse <b>usando el login de su correo UC</b>. Problemas a cruz@ing.puc.cl
     div
-       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'AC01', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
-       div style="border:none; display:inline-block; width:260px;" Deadline: Miércoles 03/Abr, 10:00
+       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to '<del>AC01</del>', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/courseware/0c1783be7d914f10999d8618c6479169/d48f992f35434ad7a43b07cdeb21b043/'
+       div style="border:none; display:inline-block; width:260px;" <del>Deadline: Miércoles 03/Abr, 10:00</del>
        div style="border:none; display:inline-block; vertical-align:top;" class="timerAC01"
 
     div
@@ -469,7 +469,7 @@ javascript:
     msgAfter: "Se acabó.",
     msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
-    dateEnd: new Date('Apr 15, 2019 14:00:00')
+    dateEnd: new Date('Apr 17, 2019 14:00:00')
   });
   var countdownT3 = new Countdown({
     selector: '.timerT3',
