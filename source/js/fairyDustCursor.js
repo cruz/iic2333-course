@@ -47,6 +47,8 @@
     //console.log(document.body.scrollTop, e.clientX, cursor.x);
     
     addParticle( cursor.x, cursor.y, possibleColors[Math.floor(Math.random()*possibleColors.length)]);
+    addParticle( cursor.x, cursor.y, possibleColors[Math.floor(Math.random()*possibleColors.length)]);
+    addParticle( cursor.x, cursor.y, possibleColors[Math.floor(Math.random()*possibleColors.length)]);
   }
   
   function addParticle(x, y, color) {
@@ -84,7 +86,7 @@
   function Particle() {
 
     this.character = "*";
-    this.lifeSpan = 120; //ms
+    this.lifeSpan = 300; //ms
     this.initialStyles ={
       "position": "absolute",
       "display": "block",
