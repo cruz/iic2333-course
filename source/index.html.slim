@@ -76,15 +76,15 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC06"
 
     /div
-      div style="border:none; display:inline-block; width:100px;" = link_to 'Midterm (SO)', 'evals/midterm.pdf'
-      div style="border:none; display:inline-block; width:100px;" = link_to 'Solución', 'evals/midterm-sol.pdf'
+      /div style="border:none; display:inline-block; width:100px;" = link_to 'Midterm (SO)', 'evals/midterm.pdf'
+      /div style="border:none; display:inline-block; width:100px;" = link_to 'Solución', 'evals/midterm-sol.pdf'
       /div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 1/Oct, 18:30, Sala C202
       /div style="border:none; display:inline-block; width:380px;" Inicio: Lunes 1/Oct, 18:30, Sala C202
       /div style="border:none; display:inline-block;" class="timerMT"
 
-    /div
-      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'projects/1/P1.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 15/Oct, 23:59
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'homeworks/P1/P1.pdf'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 20/May, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
 
 
@@ -228,6 +228,8 @@ article
       li = link_to 'Ayudantía C, V 15/Mar', 'ayudantias/AyudantiaC.zip'
       li = link_to 'Ayudantía T1, V 22/Mar', 'ayudantias/AyudantiaT1.pdf'
       li = link_to 'Ayudantía T2, V 05/Abr', 'ayudantias/AyT2.zip'
+      li = link_to 'Ayudantía Proyecto SO, V 03/May', 'ayudantias/AyudantiaP1.pdf'
+      li = link_to 'Ayudantía Paginación, V 03/May', 'ayudantias/AyudantiaPaginacion.pdf'
       / li = link_to 'Ayudantía T3, L 22/Oct', 'ayudantias/AyudantiaT3.pdf'
       / li = link_to 'Ayudantía T4', 'ayudantias/AyudantiaT4.zip'
       / li = link_to 'Ayudantía Proyecto Redes', 'ayudantias/AyP2.pdf'
@@ -248,7 +250,7 @@ article
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
     div
       /div style="border:none; display:inline-block; width:300px; vertical-align:top;" Tarea 2 (5-Abr al 15-Abr)
-      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to '<del>Tarea 2</del>', 'homeworks/2/T2.pdf'
       div style="border:none; display:inline-block; width:360px;" Deadline: <del>Lunes 15</del> <del>Miércoles 17</del> Viernes 19/Abr, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
       /div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/2/RubricaT2.pdf'
@@ -272,12 +274,12 @@ article
     h3 📑 Proyectos 📑
     /  ------
     div
-      div style="border:none; display:inline-block; width:300px; vertical-align:top;" Proyecto SO (19-Abr al 3-May)
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'projects/1/P1.pdf'
-      / div style="border:none; display:inline-block; width:360px;" Deadline: <del>Lunes 15/Oct</del>Miércoles 17/Oct, 23:59
-      / div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
+      /div style="border:none; display:inline-block; width:300px; vertical-align:top;" Proyecto SO (19-Abr al 3-May)
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'homeworks/P1/P1.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Lunes 20/May, 14:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
       / div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'projects/1/RubricaP1.pdf'
-      / div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaP1.pdf'
+      div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaP1.pdf'
       / div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Test', 'projects/1/p1_tests.zip' 
 
     div
@@ -444,10 +446,10 @@ article
       div style="border:none; display:inline-block; width:80px;" V 24-Mar
       div style="border:none; display:inline-block; width:120px;" = link_to 'sigint.c',   'examples/sigint.c'
       div style="border:none; display:inline-block;" Ejemplo de cómo manejar signals del sistema
-    /div
+    div
       div style="border:none; display:inline-block; width:80px;" L 25-Sep
       div style="border:none; display:inline-block; width:120px;" = link_to 'mems.c',   'examples/mems.c'
-      div style="border:none; display:inline-block;" Ejemplo de direcciones virtuales de un proceso
+      div style="border:none; display:inline-block;" Ejemplo de direcciones virtuales de un proceso uwu
 
 
 
@@ -491,7 +493,7 @@ javascript:
    selector: '.timerP1',
    msgAfter: "Se acabó.",
    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
-   dateEnd: new Date('Oct 15, 2018 23:59:59')
+   dateEnd: new Date('May 20, 2019 13:59:59')
  });
 
   var countdownP2 = new Countdown({
