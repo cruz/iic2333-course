@@ -85,8 +85,8 @@
   
   function Particle() {
 
-    this.character = "*";
-    this.lifeSpan = 300; //ms
+    this.character = "#";
+    this.lifeSpan = 120; //ms
     this.initialStyles ={
       "position": "absolute",
       "display": "block",
