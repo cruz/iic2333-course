@@ -182,6 +182,11 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 10/Dic, 15:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC08"
 
+    div
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Actividades EdX', 'http://openedx.ing.puc.cl/courses/course-v1:PUC+IIC2333_I_2019+2019_I_IIC2333/courseware/ff9b890159704d39b9fbe5ca1d33f0fb/1cbbf451c3b9460f8fde2cf1b6ebe173/'
+      div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 8/Jul, 14:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerEdX"
+
 
   section#slides
     h3 📚 Material de Clases 📚
@@ -572,6 +577,14 @@ javascript:
     msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
     //dateStart: new Date('2013/12/25 12:00'),
     dateEnd: new Date('Dec 10, 2018 15:00:00')
+  });
+
+  var countdownEdX = new Countdown({
+    selector: '.timerEdX',
+    msgAfter: "Se acabó.",
+    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s",
+    //dateStart: new Date('2013/12/25 12:00'),
+    dateEnd: new Date('Jul 08, 2019 14:00:00')
   });
 
   var countdownI1 = new Countdown({
