@@ -85,7 +85,7 @@
   
   function Particle() {
 
-    this.character = "#";
+    this.character = "✨";
     this.lifeSpan = 120; //ms
     this.initialStyles ={
       "position": "absolute",
