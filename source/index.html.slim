@@ -55,7 +55,7 @@ article
       div style="border:none; display:inline-block; vertical-align:top;" class="timerAC04"
 
 
-    div
+    /div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Tarea 2', 'homeworks/2/T2.pdf'
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 9/Sept, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerT2"
@@ -77,9 +77,9 @@ article
       div style="border:none; display:inline-block; width:380px;" Deadline: Lunes 10/Jun, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerP2"
       
-    / div
+    div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'homeworks/P1/P1.pdf'
-      div style="border:none; display:inline-block; width:380px;" Deadline: <del>Lunes 20</del>Jueves 23/May, 14:00
+      div style="border:none; display:inline-block; width:380px;" Deadline: Viernes 04/Oct, 14:00
       div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
 
     / div
@@ -226,7 +226,7 @@ article
       li = link_to 'Ayudantía C, V 09/Ago', 'ayudantias/C.zip'
       li = link_to 'Ayudantía T1, V 23/Ago', 'ayudantias/T1.zip'
       li = link_to 'Ayudantía T2, V 30/Ago', 'ayudantias/AyT2.pdf'
-      /li = link_to 'Ayudantía Proyecto SO, V 03/May', 'ayudantias/AyudantiaP1.pdf'
+      li = link_to 'Ayudantía Proyecto SO, V 12/Sept', 'ayudantias/AyudantiaP1.pdf'
       /li = link_to 'Ayudantía Paginación, V 03/May', 'ayudantias/AyudantiaPaginacion.pdf'
       /li = link_to 'Solución Ayudantía Paginación', 'ayudantias/AyudantiaPaginacionSol.pdf'
       /li = link_to 'Ayudantía Proyecto SO 2, V 10/May', 'ayudantias/AyudantiaP1-2.zip'
@@ -250,7 +250,8 @@ article
       div style="border:none; display:inline-block; width:80px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'homeworks/1/RubricaT1.pdf'
       /div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaT1.pdf'
       div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Tests', 'homeworks/1/Tests.zip'
-      /div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Pauta', 'homeworks/1/PautaT1.zip'
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Test 2', 'homeworks/1/input4.txt'
+      div style="border:none; display:inline-block; width:80px; vertical-align:top;" = link_to 'Ejecutable', 'homeworks/1/nothing'
       /div style="border:none; display:inline-block; vertical-align:top;" class="timerT1"
     div
       /div style="border:none; display:inline-block; width:400px; vertical-align:top;" Tarea 2. W 28-Ago al L 09-Sep <span style="font-size:12px;">(Notas L 23-Sep)</span>
@@ -286,9 +287,9 @@ article
     /  ------
     div
       div style="border:none; display:inline-block; width:400px; vertical-align:top;" Proyecto SO. L 16-Sep al L 7-Oct <span style="font-size:12px;">(Notas L 28-Oct)</span>
-      /div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'homeworks/P1/P1.pdf'
-      /div style="border:none; display:inline-block; width:360px;" <del>Deadline: Lunes 20/May, 14:00</del>
-      /div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
+      div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Proyecto SO', 'homeworks/P1/P1.pdf'
+      div style="border:none; display:inline-block; width:360px;" Deadline: Viernes 04/Oct, 14:00
+      div style="border:none; display:inline-block; vertical-align:top;" class="timerP1"
       / div style="border:none; display:inline-block; width:100px; padding-left:10px; vertical-align:top;" = link_to 'Rúbrica', 'projects/1/RubricaP1.pdf'
       /div style="border:none; display:inline-block; width:100px;padding-left:10px; vertical-align:top;" = link_to 'Ayudantía', 'ayudantias/AyudantiaP1.pdf'
       / div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Test', 'projects/1/p1_tests.zip' 
@@ -504,7 +505,7 @@ javascript:
    selector: '.timerP1',
    msgAfter: "Se acabó.",
    msgPattern: "⏱ {days} días, {hours}h {minutes}m {seconds}s&nbsp;",
-   dateEnd: new Date('May 23, 2019 13:59:59')
+   dateEnd: new Date('Oct 04, 2019 13:59:59')
  });
 
   var countdownP2 = new Countdown({
