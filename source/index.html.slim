@@ -5,8 +5,8 @@ layout: activity
 
 
 article
-  section#deadlines
-    h3 🚨 Deadlines activos 🚨
+  /section#deadlines
+    /h3 🚨 Deadlines activos 🚨
     /  ------
     / div
       div style="border:none; display:inline-block; width:100px; vertical-align:top;" = link_to 'Distribución IPs 🙂', 'projects/2/distribuciones-ip.pdf'
@@ -187,7 +187,12 @@ article
   section#slides
     h3 📚 Material de Clases 📚
     /  ------
+
     ul
+      li ▶️ Videos
+      ul
+        li = link_to 'Playlist 2020-1',      'https://www.youtube.com/playlist?list=PLVTkEjeczcER2aOMHPIfaHCpTx61iKsoV'
+
       li  🖥 Sistemas Operativos
       ul
         li = link_to 'Sistemas Operativos',  'slides/0-os.html'
@@ -219,8 +224,8 @@ article
     /  -----------
     ul
       li = link_to 'Preparación de una máquina virtual', 'activities/0-init/'
-      li = link_to 'Introducción a C',                   'activities/1-C/'
-      li = link_to 'Guía Punteros',                      'activities/1-C/Guia de Punteros.pdf'
+      /li = link_to 'Introducción a C',                   'activities/1-C/'
+      /li = link_to 'Guía Punteros',                      'activities/1-C/Guia de Punteros.pdf'
       li = link_to 'Glosario Funciones Comunes en C',    'activities/1-C/Glosario Funciones Comunes.pdf'
       |   <span style="font-size:12px">Agradecimientos al equipo de IIC2133 Estructuras de Datos</span>
       li = link_to 'Evolución de los sistemas operativos', 'activities/history.html'
