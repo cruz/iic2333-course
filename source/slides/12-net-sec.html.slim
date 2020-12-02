@@ -1,0 +1,170 @@
+---
+title: Seguridad en redes
+layout: slide
+---
+
+section
+  h2 Seguridad en redes
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      /blockquote style="background:#B7E1CD;" Comunicación de <b>procesos</b> mediante <b>mensajes</b>
+
+      div style="text-align:left;" Tecnologías para proveer seguridad en un canal de comunicación
+
+      ul
+        li TCP sobre SSL
+        li IPSec
+        li VPNs
+        li Firewalls
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" TCP sobre SSL
+
+      div style="text-align:left;" Protección en la capa de transporte
+
+      ul
+        li SSL: Secure Sockets Layer
+        li TLS: Transport Layer Security
+        li Protocolo de capa de aplicación
+        li Para efectos prácticos funciona en capa de transporte
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec2.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" TCP sobre SSL
+
+      div style="text-align:left;" Protección en la capa de transporte
+
+      ul
+        li (a) Handshake normal
+        li (b) Bob verifica que Alice es realmente Alice
+        li (c) Bob envía a Alice una Master Secret Key (MS)
+        li Usando la MS, ambos generarán llaves simétricas para su sesión
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec3.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" IPSec y VPNs
+
+      div style="text-align:left;" Protección en la capa de red
+
+      ul
+        li Encriptación del <i>payload</i> antes de pasar a la Internet
+        li Para <i>routers</i> fuera de la red privada, es un paquete IP regular
+        li Entrada y salida de la VPN se hace en capa de red, en un <i>router</i> o en el <i>host</i>
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec4.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:40%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" IPSec y VPNs
+
+      div style="text-align:left;" Protección en la capa de red
+
+      ul
+        li ESP: Encapsulation Security Payload
+        li MAC: Message Authentication Code (para integridad)
+
+    div style="width:60%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec5.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Firewalls
+
+      div style="text-align:left;" Protección operacional
+
+      ul
+        li Combinación de <i>hardware</i> y <i>software</i>
+        li Todo el tráfico debe pasar por el <i>firewall</i>
+        li Solo el tráfico autorizado puede atravesar el <i>firewall</i>
+        li El <i>firewall</i> debe ser impenetrable sin autorización
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec6.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Firewalls
+
+      div style="text-align:left;" Tres tipos de filtros:
+
+      ul
+        li Filtros de paquetes
+        ul
+          li IP, TCP, UDP, puertos, SYN, ACK, ICMP, ...
+        li Filtros con estado
+        ul
+          li Para conexiones TCP. Ej: ACKs solo para conexiones establecidas
+        li <i>Gateways</i> de aplicaciones
+        ul
+          li Para usuarios autenticados en aplicaciones. 
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec6.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+
+  section
+    /img src='/images/figures/12-sec1.png' style="background:none; border:none; box-shadow:none;" width="40%"
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+
+      blockquote style="background:#B7E1CD;" Firewalls
+
+      div style="text-align:left;" IDS
+
+      ul
+        li IDS: <i>Intrusion Detection System</i>
+        li Analizan comportamiento de secuencias de paquetes
+        ul
+          li Port scan, TCP scan
+          li DoS scan
+          li Worms, viruses, app vulnerabilities
+        li Realizan DPS: <i>Deep Packet Inspection</i>
+        li DMZ: Zona desmilitarizada
+        ul
+          li Acá se encuentran los servicios que necesitan comunicación con el exterior
+
+    div style="width:50%; vertical-align:middle; display:inline-block;" 
+      img src='/images/figures/12-sec7.png' style="background:none; border:none; box-shadow:none;" width="100%"
+
+
+
